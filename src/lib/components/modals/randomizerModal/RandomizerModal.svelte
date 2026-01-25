@@ -7,7 +7,7 @@
 	import Dtwenty from '$lib/assets/icons/Dtwenty.svelte';
 	import Dtwo from '$lib/assets/icons/Dtwo.svelte';
 	import { resetRandomizer, randomizerModalData } from '$lib/store/modal';
-    import {appSettings} from '$lib/store/appSettings'
+	import { appSettings } from '$lib/store/appSettings';
 </script>
 
 <div
