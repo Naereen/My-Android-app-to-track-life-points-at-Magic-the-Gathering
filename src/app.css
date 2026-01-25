@@ -19,8 +19,10 @@
 		/* TODO: let this be configurable in then settings */
 		font-size: x-large;
 	}
-	font-body {
+
+	.font-body {
 		font-family: "Matrix-Bold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+		font-weight: bold;
 	}
 
 	body {

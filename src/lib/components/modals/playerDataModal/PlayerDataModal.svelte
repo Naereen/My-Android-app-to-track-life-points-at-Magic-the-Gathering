@@ -115,19 +115,19 @@
 				</div>
 				<div class="mt-4 flex flex-col justify-center items-center w-full px-6 sm:px-10">
 					<div class="w-full flex justify-center gap-4 mb-3">
-						<button class="px-3 py-1 rounded-full border" on:click={() => mode = 'backgrounds'} class:font-semibold={mode === 'backgrounds'}>{ $_('open_customize_backgrounds') }</button>
-						<button class="px-3 py-1 rounded-full border" on:click={() => mode = 'colors'} class:font-semibold={mode === 'colors'}>{ $_('player_background_color') }</button>
+						<button class="px-3 py-1 rounded-full border" on:click={() => mode = 'backgrounds'} class:underline={mode === 'backgrounds'} class:font-bold={mode === 'backgrounds'}>{ $_('open_customize_backgrounds') }</button>
+						<button class="px-3 py-1 rounded-full border" on:click={() => mode = 'colors'} class:underline={mode === 'colors'} class:font-bold={mode === 'colors'}>{ $_('player_background_color') }</button>
 					</div>
 					{#if mode === 'backgrounds'}
 						<div class="w-full mb-3">
 							<div class="flex gap-2">
-								<input type="text" class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black" bind:value={searchQuery} placeholder={ $_('scryfall_search') + " card name..." } />
+								<input type="text" class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black" bind:value={searchQuery} placeholder={ $_('scryfall_search') + "..." } />
 								<button class="px-3 py-2 bg-blue-500 text-white rounded-lg" on:click={doSearch} disabled={isSearching}>{isSearching ? $_('scryfall_searching') : $_('scryfall_search')}</button>
 							</div>
 						</div>
 						<div class="w-full max-h-60 overflow-auto">
 							{#if searchResults.length === 0}
-								<div class="text-sm text-gray-500">No results</div>
+								<div class="text-sm text-gray-500">{$_('scryfall_search_noresult')}</div>
 							{/if}
 							{#each searchResults as r}
 								<div class="flex gap-2 mb-3 p-2 border rounded-lg bg-white">
@@ -137,7 +137,7 @@
 										<div class="text-sm text-gray-600">Artist: {r.artist}</div>
 										<div class="text-sm text-gray-600">© Wizards of the Coast</div>
 										<div class="mt-2">
-											<button class="px-3 py-1 bg-green-600 text-white rounded" on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image)}>Choose</button>
+											<button class="px-3 py-1 bg-green-600 text-white rounded" on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image)}>{$_('scryfall_search_choose')}</button>
 										</div>
 									</div>
 									<div class="w-32 flex-shrink-0">

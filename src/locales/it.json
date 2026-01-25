@@ -49,5 +49,7 @@
     "open_customize_colors": "Colori",
     "choose_your_language": "Scegli la tua lingua",
     "scryfall_searching": "Ricerca su Scryfall...",
-    "scryfall_search": "Cerca"
+    "scryfall_search": "Cerca nome carta",
+    "scryfall_search_noresult": "Nessun risultato. Offline? Prova un'altra ricerca?",
+    "scryfall_search_choose": "Scegli"
 }
