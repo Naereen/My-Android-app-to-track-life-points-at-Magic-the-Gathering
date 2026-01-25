@@ -10,6 +10,31 @@
 	import PlayerDataModal from '$lib/components/modals/playerDataModal/PlayerDataModal.svelte';
 
 	$: innerWidth = 0;
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		let wakeLock: WakeLockSentinel | null = null;
+
+		const requestWakeLock = async () => {
+			try {
+				if ('wakeLock' in navigator) {
+					wakeLock = await navigator.wakeLock.request('screen');
+					console.log("Wake Lock enabled: the screen will not turn off.");
+				}
+			} catch (err: any) {
+				console.warn(`Wake Lock not available: ${err.name}, ${err.message}`);
+			}
+		};
+
+		requestWakeLock();
+
+		// Réactiver si l'app revient au premier plan
+		document.addEventListener('visibilitychange', () => {
+			if (wakeLock !== null && document.visibilityState === 'visible') {
+				requestWakeLock();
+			}
+		});
+	});
 </script>
 
 <svelte:window bind:innerWidth />

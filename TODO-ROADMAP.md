@@ -5,6 +5,12 @@
 - [x] Maximize to full screen on mobile devices: the "window" should take all the screen space, especially on the left/right sides
 
 - [x] Write a `manifest.json` for PWA support
+  - [x] It had MANY issues! I think I fixed them all now.
+  - [x] Test installing the PWA on Android devices
+  - [ ] Test installing the PWA on Apple devices (iOS/iPadOS)
+  - [ ] Test installing the PWA on desktop (Windows, macOS, Linux)
+
+## State saving improvements
 
 - [ ] Save the state in the local storage of the browser, so that reloading the page does not reset everything
 
@@ -25,8 +31,7 @@
 ## Player status improvements
 
 - [ ] Dead player icon
-  - [ ] Allow a player to not be dead if life is below 0
-
+  - [ ] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect)
 
 ## Successfully build a working apk file
 
@@ -38,9 +43,10 @@
 ## Better menus and dialogs
 
 - [ ] Confirmation menus overhaul
-- [ ] Improve the "reset game" dialog
-- [ ] Improve the "new player" dialog
-- [ ] Improve the "edit player" dialog
+  - [ ] Improve the "reset game" dialog
+  - [ ] Improve the "new player" dialog
+  - [ ] Improve the "edit player" dialog
+
 - [ ] Implement the "settings" dialog
 - [ ] Implement the "about" dialog
 
@@ -49,7 +55,7 @@
 ## New features
 
 - [ ] Custom Player backgrounds
-  - [ ] With a simple color picker
+  - [ ] With a simple color picker : one color of mana, and that's it
   - [ ] With a color gradient picker
   - [ ] With a card search to pick a card as background
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders
@@ -68,4 +74,4 @@
 
 ## On the development side
 
-- [ ] Tests
+- [ ] Tests? I literally have no idea how to write tests for a SvelteKit app.
