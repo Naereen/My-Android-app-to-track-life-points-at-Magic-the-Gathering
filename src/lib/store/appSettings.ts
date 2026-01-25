@@ -6,7 +6,9 @@ export const appSettings: Writable<App.Settings> = persist('appSettings', {
 	startingLifeTotal: 40,
 	customStartingLifeTotal: 60,
 	customRandomNumber: 0,
-	allowNegativeLife: false
+	allowNegativeLife: false,
+	preventScreenSleep: true,
+	fourPlayerLayout: 'matrix'
 });
 
 export const setPlayerCount = (playerCount: number) => {
@@ -27,4 +29,12 @@ export const setCustomRandomNumber = (customRandomNumber: number) => {
 
 export const setAllowNegativeLife = (allowNegativeLife: boolean) => {
     appSettings.update((data) => ({ ...data, allowNegativeLife }));
+};
+
+export const setPreventScreenSleep = (preventScreenSleep: boolean) => {
+	appSettings.update((data) => ({ ...data, preventScreenSleep }));
+};
+
+export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {
+	appSettings.update((data) => ({ ...data, fourPlayerLayout: layout }));
 };

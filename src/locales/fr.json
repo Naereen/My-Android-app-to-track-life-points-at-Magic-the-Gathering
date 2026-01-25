@@ -33,6 +33,8 @@
     "allow_negative_life_help": "Ne pas marquer le joueur comme mort si ses PV ≤ 0",
     "allow_negative_life_global": "Autoriser vie négative (global)",
     "allow_negative_life_global_help": "Quand activé, aucun joueur n'est marqué comme mort pour PV ≤ 0 (sauf si le réglage joueur l'interdit)",
+    "prevent_screen_sleep": "Garder l'écran allumé",
+    "prevent_screen_sleep_help": "Empêche l'écran de s'éteindre tant que l'application est active",
     "about_title": "À propos",
     "about_version": "Version",
     "about_author": "Auteur",
@@ -40,5 +42,7 @@
     "about_thanks": "Un grand merci à Michael Bourkas pour Lifetap, ceci est un clone personnel, produit simplement pour pratiquer, apprendre et expérimenter avec Svelte, TypeScript, etc.",
     "about_github": "Dépôt GitHub",
     "about_playstore": "Google Play (lors de la publication)",
-    "about_feedback": "Retour / Signalement de bug"
+    "about_feedback": "Retour / Signalement de bug",
+    "choose_4players_layout": "Choisir la disposition pour 4 joueurs",
+    "choose_6players_layout": "Choisir la disposition pour 6 joueurs"
 }

@@ -3,6 +3,7 @@
 	import ThreePlayerLayout from '$lib/layouts/ThreePlayerLayout.svelte';
 	import { appSettings } from '$lib/store/appSettings';
 	import FourPlayerLayoutOne from '$lib/layouts/FourPlayerLayoutOne.svelte';
+	import FourPlayerLayoutTwo from '$lib/layouts/FourPlayerLayoutTwo.svelte';
 	import FivePlayerLayout from '$lib/layouts/FivePlayerLayout.svelte';
 	import SixPlayerLayoutOne from '$lib/layouts/SixPlayerLayoutOne.svelte';
 	import { playerModalData, randomizerModalData, confirmModalData } from '$lib/store/modal';
@@ -11,33 +12,26 @@
 	import ConfirmModal from '$lib/components/modals/confirmModal/ConfirmModal.svelte';
 
 	$: innerWidth = 0;
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	import '../lib/utils/i18n.js'; // Importation pour initialiser i18n
 	import { _ } from 'svelte-i18n';  // i18n language toggle
 
+	import { initWakeLock, setKeepAwake, stopWakeLockManager } from '$lib/utils/wakeLock';
+
+	let unsubscribeAppSettings: (() => void) | null = null;
+
 	onMount(() => {
-		let wakeLock: WakeLockSentinel | null = null;
-
-		const requestWakeLock = async () => {
-			try {
-				if ('wakeLock' in navigator) {
-					wakeLock = await navigator.wakeLock.request('screen');
-					console.log("Wake Lock enabled: the screen will not turn off.");
-				}
-			} catch (err: any) {
-				console.warn(`Wake Lock not available: ${err.name}, ${err.message}`);
-			}
-		};
-
-		requestWakeLock();
-
-		// Réactiver si l'app revient au premier plan
-		document.addEventListener('visibilitychange', () => {
-			if (wakeLock !== null && document.visibilityState === 'visible') {
-				requestWakeLock();
-			}
+		initWakeLock();
+		// subscribe to appSettings.preventScreenSleep and apply
+		unsubscribeAppSettings = appSettings.subscribe((s) => {
+			setKeepAwake(!!(s as any).preventScreenSleep);
 		});
+	});
+
+	onDestroy(() => {
+		unsubscribeAppSettings?.();
+		stopWakeLockManager();
 	});
 </script>
 
@@ -49,7 +43,11 @@
 	{:else if $appSettings.playerCount === 3}
 		<ThreePlayerLayout />
 	{:else if $appSettings.playerCount === 4}
-		<FourPlayerLayoutOne />
+		{#if $appSettings.fourPlayerLayout === 'stacked'}
+			<FourPlayerLayoutTwo />
+		{:else}
+			<FourPlayerLayoutOne />
+		{/if}
 	{:else if $appSettings.playerCount === 5}
 		<FivePlayerLayout />
 	{:else if $appSettings.playerCount === 6}

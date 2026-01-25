@@ -3,14 +3,15 @@
 		appSettings,
 		setCustomStartingLifeTotal,
 		setPlayerCount,
-		setStartingLifeTotal
+		setStartingLifeTotal,
+		setFourPlayerLayout
 	} from '$lib/store/appSettings';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import CircularButton from '../../../shared/circularButton/CircularButton.svelte';
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { resetLifeTotals } from '$lib/store/player';
 	import { showConfirm } from '$lib/store/modal';
-	import { setAllowNegativeLife } from '$lib/store/appSettings';
+	import { setAllowNegativeLife, setPreventScreenSleep } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
 
 	const resetLocalStorage = async () => {
@@ -92,6 +93,11 @@
 		const target = e.currentTarget as HTMLInputElement;
 		setAllowNegativeLife(!!target.checked);
 	};
+
+	const handlePreventSleepChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setPreventScreenSleep(!!target.checked);
+	};
 </script>
 
 <svelte:window bind:innerHeight />
@@ -100,8 +106,9 @@
 <div
 	class="w-full overflow-y-auto scrollbar-hidden h-full"
 	style="max-height: {innerHeight - 80}px; -webkit-overflow-scrolling: touch;"
-	tabindex="0"
-	on:keydown={handleScrollKeydown}
+	tabindex="-1"
+	role="region"
+	aria-label={$_('settings')}
 >
 	<div class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black">
 		<button on:click={() => toggleIsMenuOpen('')} on:contextmenu|preventDefault draggable="false" class="text-white absolute left-0 pl-4"
@@ -126,6 +133,41 @@
 					{/key}
 				{/each}
 			</div>
+			{#if $appSettings.playerCount === 4}
+				<div class="mt-4">
+					<div class="text-lg mb-2">{ $_('choose_4players_layout') }</div>
+					<div class="flex gap-3 justify-center">
+						<button
+							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+							class:border-blue-400={$appSettings.fourPlayerLayout === 'matrix'}
+							on:click={() => setFourPlayerLayout('matrix')}
+						>
+							<div class="w-full h-full grid grid-rows-2 grid-cols-2 gap-1">
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+							</div>
+							<div class="mt-1 text-sm">2 x 2</div>
+						</button>
+						<button
+							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+							class:border-blue-400={$appSettings.fourPlayerLayout === 'stacked'}
+							on:click={() => setFourPlayerLayout('stacked')}
+						>
+							<div class="w-full h-full flex flex-col gap-1">
+								<div class="bg-gray-700 h-1/3" />
+								<div class="flex gap-1 h-1/3">
+									<div class="bg-gray-700 w-1/2" />
+									<div class="bg-gray-700 w-1/2" />
+								</div>
+								<div class="bg-gray-700 h-1/3" />
+							</div>
+							<div class="mt-1 text-sm">1 / 2 / 1</div>
+						</button>
+					</div>
+				</div>
+			{/if}
 
 				<!-- reset button moved to bottom of menu -->
 		</div>
@@ -180,6 +222,17 @@
 					<span class="ml-2 text-lg font-semibold">{ $_('allow_negative_life_global') }</span>
 			</label>
 		</div>
+		<div class="w-full flex justify-center mt-2 mb-4">
+			<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+				<input
+					type="checkbox"
+					checked={$appSettings.preventScreenSleep}
+					on:change={handlePreventSleepChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{ $_('prevent_screen_sleep') }</span>
+			</label>
+		</div>
 		<div class="w-full flex justify-center mt-8 mb-8">
 			<button
 				class="bg-red-600 text-white px-4 py-2 rounded-full"
@@ -189,18 +242,18 @@
 			</button>
 		</div>
 
-		<!-- About section -->
+		<!-- About section (larger text per request) -->
 		<div class="w-full text-center text-gray-400 mt-4 mb-8 px-6">
-			<div class="text-sm mb-2">{ $_('about_title') }</div>
-			<div class="text-xs mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.1.0'}</div>
-			<div class="text-xs mb-1">{ $_('about_author') }: Naereen</div>
-			<div class="text-xs mb-2">{ $_('about_license') }: MIT</div>
-			<div class="text-sm mb-2">{ $_('about_thanks') }</div>
+			<div class="text-xl mb-2 font-semibold">{ $_('about_title') }</div>
+			<div class="text-base mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.1.0'}</div>
+			<div class="text-base mb-1">{ $_('about_author') }: Naereen</div>
+			<div class="text-base mb-2">{ $_('about_license') }: MIT</div>
+			<div class="text-base mb-2">{ $_('about_thanks') }</div>
 			<div class="flex justify-center gap-4 mt-2">
-				<a class="text-blue-400 underline text-sm" href="https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering" target="_blank" rel="noreferrer">{ $_('about_github') }</a>
+				<a class="text-blue-400 underline text-base" href="https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering" target="_blank" rel="noreferrer">{ $_('about_github') }</a>
 				<!-- TODO: Optional links: Play Store / Feedback - shown as placeholders -->
-				<!-- <a class="text-blue-400 underline text-sm" href="#" on:click|preventDefault={() => null}>{ $_('about_playstore') }</a> -->
-				<!-- <a class="text-blue-400 underline text-sm" href="#" on:click|preventDefault={() => null}>{ $_('about_feedback') }</a> -->
+				<!-- <a class="text-blue-400 underline text-base" href="#" on:click|preventDefault={() => null}>{ $_('about_playstore') }</a> -->
+				<!-- <a class="text-blue-400 underline text-base" href="#" on:click|preventDefault={() => null}>{ $_('about_feedback') }</a> -->
 			</div>
 		</div>
 	</div>

@@ -32,13 +32,17 @@
     "allow_negative_life": "Allow negative life",
     "allow_negative_life_help": "Player is not marked dead when life ≤ 0",
     "allow_negative_life_global": "Allow negative life (global)",
-    "allow_negative_life_global_help": "When enabled, no player is marked dead for having ≤ 0 life (unless per-player override is off)"
-    ,"about_title": "About",
+    "allow_negative_life_global_help": "When enabled, no player is marked dead for having ≤ 0 life (unless per-player override is off)",
+    "prevent_screen_sleep": "Keep screen awake",
+    "prevent_screen_sleep_help": "Prevent the device screen from turning off while the app is active",
+    "about_title": "About",
     "about_version": "Version",
     "about_author": "Author",
     "about_license": "License",
     "about_thanks": "Huge thanks to Michael Bourkas for Lifetap, this is a personal clone, produced simply to practice and learn and experiment with Svelte, TypeScript etc.",
     "about_github": "GitHub repo",
     "about_playstore": "Google Play (when published)",
-    "about_feedback": "Feedback / Bug report"
+    "about_feedback": "Feedback / Bug report",
+    "choose_4players_layout": "Choose layout for 4 players",
+    "choose_6players_layout": "Choose layout for 6 players"
 }

@@ -164,7 +164,7 @@ export const manageLifeTotal = (
 	playerId: number,
 	amount: number = 1
 ) => {
-	removeFirstPlace();
+	// removeFirstPlace();
 	let withinBounds = false; // Flag to determine if setTempLifeDiff should be called
 
 	players.update((currentPlayers) => {

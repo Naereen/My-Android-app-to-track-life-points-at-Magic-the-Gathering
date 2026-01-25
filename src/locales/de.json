@@ -32,13 +32,17 @@
     "allow_negative_life": "Negative Lebenspunkte erlauben",
     "allow_negative_life_help": "Der Spieler wird nicht als tot markiert, wenn die Lebenspunkte ≤ 0 sind",
     "allow_negative_life_global": "Negative Lebenspunkte erlauben (global)",
-    "allow_negative_life_global_help": "Wenn aktiviert, wird kein Spieler für Lebenspunkte ≤ 0 als tot markiert (sofern nicht pro Spieler anders eingestellt)"
-    ,"about_title": "Über",
+    "allow_negative_life_global_help": "Wenn aktiviert, wird kein Spieler für Lebenspunkte ≤ 0 als tot markiert (sofern nicht pro Spieler anders eingestellt)",
+    "prevent_screen_sleep": "Bildschirm wach halten",
+    "prevent_screen_sleep_help": "Verhindert, dass der Bildschirm ausgeht, während die App aktiv ist",
+    "about_title": "Über",
     "about_version": "Version",
     "about_author": "Autor",
     "about_license": "Lizenz",
     "about_thanks": "Ein großes Dankeschön an Michael Bourkas für Lifetap, dies ist ein persönlicher Klon, produziert einfach zum Üben, Lernen und Experimentieren mit Svelte, TypeScript usw.",
     "about_github": "GitHub-Repository",
     "about_playstore": "Google Play (bei Veröffentlichung)",
-    "about_feedback": "Feedback / Fehler melden"
+    "about_feedback": "Feedback / Fehler melden",
+    "choose_4players_layout": "Layout für 4 Spieler wählen",
+    "choose_6players_layout": "Layout für 6 Spieler wählen"
 }
