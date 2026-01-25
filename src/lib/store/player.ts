@@ -58,7 +58,14 @@ export const players: Writable<App.Player.Data[]> = writable([
 // Object to store timeout references for each player
 const resetTimers: { [key: number]: number } = {};
 
-export const resetLifeTotals = () => {
+export const resetLifeTotals = (alreadyConfirmed: boolean) => {
+	if (!alreadyConfirmed) {
+		const confirm = window.confirm(get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?');
+		if (!confirm) {
+			return;
+		}
+	}
+
 	const startingLifeTotal = get(appSettings).startingLifeTotal;
 	removeFirstPlace();
 

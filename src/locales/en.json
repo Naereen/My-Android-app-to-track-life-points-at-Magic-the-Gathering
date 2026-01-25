@@ -6,10 +6,18 @@
     "settings": "Settings",
     "reset_confirm": "Are you sure you want to reset the game?",
     "player": "Player",
+    "players": "Players",
     "dice_misc": "Dice & Misc",
     "roll": "Roll",
     "set_dice": "Set",
     "flip_coin": "Flip coin",
     "custom_number": "Custom",
-    "mana_counter": "Mana Counter"
+    "mana_counter": "Mana Counter",
+    "storm_counter": "Storm Counter",
+    "close": "Close",
+    "clear": "Clear",
+    "starting_life": "Starting Life Total",
+    "window_confirm_change_life_total": "Are you sure you want to continue with these life totals?",
+    "window_confirm_change_player_count": "Are you sure you want to continue with this number of players?",
+    "window_confirm_reset_game": "Are you sure you want to reset the game?"
 }

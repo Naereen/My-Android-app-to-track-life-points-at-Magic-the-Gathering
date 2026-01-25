@@ -14,7 +14,7 @@
 {#if !$appState.isMenuOpen}
 	<div class="flex justify-around py-1.5 items-center" class:h-14={!$appState.isMenuOpen}>
 		<div class="flex justify-center items-center flex-grow">
-			<button on:click={resetLifeTotals} class="h-10 w-10"><Reset /></button>
+			<button on:click={() => resetLifeTotals(false)} class="h-10 w-10"><Reset /></button>
 		</div>
 		<div class="flex justify-center items-center flex-grow">
 			<CircularButton

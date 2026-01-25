@@ -9,6 +9,7 @@
 	import CircularButton from '../../../shared/circularButton/CircularButton.svelte';
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { resetLifeTotals } from '$lib/store/player';
+	import { _ } from 'svelte-i18n';
 
 	const isCustomStartingLife = () => {
 		return (
@@ -41,24 +42,24 @@
 
 	const setLifeTotal = (startingLifeTotal: number) => {
 		// TODO: Add clean modal popup
-		const confirm = window.confirm('Are you sure you want to continue?');
+		const confirm = window.confirm($_('window_confirm_change_life_total'));
 		if (confirm) {
 			setStartingLifeTotal(startingLifeTotal);
 			if (!isCustomStartingLife()) {
 				setCustomStartingLifeTotal(60);
 			}
 			toggleIsMenuOpen('');
-			resetLifeTotals();
+			resetLifeTotals(true);
 		}
 	};
 
 	const setNewPlayerCount = (playerCount: number) => {
 		// TODO: Add clean modal popup
-		const confirm = window.confirm('Are you sure you want to continue?');
+		const confirm = window.confirm($_('window_confirm_change_player_count'));
 		if (confirm) {
 			setPlayerCount(playerCount);
 			toggleIsMenuOpen('');
-			resetLifeTotals();
+			resetLifeTotals(true);
 		}
 	};
 
@@ -77,13 +78,13 @@
 		<button on:click={() => toggleIsMenuOpen('')} class="text-white absolute left-0 pl-4"
 			><Arrow /></button
 		>
-		<span class="text-gray-400 text-center">Settings</span>
+		<span class="text-gray-400 text-center" style="font-size: xxx-large;">{ $_('settings') }</span>
 	</div>
 
 	<div class="w-full text-center text-white mt-4 flex flex-col items-center">
 		<!-- Player Count -->
 		<div class="w-3/4">
-			<div><span>Players</span></div>
+			<div><span style="font-size: xx-large;">{ $_('players') }</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [2, 3, 4, 5, 6] as playerCount}
 					{#key $appSettings.playerCount}
@@ -101,7 +102,7 @@
 
 		<!-- Starting Life Total -->
 		<div class="mt-6 w-3/4">
-			<div><span>Starting Life</span></div>
+			<div><span style="font-size: xx-large;">{ $_('starting_life') }</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [20, 25, 30, 40, 'custom'] as lifeTotal}
 					{#key $appSettings.startingLifeTotal}

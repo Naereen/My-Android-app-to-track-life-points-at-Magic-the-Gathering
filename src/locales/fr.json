@@ -6,13 +6,18 @@
     "settings": "Paramètres",
     "reset_confirm": "Voulez-vous vraiment réinitialiser la partie ?",
     "player": "Joueur-se",
+    "players": "Joueur-ses",
     "dice_misc": "Dés & Divers",
     "roll": "Lancer",
     "set_dice": "Dé ?",
     "flip_coin": "Une pièce",
     "custom_number": "Choisir",
-    "mana_counter": "Compteur de Manas",
-    "storm_counter": "Compteur de Déluge",
+    "mana_counter": "Compteur de manas",
+    "storm_counter": "Compteur de déluge",
     "close": "Fermer",
-    "clear": "Vider"
+    "clear": "Vider",
+    "starting_life": "Points de vie de départ",
+    "window_confirm_change_life_total": "Êtes-vous sûr de vouloir continuer avec ces totaux de points de vie ?",
+    "window_confirm_change_player_count": "Êtes-vous sûr de vouloir continuer avec ce nombre de joueurs ?",
+    "window_confirm_reset_game": "Êtes-vous sûr de vouloir recommencer la partie ?"
 }
