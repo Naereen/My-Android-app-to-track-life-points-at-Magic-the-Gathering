@@ -21,8 +21,12 @@
 	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10);
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgStyle = $players[index].backgroundImage
-		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: center;`
+	? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: top center;`
 		: `background: ${bg};`;
+	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
+	$: styleVars = $players[index].backgroundImage
+		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}`
+		: `--bg-rotation: ${bgRotation}; --bg-image: none`;
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -82,11 +86,15 @@
 <svelte:window bind:innerWidth />
 
 <div
+  	class="rounded-3xl relative h-full w-full bg-rotated"
+ 	style={styleVars}
+>
+<div
 	class="flex w-full rounded-3xl flex-grow h-6"
-	style={bgStyle}
 	class:h-full={!$appState.isMenuOpen}
 	class:opacity-65={$players[index].highlighted}
 	class:bg-player-dark={isDead}
+	style="background: ${bg};"
 >
 	{#if !$appState.isMenuOpen}
 		<div class="flex flex-col w-full relative">
@@ -158,7 +166,7 @@
 							</div>
 						{/if}
 						<span
-							class="text-black text-7xl flex items-center text-center text-shadow-lg/55"
+							class="text-shadow-white text-shadow-xl text-black text-7xl flex items-center text-center"
 							class:text-5xl={$appSettings.playerCount >= 5}
 							class:-rotate-180={orientation === 'left'}
 							class:opacity-25={isDead}
@@ -177,9 +185,4 @@
 		</div>
 	{/if}
 </div>
-
-<style>
-	.vert {
-		writing-mode: vertical-rl;
-	}
-</style>
+</div>

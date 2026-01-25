@@ -22,7 +22,7 @@
 	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10);
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgStyle = $players[index].backgroundImage
-		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: center;`
+		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: center right;`
 		: `background: ${bg};`;
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
@@ -142,7 +142,8 @@
 								<Skull />
 							</div>
 						{/if}
-						<span class="text-black text-8xl text-shadow-lg/55" class:opacity-25={isDead}> {$players[index].lifeTotal}</span>
+						<span class="text-shadow-xl/100 text-black text-8xl" class:opacity-25={isDead}>
+							{$players[index].lifeTotal}</span>
 					</div>
 					<span class="w-16 text-center"
 						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span

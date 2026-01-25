@@ -20,16 +20,47 @@
 		font-size: x-large;
 	}
 
-	@theme {
-		--color-regal-blue: #243c5a;
-		--color-white: #ffffff;
-	}
-
 	body {
 		@apply bg-black;
 		min-height: 100vh;
 	}
 
+
+	.bg-rotated {
+		position: relative;
+		overflow: hidden;
+		border-radius: inherit;
+	}
+
+	/* Pseudo-élément plus grand pour couvrir correctement après rotation */
+	.bg-rotated::before {
+		content: "";
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		/* 200% permet de couvrir les cas de rotation sans couper l'image */
+		width: 200%;
+		height: 200%;
+		transform: translate(-50%, -50%) rotate(var(--bg-rotation, 0deg));
+		transform-origin: center center;
+		background-image: var(--bg-image);
+		background-size: cover;
+		background-position: center;
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	/* Assurer que le contenu reste au-dessus du background */
+	.bg-rotated > * {
+		position: relative;
+		z-index: 10;
+	}
+
+	.vert {
+		writing-mode: vertical-rl;
+	}
+
+	/* Disable long-press and dragging on elements with the no-longpress class */
 	.no-longpress, .no-longpress img, .no-longpress svg {
 		-webkit-user-drag: none;
 		user-drag: none;
@@ -38,6 +69,11 @@
 		user-select: none;
 		touch-action: manipulation;
 	}
+}
+
+@theme {
+	--color-regal-blue: #243c5a;
+	--color-white: #ffffff;
 }
 
 @layer utilities {
