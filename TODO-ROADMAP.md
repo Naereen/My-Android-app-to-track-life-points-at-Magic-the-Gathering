@@ -6,6 +6,7 @@
   - [ ] Allow a player to not be dead if life is below 0
 
 - [ ] Maximize to full screen on mobile devices: the "window" should take all the screen space, especially on the left/right sides
+
 - [x] Write a `manifest.json` for PWA support
 
 ## Successfully build a working apk file

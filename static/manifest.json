@@ -1,8 +1,8 @@
 {
   "name": "Naereen's MTG Life Tracker",
-  "short_name": "MTG Life Tracker",
+  "short_name": "Naereen's MTG Life Tracker",
   "description": "Naereen's Magic The Gathering Life Tracker, for Android and iOS devices. Keep track of your life points during games with ease! Work in progress...",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Naereen",
   "lang": "en-US",
   "start_url": "./index.html",

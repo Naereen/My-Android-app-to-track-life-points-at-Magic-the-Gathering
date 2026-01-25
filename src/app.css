@@ -8,6 +8,20 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
+
+	/* Ensure the app spans the full viewport and remove default body margins */
+	html,
+	body,
+	#svelte {
+		height: 100%;
+		width: 100%;
+		margin: 0;
+	}
+
+	body {
+		@apply bg-black;
+		min-height: 100vh;
+	}
 }
 
 @layer utilities {
