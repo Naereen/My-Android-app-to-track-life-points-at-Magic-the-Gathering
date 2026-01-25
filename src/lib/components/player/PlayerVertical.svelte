@@ -7,6 +7,7 @@
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
 	import { manageLifeTotal, players } from '$lib/store/player';
+	import { colorToBg } from '$lib/components/colorToBg';
 
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
@@ -19,23 +20,6 @@
 	$: isMobile = innerWidth < 640;
 	$: index = id - 1;
 	$: isDead = ($players[index].lifeTotal <= 0) || (($players[index].poison ?? 0) >= 10);
-
-	const colorToBg = (c: string) => {
-		switch (c) {
-			case 'blue':
-				return '#d8e5f7';
-			case 'black':
-				return '#e9e9ee';
-			case 'red':
-				return '#fde8e8';
-			case 'green':
-				return '#e8f7e8';
-			case 'white':
-			default:
-				return '#ffffff';
-		}
-	};
-
 	$: bg = colorToBg($players[index].color ?? 'white');
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
@@ -100,7 +84,7 @@
 	style="background: {bg};"
 	class:h-full={!$appState.isMenuOpen}
 	class:rotate-180={orientation === 'down'}
-	class:bg-player-light={$players[index].highlighted}
+	class:opacity-65={$players[index].highlighted}
 	class:bg-player-dark={isDead}
 >
 	{#if !$appState.isMenuOpen}
@@ -132,9 +116,11 @@
 					<button
 						on:click={() => openPlayerModal(id)}
 						on:contextmenu|preventDefault draggable="false"
-						class="bg-[#dfeaf2]/80 py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto"
+						class="bg-gray py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
+						style="background: {isDead ? 'black' : 'gray'}"
+						class:bg-black={isDead}
 						><div class="flex">
-							{$players[index].playerName}
+							<span style="font-size: xx-large; color: white;">{$players[index].playerName}</span>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center ml-2">
 									<FirstPlace />
@@ -153,7 +139,7 @@
 								<Skull />
 							</div>
 						{/if}
-						<span class="text-black text-7xl shadow-lg" class:opacity-25={isDead}> {$players[index].lifeTotal}</span>
+						<span class="text-black text-8xl text-shadow-lg/55" class:opacity-25={isDead}> {$players[index].lifeTotal}</span>
 					</div>
 					<span class="w-16 text-center"
 						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span

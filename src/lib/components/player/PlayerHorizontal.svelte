@@ -7,6 +7,7 @@
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
 	import { manageLifeTotal, players } from '$lib/store/player';
+	import { colorToBg } from '$lib/components/colorToBg';
 
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
@@ -18,23 +19,6 @@
 	$: isMobile = innerWidth < 640;
 	$: index = id - 1;
 	$: isDead = ($players[index].lifeTotal <= 0) || (($players[index].poison ?? 0) >= 10);
-
-	const colorToBg = (c: string) => {
-		switch (c) {
-			case 'blue':
-				return '#d8e5f7';
-			case 'black':
-				return '#e9e9ee';
-			case 'red':
-				return '#fde8e8';
-			case 'green':
-				return '#e8f7e8';
-			case 'white':
-			default:
-				return '#ffffff';
-		}
-	};
-
 	$: bg = colorToBg($players[index].color ?? 'white');
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
@@ -98,7 +82,7 @@
 	class="flex w-full rounded-3xl flex-grow h-6"
 	style="background: {bg};"
 	class:h-full={!$appState.isMenuOpen}
-	class:bg-player-light={$players[index].highlighted}
+	class:opacity-65={$players[index].highlighted}
 	class:bg-player-dark={isDead}
 >
 	{#if !$appState.isMenuOpen}
@@ -138,12 +122,13 @@
 					<button
 						on:click={() => openPlayerModal(id)}
 						on:contextmenu|preventDefault draggable="false"
-						class="bg-[#dfeaf2]/80 py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert"
+						class="bg-gray py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert shadow-lg"
 						class:rotate-180={orientation === 'left'}
-						class:bg-darkgray={isDead}
+						style="background: {isDead ? 'black' : 'gray'}"
+						class:bg-black={isDead}
 					>
 						<div class="flex items-center">
-							<span style="font-size: xx-large;">{$players[index].playerName}</span>
+							<span style="font-size: xx-large; color: white;">{$players[index].playerName}</span>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center mt-2 rotate-90">
 									<FirstPlace />
@@ -170,7 +155,7 @@
 							</div>
 						{/if}
 						<span
-							class="text-black text-6xl flex items-center text-center shadow-lg"
+							class="text-black text-7xl flex items-center text-center text-shadow-lg/55"
 							class:text-5xl={$appSettings.playerCount >= 5}
 							class:-rotate-180={orientation === 'left'}
 							class:opacity-25={isDead}

@@ -3,6 +3,7 @@
 	import X from '$lib/assets/icons/X.svelte';
 	import { playerModalData, resetPlayerModalData } from '$lib/store/modal';
 	import { players, setPlayerColor } from '$lib/store/player';
+	import { colorToBg } from '$lib/components/colorToBg';
 	import { _ } from 'svelte-i18n';
 
 	const handleOnKeyPress = (event: KeyboardEvent) => {
@@ -35,7 +36,7 @@
 		<div class="flex flex-col justify-center">
 			<div class="flex flex-col justify-center items-center">
 				<h2 class="text-lg font-semibold my-2 relative w-full text-center">
-					{ $_('customize_player') }<button on:click={resetPlayerModalData} on:contextmenu|preventDefault draggable="false" class="absolute -right-4 top-0"
+					{ $_('customize_player') }<button on:click={resetPlayerModalData} on:contextmenu|preventDefault draggable="false" class="absolute -right-0 top-0"
 						><X /></button
 					>
 				</h2>
@@ -51,15 +52,15 @@
 				<div class="mt-4">
 					<label class="block mb-2 font-semibold">{ $_('player_background_color') }</label>
 					<div class="flex gap-2">
-						{#each ['white','blue','black','red','green'] as c}
+						{#each ['mud', 'metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen', 'white','blue','black','red','green'] as c}
 							<button
 								on:click={() => setPlayerColor($playerModalData.playerId, c)}
-								class="w-8 h-8 rounded-full border-2"
-								style="background: {c === 'white' ? '#ffffff' : c === 'blue' ? '#d8e5f7' : c === 'black' ? '#e9e9ee' : c === 'red' ? '#fde8e8' : '#e8f7e8'}"
+								class="w-8 h-8 rounded-square rounded-lg border-2"
+								style="background: {colorToBg(c)}"
 								aria-label={c}
 							>
 								{#if $players[$playerModalData.playerId - 1].color === c}
-									<span class="block w-full h-full rounded-full" style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"></span>
+									<span class="block w-full h-full rounded-square rounded-lg" style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"></span>
 								{/if}
 							</button>
 						{/each}

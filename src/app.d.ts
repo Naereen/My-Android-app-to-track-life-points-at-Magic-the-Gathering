@@ -13,6 +13,7 @@ declare global {
 				id: number;
 				lifeTotal: number;
 				playerName: string;
+				color: string;
 				tempLifeDiff: number;
 				poison?: number;
 				highlighted: boolean;
