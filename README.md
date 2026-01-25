@@ -319,11 +319,7 @@ Contributions are welcome! Feel free to:
 
 ## 📋 TODO / Feature Ideas
 
-- [ ] Dead player icon
-- [ ] Confirmation menus overhaul
-- [ ] Tests
-- [ ] Custom Player backgrounds
-- [ ] Player damage type tracking
+See the [TODO-ROADMAP.md](TODO-ROADMAP.md) file for a list of planned features and improvements.
 
 ## 📝 License
 
