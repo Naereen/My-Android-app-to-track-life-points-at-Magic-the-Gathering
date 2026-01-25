@@ -6,9 +6,14 @@
 
 - [x] Write a `manifest.json` for PWA support
   - [x] It had MANY issues! I think I fixed them all now.
+  - [x] Test installing the PWA on desktop (Windows, macOS, Linux)
   - [x] Test installing the PWA on Android devices
   - [ ] Test installing the PWA on Apple devices (iOS/iPadOS)
-  - [ ] Test installing the PWA on desktop (Windows, macOS, Linux)
+
+- [x] Turn off the zooming on mobile devices (pinch to zoom), as it breaks the UI
+- [x] Turn off the feature of mobile devices to shut down the screen after some time of inactivity (it breaks the immersive experience of the games)
+
+- [ ] Turn off the feature of mobile devices to show the "download / share / print" menu on long click (it breaks the UI)
 
 ## State saving improvements
 
@@ -17,8 +22,10 @@
 ## Translating the app
 
 - [ ] Add internationalization (i18n) support
-  - [ ] English (default)
-  - [ ] French (my native language)
+  - [x] English (default)
+  - [x] French (my native language)
+
+- [ ] Add more languages, if the technical framework is working well:
   - [ ] Spanish
   - [ ] German
   - [ ] Italian
