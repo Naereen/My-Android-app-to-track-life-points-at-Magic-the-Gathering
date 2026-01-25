@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Naereen-MTG-Life-Tracker",
+  "productName": "Naereen's MTG Life Tracker",
   "version": "0.1.0",
-  "identifier": "link.besson.mtglifetracker",
+  "identifier": "com.tauri.dev",
   "build": {
     "frontendDist": "../build/",
     "devUrl": "http://localhost:5173/",
@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "Naereen MTG Life Tracker",
-        "width": 2400,
-        "height": 1080,
+        "title": "Naereen's MTG Life Tracker",
+        "width": 1080,
+        "height": 2412,
         "resizable": true,
         "fullscreen": false
       }

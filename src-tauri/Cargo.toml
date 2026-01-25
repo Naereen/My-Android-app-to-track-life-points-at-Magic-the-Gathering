@@ -1,17 +1,17 @@
 [package]
-name = "Naereen-MTG-Life-Tracker"
+name = "Naereen's MTG Life Tracker"
 version = "0.1.0"
 description = "Naereen's MTG Life Tracker"
-authors = ["Naereen"]
-license = "MIT License"
+authors = ["you"]
+license = ""
 repository = ""
-edition = "2024"
-rust-version = "1.93.0"
+edition = "2021"
+rust-version = "1.77.2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-name = "app_lib"
+name = "naereens_mtg_life_tracker"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
