@@ -170,14 +170,14 @@
 
 		<!-- Reset local storage placed at the bottom so user can scroll to it -->
 		<div class="w-full flex justify-center mt-4 mb-4">
-			<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+				<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
 					checked={$appSettings.allowNegativeLife}
 					on:change={handleGlobalAllowChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2">{ $_('allow_negative_life_global') }</span>
+					<span class="ml-2 text-lg font-semibold">{ $_('allow_negative_life_global') }</span>
 			</label>
 		</div>
 		<div class="w-full flex justify-center mt-8 mb-8">
@@ -187,6 +187,21 @@
 			>
 				{ $_('reset_local_storage') }
 			</button>
+		</div>
+
+		<!-- About section -->
+		<div class="w-full text-center text-gray-400 mt-4 mb-8 px-6">
+			<div class="text-sm mb-2">{ $_('about_title') }</div>
+			<div class="text-xs mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.1.0'}</div>
+			<div class="text-xs mb-1">{ $_('about_author') }: Naereen</div>
+			<div class="text-xs mb-2">{ $_('about_license') }: MIT</div>
+			<div class="text-sm mb-2">{ $_('about_thanks') }</div>
+			<div class="flex justify-center gap-4 mt-2">
+				<a class="text-blue-400 underline text-sm" href="https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering" target="_blank" rel="noreferrer">{ $_('about_github') }</a>
+				<!-- TODO: Optional links: Play Store / Feedback - shown as placeholders -->
+				<!-- <a class="text-blue-400 underline text-sm" href="#" on:click|preventDefault={() => null}>{ $_('about_playstore') }</a> -->
+				<!-- <a class="text-blue-400 underline text-sm" href="#" on:click|preventDefault={() => null}>{ $_('about_feedback') }</a> -->
+			</div>
 		</div>
 	</div>
 </div>

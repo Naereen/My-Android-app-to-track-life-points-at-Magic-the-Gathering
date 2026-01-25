@@ -33,4 +33,12 @@
     "allow_negative_life_help": "Player is not marked dead when life ≤ 0",
     "allow_negative_life_global": "Allow negative life (global)",
     "allow_negative_life_global_help": "When enabled, no player is marked dead for having ≤ 0 life (unless per-player override is off)"
+    ,"about_title": "About",
+    "about_version": "Version",
+    "about_author": "Author",
+    "about_license": "License",
+    "about_thanks": "Huge thanks to Michael Bourkas for Lifetap, this is a personal clone, produced simply to practice and learn and experiment with Svelte, TypeScript etc.",
+    "about_github": "GitHub repo",
+    "about_playstore": "Google Play (when published)",
+    "about_feedback": "Feedback / Bug report"
 }

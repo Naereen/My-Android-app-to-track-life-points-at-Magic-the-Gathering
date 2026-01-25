@@ -45,7 +45,7 @@
 
 - [x] Dead player icon: when a player is dead (life <= 0 or poison >= 10), show a skull icon next to their name, and gray out their life total
   - [x] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect), by adding a toggle for that feature, in the player edit dialog (playerwise)
-  - [ ] Allow negative life totals! (global setting)
+  - [x] Allow negative life totals! (global setting)
 
 - [x] Replace all `window.confirm` calls with custom modal dialogs integrated in the app, much nicer and prettier
 
@@ -73,7 +73,11 @@
 
 - [ ] Implement two layouts for the four-players mode:
   - [ ] A "1 / 2 / 1" layout, if players are seated on a round table
-  - [ ] A "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant, it is already implemented)
+  - [ ] A "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
+
+- [ ] Implement two layouts for the six-players mode:
+  - [ ] A "|::|" layout (one long | player on the left and the right, and in the middle like a Two-Headed Giant layout), if players are seated on a round table
+  - [ ] A ":::" layout (2 lines of 3 columns), if players are seated on opposite sides of a rectangular table (classic mode for Emperor mode, it is already implemented)
 
 ## Successfully build a working apk file
 
@@ -86,19 +90,19 @@
 
 ## Better menus and dialogs
 
-- [ ] Confirmation menus overhaul
-  - [ ] Improve the "reset game" dialog
-  - [ ] Improve the "new player" dialog
-  - [ ] Improve the "edit player" dialog
+- [x] Confirmation menus overhaul
+  - [x] Improve the "reset game" dialog
+  - [x] Improve the "new player" dialog
+  - [x] Improve the "edit player" dialog
 
-- [ ] Implement the "settings" dialog
+- [x] Implement the "settings" dialog
 - [ ] Implement the "about" dialog
 
 ---------------------------------------------------------------------------
 
 ## New features
 
-- [ ] Custom Player backgrounds
+- [x] Custom Player backgrounds
   - [x] With a simple color picker : one color of mana, and that's it
   - [x] If clicking on a color after it is already selected, deselect it (go back to default background)
   - [x] With a color gradient picker: two colors of mana, gradient between the two
