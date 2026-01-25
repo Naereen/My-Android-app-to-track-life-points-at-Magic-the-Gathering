@@ -15,6 +15,9 @@
 
 - [ ] Turn off the feature of mobile devices to show the "download / share / print" menu on long click (it breaks the UI)
 
+- [ ] Reduce the vertical space taken by the "ressources" menu (mana/storm symbols)
+- [ ] Increase the font-size of the names of the players, especially on mobile devices
+
 ## State saving improvements
 
 - [ ] Save the state in the local storage of the browser, so that reloading the page does not reset everything

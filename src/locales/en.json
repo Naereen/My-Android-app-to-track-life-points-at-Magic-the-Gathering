@@ -1,0 +1,9 @@
+{
+    "app_name": "MTG Life Tracker by Naereen",
+    "life": "Life Points",
+    "poison": "Poison",
+    "commander_damage": "Commander Damage",
+    "settings": "Settings",
+    "reset_confirm": "Are you sure you want to reset the game?",
+    "player": "Player"
+}

@@ -1,0 +1,9 @@
+{
+    "app_name": "MTG Tracker de Points de Vie de Naereen",
+    "life": "Points de vie",
+    "poison": "Poison",
+    "commander_damage": "Dégâts de Commandant",
+    "settings": "Paramètres",
+    "reset_confirm": "Voulez-vous vraiment réinitialiser la partie ?",
+    "player": "Joueur-se"
+}

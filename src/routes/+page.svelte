@@ -35,6 +35,9 @@
 			}
 		});
 	});
+
+	// import { _ } from 'svelte-i18n';
+	// import './lib/utils/i18n.js'; // Importation pour initialiser i18n
 </script>
 
 <svelte:window bind:innerWidth />
