@@ -21,5 +21,6 @@
     "starting_life": "Anfangslebenspunkte",
     "window_confirm_change_life_total": "Möchten Sie mit diesen Lebenspunkten fortfahren?",
     "window_confirm_change_player_count": "Möchten Sie mit dieser Spieleranzahl fortfahren?",
-    "window_confirm_reset_game": "Möchten Sie das Spiel wirklich zurücksetzen?"
+    "window_confirm_reset_game": "Möchten Sie das Spiel wirklich zurücksetzen?",
+    "player_background_color": "Farbauswahl"
 }
