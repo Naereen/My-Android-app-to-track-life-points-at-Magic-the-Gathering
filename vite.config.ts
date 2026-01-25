@@ -8,6 +8,7 @@ export default defineConfig({
 		VitePWA({
 			mode: 'development',
 			// base: '/',
+			// base: '/My-Android-app-to-track-life-points-at-Magic-the-Gathering/',
 			// generate a manifest named `manifest.json` and a service worker named `service-worker.js`
 			manifestFilename: 'manifest.json',
 			filename: 'service-worker.js',
