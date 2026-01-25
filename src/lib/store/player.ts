@@ -1,17 +1,19 @@
-import { get, writable, type Writable } from 'svelte/store';
+import { get, writable, derived, type Writable } from 'svelte/store';
 import { appSettings } from './appSettings';
-
-// i18n language toggle
-import { _ } from 'svelte-i18n';
-import '../utils/i18n.js'; // Importation pour initialiser
+import { _ } from 'svelte-i18n';  // i18n language toggle
 
 const playerBaseName = get(_)('player') || 'Player';
+
+// Au lieu d'une valeur statique, créez un store dérivé pour les labels
+export const playerBaseName2 = derived(_, ($_t) => {
+    return $_t('player') || 'Player';
+});
 
 export const players: Writable<App.Player.Data[]> = writable([
 	{
 		id: 1,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: playerBaseName + ' 1',
+		playerName: `${playerBaseName} 1`,
 		tempLifeDiff: 0,
 		isFirst: false,
 		highlighted: false
@@ -19,7 +21,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 	{
 		id: 2,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: playerBaseName + ' 2',
+		playerName: `${playerBaseName} 2`,
 		tempLifeDiff: 0,
 		isFirst: false,
 		highlighted: false
@@ -27,7 +29,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 	{
 		id: 3,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: playerBaseName + ' 3',
+		playerName: `${playerBaseName} 3`,
 		tempLifeDiff: 0,
 		isFirst: false,
 		highlighted: false
@@ -35,7 +37,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 	{
 		id: 4,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: playerBaseName + ' 4',
+		playerName: `${playerBaseName} 4`,
 		tempLifeDiff: 0,
 		isFirst: false,
 		highlighted: false
@@ -43,7 +45,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 	{
 		id: 5,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: playerBaseName + ' 5',
+		playerName: `${playerBaseName} 5`,
 		tempLifeDiff: 0,
 		isFirst: false,
 		highlighted: false
@@ -51,7 +53,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 	{
 		id: 6,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: playerBaseName + ' 6',
+		playerName: `${playerBaseName} 6`,
 		tempLifeDiff: 0,
 		isFirst: false,
 		highlighted: false

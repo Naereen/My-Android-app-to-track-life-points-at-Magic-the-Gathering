@@ -1,5 +1,6 @@
 <script>
 	import '../app.css';
+	import '../lib/utils/i18n.js'; // Importation pour initialiser i18n
 
 	$: innerHeight = 0;
 </script>
