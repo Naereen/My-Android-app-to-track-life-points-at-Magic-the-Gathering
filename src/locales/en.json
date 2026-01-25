@@ -28,5 +28,7 @@
     "reset_local_storage": "Reset local storage",
     "window_confirm_reset_local_storage": "This will clear saved settings and game state from local storage. Continue?",
     "confirm_modal": "Confirm?",
-    "cancel_modal": "Cancel"
+    "cancel_modal": "Cancel",
+    "allow_negative_life": "Allow negative life",
+    "allow_negative_life_help": "Player is not marked dead when life ≤ 0"
 }

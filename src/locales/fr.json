@@ -29,5 +29,7 @@
     "reset_local_storage": "Réinitialiser le stockage local",
     "window_confirm_reset_local_storage": "Cela effacera les paramètres et l'état de la partie enregistrés dans le stockage local. Continuer ?",
     "confirm_modal": "Confirmer ?",
-    "cancel_modal": "Annuler"
+    "cancel_modal": "Annuler",
+    "allow_negative_life": "Autoriser vie négative",
+    "allow_negative_life_help": "Ne pas marquer le joueur comme mort si ses PV ≤ 0"
 }

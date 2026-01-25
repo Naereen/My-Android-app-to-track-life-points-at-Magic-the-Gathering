@@ -44,9 +44,9 @@
 ## Player status and visualization improvements
 
 - [x] Dead player icon: when a player is dead (life <= 0 or poison >= 10), show a skull icon next to their name, and gray out their life total
-  - [ ] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect) - FIXME: need to add a toggle for that in the player edit dialog
+  - [x] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect), by adding a toggle for that feature, in the player edit dialog (playerwise)
 
-- [ ] Replace all `window.confirm` calls with custom modal dialogs integrated in the app, much nicer and prettier
+- [x] Replace all `window.confirm` calls with custom modal dialogs integrated in the app, much nicer and prettier
 
 - [ ] Add support for the poison counter
   - [ ] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app

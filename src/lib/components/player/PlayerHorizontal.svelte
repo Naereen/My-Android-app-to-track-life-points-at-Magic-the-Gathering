@@ -18,7 +18,7 @@
 	$: innerWidth = 0;
 	$: isMobile = innerWidth < 640;
 	$: index = id - 1;
-	$: isDead = ($players[index].lifeTotal <= 0) || (($players[index].poison ?? 0) >= 10);
+	$: isDead = (($players[index].lifeTotal <= 0) && !$players[index].allowNegativeLife) || (($players[index].poison ?? 0) >= 10);
 	$: bg = colorToBg($players[index].color ?? 'white');
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {

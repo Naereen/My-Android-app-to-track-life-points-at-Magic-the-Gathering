@@ -14,6 +14,7 @@ const defaultPlayers: App.Player.Data[] = [
 		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
+		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
 		isDead: false
@@ -25,6 +26,7 @@ const defaultPlayers: App.Player.Data[] = [
 		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
+		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
 		isDead: false
@@ -36,6 +38,7 @@ const defaultPlayers: App.Player.Data[] = [
 		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
+		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
 		isDead: false
@@ -47,6 +50,7 @@ const defaultPlayers: App.Player.Data[] = [
 		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
+		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
 		isDead: false
@@ -58,6 +62,7 @@ const defaultPlayers: App.Player.Data[] = [
 		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
+		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
 		isDead: false
@@ -69,6 +74,7 @@ const defaultPlayers: App.Player.Data[] = [
 		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
+		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
 		isDead: false
@@ -84,6 +90,20 @@ export const setPlayerColor = (playerId: number, color: string) => {
 				return {
 					...player,
 					color
+				};
+			}
+			return player;
+		});
+	});
+};
+
+export const setPlayerAllowNegative = (playerId: number, allow: boolean) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					allowNegativeLife: allow
 				};
 			}
 			return player;

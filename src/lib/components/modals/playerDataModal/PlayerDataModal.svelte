@@ -2,7 +2,7 @@
 	import Pen from '$lib/assets/icons/Pen.svelte';
 	import X from '$lib/assets/icons/X.svelte';
 	import { playerModalData, resetPlayerModalData } from '$lib/store/modal';
-	import { players, setPlayerColor } from '$lib/store/player';
+	import { players, setPlayerColor, setPlayerAllowNegative } from '$lib/store/player';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { _ } from 'svelte-i18n';
 
@@ -69,7 +69,7 @@
 >
 	<div
 		on:click|stopPropagation
-		class="bg-[#d8e5f7] max-w-80 max-h-80 w-full h-full opacity-100 rounded-[2rem] flex justify-center items-start text-black p-2 relative"
+		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[90vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative"
 		role="button"
 		on:keydown={() => null}
 		tabindex="0"
@@ -90,7 +90,7 @@
 					/>
 					<div class="absolute right-3 top-2 pointer-events-none"><Pen /></div>
 				</div>
-				<div class="mt-4 flex flex-col justify-center items-center w-full ml-10 mr-10">
+				<div class="mt-4 flex flex-col justify-center items-center w-full px-6 sm:px-10">
 					<label class="block mb-2 font-semibold">{ $_('player_background_color') }</label>
 					<div class="flex items-center gap-3 mb-2">
 						<label class="flex items-center gap-2 text-sm"><input type="checkbox" bind:checked={gradientMode} /> { $_('gradient_mode') }</label>
@@ -144,6 +144,12 @@
 								{/if}
 							</button>
 						{/each}
+
+						<!-- Allow negative life toggle placed after color options -->
+						<div class="mt-4 w-full flex flex-col items-start">
+							<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].allowNegativeLife} on:change={() => setPlayerAllowNegative($playerModalData.playerId, !$players[$playerModalData.playerId - 1].allowNegativeLife)} /> <span class="ml-2 block mb-2 font-semibold">{ $_('allow_negative_life') }</span></label>
+							<div class="mt-2 text-sm text-gray-600">{ $_('allow_negative_life_help') }</div>
+						</div>
 					</div>
 				</div>
 			</div>

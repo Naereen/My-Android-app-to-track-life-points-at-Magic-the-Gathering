@@ -29,5 +29,7 @@
     "reset_local_storage": "Lokalen Speicher zurücksetzen",
     "window_confirm_reset_local_storage": "Dies löscht gespeicherte Einstellungen und den Spielstand aus dem lokalen Speicher. Fortfahren?",
     "confirm_modal": "Bestätigen?",
-    "cancel_modal": "Abbrechen"
+    "cancel_modal": "Abbrechen",
+    "allow_negative_life": "Negative Lebenspunkte erlauben",
+    "allow_negative_life_help": "Der Spieler wird nicht als tot markiert, wenn die Lebenspunkte ≤ 0 sind"
 }

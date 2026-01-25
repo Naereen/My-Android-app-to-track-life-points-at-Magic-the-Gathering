@@ -16,6 +16,7 @@ declare global {
 				color: string;
 				tempLifeDiff: number;
 				poison?: number;
+				allowNegativeLife?: boolean;
 				highlighted: boolean;
 				isFirst: boolean;
 				isDead: boolean;
