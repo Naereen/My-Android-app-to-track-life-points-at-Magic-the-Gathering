@@ -11,6 +11,17 @@
 	import { resetLifeTotals } from '$lib/store/player';
 	import { _ } from 'svelte-i18n';
 
+	const resetLocalStorage = () => {
+		const confirmReset = window.confirm($_('window_confirm_reset_local_storage'));
+		if (!confirmReset) return;
+		try {
+			['appSettings', 'resourceCounter', 'appState', 'players'].forEach((k) => localStorage.removeItem(k));
+		} catch (e) {
+			// ignore
+		}
+		window.location.reload();
+	};
+
 	const isCustomStartingLife = () => {
 		return (
 			$appSettings.startingLifeTotal !== 20 &&
@@ -64,20 +75,32 @@
 	};
 
 	$: innerHeight = 0;
+
+	const handleScrollKeydown = (event: KeyboardEvent) => {
+		const target = event.currentTarget as HTMLElement;
+		if (!target) return;
+		if (event.key === 'ArrowDown') {
+			target.scrollBy({ top: 48, behavior: 'smooth' });
+			event.preventDefault();
+		} else if (event.key === 'ArrowUp') {
+			target.scrollBy({ top: -48, behavior: 'smooth' });
+			event.preventDefault();
+		}
+	};
 </script>
 
 <svelte:window bind:innerHeight />
 
+
 <div
-	class="w-full overflow-scroll scrollbar-hidden h-full"
-	style="max-height: {innerHeight - 80}px;"
+	class="w-full overflow-y-auto scrollbar-hidden h-full"
+	style="max-height: {innerHeight - 80}px; -webkit-overflow-scrolling: touch;"
+	tabindex="0"
+	on:keydown={handleScrollKeydown}
 >
-	<div
-		class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black"
-	>
+	<div class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black">
 		<button on:click={() => toggleIsMenuOpen('')} on:contextmenu|preventDefault draggable="false" class="text-white absolute left-0 pl-4"
-			><Arrow /></button
-		>
+			><Arrow /></button>
 		<span class="text-gray-400 text-center" style="font-size: xxx-large;">{ $_('settings') }</span>
 	</div>
 
@@ -98,6 +121,8 @@
 					{/key}
 				{/each}
 			</div>
+
+				<!-- reset button moved to bottom of menu -->
 		</div>
 
 		<!-- Starting Life Total -->
@@ -136,6 +161,16 @@
 					{/key}
 				{/each}
 			</div>
+		</div>
+
+		<!-- Reset local storage placed at the bottom so user can scroll to it -->
+		<div class="w-full flex justify-center mt-8 mb-8">
+			<button
+				class="bg-red-600 text-white px-4 py-2 rounded-full"
+				on:click={resetLocalStorage}
+			>
+				{ $_('reset_local_storage') }
+			</button>
 		</div>
 	</div>
 </div>

@@ -1,14 +1,18 @@
-import { writable, type Writable } from 'svelte/store';
+import { type Writable } from 'svelte/store';
+import { persist } from './persist';
 
-export const resourceCounter: Writable<{ [key in App.Resources.Resource]: number }> = writable({
-	white: 0,
-	blue: 0,
-	black: 0,
-	red: 0,
-	green: 0,
-	waste: 0,
-	storm: 0
-});
+export const resourceCounter: Writable<{ [key in App.Resources.Resource]: number }> = persist(
+	'resourceCounter',
+	{
+		white: 0,
+		blue: 0,
+		black: 0,
+		red: 0,
+		green: 0,
+		waste: 0,
+		storm: 0
+	}
+);
 
 export const setResource = (resourceType: App.Resources.Resource, count: number) => {
 	resourceCounter.update((currentResources) => {

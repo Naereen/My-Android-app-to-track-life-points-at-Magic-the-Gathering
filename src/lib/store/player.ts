@@ -1,10 +1,11 @@
-import { get, writable, derived, type Writable } from 'svelte/store';
+import { get, type Writable } from 'svelte/store';
 import { appSettings } from './appSettings';
-import { _ } from 'svelte-i18n';  // i18n language toggle
+import { _ } from 'svelte-i18n'; // i18n language toggle
+import { persist } from './persist';
 
 const playerBaseName = get(_)('player') || 'Player';
 
-export const players: Writable<App.Player.Data[]> = writable([
+const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 1,
 		lifeTotal: get(appSettings).startingLifeTotal,
@@ -71,7 +72,9 @@ export const players: Writable<App.Player.Data[]> = writable([
 		highlighted: false,
 		isDead: false
 	}
-]);
+];
+
+export const players: Writable<App.Player.Data[]> = persist('players', defaultPlayers);
 
 export const setPlayerColor = (playerId: number, color: string) => {
 	players.update((currentPlayers) => {

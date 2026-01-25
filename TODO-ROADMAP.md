@@ -20,18 +20,21 @@
 
 ## State saving improvements
 
-- [ ] Save the state in the local storage of the browser, so that reloading the page does not reset everything
+- [x] Save the state in the local storage of the browser, so that reloading the page does not reset everything
+  - [x] Save the app settings (number of players, starting life total, etc.)
+  - [x] Save the players state (life totals, commander damage, etc.)
+  - [ ] Add a button to reset the local storage (clear saved settings and game state), FIXME: need to center it on the bottom of the settings menu
 
-## Translating the app
+## DONE - Translating the app : 5 languages so far!
 
 - [x] Add internationalization (i18n) support
   - [x] English (default)
   - [x] French (my native language)
 
-- [ ] Add more languages, if the technical framework is working well:
+- [x] Add more languages, if the technical framework is working well:
   - [x] Spanish
-  - [ ] German - TODO: ask Raphael?
-  - [ ] Italian - TODO: ask Patrizio?
+  - [x] German
+  - [x] Italian
 
 ## Bugs fixing:
 
@@ -41,7 +44,9 @@
 ## Player status and visualization improvements
 
 - [x] Dead player icon: when a player is dead (life <= 0 or poison >= 10), show a skull icon next to their name, and gray out their life total
-  - [ ] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect)
+  - [ ] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect) - FIXME: need to add a toggle for that in the player edit dialog
+
+- [ ] Replace all `window.confirm` calls with custom modal dialogs integrated in the app, much nicer and prettier
 
 - [ ] Add support for the poison counter
   - [ ] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
@@ -87,8 +92,10 @@
 
 - [ ] Custom Player backgrounds
   - [x] With a simple color picker : one color of mana, and that's it
-  - [ ] If clicking on a color after it is already selected, deselect it (go back to default background)
-  - [ ] With a color gradient picker: two colors of mana, gradient between the two
+  - [x] If clicking on a color after it is already selected, deselect it (go back to default background)
+  - [x] With a color gradient picker: two colors of mana, gradient between the two
+
+- [ ] Even better custom Player backgrounds
   - [ ] With a card search to pick a card as background
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders
 

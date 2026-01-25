@@ -1,6 +1,6 @@
-import { writable } from 'svelte/store';
+import { persist } from './persist';
 
-export const appState = writable({
+export const appState = persist('appState', {
 	isMenuOpen: false,
 	activeMenu: ''
 });

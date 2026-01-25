@@ -25,4 +25,7 @@
     "player_background_color": "Choix de couleur",
     "clear_gradient": "Effacer",
     "gradient_mode": "Mode dégradé"
+    ,
+    "reset_local_storage": "Réinitialiser le stockage local",
+    "window_confirm_reset_local_storage": "Cela effacera les paramètres et l'état de la partie enregistrés dans le stockage local. Continuer ?"
 }

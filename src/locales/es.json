@@ -25,4 +25,7 @@
     "player_background_color": "Personalizar color",
     "clear_gradient": "Borrar",
     "gradient_mode": "Modo degradado"
+    ,
+    "reset_local_storage": "Restablecer almacenamiento local",
+    "window_confirm_reset_local_storage": "Esto borrará la configuración y el estado de la partida guardados en el almacenamiento local. ¿Continuar?"
 }

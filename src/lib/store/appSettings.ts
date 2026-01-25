@@ -1,6 +1,7 @@
-import { get, writable, type Writable } from 'svelte/store';
+import { type Writable } from 'svelte/store';
+import { persist } from './persist';
 
-export const appSettings = writable({
+export const appSettings: Writable<App.Settings> = persist('appSettings', {
 	playerCount: 4,
 	startingLifeTotal: 40,
 	customStartingLifeTotal: 60,

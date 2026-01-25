@@ -24,5 +24,7 @@
     "window_confirm_reset_game": "Are you sure you want to reset the game?",
     "player_background_color": "Customize Color",
     "clear_gradient": "Clear",
-    "gradient_mode": "Gradient Mode"
+    "gradient_mode": "Gradient Mode",
+    "reset_local_storage": "Reset local storage",
+    "window_confirm_reset_local_storage": "This will clear saved settings and game state from local storage. Continue?"
 }
