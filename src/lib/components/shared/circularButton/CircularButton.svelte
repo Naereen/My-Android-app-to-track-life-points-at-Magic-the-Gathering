@@ -17,7 +17,7 @@
 	}
 </script>
 
-<button class="rounded-full flex justify-center items-center {outline} {outerSize}" on:click>
+<button class="rounded-full flex justify-center items-center {outline} {outerSize}" on:click on:contextmenu|preventDefault draggable="false">
 	<div class="rounded-full bg-[#2d2f30] {innerSize}">
 		<span class="text-white flex justify-center items-center h-full">
 			{#if customText}

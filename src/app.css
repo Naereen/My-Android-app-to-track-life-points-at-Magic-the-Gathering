@@ -37,3 +37,12 @@
 		-ms-overflow-style: none; /* IE and Edge */
 	}
 }
+
+.no-longpress, .no-longpress img, .no-longpress svg {
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none; /* iOS */
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}

@@ -42,7 +42,7 @@
 		<div
 			class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black"
 		>
-			<button on:click={() => toggleIsMenuOpen('')} class="text-white absolute left-0 pl-4">
+			<button on:click={() => toggleIsMenuOpen('')} on:contextmenu|preventDefault draggable="false" class="text-white absolute left-0 pl-4">
 				<Arrow />
 			</button>
 			<span class="text-gray-400 text-center" style="font-size: xxx-large;">{ $_('dice_misc') }</span>

@@ -87,6 +87,7 @@
 				on:mouseup={() => handleMouseUp('subtract')}
 				on:touchstart={() => handleTouchStart('subtract')}
 				on:touchend={() => handleTouchEnd('subtract')}
+				on:contextmenu|preventDefault draggable="false"
 				class="w-1/2 flex justify-start items-center active:bg-player-light rounded-l-3xl select-none"
 			>
 				<Minus />
@@ -96,6 +97,7 @@
 				on:mouseup={() => handleMouseUp('add')}
 				on:touchstart={() => handleTouchStart('add')}
 				on:touchend={() => handleTouchEnd('add')}
+				on:contextmenu|preventDefault draggable="false"
 				class="w-1/2 flex justify-end items-center active:bg-player-light rounded-r-3xl select-none"
 			>
 				<Plus />
@@ -106,6 +108,7 @@
 				<div class="grow h-1/3 text-center">
 					<button
 						on:click={() => openPlayerModal(id)}
+						on:contextmenu|preventDefault draggable="false"
 						class="bg-[#dfeaf2]/80 py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto"
 						><div class="flex">
 							{$players[index].playerName}

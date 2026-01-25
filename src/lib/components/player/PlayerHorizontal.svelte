@@ -87,6 +87,7 @@
 					on:mouseup={() => handleMouseUp('subtract')}
 					on:touchstart={() => handleTouchStart('subtract')}
 					on:touchend={() => handleTouchEnd('subtract')}
+					on:contextmenu|preventDefault draggable="false"
 					class="w-full h-1/2 flex justify-center {orientation === 'left'
 						? 'items-end rounded-b-3xl'
 						: 'items-start rounded-t-3xl'} active:bg-player-light select-none"
@@ -98,6 +99,7 @@
 					on:mouseup={() => handleMouseUp('add')}
 					on:touchstart={() => handleTouchStart('add')}
 					on:touchend={() => handleTouchEnd('add')}
+					on:contextmenu|preventDefault draggable="false"
 					class="w-full h-1/2 flex justify-center {orientation === 'left'
 						? 'items-start rounded-t-3xl'
 						: 'items-end rounded-b-3xl'} active:bg-player-light select-none"
@@ -113,6 +115,7 @@
 				<div class="grow w-1/3 text-center flex justify-center items-center">
 					<button
 						on:click={() => openPlayerModal(id)}
+						on:contextmenu|preventDefault draggable="false"
 						class="bg-[#dfeaf2]/80 py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert"
 						class:rotate-180={orientation === 'left'}
 					>

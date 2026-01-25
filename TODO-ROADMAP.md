@@ -8,14 +8,14 @@
   - [x] It had MANY issues! I think I fixed them all now.
   - [x] Test installing the PWA on desktop (Windows, macOS, Linux)
   - [x] Test installing the PWA on Android devices
-  - [ ] Test installing the PWA on Apple devices (iOS/iPadOS)
+  - [ ] Test installing the PWA on Apple devices (iOS/iPadOS) - TODO: need an Apple device for that!
 
 - [x] Turn off the zooming on mobile devices (pinch to zoom), as it breaks the UI
 - [x] Turn off the feature of mobile devices to shut down the screen after some time of inactivity (it breaks the immersive experience of the games)
 
-- [ ] Turn off the feature of mobile devices to show the "download / share / print" menu on long click (it breaks the UI)
+- [x] Turn off the feature of mobile devices to show the "download / share / print" menu on long click (it breaks the UI)
 
-- [ ] Reduce the vertical space taken by the "ressources" menu (mana/storm symbols)
+- [x] Reduce the vertical space taken by the "ressources" menu (mana/storm symbols) ==> NOPE
 - [x] Increase the font-size of the names of the players, especially on mobile devices
 
 ## State saving improvements
@@ -35,7 +35,7 @@
 
 ## Bugs fixing:
 
-- [ ] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
+- [x] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
 - [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks)
 
 ## Player status improvements
