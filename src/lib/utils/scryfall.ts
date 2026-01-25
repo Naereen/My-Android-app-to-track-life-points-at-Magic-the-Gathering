@@ -15,7 +15,7 @@ async function fetchJson(url: string) {
 export async function searchCards(query: string, limit = 12): Promise<ScryfallCard[]> {
     if (!query || query.trim().length === 0) return [];
     const q = encodeURIComponent(query);
-    const url = `https://api.scryfall.com/cards/search?q=${q}&order=released&unique=cards`;
+    const url = `https://api.scryfall.com/cards/search?q=${q}&order=released&unique=art`;
     try {
         const data = await fetchJson(url);
         if (!data || !data.data) return [];

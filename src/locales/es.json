@@ -47,5 +47,7 @@
     "choose_6players_layout": "Elegir diseño para 6 jugadores",
     "open_customize_backgrounds": "Ilustraciones",
     "open_customize_colors": "Colores",
-    "choose_your_language": "Elige tu idioma"
+    "choose_your_language": "Elige tu idioma",
+    "scryfall_searching": "Buscando en Scryfall...",
+    "scryfall_search": "Buscar"
 }

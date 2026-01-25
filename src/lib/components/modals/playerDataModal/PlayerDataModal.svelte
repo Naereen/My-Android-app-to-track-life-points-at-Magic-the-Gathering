@@ -121,8 +121,8 @@
 					{#if mode === 'backgrounds'}
 						<div class="w-full mb-3">
 							<div class="flex gap-2">
-								<input type="text" class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black" bind:value={searchQuery} placeholder="Search card name..." />
-								<button class="px-3 py-2 bg-blue-500 text-white rounded-lg" on:click={doSearch} disabled={isSearching}>{isSearching ? 'Searching...' : 'Search'}</button>
+								<input type="text" class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black" bind:value={searchQuery} placeholder={ $_('scryfall_search') + " card name..." } />
+								<button class="px-3 py-2 bg-blue-500 text-white rounded-lg" on:click={doSearch} disabled={isSearching}>{isSearching ? $_('scryfall_searching') : $_('scryfall_search')}</button>
 							</div>
 						</div>
 						<div class="w-full max-h-60 overflow-auto">

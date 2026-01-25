@@ -117,7 +117,8 @@
 
 - [x] Even better custom Player backgrounds
   - [x] With a card search to pick a card as background
-  - [ ] Align the top of the illustration with the top of background area (crop the card image if needed)
+  - [x] Align the top of the illustration with the top of background area (crop the card image if needed)
+  - [x] Works fine for cards with different illustrations for the same name and edition
   - [ ] Add a "clear background" button to go back to default background
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders
 

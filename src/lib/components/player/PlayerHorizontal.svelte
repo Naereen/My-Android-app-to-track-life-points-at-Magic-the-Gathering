@@ -86,11 +86,11 @@
 <svelte:window bind:innerWidth />
 
 <div
-  	class="rounded-3xl relative h-full w-full bg-rotated"
+  	class="rounded-2xl relative h-full w-full bg-rotated"
  	style={styleVars}
 >
 <div
-	class="flex w-full rounded-3xl flex-grow h-6"
+	class="flex w-full rounded-2xl flex-grow h-6"
 	class:h-full={!$appState.isMenuOpen}
 	class:opacity-65={$players[index].highlighted}
 	class:bg-player-dark={isDead}
