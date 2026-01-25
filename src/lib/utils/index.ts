@@ -2,8 +2,11 @@ import { dev } from '$app/environment';
 
 export function optimize(src: string, widths = [640, 960, 1280], quality = 90) {
 	return './' + src; // XXX: Disable optimization for now
-	if (dev) return src;
+	// if (dev) return src;
 
+	/* Generate a srcset attribute value for Vercel's image optimization */
+	/* See https://vercel.com/docs/concepts/edge-network/image-optimization */
+	/*
 	return widths
 		.slice()
 		.sort((a, b) => a - b)
@@ -13,4 +16,5 @@ export function optimize(src: string, widths = [640, 960, 1280], quality = 90) {
 			return url + descriptor;
 		})
 		.join(', ');
+	*/
 }
