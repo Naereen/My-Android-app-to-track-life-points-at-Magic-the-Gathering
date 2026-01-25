@@ -5,7 +5,15 @@
 - [ ] Dead player icon
   - [ ] Allow a player to not be dead if life is below 0
 
-- [ ] Write a `manifest.json` for PWA support
+- [ ] Maximize to full screen on mobile devices: the "window" should take all the screen space, especially on the left/right sides
+- [x] Write a `manifest.json` for PWA support
+
+## Successfully build a working apk file
+
+- [ ] Configure the build process to generate a working apk file
+- [ ] Set up deployment to GitHub Releases so that the latest apk file is always available for download
+- [ ] Test it on my devices
+- [ ] Publish it as a beta on the Google Play Store
 
 ## Better menus and dialogs
 
