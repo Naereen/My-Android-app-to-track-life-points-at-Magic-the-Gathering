@@ -21,7 +21,7 @@
 	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10);
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgStyle = $players[index].backgroundImage
-	? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: top center;`
+		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: top center;`
 		: `background: ${bg};`;
 	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
 	$: styleVars = $players[index].backgroundImage
@@ -86,8 +86,10 @@
 <svelte:window bind:innerWidth />
 
 <div
-  	class="rounded-2xl relative h-full w-full bg-rotated"
+  	class="rounded-2xl relative h-full w-full"
+	class:bg-rotated={!!$players[index].backgroundImage}
  	style={styleVars}
+	style:background={!$players[index].backgroundImage ? bg : undefined}
 >
 <div
 	class="flex w-full rounded-2xl flex-grow h-6"
