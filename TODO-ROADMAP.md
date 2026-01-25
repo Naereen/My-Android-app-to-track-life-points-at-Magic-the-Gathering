@@ -86,7 +86,8 @@
 ## New features
 
 - [ ] Custom Player backgrounds
-  - [ ] With a simple color picker : one color of mana, and that's it
+  - [x] With a simple color picker : one color of mana, and that's it
+  - [ ] If clicking on a color after it is already selected, deselect it (go back to default background)
   - [ ] With a color gradient picker: two colors of mana, gradient between the two
   - [ ] With a card search to pick a card as background
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders

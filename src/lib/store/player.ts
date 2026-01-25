@@ -73,7 +73,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 	}
 ]);
 
-export const setPlayerColor = (playerId: number, color: 'white' | 'blue' | 'black' | 'red' | 'green') => {
+export const setPlayerColor = (playerId: number, color: string) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {

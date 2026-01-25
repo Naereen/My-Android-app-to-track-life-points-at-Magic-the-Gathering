@@ -22,5 +22,7 @@
     "window_confirm_change_life_total": "¿Estás seguro de que quieres continuar con estos totales de vida?",
     "window_confirm_change_player_count": "¿Estás seguro de que quieres continuar con este número de jugadores?",
     "window_confirm_reset_game": "¿Estás seguro de que quieres reiniciar la partida?",
-    "player_background_color": "Personalizar color"
+    "player_background_color": "Personalizar color",
+    "clear_gradient": "Borrar",
+    "gradient_mode": "Modo degradado"
 }

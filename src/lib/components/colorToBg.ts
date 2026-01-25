@@ -1,5 +1,5 @@
-const colorToBg = (c: string) => {
-	switch (c) {
+const nameToHex = (n: string) => {
+	switch (n.trim()) {
 		case 'mud':
 			return '#704214';
 		case 'metalicgray':
@@ -26,6 +26,20 @@ const colorToBg = (c: string) => {
 		default:
 			return '#ffffff';
 	}
+};
+
+const colorToBg = (c: string) => {
+	if (!c) return nameToHex('white');
+
+	// support gradients encoded as comma-separated color names
+	if (c.includes(',')) {
+		const parts = c.split(',').map((p) => nameToHex(p));
+		// produce a smooth linear gradient top->bottom
+		return `linear-gradient(0deg, ${parts.join(', ')})`;
+	}
+
+	// single color name
+	return nameToHex(c);
 };
 
 export { colorToBg };
