@@ -10,5 +10,6 @@
     "roll": "Roll",
     "set_dice": "Set",
     "flip_coin": "Flip coin",
-    "custom_number": "Custom"
+    "custom_number": "Custom",
+    "mana_counter": "Mana Counter"
 }

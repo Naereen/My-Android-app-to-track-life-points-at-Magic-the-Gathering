@@ -8,13 +8,13 @@
 	export let type: App.Resources.Resource;
 
 	const images: { [key in App.Resources.Resource]: string } = {
-		white: '/white-mana-symbol.webp',
-		blue: '/blue-mana-symbol.webp',
-		black: '/black-mana-symbol.webp',
-		red: '/red-mana-symbol.webp',
-		green: '/green-mana-symbol.webp',
-		waste: '/waste-mana-symbol.webp',
-		storm: '/storm-counter-symbol.webp'
+		white: 'white-mana-symbol.webp',
+		blue: 'blue-mana-symbol.webp',
+		black: 'black-mana-symbol.webp',
+		red: 'red-mana-symbol.webp',
+		green: 'green-mana-symbol.webp',
+		waste: 'waste-mana-symbol.webp',
+		storm: 'storm-counter-symbol.webp'
 	};
 </script>
 
@@ -25,7 +25,7 @@
 			customText
 			highlight
 			light
-			small><Minus light size="1rem" /></CircularButton
+			small><Minus light size="1.25rem" /></CircularButton
 		>
 	</div>
 	<div
@@ -42,7 +42,7 @@
 			customText
 			highlight
 			light
-			small><Plus light size="1rem" /></CircularButton
+			small><Plus light size="1.25rem" /></CircularButton
 		>
 	</div>
 </li>

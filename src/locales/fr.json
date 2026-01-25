@@ -10,5 +10,9 @@
     "roll": "Lancer",
     "set_dice": "Dé ?",
     "flip_coin": "Une pièce",
-    "custom_number": "Choisir"
+    "custom_number": "Choisir",
+    "mana_counter": "Compteur de Manas",
+    "storm_counter": "Compteur de Déluge",
+    "close": "Fermer",
+    "clear": "Vider"
 }

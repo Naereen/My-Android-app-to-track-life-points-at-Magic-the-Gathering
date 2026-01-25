@@ -5,6 +5,7 @@
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { resetResources } from '$lib/store/resources';
 	import ManaCoutner from './subcomponents/manaCoutner/ManaCoutner.svelte';
+	import { _ } from 'svelte-i18n';
 
 	$: innerHeight = 0;
 </script>
@@ -22,7 +23,7 @@
 			<button on:click={() => toggleIsMenuOpen('')} class="text-white absolute left-0 pl-4">
 				<Arrow />
 			</button>
-			<span class="text-gray-400 text-center">Mana Counter</span>
+			<span class="text-gray-400 text-center">{ $_('mana_counter') }</span>
 		</div>
 
 		<div class="flex flex-col">
@@ -39,7 +40,7 @@
 				</div>
 			</div>
 			<div class="w-full text-center text-white my-2 flex flex-col items-center">
-				<span class="text-gray-400 text-center">Storm Counter</span>
+				<span class="text-gray-400 text-center">{ $_('storm_counter') }</span>
 				<div class="w-2/4 flex justify-center">
 					<ul class="w-full">
 						<ManaCoutner type="storm" />
@@ -47,8 +48,8 @@
 				</div>
 			</div>
 			<div class="flex justify-center gap-2 py-2">
-				<Button on:click={() => toggleIsMenuOpen('')}>close</Button>
-				<Button on:click={resetResources} type="dark">clear</Button>
+				<Button on:click={() => toggleIsMenuOpen('')}>{ $_('close') }</Button>
+				<Button on:click={resetResources} type="dark">{ $_('clear') }</Button>
 			</div>
 		</div>
 	</div>
