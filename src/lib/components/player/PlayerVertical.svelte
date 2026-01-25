@@ -21,6 +21,9 @@
 	$: index = id - 1;
 	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10);
 	$: bg = colorToBg($players[index].color ?? 'white');
+	$: bgStyle = $players[index].backgroundImage
+		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: center;`
+		: `background: ${bg};`;
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -81,7 +84,7 @@
 
 <div
 	class="flex w-full rounded-3xl flex-grow h-6"
-	style="background: {bg};"
+	style={bgStyle}
 	class:h-full={!$appState.isMenuOpen}
 	class:rotate-180={orientation === 'down'}
 	class:opacity-65={$players[index].highlighted}

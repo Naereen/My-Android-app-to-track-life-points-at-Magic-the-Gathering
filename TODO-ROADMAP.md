@@ -74,7 +74,7 @@
   - [ ] Maybe an icon next to their name?
 
 - [x] Implement two layouts for the four-players mode:
-  - [ ] A "1 / 2 / 1" layout, if players are seated on a round table
+  - [x] A "1 / 2 / 1" layout, if players are seated on a round table
   - [x] A "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
 
 - [ ] Implement two layouts for the six-players mode:
@@ -82,6 +82,8 @@
   - [ ] A ":::" layout (2 lines of 3 columns), if players are seated on opposite sides of a rectangular table (classic mode for Emperor mode, it is already implemented)
 
 ## Successfully build a working apk file
+
+> Let's use [CapacitorJS.com](https://capacitorjs.com/) for that!
 
 - [ ] Configure the build process to generate a working apk file
 - [ ] Set up deployment to GitHub Releases so that the latest apk file is always available for download
@@ -98,7 +100,7 @@
   - [x] Improve the "edit player" dialog
 
 - [x] Implement the "settings" dialog
-- [ ] Implement the "about" dialog
+- [x] Implement the "about" dialog
 
 ---------------------------------------------------------------------------
 

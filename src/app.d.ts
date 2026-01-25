@@ -14,6 +14,7 @@ declare global {
 				lifeTotal: number;
 				playerName: string;
 				color: string;
+				backgroundImage?: string | null;
 				tempLifeDiff: number;
 				poison?: number;
 				allowNegativeLife?: boolean;

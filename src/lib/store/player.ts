@@ -12,6 +12,7 @@ const defaultPlayers: App.Player.Data[] = [
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 1` || 'Player 1',
 		color: 'white',
+		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		allowNegativeLife: false,
@@ -24,6 +25,7 @@ const defaultPlayers: App.Player.Data[] = [
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 2` || 'Player 2',
 		color: 'white',
+		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		allowNegativeLife: false,
@@ -36,6 +38,7 @@ const defaultPlayers: App.Player.Data[] = [
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 3` || 'Player 3',
 		color: 'white',
+		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		allowNegativeLife: false,
@@ -48,6 +51,7 @@ const defaultPlayers: App.Player.Data[] = [
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 4` || 'Player 4',
 		color: 'white',
+		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		allowNegativeLife: false,
@@ -60,6 +64,7 @@ const defaultPlayers: App.Player.Data[] = [
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 5` || 'Player 5',
 		color: 'white',
+		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		allowNegativeLife: false,
@@ -72,6 +77,7 @@ const defaultPlayers: App.Player.Data[] = [
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 6` || 'Player 6',
 		color: 'white',
+		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		allowNegativeLife: false,
@@ -104,6 +110,20 @@ export const setPlayerAllowNegative = (playerId: number, allow: boolean) => {
 				return {
 					...player,
 					allowNegativeLife: allow
+				};
+			}
+			return player;
+		});
+	});
+};
+
+export const setPlayerBackgroundImage = (playerId: number, imageUrl: string | null) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					backgroundImage: imageUrl
 				};
 			}
 			return player;
