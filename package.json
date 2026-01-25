@@ -1,6 +1,6 @@
 {
-	"name": "mtg-life-tracker-clone",
-	"version": "0.0.1",
+	"name": "naereen-mtg-life-tracker",
+	"version": "0.1.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
