@@ -2,6 +2,7 @@
 	import FirstPlace from '$lib/assets/icons/FirstPlace.svelte';
 	import Minus from '$lib/assets/icons/Minus.svelte';
 	import Plus from '$lib/assets/icons/Plus.svelte';
+	import Skull from '$lib/assets/icons/Skull.svelte';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
@@ -16,6 +17,7 @@
 	$: innerWidth = 0;
 	$: isMobile = innerWidth < 640;
 	$: index = id - 1;
+	$: isDead = ($players[index].lifeTotal <= 0) || (($players[index].poison ?? 0) >= 10);
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -119,7 +121,7 @@
 						class="bg-[#dfeaf2]/80 py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert"
 						class:rotate-180={orientation === 'left'}
 					>
-						<div class="flex">
+						<div class="flex items-center">
 							<span style="font-size: xx-large;">{$players[index].playerName}</span>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center mt-2 rotate-90">
@@ -139,11 +141,20 @@
 						class:h-8={$appSettings.playerCount >= 5}
 						>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span
 					>
-					<span
-						class="text-black text-6xl flex items-center text-center"
-						class:-rotate-180={orientation === 'left'}
-						class:text-5xl={$appSettings.playerCount >= 5}>{$players[index].lifeTotal}</span
-					>
+					<div class="relative flex items-center justify-center">
+						{#if isDead}
+							<div class="absolute z-10 text-black" class:rotate-90={orientation === 'right'} class:-rotate-90={orientation === 'left'} class:-translate-x-35={orientation === 'right'} class:translate-x-20={orientation === 'left'} style="width: {$appSettings.playerCount >= 5 ? '2rem' : '2.75rem'}; height: {$appSettings.playerCount >= 5 ? '2rem' : '2.75rem'}; opacity: 1;">
+								<Skull />
+								<br>
+							</div>
+						{/if}
+						<span
+							class="text-black text-6xl flex items-center text-center"
+							class:text-5xl={$appSettings.playerCount >= 5}
+							class:-rotate-180={orientation === 'left'}
+							class:opacity-25={isDead}
+							>{$players[index].lifeTotal}</span>
+					</div>
 					<span
 						class="h-16 text-center"
 						class:rotate-180={orientation === 'left'}

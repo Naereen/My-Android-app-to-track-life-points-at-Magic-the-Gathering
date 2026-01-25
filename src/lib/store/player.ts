@@ -10,6 +10,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 1` || 'Player 1',
 		tempLifeDiff: 0,
+		poison: 0,
 		isFirst: false,
 		highlighted: false
 	},
@@ -18,6 +19,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 2` || 'Player 2',
 		tempLifeDiff: 0,
+		poison: 0,
 		isFirst: false,
 		highlighted: false
 	},
@@ -26,6 +28,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 3` || 'Player 3',
 		tempLifeDiff: 0,
+		poison: 0,
 		isFirst: false,
 		highlighted: false
 	},
@@ -34,6 +37,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 4` || 'Player 4',
 		tempLifeDiff: 0,
+		poison: 0,
 		isFirst: false,
 		highlighted: false
 	},
@@ -42,6 +46,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 5` || 'Player 5',
 		tempLifeDiff: 0,
+		poison: 0,
 		isFirst: false,
 		highlighted: false
 	},
@@ -50,6 +55,7 @@ export const players: Writable<App.Player.Data[]> = writable([
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 6` || 'Player 6',
 		tempLifeDiff: 0,
+		poison: 0,
 		isFirst: false,
 		highlighted: false
 	}
@@ -80,7 +86,8 @@ export const resetLifeTotals = (alreadyConfirmed: boolean) => {
 			return {
 				...player,
 				lifeTotal: startingLifeTotal,
-				tempLifeDiff: 0 // Reset tempLifeDiff to 0
+				tempLifeDiff: 0, // Reset tempLifeDiff to 0
+				poison: 0
 			};
 		});
 	});

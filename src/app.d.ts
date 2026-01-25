@@ -14,6 +14,7 @@ declare global {
 				lifeTotal: number;
 				playerName: string;
 				tempLifeDiff: number;
+				poison?: number;
 				highlighted: boolean;
 				isFirst: boolean;
 			};

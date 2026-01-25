@@ -30,18 +30,37 @@
 
 - [ ] Add more languages, if the technical framework is working well:
   - [x] Spanish
-  - [ ] German
-  - [ ] Italian
+  - [ ] German - TODO: ask Raphael?
+  - [ ] Italian - TODO: ask Patrizio?
 
 ## Bugs fixing:
 
 - [x] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
 - [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks)
 
-## Player status improvements
+## Player status and visualization improvements
 
-- [ ] Dead player icon
+- [x] Dead player icon: when a player is dead (life <= 0 or poison >= 10), show a skull icon next to their name, and gray out their life total
   - [ ] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect)
+
+- [ ] Add support for the poison counter
+  - [ ] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
+  - [ ] Show the poison counter next to the life total, as soon as it is > 0
+  - [ ] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
+
+- [ ] Implement a way to know whose turn it is
+  - [ ] A button to advance to the next player's turn
+  - [ ] A button to go back to the previous player's turn
+  - [ ] Show the current player's turn somewhere on the screen
+
+- [ ] Improve the visibility of the "current player" (the one whose turn it is)
+  - [ ] Maybe a glowing border around their panel?
+  - [ ] Maybe a different background color?
+  - [ ] Maybe an icon next to their name?
+
+- [ ] Implement two layouts for the four-players mode:
+  - [ ] A "1 / 2 / 1" layout, if players are seated on a round table
+  - [ ] A "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant, it is already implemented)
 
 ## Successfully build a working apk file
 
@@ -49,6 +68,8 @@
 - [ ] Set up deployment to GitHub Releases so that the latest apk file is always available for download
 - [ ] Test it on my devices
 - [ ] Publish it as a beta on the Google Play Store
+
+
 
 ## Better menus and dialogs
 

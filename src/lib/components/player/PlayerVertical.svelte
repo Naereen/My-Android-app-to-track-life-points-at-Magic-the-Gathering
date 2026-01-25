@@ -2,6 +2,8 @@
 	import FirstPlace from '$lib/assets/icons/FirstPlace.svelte';
 	import Minus from '$lib/assets/icons/Minus.svelte';
 	import Plus from '$lib/assets/icons/Plus.svelte';
+	import Skull from '$lib/assets/icons/Skull.svelte';
+	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
 	import { manageLifeTotal, players } from '$lib/store/player';
@@ -16,6 +18,7 @@
 	$: innerWidth = 0;
 	$: isMobile = innerWidth < 640;
 	$: index = id - 1;
+	$: isDead = ($players[index].lifeTotal <= 0) || (($players[index].poison ?? 0) >= 10);
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -124,7 +127,14 @@
 					<span class="w-16 text-center"
 						>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span
 					>
-					<span class="text-black text-7xl"> {$players[index].lifeTotal}</span>
+					<div class="relative flex items-center justify-center">
+						{#if isDead}
+							<div class="absolute z-10 text-black" style="width: {$appSettings.playerCount >= 5 ? '2.75rem' : '3.5rem'}; height: {$appSettings.playerCount >= 5 ? '2.75rem' : '3.5rem'}; opacity: 1;">
+								<Skull />
+							</div>
+						{/if}
+						<span class="text-black text-7xl" class:opacity-25={isDead}> {$players[index].lifeTotal}</span>
+					</div>
 					<span class="w-16 text-center"
 						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
 					>
