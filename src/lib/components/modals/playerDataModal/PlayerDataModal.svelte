@@ -78,8 +78,7 @@
 			<div class="flex flex-col justify-center items-center">
 				<h2 class="text-lg font-semibold my-2 relative w-full text-center">
 					{ $_('customize_player') }<button on:click={resetPlayerModalData} on:contextmenu|preventDefault draggable="false" class="absolute -right-0 top-0"
-						><X /></button
-					>
+						><X /></button>
 				</h2>
 				<div class="relative">
 					<input
@@ -96,7 +95,7 @@
 						<label class="flex items-center gap-2 text-sm"><input type="checkbox" bind:checked={gradientMode} /> { $_('gradient_mode') }</label>
 						<button on:click={() => clearSelection($playerModalData.playerId)} class="ml-2 text-sm underline">{ $_('clear_gradient') }</button>
 					</div>
-					<div class="justify-center content-center items-center gap-10 m-auto">
+					<div class="flex flex-wrap justify-center items-center gap-3 m-auto">
 						{#each ['white','blue','black','red','green'] as c}
 							<button
 								on:click={() => toggleColorSelection($playerModalData.playerId, c)}
@@ -112,7 +111,8 @@
 								{/if}
 							</button>
 						{/each}
-						<br>
+						<hr class="w-full" />
+						<div class="h-1" />
 						{#each ['mud', 'metalicgray'] as c}
 							<button
 								on:click={() => toggleColorSelection($playerModalData.playerId, c)}
@@ -128,7 +128,8 @@
 								{/if}
 							</button>
 						{/each}
-						<hr>
+						<hr class="w-full" />
+						<div class="h-1" />
 						{#each ['gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
 							<button
 								on:click={() => toggleColorSelection($playerModalData.playerId, c)}
@@ -146,9 +147,9 @@
 						{/each}
 
 						<!-- Allow negative life toggle placed after color options -->
-						<div class="mt-4 w-full flex flex-col items-start">
-							<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].allowNegativeLife} on:change={() => setPlayerAllowNegative($playerModalData.playerId, !$players[$playerModalData.playerId - 1].allowNegativeLife)} /> <span class="ml-2 block mb-2 font-semibold">{ $_('allow_negative_life') }</span></label>
-							<div class="mt-2 text-sm text-gray-600">{ $_('allow_negative_life_help') }</div>
+						<div class="mt-4 w-full flex flex-col items-center text-center">
+							<label class="flex items-center gap-2 justify-center"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].allowNegativeLife} on:change={() => setPlayerAllowNegative($playerModalData.playerId, !$players[$playerModalData.playerId - 1].allowNegativeLife)} /> <span class="ml-2 block mb-2 font-semibold text-center">{ $_('allow_negative_life') }</span></label>
+							<div class="mt-2 text-sm text-gray-600 text-center">{ $_('allow_negative_life_help') }</div>
 						</div>
 					</div>
 				</div>

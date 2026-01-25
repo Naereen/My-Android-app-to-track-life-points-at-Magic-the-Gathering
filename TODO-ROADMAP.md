@@ -11,7 +11,7 @@
   - [ ] Test installing the PWA on Apple devices (iOS/iPadOS) - TODO: need an Apple device for that!
 
 - [x] Turn off the zooming on mobile devices (pinch to zoom), as it breaks the UI
-- [x] Turn off the feature of mobile devices to shut down the screen after some time of inactivity (it breaks the immersive experience of the games)
+- [x] Turn off the feature of mobile devices to shut down the screen after some time of inactivity (it breaks the immersive experience of the games) - FIXME: add this as a setting!
 
 - [x] Turn off the feature of mobile devices to show the "download / share / print" menu on long click (it breaks the UI)
 
@@ -23,7 +23,7 @@
 - [x] Save the state in the local storage of the browser, so that reloading the page does not reset everything
   - [x] Save the app settings (number of players, starting life total, etc.)
   - [x] Save the players state (life totals, commander damage, etc.)
-  - [ ] Add a button to reset the local storage (clear saved settings and game state), FIXME: need to center it on the bottom of the settings menu
+  - [x] Add a button to reset the local storage (clear saved settings and game state)
 
 ## DONE - Translating the app : 5 languages so far!
 
@@ -45,8 +45,16 @@
 
 - [x] Dead player icon: when a player is dead (life <= 0 or poison >= 10), show a skull icon next to their name, and gray out their life total
   - [x] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect), by adding a toggle for that feature, in the player edit dialog (playerwise)
+  - [ ] Allow negative life totals! (global setting)
 
 - [x] Replace all `window.confirm` calls with custom modal dialogs integrated in the app, much nicer and prettier
+
+- [ ] Add a « about section » at the bottom of the settings menu, with:
+  - [ ] App version, name of the author, license
+  - [ ] Huge thank you to Michael Bourkas for the Lifetap app, which this is a personnal clone of
+  - [ ] Link to the GitHub repository
+  - [ ] ?? Link to the Google Play Store page (when published)
+  - [ ] ?? Link to a feedback form (Google Forms or similar)
 
 - [ ] Add support for the poison counter
   - [ ] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app

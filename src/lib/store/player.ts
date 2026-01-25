@@ -181,7 +181,11 @@ export const manageLifeTotal = (
 				}
 
 				// Ensure the life total is within acceptable bounds
-				newLifeTotal = Math.max(0, Math.min(999, newLifeTotal));
+				// allow negative life totals when enabled globally or per-player
+				const globalAllow = get(appSettings).allowNegativeLife || false;
+				const allowNegative = globalAllow || !!player.allowNegativeLife;
+				const minAllowed = allowNegative ? -999 : 0;
+				newLifeTotal = Math.max(minAllowed, Math.min(999, newLifeTotal));
 
 				return {
 					...player,
@@ -193,6 +197,7 @@ export const manageLifeTotal = (
 	});
 
 	// Only run this if life total is within bounds
+	// recompute withinBounds according to allowed min when needed
 	if (withinBounds) {
 		setTempLifeDiff(playerId, type, amount);
 	}

@@ -10,6 +10,7 @@
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { resetLifeTotals } from '$lib/store/player';
 	import { showConfirm } from '$lib/store/modal';
+	import { setAllowNegativeLife } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
 
 	const resetLocalStorage = async () => {
@@ -85,6 +86,11 @@
 			target.scrollBy({ top: -48, behavior: 'smooth' });
 			event.preventDefault();
 		}
+	};
+
+	const handleGlobalAllowChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setAllowNegativeLife(!!target.checked);
 	};
 </script>
 
@@ -163,6 +169,17 @@
 		</div>
 
 		<!-- Reset local storage placed at the bottom so user can scroll to it -->
+		<div class="w-full flex justify-center mt-4 mb-4">
+			<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+				<input
+					type="checkbox"
+					checked={$appSettings.allowNegativeLife}
+					on:change={handleGlobalAllowChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2">{ $_('allow_negative_life_global') }</span>
+			</label>
+		</div>
 		<div class="w-full flex justify-center mt-8 mb-8">
 			<button
 				class="bg-red-600 text-white px-4 py-2 rounded-full"

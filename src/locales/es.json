@@ -24,12 +24,13 @@
     "window_confirm_reset_game": "¿Estás seguro de que quieres reiniciar la partida?",
     "player_background_color": "Personalizar color",
     "clear_gradient": "Borrar",
-    "gradient_mode": "Modo degradado"
-    ,
+    "gradient_mode": "Modo degradado",
     "reset_local_storage": "Restablecer almacenamiento local",
     "window_confirm_reset_local_storage": "Esto borrará la configuración y el estado de la partida guardados en el almacenamiento local. ¿Continuar?",
     "confirm_modal": "¿Confirmar?",
     "cancel_modal": "Cancelar",
     "allow_negative_life": "Permitir vida negativa",
-    "allow_negative_life_help": "El jugador no se marca como muerto cuando la vida ≤ 0"
+    "allow_negative_life_help": "El jugador no se marca como muerto cuando la vida ≤ 0",
+    "allow_negative_life_global": "Permitir vida negativa (global)",
+    "allow_negative_life_global_help": "Cuando está activado, ningún jugador se marca como muerto por tener ≤ 0 de vida (a menos que la opción por jugador lo impida)"
 }

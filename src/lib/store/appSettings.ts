@@ -5,7 +5,8 @@ export const appSettings: Writable<App.Settings> = persist('appSettings', {
 	playerCount: 4,
 	startingLifeTotal: 40,
 	customStartingLifeTotal: 60,
-	customRandomNumber: 0
+	customRandomNumber: 0,
+	allowNegativeLife: false
 });
 
 export const setPlayerCount = (playerCount: number) => {
@@ -22,4 +23,8 @@ export const setCustomStartingLifeTotal = (customStartingLifeTotal: number) => {
 
 export const setCustomRandomNumber = (customRandomNumber: number) => {
 	appSettings.update((data) => ({ ...data, customRandomNumber }));
+};
+
+export const setAllowNegativeLife = (allowNegativeLife: boolean) => {
+    appSettings.update((data) => ({ ...data, allowNegativeLife }));
 };
