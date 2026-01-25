@@ -1,4 +1,4 @@
-import { writable, type Writable } from "svelte/store";
+import { writable, type Writable } from 'svelte/store';
 
 export const resourceCounter: Writable<{ [key in App.Resources.Resource]: number }> = writable({
 	white: 0,
