@@ -135,13 +135,13 @@
 					<button
 						on:click={() => openPlayerModal(id)}
 						on:contextmenu|preventDefault draggable="false"
-						class="bg-gray py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert shadow-lg"
+						class="bg-darkgray py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert shadow-lg"
 						class:rotate-180={orientation === 'left'}
 						style="background: {isDead ? 'black' : 'gray'}"
 						class:bg-black={isDead}
 					>
 						<div class="flex items-center">
-							<span style="font-size: xx-large; color: white;">{$players[index].playerName}</span>
+							<span style="font-size: xx-large; color: white;" style:text-decoration={isDead ? 'line-through' : 'none'}>{$players[index].playerName}</span>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center mt-2 rotate-90">
 									<FirstPlace />
