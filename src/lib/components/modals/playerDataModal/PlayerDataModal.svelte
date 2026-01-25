@@ -49,10 +49,36 @@
 					/>
 					<div class="absolute right-3 top-2 pointer-events-none"><Pen /></div>
 				</div>
-				<div class="mt-4">
+				<div class="mt-4 flex flex-col justify-center items-center w-full ml-10 mr-10">
 					<label class="block mb-2 font-semibold">{ $_('player_background_color') }</label>
-					<div class="flex gap-2">
-						{#each ['mud', 'metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen', 'white','blue','black','red','green'] as c}
+					<div class="justify-center content-center items-center gap-10 m-auto">
+						{#each ['white','blue','black','red','green'] as c}
+							<button
+								on:click={() => setPlayerColor($playerModalData.playerId, c)}
+								class="w-8 h-8 rounded-square rounded-lg border-2"
+								style="background: {colorToBg(c)}"
+								aria-label={c}
+							>
+								{#if $players[$playerModalData.playerId - 1].color === c}
+									<span class="block w-full h-full rounded-square rounded-lg" style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset">✔️</span>
+								{/if}
+							</button>
+						{/each}
+						<br>
+						{#each ['mud', 'metalicgray'] as c}
+							<button
+								on:click={() => setPlayerColor($playerModalData.playerId, c)}
+								class="w-8 h-8 rounded-square rounded-lg border-2"
+								style="background: {colorToBg(c)}"
+								aria-label={c}
+							>
+								{#if $players[$playerModalData.playerId - 1].color === c}
+									<span class="block w-full h-full rounded-square rounded-lg" style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"></span>
+								{/if}
+							</button>
+						{/each}
+						<hr>
+						{#each ['gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
 							<button
 								on:click={() => setPlayerColor($playerModalData.playerId, c)}
 								class="w-8 h-8 rounded-square rounded-lg border-2"
