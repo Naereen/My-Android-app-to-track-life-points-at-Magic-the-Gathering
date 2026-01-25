@@ -19,6 +19,24 @@
 	$: index = id - 1;
 	$: isDead = ($players[index].lifeTotal <= 0) || (($players[index].poison ?? 0) >= 10);
 
+	const colorToBg = (c: string) => {
+		switch (c) {
+			case 'blue':
+				return '#d8e5f7';
+			case 'black':
+				return '#e9e9ee';
+			case 'red':
+				return '#fde8e8';
+			case 'green':
+				return '#e8f7e8';
+			case 'white':
+			default:
+				return '#ffffff';
+		}
+	};
+
+	$: bg = colorToBg($players[index].color ?? 'white');
+
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
 			isHolding = true;
@@ -77,9 +95,11 @@
 <svelte:window bind:innerWidth />
 
 <div
-	class="bg-player flex w-full rounded-3xl flex-grow h-6"
+	class="flex w-full rounded-3xl flex-grow h-6"
+	style="background: {bg};"
 	class:h-full={!$appState.isMenuOpen}
 	class:bg-player-light={$players[index].highlighted}
+	class:bg-player-dark={isDead}
 >
 	{#if !$appState.isMenuOpen}
 		<div class="flex flex-col w-full relative">
@@ -120,6 +140,7 @@
 						on:contextmenu|preventDefault draggable="false"
 						class="bg-[#dfeaf2]/80 py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert"
 						class:rotate-180={orientation === 'left'}
+						class:bg-darkgray={isDead}
 					>
 						<div class="flex items-center">
 							<span style="font-size: xx-large;">{$players[index].playerName}</span>
@@ -143,13 +164,13 @@
 					>
 					<div class="relative flex items-center justify-center">
 						{#if isDead}
-							<div class="absolute z-10 text-black" class:rotate-90={orientation === 'right'} class:-rotate-90={orientation === 'left'} class:-translate-x-35={orientation === 'right'} class:translate-x-20={orientation === 'left'} style="width: {$appSettings.playerCount >= 5 ? '2rem' : '2.75rem'}; height: {$appSettings.playerCount >= 5 ? '2rem' : '2.75rem'}; opacity: 1;">
+							<div class="z-10 text-black" class:rotate-90={orientation === 'right'} class:-rotate-90={orientation === 'left'} class:-translate-x-0={orientation === 'right'} class:translate-x-0={orientation === 'left'} style="width: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; height: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; opacity: 1;">
 								<Skull />
 								<br>
 							</div>
 						{/if}
 						<span
-							class="text-black text-6xl flex items-center text-center"
+							class="text-black text-6xl flex items-center text-center shadow-lg"
 							class:text-5xl={$appSettings.playerCount >= 5}
 							class:-rotate-180={orientation === 'left'}
 							class:opacity-25={isDead}

@@ -17,6 +17,7 @@ declare global {
 				poison?: number;
 				highlighted: boolean;
 				isFirst: boolean;
+				isDead: boolean;
 			};
 		}
 		namespace Resources {

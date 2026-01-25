@@ -2,7 +2,7 @@
 	import Pen from '$lib/assets/icons/Pen.svelte';
 	import X from '$lib/assets/icons/X.svelte';
 	import { playerModalData, resetPlayerModalData } from '$lib/store/modal';
-	import { players } from '$lib/store/player';
+	import { players, setPlayerColor } from '$lib/store/player';
 	import { _ } from 'svelte-i18n';
 
 	const handleOnKeyPress = (event: KeyboardEvent) => {
@@ -47,6 +47,23 @@
 						on:keypress={handleOnKeyPress}
 					/>
 					<div class="absolute right-3 top-2 pointer-events-none"><Pen /></div>
+				</div>
+				<div class="mt-4">
+					<label class="block mb-2 font-semibold">{ $_('player_background_color') }</label>
+					<div class="flex gap-2">
+						{#each ['white','blue','black','red','green'] as c}
+							<button
+								on:click={() => setPlayerColor($playerModalData.playerId, c)}
+								class="w-8 h-8 rounded-full border-2"
+								style="background: {c === 'white' ? '#ffffff' : c === 'blue' ? '#d8e5f7' : c === 'black' ? '#e9e9ee' : c === 'red' ? '#fde8e8' : '#e8f7e8'}"
+								aria-label={c}
+							>
+								{#if $players[$playerModalData.playerId - 1].color === c}
+									<span class="block w-full h-full rounded-full" style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"></span>
+								{/if}
+							</button>
+						{/each}
+					</div>
 				</div>
 			</div>
 		</div>

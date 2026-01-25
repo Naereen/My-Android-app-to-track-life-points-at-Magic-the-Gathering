@@ -20,6 +20,24 @@
 	$: index = id - 1;
 	$: isDead = ($players[index].lifeTotal <= 0) || (($players[index].poison ?? 0) >= 10);
 
+	const colorToBg = (c: string) => {
+		switch (c) {
+			case 'blue':
+				return '#d8e5f7';
+			case 'black':
+				return '#e9e9ee';
+			case 'red':
+				return '#fde8e8';
+			case 'green':
+				return '#e8f7e8';
+			case 'white':
+			default:
+				return '#ffffff';
+		}
+	};
+
+	$: bg = colorToBg($players[index].color ?? 'white');
+
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
 			isHolding = true;
@@ -78,10 +96,12 @@
 <svelte:window bind:innerWidth />
 
 <div
-	class="bg-player flex w-full rounded-3xl flex-grow h-6"
+	class="flex w-full rounded-3xl flex-grow h-6"
+	style="background: {bg};"
 	class:h-full={!$appState.isMenuOpen}
 	class:rotate-180={orientation === 'down'}
 	class:bg-player-light={$players[index].highlighted}
+	class:bg-player-dark={isDead}
 >
 	{#if !$appState.isMenuOpen}
 		<div class="flex w-full relative">
@@ -133,7 +153,7 @@
 								<Skull />
 							</div>
 						{/if}
-						<span class="text-black text-7xl" class:opacity-25={isDead}> {$players[index].lifeTotal}</span>
+						<span class="text-black text-7xl shadow-lg" class:opacity-25={isDead}> {$players[index].lifeTotal}</span>
 					</div>
 					<span class="w-16 text-center"
 						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span

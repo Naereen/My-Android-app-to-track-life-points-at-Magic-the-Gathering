@@ -7,7 +7,8 @@ export default {
 		},
 		extend: {
 			colors: {
-				player: '#B0CBDD',
+				'player': '#B0CBDD',
+				'player-dark': '#2c2d2d',
 				'player-light': '#eff5f8'
 			}
 		}

@@ -9,57 +9,83 @@ export const players: Writable<App.Player.Data[]> = writable([
 		id: 1,
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 1` || 'Player 1',
+		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
 		isFirst: false,
-		highlighted: false
+		highlighted: false,
+		isDead: false
 	},
 	{
 		id: 2,
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 2` || 'Player 2',
+		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
 		isFirst: false,
-		highlighted: false
+		highlighted: false,
+		isDead: false
 	},
 	{
 		id: 3,
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 3` || 'Player 3',
+		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
 		isFirst: false,
-		highlighted: false
+		highlighted: false,
+		isDead: false
 	},
 	{
 		id: 4,
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 4` || 'Player 4',
+		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
 		isFirst: false,
-		highlighted: false
+		highlighted: false,
+		isDead: false
 	},
 	{
 		id: 5,
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 5` || 'Player 5',
+		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
 		isFirst: false,
-		highlighted: false
+		highlighted: false,
+		isDead: false
 	},
 	{
 		id: 6,
 		lifeTotal: get(appSettings).startingLifeTotal,
 		playerName: `${playerBaseName} 6` || 'Player 6',
+		color: 'white',
 		tempLifeDiff: 0,
 		poison: 0,
 		isFirst: false,
-		highlighted: false
+		highlighted: false,
+		isDead: false
 	}
 ]);
+
+export const setPlayerColor = (playerId: number, color: 'white' | 'blue' | 'black' | 'red' | 'green') => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					color
+				};
+			}
+			return player;
+		});
+	});
+};
 
 // Object to store timeout references for each player
 const resetTimers: { [key: number]: number } = {};
@@ -250,7 +276,8 @@ const spinToSelectFirstPlayer = () => {
 						return {
 							...player,
 							isFirst: index === (currentIndex - 1) % totalPlayers,
-							highlighted: false
+							highlighted: false,
+							isDead: false
 						};
 					});
 				});

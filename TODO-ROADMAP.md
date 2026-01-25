@@ -87,7 +87,7 @@
 
 - [ ] Custom Player backgrounds
   - [ ] With a simple color picker : one color of mana, and that's it
-  - [ ] With a color gradient picker
+  - [ ] With a color gradient picker: two colors of mana, gradient between the two
   - [ ] With a card search to pick a card as background
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders
 
