@@ -3,6 +3,7 @@
 	import X from '$lib/assets/icons/X.svelte';
 	import { playerModalData, resetPlayerModalData } from '$lib/store/modal';
 	import { players } from '$lib/store/player';
+	import { _ } from 'svelte-i18n';
 
 	const handleOnKeyPress = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
@@ -34,7 +35,7 @@
 		<div class="flex flex-col justify-center">
 			<div class="flex flex-col justify-center items-center">
 				<h2 class="text-lg font-semibold my-2 relative w-full text-center">
-					Customize Player<button on:click={resetPlayerModalData} class="absolute -right-4 top-0"
+					{ $_('customize_player') }<button on:click={resetPlayerModalData} class="absolute -right-4 top-0"
 						><X /></button
 					>
 				</h2>

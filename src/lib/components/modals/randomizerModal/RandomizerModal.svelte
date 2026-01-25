@@ -8,6 +8,7 @@
 	import Dtwo from '$lib/assets/icons/Dtwo.svelte';
 	import { resetRandomizer, randomizerModalData } from '$lib/store/modal';
 	import { appSettings } from '$lib/store/appSettings';
+	import { _ } from 'svelte-i18n';
 </script>
 
 <div
@@ -41,7 +42,7 @@
 				{:else if $randomizerModalData.type === 'd20'}
 					<Dtwenty />
 				{:else if $randomizerModalData.type === 'custom'}
-					{$appSettings.customRandomNumber || 0}-sided die
+					{$appSettings.customRandomNumber || 0} - { $_('sided_die') }
 				{/if}
 			</div>
 			<div><p class="text-white text-6xl">{$randomizerModalData.result}</p></div>

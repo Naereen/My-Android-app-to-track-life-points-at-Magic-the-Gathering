@@ -117,7 +117,7 @@
 						class:rotate-180={orientation === 'left'}
 					>
 						<div class="flex">
-							{$players[index].playerName}
+							<span style="font-size: xx-large;">{$players[index].playerName}</span>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center mt-2 rotate-90">
 									<FirstPlace />
