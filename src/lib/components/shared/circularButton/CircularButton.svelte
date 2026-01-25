@@ -11,9 +11,9 @@
 
 	if (highlight) {
 		outline = 'bg-[#42d5ff]';
-		if (light) {
-			outline = 'bg-white';
-		}
+		// if (light) {
+		// 	outline = 'bg-white';
+		// }
 	}
 </script>
 
