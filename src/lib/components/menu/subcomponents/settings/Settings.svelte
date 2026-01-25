@@ -4,7 +4,8 @@
 		setCustomStartingLifeTotal,
 		setPlayerCount,
 		setStartingLifeTotal,
-		setFourPlayerLayout
+		setFourPlayerLayout,
+		setAppLocale
 	} from '$lib/store/appSettings';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import CircularButton from '../../../shared/circularButton/CircularButton.svelte';
@@ -97,6 +98,18 @@
 	const handlePreventSleepChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setPreventScreenSleep(!!target.checked);
+	};
+
+	const languages = [
+		{ code: 'en', label: 'English' },
+		{ code: 'fr', label: 'Français' },
+		{ code: 'es', label: 'Español' },
+		{ code: 'de', label: 'Deutsch' },
+		{ code: 'it', label: 'Italiano' }
+	];
+
+	const handleChangeLocale = (code: string) => {
+		setAppLocale(code);
 	};
 </script>
 
@@ -210,6 +223,24 @@
 			</div>
 		</div>
 
+		<!-- Language selection -->
+		<div class="w-full flex justify-center mt-6 mb-4">
+			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
+				<div class="text-2xl mb-2">{ $_('choose_your_language') }</div>
+				<div class="flex gap-2 justify-center">
+					{#each languages as lang}
+						<button
+							class="px-3 py-1 rounded-full"
+							class:bg-blue-500={$appSettings.locale === lang.code}
+							class:text-white={$appSettings.locale === lang.code}
+							on:click={() => handleChangeLocale(lang.code)}
+						>
+							{lang.label}
+						</button>
+					{/each}
+				</div>
+			</div>
+		</div>
 		<!-- Reset local storage placed at the bottom so user can scroll to it -->
 		<div class="w-full flex justify-center mt-4 mb-4">
 				<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
@@ -235,7 +266,7 @@
 		</div>
 		<div class="w-full flex justify-center mt-8 mb-8">
 			<button
-				class="bg-red-600 text-white px-4 py-2 rounded-full"
+				class="bg-red-900 text-white px-4 py-2 rounded-full"
 				on:click={resetLocalStorage}
 			>
 				{ $_('reset_local_storage') }
@@ -244,7 +275,7 @@
 
 		<!-- About section (larger text per request) -->
 		<div class="w-full text-center text-gray-400 mt-4 mb-8 px-6">
-			<div class="text-xl mb-2 font-semibold">{ $_('about_title') }</div>
+			<div class="text-white text-2xl mb-2 font-semibold">{ $_('about_title') }</div>
 			<div class="text-base mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.1.0'}</div>
 			<div class="text-base mb-1">{ $_('about_author') }: Naereen</div>
 			<div class="text-base mb-2">{ $_('about_license') }: MIT</div>

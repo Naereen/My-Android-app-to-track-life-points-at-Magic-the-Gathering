@@ -11,12 +11,26 @@
 	<div
 		class="bg-black/70 absolute w-full h-full top-0 left-0 flex justify-center items-center"
 		on:click={() => respondConfirm(false)}
-		role="dialog"
-		aria-modal="true"
+		role="button"
+		aria-label="close dialog"
 		tabindex="0"
+		on:keydown={(e) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				respondConfirm(false);
+			}
+		}}
 	>
 		<div
 			on:click|stopPropagation
+			role="dialog"
+			aria-modal="true"
+			tabindex="0"
+			on:keydown={(e) => {
+				if (e.key === 'Escape') {
+					respondConfirm(false);
+				}
+			}}
 			class="bg-white max-w-80 w-11/12 max-h-80 rounded-[1rem] flex flex-col justify-center items-center text-black p-4 relative"
 		>
 			<button class="absolute right-3 top-3" on:click={() => respondConfirm(false)} on:contextmenu|preventDefault draggable="false"><X /></button>

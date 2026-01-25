@@ -25,7 +25,7 @@
     "player_background_color": "Personalizza colores",
     "clear_gradient": "Cancella",
     "gradient_mode": "Modalità gradiente",
-    "reset_local_storage": "Azzera archiviazione locale",
+    "reset_local_storage": "Azzera archiviazione locale?",
     "window_confirm_reset_local_storage": "Questo cancellerà le impostazioni salvate e lo stato della partita dall'archiviazione locale. Continuare?",
     "confirm_modal": "Confermare?",
     "cancel_modal": "Annullare",
@@ -46,5 +46,6 @@
     "choose_4players_layout": "Scegli layout per 4 giocatori",
     "choose_6players_layout": "Scegli layout per 6 giocatori",
     "open_customize_backgrounds": "Illustrazioni",
-    "open_customize_colors": "Colori"
+    "open_customize_colors": "Colori",
+    "choose_your_language": "Scegli la tua lingua"
 }

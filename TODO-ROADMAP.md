@@ -36,6 +36,8 @@
   - [x] German
   - [x] Italian
 
+- [ ] Add a language selection menu in the settings dialog
+
 ## Bugs fixing:
 
 - [x] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
@@ -77,7 +79,7 @@
   - [x] A "1 / 2 / 1" layout, if players are seated on a round table
   - [x] A "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
 
-- [ ] Implement two layouts for the six-players mode:
+- [ ] (much later, I never play with 6 players) Implement two layouts for the six-players mode:
   - [ ] A "|::|" layout (one long | player on the left and the right, and in the middle like a Two-Headed Giant layout), if players are seated on a round table
   - [ ] A ":::" layout (2 lines of 3 columns), if players are seated on opposite sides of a rectangular table (classic mode for Emperor mode, it is already implemented)
 
@@ -102,21 +104,49 @@
 - [x] Implement the "settings" dialog
 - [x] Implement the "about" dialog
 
+- [ ] Improve the spacing of the mana/storm count : reduce the size of the mana symbols ?
+
 ---------------------------------------------------------------------------
 
-## New features
+## Very cool features from "Lifetap" app to implement
 
 - [x] Custom Player backgrounds
   - [x] With a simple color picker : one color of mana, and that's it
   - [x] If clicking on a color after it is already selected, deselect it (go back to default background)
   - [x] With a color gradient picker: two colors of mana, gradient between the two
 
-- [ ] Even better custom Player backgrounds
-  - [ ] With a card search to pick a card as background
+- [x] Even better custom Player backgrounds
+  - [x] With a card search to pick a card as background
+  - [ ] Align the top of the illustration with the top of background area (crop the card image if needed)
+  - [ ] Add a "clear background" button to go back to default background
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders
 
 - [ ] Commander damage type tracking
 - [ ] Multiplayer game modes (Two-Headed Giant, Commander, etc.)
+
+## Variants already existing in Lifetap but not yet implemented here
+
+- PlaneChase support (background changes every turn or on a click)
+- Archenemy support (extra damage tracking)
+
+---------------------------------------------------------------------------
+
+## New features to implement
+
+Random ideas:
+
+- [ ] Sound effects on button clicks (life up/down, commander damage up/down, etc.)
+- [ ] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.)
+- [ ] Customizable button sizes (small, medium, large)
+- [ ] Customizable layout options (compact mode, expanded mode)
+- [ ] Night mode / dark theme
+- [ ] Customizable fonts (font family, font size)
+- [ ] Multiplayer online mode (connect with friends over the internet)
+
+## Variants to implement here, not existing in Lifetap
+
+- Treachery support (hidden role to check once when the game starts, and hidden after that)
+- 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
 
 ---------------------------------------------------------------------------
 

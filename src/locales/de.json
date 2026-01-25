@@ -25,7 +25,7 @@
     "player_background_color": "Farbauswahl",
     "clear_gradient": "Löschen",
     "gradient_mode": "Verlaufmodus",
-    "reset_local_storage": "Lokalen Speicher zurücksetzen",
+    "reset_local_storage": "Lokalen Speicher zurücksetzen?",
     "window_confirm_reset_local_storage": "Dies löscht gespeicherte Einstellungen und den Spielstand aus dem lokalen Speicher. Fortfahren?",
     "confirm_modal": "Bestätigen?",
     "cancel_modal": "Abbrechen",
@@ -46,5 +46,6 @@
     "choose_4players_layout": "Layout für 4 Spieler wählen",
     "choose_6players_layout": "Layout für 6 Spieler wählen",
     "open_customize_backgrounds": "Illustrationen",
-    "open_customize_colors": "Farben"
+    "open_customize_colors": "Farben",
+    "choose_your_language": "Wähle deine Sprache"
 }

@@ -1,6 +1,6 @@
 {
 	"name": "naereen-mtg-life-tracker",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -10,8 +10,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write .",
-		"tauri": "tauri"
+		"format": "prettier --write ."
 	},
 	"devDependencies": {
 		"@iconify/svelte": "^4.0.2",

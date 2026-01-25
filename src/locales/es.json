@@ -25,7 +25,7 @@
     "player_background_color": "Personalizar colors",
     "clear_gradient": "Borrar",
     "gradient_mode": "Modo degradado",
-    "reset_local_storage": "Restablecer almacenamiento local",
+    "reset_local_storage": "¿Restablecer almacenamiento local?",
     "window_confirm_reset_local_storage": "Esto borrará la configuración y el estado de la partida guardados en el almacenamiento local. ¿Continuar?",
     "confirm_modal": "¿Confirmar?",
     "cancel_modal": "Cancelar",
@@ -46,5 +46,6 @@
     "choose_4players_layout": "Elegir diseño para 4 jugadores",
     "choose_6players_layout": "Elegir diseño para 6 jugadores",
     "open_customize_backgrounds": "Ilustraciones",
-    "open_customize_colors": "Colores"
+    "open_customize_colors": "Colores",
+    "choose_your_language": "Elige tu idioma"
 }

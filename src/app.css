@@ -17,12 +17,26 @@
 		width: 100%;
 		margin: 0;
 		/* TODO: let this be configurable in then settings */
-		font-size: larger;
+		font-size: x-large;
+	}
+
+	@theme {
+		--color-regal-blue: #243c5a;
+		--color-white: #ffffff;
 	}
 
 	body {
 		@apply bg-black;
 		min-height: 100vh;
+	}
+
+	.no-longpress, .no-longpress img, .no-longpress svg {
+		-webkit-user-drag: none;
+		user-drag: none;
+		-webkit-touch-callout: none; /* iOS */
+		-webkit-user-select: none;
+		user-select: none;
+		touch-action: manipulation;
 	}
 }
 
@@ -36,13 +50,4 @@
 		scrollbar-width: none; /* Firefox */
 		-ms-overflow-style: none; /* IE and Edge */
 	}
-}
-
-.no-longpress, .no-longpress img, .no-longpress svg {
-  -webkit-user-drag: none;
-  user-drag: none;
-  -webkit-touch-callout: none; /* iOS */
-  -webkit-user-select: none;
-  user-select: none;
-  touch-action: manipulation;
 }

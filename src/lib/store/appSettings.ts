@@ -1,5 +1,6 @@
 import { type Writable } from 'svelte/store';
 import { persist } from './persist';
+import { locale as i18nLocale } from 'svelte-i18n';
 
 export const appSettings: Writable<App.Settings> = persist('appSettings', {
 	playerCount: 4,
@@ -8,7 +9,8 @@ export const appSettings: Writable<App.Settings> = persist('appSettings', {
 	customRandomNumber: 0,
 	allowNegativeLife: false,
 	preventScreenSleep: true,
-	fourPlayerLayout: 'matrix'
+	fourPlayerLayout: 'matrix',
+	locale: 'en'
 });
 
 export const setPlayerCount = (playerCount: number) => {
@@ -37,4 +39,13 @@ export const setPreventScreenSleep = (preventScreenSleep: boolean) => {
 
 export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {
 	appSettings.update((data) => ({ ...data, fourPlayerLayout: layout }));
+};
+
+export const setAppLocale = (locale: string) => {
+	appSettings.update((data) => ({ ...data, locale }));
+	try {
+		i18nLocale.set(locale);
+	} catch (e) {
+		// ignore if i18n not initialized yet
+	}
 };
