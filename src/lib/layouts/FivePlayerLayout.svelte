@@ -32,6 +32,6 @@
 		class:h-[30%]={!$appState.isMenuOpen}
 		class:pt-2={$appState.isMenuOpen}
 	>
-		<PlayerVertical orientation={'up'} id={1} />
+		<PlayerVertical orientation="up" id={1} />
 	</div>
 </div>

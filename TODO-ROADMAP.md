@@ -56,7 +56,7 @@
   - [ ] ?? Link to the Google Play Store page (when published)
   - [ ] ?? Link to a feedback form (Google Forms or similar)
 
-- [ ] Keep the small "medal" which indicates who started the game, during all the game (not only at the beginning)
+- [x] Keep the small "medal" which indicates who started the game, during all the game (not only at the beginning)
 
 - [ ] Add support for the poison counter
   - [ ] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
@@ -73,9 +73,9 @@
   - [ ] Maybe a different background color?
   - [ ] Maybe an icon next to their name?
 
-- [ ] Implement two layouts for the four-players mode:
+- [x] Implement two layouts for the four-players mode:
   - [ ] A "1 / 2 / 1" layout, if players are seated on a round table
-  - [ ] A "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
+  - [x] A "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
 
 - [ ] Implement two layouts for the six-players mode:
   - [ ] A "|::|" layout (one long | player on the left and the right, and in the middle like a Two-Headed Giant layout), if players are seated on a round table
