@@ -8,6 +8,7 @@ export default defineConfig({
 		VitePWA({
 			registerType: 'autoUpdate',
 			injectRegister: 'auto',
+			includeAssets: ['icons/favicon.ico', 'icons/icon-128x128.png', 'icons/icon-192x192.png', 'icons/icon-256x256.png', 'icons/icon-512x512.png', 'icons/icon-512x512.png'],
 			manifest: {
 				name: "Naereen's MTG Life Tracker",
 				short_name: "Naereen's MTG Life Tracker",
