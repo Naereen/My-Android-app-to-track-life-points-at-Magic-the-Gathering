@@ -11,6 +11,7 @@
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { generateRandomNumber } from '$lib/store/modal';
 	import DiceCard from './subcomponents/diceCard/RandomizerButton.svelte';
+	import { _ } from 'svelte-i18n';
 
 	$: innerHeight = 0;
 
@@ -44,7 +45,7 @@
 			<button on:click={() => toggleIsMenuOpen('')} class="text-white absolute left-0 pl-4">
 				<Arrow />
 			</button>
-			<span class="text-gray-400 text-center">Dice & Misc</span>
+			<span class="text-gray-400 text-center">{ $_('dice_misc') }</span>
 		</div>
 
 		<div class="w-full flex justify-center">
@@ -54,7 +55,7 @@
 						on:click={() => {
 							generateRandomNumber('d2');
 						}}
-						text="Flip coin"><Dtwo size="4rem" /></DiceCard
+						text="{ $_('flip_coin') }"><Dtwo size="4rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
@@ -62,7 +63,7 @@
 						on:click={() => {
 							generateRandomNumber('custom');
 						}}
-						text="Custom"
+						text="{ $_('custom_number') }"
 						><div class="px-2 rounded flex flex-col">
 							<div class="relative">
 								<input
@@ -77,9 +78,9 @@
 									max="999"
 									min="0"
 								/>
-								<p class="absolute top-2 left-2 text-white text-sm">Set</p>
+								<p class="absolute top-2 left-2 text-white text-sm">{ $_('set_dice') }</p>
 							</div>
-							<div class="text-white text-xl mb-2 mt-2">Roll</div>
+							<div class="text-white text-xl mb-2 mt-2">{ $_('roll') }</div>
 						</div></DiceCard
 					>
 				</div>
@@ -88,7 +89,7 @@
 						on:click={() => {
 							generateRandomNumber('d4');
 						}}
-						text="Roll d4"><Dfour size="4rem" /></DiceCard
+						text="{ $_('roll') } d4"><Dfour size="4rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
@@ -96,7 +97,7 @@
 						on:click={() => {
 							generateRandomNumber('d6');
 						}}
-						text="Roll d6"><Dsix size="4rem" /></DiceCard
+						text="{ $_('roll') } d6"><Dsix size="4rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
@@ -104,7 +105,7 @@
 						on:click={() => {
 							generateRandomNumber('d8');
 						}}
-						text="Roll d8"><Deight size="4rem" /></DiceCard
+						text="{ $_('roll') } d8"><Deight size="4rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
@@ -112,7 +113,7 @@
 						on:click={() => {
 							generateRandomNumber('d10');
 						}}
-						text="Roll d10"><Dten size="4rem" /></DiceCard
+						text="{ $_('roll') } d10"><Dten size="4rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
@@ -120,7 +121,7 @@
 						on:click={() => {
 							generateRandomNumber('d12');
 						}}
-						text="Roll d12"><Dtwelve size="4rem" /></DiceCard
+						text="{ $_('roll') } d12"><Dtwelve size="4rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
@@ -128,7 +129,7 @@
 						on:click={() => {
 							generateRandomNumber('d20');
 						}}
-						text="Roll d20"><Dtwenty size="4rem" /></DiceCard
+						text="{ $_('roll') } d20"><Dtwenty size="4rem" /></DiceCard
 					>
 				</div>
 			</div>

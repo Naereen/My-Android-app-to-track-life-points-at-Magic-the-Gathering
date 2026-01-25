@@ -5,5 +5,10 @@
     "commander_damage": "Dégâts de Commandant",
     "settings": "Paramètres",
     "reset_confirm": "Voulez-vous vraiment réinitialiser la partie ?",
-    "player": "Joueur-se"
+    "player": "Joueur-se",
+    "dice_misc": "Dés & Divers",
+    "roll": "Lancer",
+    "set_dice": "Dé ?",
+    "flip_coin": "Une pièce",
+    "custom_number": "Choisir"
 }

@@ -1,5 +1,5 @@
 <script>
-	export let size = '2rem';
+	export let size = '3rem';
 	export let light = false;
 </script>
 
