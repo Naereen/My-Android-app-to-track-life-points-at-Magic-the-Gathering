@@ -7,7 +7,7 @@ export default defineConfig({
 		sveltekit(),
 		VitePWA({
 			mode: 'development',
-			base: '/',
+			// base: '/',
 			// generate a manifest named `manifest.json` and a service worker named `service-worker.js`
 			manifestFilename: 'manifest.json',
 			filename: 'service-worker.js',
