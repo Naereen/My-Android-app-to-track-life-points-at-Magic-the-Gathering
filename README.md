@@ -2,6 +2,11 @@
 
 A web-based life point tracker for Magic: The Gathering, inspired by the [Lifetap](https://play.google.com/store/apps/details?id=com.lifetap) Android application. Built with SvelteKit, TypeScript, and Tailwind CSS.
 
+The application can be used on Android devices via a web browser or by downloading the apk file (coming soon!).
+
+You can find it live here:
+<https://perso.crans.org/besson/publis/My-Android-app-to-track-life-points-at-Magic-the-Gathering/>
+
 ## 📸 Screenshots
 
 TODO: add screenshots here!
