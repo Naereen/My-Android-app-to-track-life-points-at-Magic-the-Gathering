@@ -14,6 +14,9 @@ build-apk:
 install-apk:
 	adb install src-tauri/gen/android/app/build/outputs/apk/debug/app-debug.apk
 
+dev:
+	npm run dev
+
 send:	send_zamok
 send_zamok:
 	CP --exclude=.git ./build/ ${Szam}publis/My-Android-app-to-track-life-points-at-Magic-the-Gathering/

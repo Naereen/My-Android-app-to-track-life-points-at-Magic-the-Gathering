@@ -2,7 +2,7 @@
 <html lang="en" class="select-none">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<link rel="icon" href="%sveltekit.assets%/icons/favicon.ico" />
 		<link rel="stylesheet" href="%sveltekit.assets%/dicefont/dicefont.css" />
 		<link rel="stylesheet" href="%sveltekit.assets%/inter/inter.css" />
 		<meta
@@ -18,5 +18,16 @@
 		class="bg-black font-body leading-relaxed text-slate-400 antialiased touch-none select-none w-full"
 	>
 		<div style="display: contents">%sveltekit.body%</div>
+
+    <!-- <script>
+        // Register a simple service worker to enable PWA behaviors (offline caching of static assets).
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('ServiceWorker registered:', reg.scope))
+                    .catch(err => console.warn('ServiceWorker registration failed:', err));
+            });
+        }
+    </script> -->
 	</body>
 </html>
