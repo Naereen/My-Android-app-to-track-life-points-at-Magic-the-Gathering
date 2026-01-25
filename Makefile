@@ -9,10 +9,11 @@ build-web:
 	npm run build
 
 build-apk:
-	npx tauri android build
+	@echo "TODO: find a technology to build an .apk"
 
 install-apk:
-	adb install src-tauri/gen/android/app/build/outputs/apk/debug/app-debug.apk
+	@echo "TODO: find a technology to build an .apk"
+	# adb install src-tauri/gen/android/app/build/outputs/apk/debug/app-debug.apk
 
 dev:
 	npm run dev

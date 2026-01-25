@@ -6,9 +6,16 @@ export default defineConfig({
 	plugins: [
 		sveltekit(),
 		VitePWA({
-			registerType: 'autoUpdate',
-			injectRegister: 'auto',
-			includeAssets: ['icons/favicon.ico', 'icons/icon-128x128.png', 'icons/icon-192x192.png', 'icons/icon-256x256.png', 'icons/icon-512x512.png', 'icons/icon-512x512.png'],
+			mode: 'development',
+			base: '/',
+			// generate a manifest named `manifest.json` and a service worker named `service-worker.js`
+			manifestFilename: 'manifest.json',
+			filename: 'service-worker.js',
+			strategies: 'generateSW',
+			registerType: 'prompt',
+			injectRegister: 'inline',
+			selfDestroying: false,
+			includeAssets: ['icons/favicon.ico', 'icons/icon-128x128.png', 'icons/icon-192x192.png', 'icons/icon-256x256.png', 'icons/icon-512x512.png'],
 			manifest: {
 				name: "Naereen's MTG Life Tracker",
 				short_name: "Naereen's MTG Life Tracker",
@@ -48,7 +55,9 @@ export default defineConfig({
 				]
 			},
 			devOptions: {
-				enabled: true
+				enabled: true,
+				type: 'module',
+				navigateFallback: 'index.html'
 			},
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json,jpg,jpeg,woff2,woff,ttf,eot,otf}'],
