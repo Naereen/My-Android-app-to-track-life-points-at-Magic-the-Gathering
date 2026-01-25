@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Naereen's Magic Life Tracker",
+  "productName": "Naereen-MTG-Life-Tracker",
   "version": "0.1.0",
   "identifier": "link.besson.mtglifetracker",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Naereen's Magic Life Tracker",
+        "title": "Naereen MTG Life Tracker",
         "width": 2400,
         "height": 1080,
         "resizable": true,

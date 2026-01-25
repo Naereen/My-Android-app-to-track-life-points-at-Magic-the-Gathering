@@ -1,13 +1,32 @@
 # TODO / Roadmap
 
-## "Small" improvements to existing features
+## "Small" improvements to the usability of the app
+
+- [x] Maximize to full screen on mobile devices: the "window" should take all the screen space, especially on the left/right sides
+
+- [x] Write a `manifest.json` for PWA support
+
+- [ ] Save the state in the local storage of the browser, so that reloading the page does not reset everything
+
+## Translating the app
+
+- [ ] Add internationalization (i18n) support
+  - [ ] English (default)
+  - [ ] French (my native language)
+  - [ ] Spanish
+  - [ ] German
+  - [ ] Italian
+
+## Bugs fixing:
+
+- [ ] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
+- [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks)
+
+## Player status improvements
 
 - [ ] Dead player icon
   - [ ] Allow a player to not be dead if life is below 0
 
-- [ ] Maximize to full screen on mobile devices: the "window" should take all the screen space, especially on the left/right sides
-
-- [x] Write a `manifest.json` for PWA support
 
 ## Successfully build a working apk file
 
@@ -22,7 +41,7 @@
 - [ ] Improve the "reset game" dialog
 - [ ] Improve the "new player" dialog
 - [ ] Improve the "edit player" dialog
-- [ ] Improve the "settings" dialog
+- [ ] Implement the "settings" dialog
 - [ ] Implement the "about" dialog
 
 ---------------------------------------------------------------------------
