@@ -22,7 +22,7 @@
     "window_confirm_change_life_total": "Êtes-vous sûr de vouloir continuer avec ces totaux de points de vie ?",
     "window_confirm_change_player_count": "Êtes-vous sûr de vouloir continuer avec ce nombre de joueurs ?",
     "window_confirm_reset_game": "Êtes-vous sûr de vouloir recommencer la partie ?",
-    "player_background_color": "Choix de couleur",
+    "player_background_color": "Choix de couleurs",
     "clear_gradient": "Effacer",
     "gradient_mode": "Mode dégradé",
     "reset_local_storage": "Réinitialiser le stockage local",
@@ -44,5 +44,7 @@
     "about_playstore": "Google Play (lors de la publication)",
     "about_feedback": "Retour / Signalement de bug",
     "choose_4players_layout": "Choisir la disposition pour 4 joueurs",
-    "choose_6players_layout": "Choisir la disposition pour 6 joueurs"
+    "choose_6players_layout": "Choisir la disposition pour 6 joueurs",
+    "open_customize_backgrounds": "Illustrations",
+    "open_customize_colors": "Couleurs"
 }
