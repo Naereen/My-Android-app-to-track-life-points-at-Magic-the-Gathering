@@ -1,14 +1,15 @@
 {
   "name": "Naereen's MTG Life Tracker",
-  "short_name": "MTG Life",
+  "short_name": "MTG Life Tracker",
   "description": "Naereen's MTG Life Tracker",
   "version": "0.0.1",
   "author": "Naereen",
   "lang": "en-US",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
+  "dir": "ltr",
   "background_color": "#ffffff",
   "theme_color": "#062911",
   "icons": [
@@ -25,5 +26,7 @@
       "purpose": "any maskable"
     }
   ],
+  "categories": ["games", "entertainment"],
+  "related_applications": [],
   "prefer_related_applications": false
 }
