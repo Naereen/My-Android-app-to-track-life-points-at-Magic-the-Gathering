@@ -20,11 +20,6 @@
 		font-size: x-large;
 	}
 
-	.font-body {
-		font-family: "Matrix-Bold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-		font-weight: bold;
-	}
-
 	body {
 		@apply bg-black;
 		min-height: 100vh;
@@ -90,15 +85,4 @@
 		scrollbar-width: none; /* Firefox */
 		-ms-overflow-style: none; /* IE and Edge */
 	}
-}
-
-@font-face {
-	font-family: "Matrix-Bold";
-	src: url("../static/fonts/fonts/Matrix-Bold.eot");
-	src: url("../static/fonts/fonts/Matrix-Bold.eot") format("embedded-opentype"),
-		url("../static/fonts/fonts/Matrix-Bold.woff") format("woff"),
-		url("../static/fonts/fonts/Matrix-Bold.ttf") format("truetype");
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
 }
