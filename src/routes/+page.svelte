@@ -12,6 +12,9 @@
 	$: innerWidth = 0;
 	import { onMount } from 'svelte';
 
+	import '../lib/utils/i18n.js'; // Importation pour initialiser i18n
+	import { _ } from 'svelte-i18n';  // i18n language toggle
+
 	onMount(() => {
 		let wakeLock: WakeLockSentinel | null = null;
 
@@ -35,9 +38,6 @@
 			}
 		});
 	});
-
-	import '../lib/utils/i18n.js'; // Importation pour initialiser i18n
-	import { _ } from 'svelte-i18n';  // i18n language toggle
 </script>
 
 <svelte:window bind:innerWidth />

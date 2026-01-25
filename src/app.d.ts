@@ -25,3 +25,5 @@ declare global {
 }
 
 export {};
+
+import 'lib/utils/i18n.js'; // Importation pour initialiser i18n
