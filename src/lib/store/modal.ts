@@ -39,3 +39,32 @@ export const openPlayerModal = (playerId: number) => {
 export const resetPlayerModalData = () => {
 	playerModalData.set(initialPlayerModalData);
 };
+
+// Confirm modal store: holds a message and a resolver function for promise-based API
+type ConfirmModalState = {
+	isOpen: boolean;
+	message: string;
+	resolve: ((value: boolean) => void) | null;
+};
+
+const initialConfirmModalState: ConfirmModalState = { isOpen: false, message: '', resolve: null };
+
+export const confirmModalData = writable<ConfirmModalState>(initialConfirmModalState);
+
+export const showConfirm = (message: string) => {
+	return new Promise<boolean>((resolve) => {
+		confirmModalData.set({ isOpen: true, message, resolve });
+	});
+};
+
+export const respondConfirm = (value: boolean) => {
+	const current = get(confirmModalData);
+	if (current && current.resolve) {
+		try {
+			current.resolve(value);
+		} catch (e) {
+			// ignore
+		}
+	}
+	confirmModalData.set(initialConfirmModalState);
+};

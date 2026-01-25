@@ -9,10 +9,11 @@
 	import CircularButton from '../../../shared/circularButton/CircularButton.svelte';
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { resetLifeTotals } from '$lib/store/player';
+	import { showConfirm } from '$lib/store/modal';
 	import { _ } from 'svelte-i18n';
 
-	const resetLocalStorage = () => {
-		const confirmReset = window.confirm($_('window_confirm_reset_local_storage'));
+	const resetLocalStorage = async () => {
+		const confirmReset = await showConfirm($_('window_confirm_reset_local_storage'));
 		if (!confirmReset) return;
 		try {
 			['appSettings', 'resourceCounter', 'appState', 'players'].forEach((k) => localStorage.removeItem(k));
@@ -51,9 +52,8 @@
 		}
 	};
 
-	const setLifeTotal = (startingLifeTotal: number) => {
-		// TODO: Add clean modal popup
-		const confirm = window.confirm($_('window_confirm_change_life_total'));
+	const setLifeTotal = async (startingLifeTotal: number) => {
+		const confirm = await showConfirm($_('window_confirm_change_life_total'));
 		if (confirm) {
 			setStartingLifeTotal(startingLifeTotal);
 			if (!isCustomStartingLife()) {
@@ -64,9 +64,8 @@
 		}
 	};
 
-	const setNewPlayerCount = (playerCount: number) => {
-		// TODO: Add clean modal popup
-		const confirm = window.confirm($_('window_confirm_change_player_count'));
+	const setNewPlayerCount = async (playerCount: number) => {
+		const confirm = await showConfirm($_('window_confirm_change_player_count'));
 		if (confirm) {
 			setPlayerCount(playerCount);
 			toggleIsMenuOpen('');

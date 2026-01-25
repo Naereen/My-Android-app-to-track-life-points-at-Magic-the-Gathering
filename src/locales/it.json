@@ -26,5 +26,7 @@
     "clear_gradient": "Cancella",
     "gradient_mode": "Modalità gradiente",
     "reset_local_storage": "Azzera archiviazione locale",
-    "window_confirm_reset_local_storage": "Questo cancellerà le impostazioni salvate e lo stato della partita dall'archiviazione locale. Continuare?"
+    "window_confirm_reset_local_storage": "Questo cancellerà le impostazioni salvate e lo stato della partita dall'archiviazione locale. Continuare?",
+    "confirm_modal": "Confermare?",
+    "cancel_modal": "Annullare"
 }

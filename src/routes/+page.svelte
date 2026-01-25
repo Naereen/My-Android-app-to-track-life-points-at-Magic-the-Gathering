@@ -5,9 +5,10 @@
 	import FourPlayerLayoutOne from '$lib/layouts/FourPlayerLayoutOne.svelte';
 	import FivePlayerLayout from '$lib/layouts/FivePlayerLayout.svelte';
 	import SixPlayerLayoutOne from '$lib/layouts/SixPlayerLayoutOne.svelte';
-	import { playerModalData, randomizerModalData } from '$lib/store/modal';
+	import { playerModalData, randomizerModalData, confirmModalData } from '$lib/store/modal';
 	import RandomizerModal from '$lib/components/modals/randomizerModal/RandomizerModal.svelte';
 	import PlayerDataModal from '$lib/components/modals/playerDataModal/PlayerDataModal.svelte';
+	import ConfirmModal from '$lib/components/modals/confirmModal/ConfirmModal.svelte';
 
 	$: innerWidth = 0;
 	import { onMount } from 'svelte';
@@ -59,5 +60,8 @@
 	{/if}
 	{#if $playerModalData.isOpen}
 		<PlayerDataModal />
+	{/if}
+	{#if $confirmModalData.isOpen}
+		<ConfirmModal />
 	{/if}
 </div>

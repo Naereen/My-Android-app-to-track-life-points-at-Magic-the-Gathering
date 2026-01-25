@@ -27,5 +27,7 @@
     "gradient_mode": "Verlaufmodus"
     ,
     "reset_local_storage": "Lokalen Speicher zurücksetzen",
-    "window_confirm_reset_local_storage": "Dies löscht gespeicherte Einstellungen und den Spielstand aus dem lokalen Speicher. Fortfahren?"
+    "window_confirm_reset_local_storage": "Dies löscht gespeicherte Einstellungen und den Spielstand aus dem lokalen Speicher. Fortfahren?",
+    "confirm_modal": "Bestätigen?",
+    "cancel_modal": "Abbrechen"
 }

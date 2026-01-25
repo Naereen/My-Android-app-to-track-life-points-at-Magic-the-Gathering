@@ -26,5 +26,7 @@
     "clear_gradient": "Clear",
     "gradient_mode": "Gradient Mode",
     "reset_local_storage": "Reset local storage",
-    "window_confirm_reset_local_storage": "This will clear saved settings and game state from local storage. Continue?"
+    "window_confirm_reset_local_storage": "This will clear saved settings and game state from local storage. Continue?",
+    "confirm_modal": "Confirm?",
+    "cancel_modal": "Cancel"
 }

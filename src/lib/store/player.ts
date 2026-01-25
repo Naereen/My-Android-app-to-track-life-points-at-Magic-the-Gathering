@@ -1,6 +1,7 @@
 import { get, type Writable } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { _ } from 'svelte-i18n'; // i18n language toggle
+import { showConfirm } from '$lib/store/modal';
 import { persist } from './persist';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -93,9 +94,9 @@ export const setPlayerColor = (playerId: number, color: string) => {
 // Object to store timeout references for each player
 const resetTimers: { [key: number]: number } = {};
 
-export const resetLifeTotals = (alreadyConfirmed: boolean) => {
+export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	if (!alreadyConfirmed) {
-		const confirm = window.confirm(get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?');
+		const confirm = await showConfirm(get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?');
 		if (!confirm) {
 			return;
 		}
