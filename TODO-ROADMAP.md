@@ -16,7 +16,7 @@
 - [ ] Turn off the feature of mobile devices to show the "download / share / print" menu on long click (it breaks the UI)
 
 - [ ] Reduce the vertical space taken by the "ressources" menu (mana/storm symbols)
-- [ ] Increase the font-size of the names of the players, especially on mobile devices
+- [x] Increase the font-size of the names of the players, especially on mobile devices
 
 ## State saving improvements
 
@@ -24,12 +24,12 @@
 
 ## Translating the app
 
-- [ ] Add internationalization (i18n) support
+- [x] Add internationalization (i18n) support
   - [x] English (default)
   - [x] French (my native language)
 
 - [ ] Add more languages, if the technical framework is working well:
-  - [ ] Spanish
+  - [x] Spanish
   - [ ] German
   - [ ] Italian
 
