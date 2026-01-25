@@ -49,6 +49,28 @@
 		pointer-events: none;
 	}
 
+	/* Overlay qui apparaît au-dessus du background (non interactif) */
+	.bg-rotated-overlay {
+		position: absolute;
+		inset: 0;
+		z-index: 20;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 120ms ease, background-color 120ms ease;
+		/* couleur par défaut d'accentuation (peut être surchargée via variable) */
+		background: linear-gradient(rgba(255,255,255,0.06), rgba(255,255,255,0.06));
+	}
+
+	.bg-rotated-overlay.highlight {
+		opacity: 1;
+	}
+
+	/* état mort : overlay sombre */
+	.bg-rotated-overlay.dead {
+		background: rgba(0,0,0,0.5);
+		opacity: 1;
+	}
+
 	/* Assurer que le contenu reste au-dessus du background */
 	.bg-rotated > * {
 		position: relative;

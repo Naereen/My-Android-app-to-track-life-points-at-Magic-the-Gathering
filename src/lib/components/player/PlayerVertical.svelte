@@ -24,6 +24,10 @@
 	$: bgStyle = $players[index].backgroundImage
 		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: center right;`
 		: `background: ${bg};`;
+	$: bgRotation = '0deg';
+	$: styleVars = $players[index].backgroundImage
+		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}`
+		: `--bg-rotation: ${bgRotation}; --bg-image: none`;
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -84,12 +88,16 @@
 
 <div
 	class="flex w-full rounded-3xl flex-grow h-6"
-	style={bgStyle}
+	class:bg-rotated={!!$players[index].backgroundImage}
+	style={styleVars}
+	style:background={!$players[index].backgroundImage ? bg : undefined}
 	class:h-full={!$appState.isMenuOpen}
 	class:rotate-180={orientation === 'down'}
-	class:opacity-65={$players[index].highlighted}
+	class:opacity-85={$players[index].highlighted}
 	class:bg-player-dark={isDead}
 >
+	<!-- Overlay au-dessus du background (non-interactif) -->
+	<div class="bg-rotated-overlay" class:highlight={$players[index].highlighted} class:dead={isDead}></div>
 	{#if !$appState.isMenuOpen}
 		<div class="flex w-full relative">
 			<button
@@ -119,9 +127,8 @@
 					<button
 						on:click={() => openPlayerModal(id)}
 						on:contextmenu|preventDefault draggable="false"
-						class="bg-darkgray py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
-						style="background: {isDead ? 'black' : 'gray'}"
-						class:bg-black={isDead}
+						class="py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
+						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						><div class="flex">
 							<span style="font-size: xx-large; color: white;" style:text-decoration={isDead ? 'line-through' : 'none'}>{$players[index].playerName}</span>
 							{#if $players[index].isFirst}

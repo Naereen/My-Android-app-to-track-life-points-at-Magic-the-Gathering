@@ -60,6 +60,12 @@
 
 - [x] Keep the small "medal" which indicates who started the game, during all the game (not only at the beginning)
 
+- [ ] Add a small section on the bottom of each player panel to show the current status effects on that player
+  - [ ] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
+  - [ ] Maybe even use small icons for that?
+  - [ ] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
+  - [ ] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax, Commander Damage (from each opponent).
+
 - [ ] Add support for the poison counter
   - [ ] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
   - [ ] Show the poison counter next to the life total, as soon as it is > 0

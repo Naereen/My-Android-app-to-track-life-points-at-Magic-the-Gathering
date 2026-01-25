@@ -87,14 +87,16 @@
 
 <div
   	class="rounded-2xl relative h-full w-full"
-	class:bg-rotated={!!$players[index].backgroundImage}
+ 	class:bg-rotated={!!$players[index].backgroundImage}
  	style={styleVars}
-	style:background={!$players[index].backgroundImage ? bg : undefined}
+ 	style:background={!$players[index].backgroundImage ? bg : undefined}
 >
+	<!-- Overlay au-dessus du background (non-interactif) -->
+	<div class="bg-rotated-overlay" class:highlight={$players[index].highlighted} class:dead={isDead}></div>
 <div
 	class="flex w-full rounded-2xl flex-grow h-6"
 	class:h-full={!$appState.isMenuOpen}
-	class:opacity-65={$players[index].highlighted}
+	class:opacity-85={$players[index].highlighted}
 	class:bg-player-dark={isDead}
 	style="background: ${bg};"
 >
@@ -135,10 +137,9 @@
 					<button
 						on:click={() => openPlayerModal(id)}
 						on:contextmenu|preventDefault draggable="false"
-						class="bg-darkgray py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert shadow-lg"
+						class="py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert shadow-lg"
 						class:rotate-180={orientation === 'left'}
-						style="background: {isDead ? 'black' : 'gray'}"
-						class:bg-black={isDead}
+						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 					>
 						<div class="flex items-center">
 							<span style="font-size: xx-large; color: white;" style:text-decoration={isDead ? 'line-through' : 'none'}>{$players[index].playerName}</span>
