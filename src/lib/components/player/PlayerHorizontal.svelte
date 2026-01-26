@@ -33,9 +33,6 @@
 	$: index = id - 1;
 	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10);
 	$: bg = colorToBg($players[index].color ?? 'white');
-	$: bgStyle = $players[index].backgroundImage
-		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: top center;`
-		: `background: ${bg};`;
 	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
 	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
 	$: bgPositionX = orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';

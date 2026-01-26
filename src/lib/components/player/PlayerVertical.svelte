@@ -34,9 +34,6 @@
 	$: index = id - 1;
 	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10);
 	$: bg = colorToBg($players[index].color ?? 'white');
-	$: bgStyle = $players[index].backgroundImage
-		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: center right;`
-		: `background: ${bg};`;
 	$: bgRotation = '0deg';
 	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
 	$: bgPositionX = orientation === 'up' ? 'center' : orientation === 'right' ? 'center' : 'center';
@@ -150,7 +147,7 @@
 	style:background={!$players[index].backgroundImage ? bg : undefined}
 	class:h-full={!$appState.isMenuOpen}
 	class:rotate-180={orientation === 'down'}
-	class:opacity-85={$players[index].highlighted}
+	class:opacity-35={$players[index].highlighted}
 	class:bg-player-dark={isDead}
 >
 	<!-- Overlay au-dessus du background (non-interactif) -->

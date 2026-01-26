@@ -64,6 +64,7 @@
 		pointer-events: none;
 	}
 
+
 	/* Overlay qui apparaît au-dessus du background (non interactif) */
 	.bg-rotated-overlay {
 		position: absolute;
