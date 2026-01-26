@@ -69,12 +69,17 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] Add a way to directly set the life total to a specific value, in the player pane
 
+- [ ] In the PlayerDataModal.svelte, allow to scroll all the window, but keep the top always visible (fixed position)
+- [ ] In the PlayerDataModal.svelte, when selecting a card from Scryfall as background, after a search success, add a "Choose at random" button to pick a random card from the search results (instead of having to pick one by one). Also translate into fr/es/it/de the "Choose at random" text.
+
 - [x] Add a small section on the bottom of each player panel to show the current status effects on that player
   - [x] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
   - [x] Maybe even use small icons for that?
   - [x] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
   - [x] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax
   - [ ] TODO: improve this section visually, make it prettier (nicer icons, better layout, etc.)
+
+- [ ] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
 - [ ] Harder to track: implement the Commander Damage tracker (from each opponent).
   - [ ] make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
@@ -145,7 +150,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Align the top of the illustration with the top of background area (crop the card image if needed)
   - [x] Works fine for cards with different illustrations for the same name and edition
   - [x] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
-  - [ ] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two different colors)
+  - [x] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two colors)
+    - [ ] Later: randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG)
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders
 
 - [ ] Commander damage type tracking

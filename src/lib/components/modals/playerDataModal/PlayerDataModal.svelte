@@ -137,7 +137,7 @@
 					</div>
 					{#if mode === 'backgrounds'}
 						<div class="w-full mb-3">
-							<div class="flex gap-2">
+							<div class="gap-2">
 								<input type="text" class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black" bind:value={searchQuery} placeholder={ $_('scryfall_search') + "..." } />
 								<button class="px-3 py-2 bg-blue-500 text-white rounded-lg" on:click={doSearch} disabled={isSearching}>{isSearching ? $_('scryfall_searching') : $_('scryfall_search')}</button>
 								<button class="px-3 py-2 bg-red-500 text-white rounded-lg" on:click={() => setPlayerBackgroundImage($playerModalData.playerId, null)}>{ $_('clear_background') }</button>
@@ -153,7 +153,7 @@
 										<div class="font-semibold text-xl">{r.name}</div>
 										<div class="text-sm text-gray-600">{r.set_name}</div>
 										<div class="text-sm text-gray-600">Artist: {r.artist}</div>
-										<div class="text-sm text-gray-600">© Wizards of the Coast</div>
+										<div class="text-sm text-gray-600">© Wizards of the Coast, 1993-2026</div>
 										<div class="mt-2">
 											<button class="px-3 py-1 bg-green-600 text-white rounded" on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image)}>{$_('scryfall_search_choose')}</button>
 										</div>
@@ -236,13 +236,13 @@
 						</div>
 
 						<!-- Status effects controls -->
-						<div class="mt-4 w-full border-t pt-4">
+						<div class="mt-4 w-full flex flex-col items-center text-center">
 							<div class="font-semibold mb-2">{ $_('status_effects') }</div>
 							<div class="flex flex-wrap gap-3 mb-3">
 								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'monarch', !($players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false))} /> <Crown title={$_('tooltip_status_monarch')} /> { $_('monarch') }</label>
 								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'initiative', !($players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false))} /> <Initiative title={$_('tooltip_status_initiative')} /> { $_('initiative') }</label>
 								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ascend', !($players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false))} /> <Ascend title={$_('tooltip_status_ascend')} /> { $_('ascend') }</label>
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight title={$_('tooltip_status_day_night')} /> { $_('day_night') }</label>
+								<!-- <label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight title={$_('tooltip_status_day_night')} /> { $_('day_night') }</label> -->
 								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ko ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ko', !($players[$playerModalData.playerId - 1].statusEffects?.ko ?? false))} /> <StatusSkull title={$_('tooltip_status_ko')} /> { $_('ko') }</label>
 							</div>
 

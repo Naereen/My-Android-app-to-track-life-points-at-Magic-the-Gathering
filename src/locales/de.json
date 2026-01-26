@@ -51,7 +51,7 @@
     "choose_your_language": "Wähle deine Sprache",
     "scryfall_searching": "Suche in Scryfall...",
     "scryfall_search": "Suchen Kartennamen",
-    "scryfall_search_noresult": "Keine Ergebnisse. Offline? Versuchen Sie eine andere Suche?",
+    "scryfall_search_noresult": "Scryfall syntax is supported. Keine Ergebnisse. Offline? Versuchen Sie eine andere Suche?",
     "scryfall_search_choose": "Wählen",
     "status_effects": "Status-Effekte",
     "monarch": "Monarch",
