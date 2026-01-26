@@ -69,7 +69,9 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] Add a way to directly set the life total to a specific value, in the player pane
 
-- [ ] In the PlayerDataModal.svelte, allow to scroll all the window, but keep the top always visible (fixed position)
+- [x] In the PlayerDataModal.svelte, allow to scroll all the window, but keep the top always visible (fixed position). Do this by allowing the modal content to scroll, but not the modal header.
+- [ ] In the PlayerDataModal.svelte, add a third virtual "tab" (first two are Backgrounds and Colors), the "status_effects" should live in a separate pseudo tab view, to save some space?
+
 - [ ] In the PlayerDataModal.svelte, when selecting a card from Scryfall as background, after a search success, add a "Choose at random" button to pick a random card from the search results (instead of having to pick one by one). Also translate into fr/es/it/de the "Choose at random" text.
 
 - [x] Add a small section on the bottom of each player panel to show the current status effects on that player

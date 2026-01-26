@@ -102,7 +102,7 @@
 </script>
 
 <div
-	class="bg-black/70 absolute w-full h-full top-0 left-0 flex justify-center items-center"
+	class="bg-black/70 fixed inset-0 flex justify-center items-start"
 	on:click={resetPlayerModalData}
 	role="button"
 	on:keydown={() => null}
@@ -110,14 +110,14 @@
 >
 	<div
 		on:click|stopPropagation
-		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[90vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative"
+		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[90vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-8 overflow-auto"
 		role="button"
 		on:keydown={() => null}
 		tabindex="0"
 	>
-		<div class="flex flex-col justify-center">
-			<div class="flex flex-col justify-center items-center">
-				<h2 class="text-xl font-semibold my-2 relative w-full text-center">
+		<div class="flex flex-col justify-center w-full">
+			<div class="flex flex-col justify-center items-center sticky top-0 bg-[#d8e5f7] z-10 pb-4">
+				<h2 class="text-2xl font-semibold my-2 relative w-full text-center">
 					{ $_('customize_player') }<button on:click={resetPlayerModalData} on:contextmenu|preventDefault draggable="false" class="absolute -right-0 top-0"
 						><X /></button>
 				</h2>
@@ -177,7 +177,7 @@
 							<button on:click={() => clearSelection($playerModalData.playerId)} class="ml-2 text-sm underline">{ $_('clear_gradient') }</button>
 						</div>
 						<div class="flex flex-wrap justify-center items-center gap-3 m-auto">
-							{#each ['white','blue','black','red','green'] as c}
+							{#each ['white','blue','black','red','green', 'mud'] as c}
 								<button
 									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
 									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
@@ -194,24 +194,7 @@
 							{/each}
 							<div class="-h-1" />
 							<hr class="w-full" />
-							{#each ['mud', 'metalicgray'] as c}
-								<button
-									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
-									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
-									style="background: {colorToBg(c)}"
-									aria-label={c}
-								>
-									{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
-										<span class="block w-full h-full rounded-square rounded-lg" style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"></span>
-									{/if}
-									{#if selectedColors.indexOf(c) !== -1}
-										<span class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center">{selectedColors.indexOf(c) + 1}</span>
-									{/if}
-								</button>
-							{/each}
-							<div class="-h-1" />
-							<hr class="w-full" />
-							{#each ['gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
+							{#each ['metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
 								<button
 									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
 									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
