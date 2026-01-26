@@ -10,7 +10,8 @@ export const appSettings: Writable<App.Settings> = persist('appSettings', {
 	allowNegativeLife: false,
 	preventScreenSleep: true,
 	fourPlayerLayout: 'matrix',
-	locale: 'en'
+	hapticsEnabled: true,
+	locale: 'fr'
 });
 
 export const setPlayerCount = (playerCount: number) => {
@@ -35,6 +36,10 @@ export const setAllowNegativeLife = (allowNegativeLife: boolean) => {
 
 export const setPreventScreenSleep = (preventScreenSleep: boolean) => {
 	appSettings.update((data) => ({ ...data, preventScreenSleep }));
+};
+
+export const setHapticsEnabled = (hapticsEnabled: boolean) => {
+    appSettings.update((data) => ({ ...data, hapticsEnabled }));
 };
 
 export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {

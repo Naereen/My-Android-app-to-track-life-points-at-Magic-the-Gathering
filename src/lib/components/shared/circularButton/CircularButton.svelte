@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tap } from '$lib/utils/haptics';
 	export let number: number = 0;
 	export let highlight = false;
 	export let customText = false;
@@ -12,12 +13,16 @@
 	if (highlight) {
 		outline = 'bg-[#42d5ff]';
 		// if (light) {
-		// 	outline = 'bg-white';
+		//  outline = 'bg-white';
 		// }
 	}
+
+	const handleClick = (e: MouseEvent) => {
+		tap(12);
+	};
 </script>
 
-<button class="rounded-full flex justify-center items-center {outline} {outerSize}" on:click on:contextmenu|preventDefault draggable="false">
+<button class="rounded-full flex justify-center items-center {outline} {outerSize}" on:click={handleClick} on:contextmenu|preventDefault draggable="false">
 	<div class="rounded-full bg-[#2d2f30] {innerSize}">
 		<span class="text-white flex justify-center items-center h-full">
 			{#if customText}

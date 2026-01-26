@@ -12,7 +12,7 @@
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { resetLifeTotals } from '$lib/store/player';
 	import { showConfirm } from '$lib/store/modal';
-	import { setAllowNegativeLife, setPreventScreenSleep } from '$lib/store/appSettings';
+	import { setAllowNegativeLife, setPreventScreenSleep, setHapticsEnabled } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
 
 	const resetLocalStorage = async () => {
@@ -98,6 +98,11 @@
 	const handlePreventSleepChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setPreventScreenSleep(!!target.checked);
+	};
+
+	const handleHapticsChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setHapticsEnabled(!!target.checked);
 	};
 
 	const languages = [
@@ -264,6 +269,17 @@
 				<span class="ml-2 text-lg font-semibold">{ $_('prevent_screen_sleep') }</span>
 			</label>
 		</div>
+		<div class="w-full flex justify-center mt-2 mb-4">
+			<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+				<input
+					type="checkbox"
+					checked={$appSettings.hapticsEnabled}
+					on:change={handleHapticsChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">Haptic feedback</span>
+			</label>
+		</div>
 		<div class="w-full flex justify-center mt-8 mb-8">
 			<button
 				class="bg-red-900 text-white px-4 py-2 rounded-full"
@@ -276,7 +292,7 @@
 		<!-- About section (larger text per request) -->
 		<div class="w-full text-center text-gray-400 mt-4 mb-8 px-6">
 			<div class="text-white text-2xl mb-2 font-semibold">{ $_('about_title') }</div>
-			<div class="text-base mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.1.0'}</div>
+			<div class="text-base mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.2.0'}</div>
 			<div class="text-base mb-1">{ $_('about_author') }: Naereen</div>
 			<div class="text-base mb-2">{ $_('about_license') }: MIT</div>
 			<div class="text-base mb-2">{ $_('about_thanks') }</div>
