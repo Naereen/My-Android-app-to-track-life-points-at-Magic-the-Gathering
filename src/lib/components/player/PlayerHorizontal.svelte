@@ -227,10 +227,11 @@
 						{#if !editing}
 							<button on:dblclick={startEdit} on:contextmenu|preventDefault={openPromptSetLife} class="pointer-events-auto bg-transparent border-none p-0 m-0">
 								<span
-									class="text-shadow-white text-shadow-xl text-black text-7xl flex items-center text-center"
+									class="text-shadow-white text-shadow-xl text-white text-7xl font-bold flex items-center text-center"
 									class:text-5xl={$appSettings.playerCount >= 5}
 									class:-rotate-180={orientation === 'left'}
 									class:opacity-25={isDead}
+									style="text-shadow: 0 0 40px black;"
 									>{$players[index].lifeTotal}</span>
 							</button>
 						{:else}

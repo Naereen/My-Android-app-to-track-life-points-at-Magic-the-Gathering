@@ -207,7 +207,7 @@
 						{/if}
 						{#if !editing}
 							<button on:dblclick={startEdit} on:contextmenu|preventDefault={openPromptSetLife} class="pointer-events-auto bg-transparent border-none p-0 m-0">
-								<span class="text-shadow-xl/100 text-black text-8xl" class:opacity-25={isDead}>
+								<span class="text-shadow-xl/120 text-white text-8xl font-bold" class:opacity-25={isDead} style="text-shadow: 0 0 40px black;">
 									{$players[index].lifeTotal}</span>
 							</button>
 						{:else}

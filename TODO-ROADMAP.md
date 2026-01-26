@@ -69,6 +69,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] Add a way to directly set the life total to a specific value, in the player pane
 
+- [x] Improve the text contrast of the life total number, especially on mobile devices (hard to read sometimes) : add a white shadow, and make it bold
+
 - [x] In the PlayerDataModal.svelte, allow to scroll all the window, but keep the top always visible (fixed position). Do this by allowing the modal content to scroll, but not the modal header.
 - [ ] In the PlayerDataModal.svelte, add a third virtual "tab" (first two are Backgrounds and Colors), the "status_effects" should live in a separate pseudo tab view, to save some space?
 

@@ -2,7 +2,7 @@
 
 A web-based life point tracker for Magic: The Gathering, inspired by the [Lifetap](https://play.google.com/store/apps/details?id=com.lifetap) Android application. Built with SvelteKit, TypeScript, and Tailwind CSS.
 
-![Naereens-MTG-Life-Tracker-logo](Naereens-MTG-Life-Tracker-logo.png)
+<img src="Naereens-MTG-Life-Tracker-logo.png" alt="The App logo, Naereen's MTG Life Tracker, written in gold on a green background" width="300"/>
 
 **The application can be used on Android or Apple devices, via a simple web browser**, or by downloading the apk file for Android (coming soon!).
 
