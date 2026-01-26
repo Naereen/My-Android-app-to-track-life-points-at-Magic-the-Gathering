@@ -53,6 +53,7 @@
     "scryfall_search": "Search card name",
     "scryfall_search_noresult": "Scryfall syntax is supported. No result. Offline? Try another search?",
     "scryfall_search_choose": "Choose",
+    "scryfall_search_choose_random": "Choose at random",
     "status_effects": "Status Effects",
     "monarch": "Monarch",
     "initiative": "Initiative",

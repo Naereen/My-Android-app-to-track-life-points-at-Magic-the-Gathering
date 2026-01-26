@@ -53,6 +53,7 @@
     "scryfall_search": "Cerca nome carta",
     "scryfall_search_noresult": "Scryfall syntax is supported. Nessun risultato. Offline? Prova un'altra ricerca?",
     "scryfall_search_choose": "Scegli",
+    "scryfall_search_choose_random": "Scegli a caso",
     "status_effects": "Effetti di stato",
     "monarch": "Monarca",
     "initiative": "Iniziativa",

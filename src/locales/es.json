@@ -53,6 +53,7 @@
     "scryfall_search": "Buscar nombre de carta",
     "scryfall_search_noresult": "Scryfall syntax is supported. No hay resultados. ¿Sin conexión? ¿Intenta otra búsqueda?",
     "scryfall_search_choose": "Elegir",
+    "scryfall_search_choose_random": "Elegir al azar",
     "status_effects": "Efectos de estado",
     "monarch": "Monarca",
     "initiative": "Iniciativa",

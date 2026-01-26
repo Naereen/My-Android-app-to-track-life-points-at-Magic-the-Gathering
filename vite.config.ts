@@ -61,7 +61,7 @@ export default defineConfig({
 			devOptions: {
 				enabled: true,
 				type: 'module',
-				navigateFallback: 'index.html'
+				// navigateFallback: 'index.html'
 			},
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json,jpg,jpeg,woff2,woff,ttf,eot,otf}'],

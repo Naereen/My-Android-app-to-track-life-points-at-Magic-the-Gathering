@@ -58,8 +58,8 @@
 		transform: translate(-50%, -50%) rotate(var(--bg-rotation, 0deg));
 		transform-origin: center center;
 		background-image: var(--bg-image);
-		background-size: cover;
-		background-position: var(--bg-positionx, center) var(--bg-positiony, top);
+		background-size: contain;
+		background-position: var(--bg-positionx, center) var(--bg-positiony, center);
 		z-index: -10;
 		pointer-events: none;
 	}

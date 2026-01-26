@@ -72,9 +72,10 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Improve the text contrast of the life total number, especially on mobile devices (hard to read sometimes) : add a white shadow, and make it bold
 
 - [x] In the PlayerDataModal.svelte, allow to scroll all the window, but keep the top always visible (fixed position). Do this by allowing the modal content to scroll, but not the modal header.
-- [ ] In the PlayerDataModal.svelte, add a third virtual "tab" (first two are Backgrounds and Colors), the "status_effects" should live in a separate pseudo tab view, to save some space?
+- [x] In the PlayerDataModal.svelte, add a third virtual "tab" (first two are Backgrounds and Colors), the "status_effects" should live in a separate pseudo tab view, to save some space?
 
-- [ ] In the PlayerDataModal.svelte, when selecting a card from Scryfall as background, after a search success, add a "Choose at random" button to pick a random card from the search results (instead of having to pick one by one). Also translate into fr/es/it/de the "Choose at random" text.
+- [x] In the PlayerDataModal.svelte, when selecting a card from Scryfall as background, after a search success, add a "Choose at random" button to pick a random card from the search results (instead of having to pick one by one). Also translate into fr/es/it/de the "Choose at random" text.
+  - [ ] TODO: if there is not yet a research result, clicking on this button shouldn't do nothing, it should just chose a random card from the full Scryfall database (just one random card from the entire database of cards/illustrations). The function is already implemented in the Scryfall utils (`randomCards`), just need to call it here when there is no search result yet. FIXME: currently, this doesn't work.
 
 - [x] Add a small section on the bottom of each player panel to show the current status effects on that player
   - [x] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
@@ -82,10 +83,11 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
   - [x] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax
   - [ ] TODO: improve this section visually, make it prettier (nicer icons, better layout, etc.)
+  - [ ] FIXME: when clicking the "K.O." status effect, it doesn't change the player's isDead status (gray out life total and skull icon). Needs fixing.
 
-- [ ] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
+- [ ] TODO: Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
-- [ ] Harder to track: implement the Commander Damage tracker (from each opponent).
+- [ ] TODO: Harder to track: implement the Commander Damage tracker (from each opponent).
   - [ ] make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Add support for the poison counter: can you die to them?
@@ -95,7 +97,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
 
 - [ ] Implement a way to know whose turn it is
-  - [ ] A button to advance to the next player's turn
+  - [ ] A button to advance to the next player's turn, in the middle of the buttons for mana and randomizer
   - [ ] A button to go back to the previous player's turn
   - [ ] Show the current player's turn somewhere on the screen
 
@@ -104,10 +106,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [ ] Show the remaining time for the current player's turn
   - [ ] Sound an alarm when the time is up
 
-- [ ] Improve the visibility of the "current player" (the one whose turn it is)
-  - [ ] Maybe a glowing border around their panel?
-  - [ ] Maybe a different background color?
-  - [ ] Maybe an icon next to their name?
+- [ ] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing border around their panel?
 
 - [x] Implement two layouts for the four-players mode:
   - [x] A "1 / 2 / 1" layout, if players are seated on a round table

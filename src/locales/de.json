@@ -53,6 +53,7 @@
     "scryfall_search": "Suchen Kartennamen",
     "scryfall_search_noresult": "Scryfall syntax is supported. Keine Ergebnisse. Offline? Versuchen Sie eine andere Suche?",
     "scryfall_search_choose": "Wählen",
+    "scryfall_search_choose_random": "Zufällig auswählen",
     "status_effects": "Status-Effekte",
     "monarch": "Monarch",
     "initiative": "Initiative",
