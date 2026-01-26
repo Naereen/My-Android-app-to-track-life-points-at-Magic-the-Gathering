@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   width="520"
+   height="520"
+   viewBox="-300 -300 520 520"
+   id="svg2"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <metadata
+     id="metadata17">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs15" />
+  <path
+     d="m 220.00002,-39.999996 a 260.00001,260 0 1 1 -520.00002,0 260.00001,260 0 1 1 520.00002,0 z"
+     id="path3776"
+     style="fill:#f2de00;fill-opacity:1;stroke:none;stroke-width:8.84512" />
+  <circle
+     cx="-39.999992"
+     cy="-39.999996"
+     r="50"
+     id="circle6" />
+  <path
+     d="m -114.99969,-38.506523 a 75,75 0 0 0 37.5,64.952003 l -87.5,151.554 a 250,250 0 0 1 -125,-216.506003 z"
+     id="bld-7" />
+  <use
+     transform="rotate(120,-39.999689,-38.506523)"
+     id="use9-5"
+     x="0"
+     y="0"
+     width="600"
+     height="600"
+     xlink:href="#bld-7" />
+  <use
+     transform="rotate(-120,-39.999689,-38.506523)"
+     id="use11-9"
+     x="0"
+     y="0"
+     width="600"
+     height="600"
+     xlink:href="#bld-7" />
+  <path
+     d="M -39.999991,-300 C -183.59402,-300 -299.99999,-183.59404 -299.99999,-39.999997 -299.99999,103.59404 -183.59402,220 -39.999991,220 103.59404,220 220.00001,103.59404 220.00001,-39.999997 220.00001,-183.59404 103.59404,-300 -39.999991,-300 Z m 0,11 c 137.5189,0 249.000001,111.4811 249.000001,249.000003 C 209.00001,97.518903 97.518909,209 -39.999991,209 -177.51889,209 -288.99999,97.518903 -288.99999,-39.999997 -288.99999,-177.5189 -177.51889,-289 -39.999991,-289 Z"
+     id="path2996"
+     style="fill:#f2de00;fill-opacity:1;stroke:none" />
+</svg>

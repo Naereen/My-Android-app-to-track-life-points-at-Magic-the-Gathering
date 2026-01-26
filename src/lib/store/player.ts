@@ -15,6 +15,7 @@ const defaultPlayers: App.Player.Data[] = [
 		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
+		statusEffects: {},
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -28,6 +29,7 @@ const defaultPlayers: App.Player.Data[] = [
 		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
+		statusEffects: {},
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -41,6 +43,7 @@ const defaultPlayers: App.Player.Data[] = [
 		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
+		statusEffects: {},
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -54,6 +57,7 @@ const defaultPlayers: App.Player.Data[] = [
 		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
+		statusEffects: {},
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -67,6 +71,7 @@ const defaultPlayers: App.Player.Data[] = [
 		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
+		statusEffects: {},
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -80,6 +85,7 @@ const defaultPlayers: App.Player.Data[] = [
 		backgroundImage: null,
 		tempLifeDiff: 0,
 		poison: 0,
+		statusEffects: {},
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -131,6 +137,54 @@ export const setPlayerBackgroundImage = (playerId: number, imageUrl: string | nu
 	});
 };
 
+export const setPlayerStatusBoolean = (playerId: number, key: string, value: boolean) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				const statusEffects = player.statusEffects ? { ...player.statusEffects } : {};
+				// @ts-ignore
+				statusEffects[key] = value;
+				return {
+					...player,
+					statusEffects
+				};
+			}
+			return player;
+		});
+	});
+};
+
+export const setPlayerStatusNumeric = (playerId: number, key: string, value: number) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				const statusEffects = player.statusEffects ? { ...player.statusEffects } : {};
+				// @ts-ignore
+				statusEffects[key] = value;
+				return {
+					...player,
+					statusEffects
+				};
+			}
+			return player;
+		});
+	});
+};
+
+export const setPlayerPoison = (playerId: number, amount: number) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					poison: amount
+				};
+			}
+			return player;
+		});
+	});
+};
+
 // Object to store timeout references for each player
 const resetTimers: { [key: number]: number } = {};
 
@@ -157,7 +211,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 				...player,
 				lifeTotal: startingLifeTotal,
 				tempLifeDiff: 0, // Reset tempLifeDiff to 0
-				poison: 0
+				poison: 0,
+				statusEffects: {}
 			};
 		});
 	});
@@ -268,7 +323,7 @@ export const setTempLifeDiff = (
 							return p;
 						});
 					});
-				}, 6000);
+				}, 2000);
 
 				return {
 					...player,

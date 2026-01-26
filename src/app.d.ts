@@ -17,6 +17,18 @@ declare global {
 				backgroundImage?: string | null;
 				tempLifeDiff: number;
 				poison?: number;
+				statusEffects?: {
+					monarch?: boolean;
+					initiative?: boolean;
+					ascend?: boolean;
+					dayNight?: boolean;
+					ko?: boolean;
+					energy?: number;
+					experience?: number;
+					rad?: number;
+					commandTax?: number;
+					commanderDamage?: number[];
+				};
 				allowNegativeLife?: boolean;
 				highlighted: boolean;
 				isFirst: boolean;

@@ -60,6 +60,9 @@
 
 - [x] Keep the small "medal" which indicates who started the game, during all the game (not only at the beginning)
 
+- [ ] Add a way to directly set the life total to a specific value, in the player panel
+
+
 - [ ] Add a small section on the bottom of each player panel to show the current status effects on that player
   - [ ] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
   - [ ] Maybe even use small icons for that?
@@ -68,6 +71,7 @@
 
 - [ ] Add support for the poison counter
   - [ ] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
+  - [ ] Add a way to increment/decrement poison counter with clicks on some buttons in the player panel (like for life total)
   - [ ] Show the poison counter next to the life total, as soon as it is > 0
   - [ ] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
 

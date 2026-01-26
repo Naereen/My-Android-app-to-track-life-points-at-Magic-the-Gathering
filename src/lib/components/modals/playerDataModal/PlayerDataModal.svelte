@@ -2,7 +2,17 @@
 	import Pen from '$lib/assets/icons/Pen.svelte';
 	import X from '$lib/assets/icons/X.svelte';
 	import { playerModalData, resetPlayerModalData } from '$lib/store/modal';
-	import { players, setPlayerColor, setPlayerAllowNegative } from '$lib/store/player';
+	import { players, setPlayerColor, setPlayerAllowNegative, setPlayerStatusBoolean, setPlayerStatusNumeric, setPlayerPoison } from '$lib/store/player';
+	import StatusSkull from '$lib/assets/icons/StatusSkull.svelte';
+	import Crown from '$lib/assets/icons/Crown.svelte';
+	import Initiative from '$lib/assets/icons/Initiative.svelte';
+	import Ascend from '$lib/assets/icons/Ascend.svelte';
+	import DayNight from '$lib/assets/icons/DayNight.svelte';
+	import PoisonIcon from '$lib/assets/icons/Poison.svelte';
+	import Energy from '$lib/assets/icons/Energy.svelte';
+	import Experience from '$lib/assets/icons/Experience.svelte';
+	import Rad from '$lib/assets/icons/Rad.svelte';
+	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { _ } from 'svelte-i18n';
 
@@ -215,6 +225,55 @@
 						<div class="mt-4 w-full flex flex-col items-center text-center">
 							<label class="flex items-center gap-2 justify-center"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].allowNegativeLife} on:change={() => setPlayerAllowNegative($playerModalData.playerId, !$players[$playerModalData.playerId - 1].allowNegativeLife)} /> <span class="ml-2 block mb-2 font-semibold text-center">{ $_('allow_negative_life') }</span></label>
 							<div class="mt-2 text-sm text-gray-600 text-center">{ $_('allow_negative_life_help') }</div>
+						</div>
+
+						<!-- Status effects controls -->
+						<div class="mt-4 w-full border-t pt-4">
+							<div class="font-semibold mb-2">Status Effects</div>
+							<div class="flex flex-wrap gap-3 mb-3">
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'monarch', !($players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false))} /> <Crown /> Monarch</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'initiative', !($players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false))} /> <Initiative /> Initiative</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ascend', !($players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false))} /> <Ascend /> Ascend</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight /> Day/Night</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ko ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ko', !($players[$playerModalData.playerId - 1].statusEffects?.ko ?? false))} /> <StatusSkull /> K.O.</label>
+							</div>
+
+							<div class="grid grid-cols-2 gap-3">
+								<div class="flex items-center gap-2">
+									<span class="w-24 flex items-center gap-2"><PoisonIcon /> Poison</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerPoison($playerModalData.playerId, Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1))}>-</button>
+									<span class="px-2">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerPoison($playerModalData.playerId, Math.min(99, ($players[$playerModalData.playerId - 1].poison ?? 0) + 1))}>+</button>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<span class="w-24 flex items-center gap-2"><Energy /> Energy</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'energy', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) - 1))}>-</button>
+									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'energy', ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) + 1)}>+</button>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<span class="w-24 flex items-center gap-2"><Experience /> Experience</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'experience', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) - 1))}>-</button>
+									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'experience', ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) + 1)}>+</button>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<span class="w-24 flex items-center gap-2"><Rad /> Rad</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'rad', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) - 1))}>-</button>
+									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'rad', ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1)}>+</button>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<span class="w-24 flex items-center gap-2"><CommandTax /> CmdTax</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'commandTax', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) - 1))}>-</button>
+									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'commandTax', ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) + 1)}>+</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

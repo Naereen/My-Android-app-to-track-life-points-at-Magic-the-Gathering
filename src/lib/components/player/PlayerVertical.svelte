@@ -3,6 +3,15 @@
 	import Minus from '$lib/assets/icons/Minus.svelte';
 	import Plus from '$lib/assets/icons/Plus.svelte';
 	import Skull from '$lib/assets/icons/Skull.svelte';
+	import Crown from '$lib/assets/icons/Crown.svelte';
+	import Initiative from '$lib/assets/icons/Initiative.svelte';
+	import Ascend from '$lib/assets/icons/Ascend.svelte';
+	import DayNight from '$lib/assets/icons/DayNight.svelte';
+	import PoisonIcon from '$lib/assets/icons/Poison.svelte';
+	import Energy from '$lib/assets/icons/Energy.svelte';
+	import Experience from '$lib/assets/icons/Experience.svelte';
+	import Rad from '$lib/assets/icons/Rad.svelte';
+	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
@@ -28,6 +37,13 @@
 	$: styleVars = $players[index].backgroundImage
 		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}`
 		: `--bg-rotation: ${bgRotation}; --bg-image: none`;
+	$: status = $players[index].statusEffects ?? {};
+	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter((k) => status[k]);
+	$: poisonCount = $players[index].poison ?? 0;
+	$: energyCount = status.energy ?? 0;
+	$: experienceCount = status.experience ?? 0;
+	$: radCount = status.rad ?? 0;
+	$: commandTaxCount = status.commandTax ?? 0;
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -87,7 +103,7 @@
 <svelte:window bind:innerWidth />
 
 <div
-	class="flex w-full rounded-3xl flex-grow h-6"
+	class="flex w-full rounded-2xl flex-grow h-6"
 	class:bg-rotated={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
@@ -106,7 +122,7 @@
 				on:touchstart={() => handleTouchStart('subtract')}
 				on:touchend={() => handleTouchEnd('subtract')}
 				on:contextmenu|preventDefault draggable="false"
-				class="w-1/2 flex justify-start items-center active:bg-player-light rounded-l-3xl select-none"
+				class="w-1/2 flex justify-start items-center active:bg-player-light rounded-l-2xl select-none"
 			>
 				<Minus />
 			</button>
@@ -160,4 +176,37 @@
 			</div>
 		</div>
 	{/if}
+		<!-- Status effects bar -->
+		<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none">
+			<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
+				{#if poisonCount > 0}
+					<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><PoisonIcon /> <span> {poisonCount}/10</span></div>
+				{/if}
+				{#if energyCount > 0}
+					<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><Energy /> <span>{energyCount}</span></div>
+				{/if}
+				{#if experienceCount > 0}
+					<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><Experience /> <span>{experienceCount}</span></div>
+				{/if}
+				{#if radCount > 0}
+					<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><Rad /> <span>{radCount}</span></div>
+				{/if}
+				{#if commandTaxCount > 0}
+					<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><CommandTax /> <span>{commandTaxCount}</span></div>
+				{/if}
+				{#each booleanStatuses as s}
+					{#if s === 'monarch'}
+						<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><Crown /></div>
+					{:else if s === 'initiative'}
+						<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><Initiative /></div>
+					{:else if s === 'ascend'}
+						<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><Ascend /></div>
+					{:else if s === 'dayNight'}
+						<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><DayNight /></div>
+					{:else if s === 'ko'}
+						<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><Skull /></div>
+					{/if}
+				{/each}
+			</div>
+		</div>
 </div>
