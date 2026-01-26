@@ -156,8 +156,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Works fine for cards with different illustrations for the same name and edition
   - [x] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
   - [x] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two colors)
-    - [ ] Later: randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG)
-  - [ ] Allow partners and backgrounds and all pairs of legendary commanders
+    - [ ] Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG)
+  - [x] Allow partners and backgrounds and all pairs of legendary commanders. XXX: Not yet, it's too complicated to manage a background with two illustrations side by side properly.
 
 - [ ] Commander damage type tracking
 - [ ] Multiplayer game modes (Two-Headed Giant, Commander, etc.)
@@ -173,8 +173,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 Random ideas:
 
-- [ ] Sound effects on button clicks (life up/down, commander damage up/down, etc.)
-- [ ] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). TODO: Needs testing on mobile devices. I wasn't convinced by the results yet on my Android phone.
+- [ ] Sound effects on button clicks (life up/down, commander damage up/down, etc.) ?
+- [x] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). Needs more testing on mobile devices. I wasn't convinced by the results yet on my Android phone.
 
 Nope:
 
@@ -185,9 +185,9 @@ Nope:
 
 ## Variants to implement here, not existing in Lifetap
 
-- [ ] Treachery support (hidden role to check once when the game starts, and hidden after that)
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
 - [ ] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities)
+- [ ] Treachery support (hidden role to check once when the game starts, and hidden after that)
 
 ---------------------------------------------------------------------------
 
