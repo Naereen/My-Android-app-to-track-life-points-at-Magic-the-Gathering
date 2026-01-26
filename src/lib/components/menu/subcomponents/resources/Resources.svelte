@@ -14,7 +14,7 @@
 
 <div
 	class="w-full overflow-scroll scrollbar-hidden h-full"
-	style="max-height: {innerHeight - ($appSettings.playerCount >= 5 ? 110 : 80)}px;"
+	style="max-height: {innerHeight - ($appSettings.playerCount >= 5 ? 110 : 80)}px; font-size: 1.2rem;"
 >
 	<div class="flex flex-col">
 		<div
@@ -29,7 +29,7 @@
 		<div class="flex flex-col">
 			<div class="w-full text-center text-white flex flex-col items-center">
 				<div class="w-2/4 flex justify-center">
-					<ul class="w-full flex flex-col gap-3">
+					<ul class="w-full flex flex-col gap-2">
 						<ManaCoutner type="white" />
 						<ManaCoutner type="blue" />
 						<ManaCoutner type="black" />

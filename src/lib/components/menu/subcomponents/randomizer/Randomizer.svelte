@@ -45,7 +45,7 @@
 			<button on:click={() => toggleIsMenuOpen('')} on:contextmenu|preventDefault draggable="false" class="text-white absolute left-0 pl-4">
 				<Arrow />
 			</button>
-			<span class="text-gray-400 text-center" style="font-size: xxx-large;">{ $_('dice_misc') }</span>
+			<span class="text-white text-center" style="font-size: xxx-large;">{ $_('dice_misc') }</span>
 		</div>
 
 		<div class="w-full flex justify-center">

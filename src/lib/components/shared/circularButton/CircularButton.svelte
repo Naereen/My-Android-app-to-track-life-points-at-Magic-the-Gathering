@@ -3,7 +3,7 @@
 	export let number: number = 0;
 	export let highlight = false;
 	export let customText = false;
-	export let light = false;
+	export const light = false;
 	export let small = false;
 
 	let outline = 'bg-[#2d2f30]';

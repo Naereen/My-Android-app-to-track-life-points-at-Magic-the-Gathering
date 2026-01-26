@@ -16,8 +16,23 @@
 		height: 100%;
 		width: 100%;
 		margin: 0;
+		/* Set default font size for the app */
 		/* TODO: let this be configurable in then settings */
-		font-size: x-large;
+		font-size: large;
+	}
+
+	@media (max-width: 640px) {
+		html {
+			/* Smaller font size on small screens */
+			font-size: medium;
+		}
+	}
+
+	@media (max-width: 480px) {
+		html {
+			/* Much smaller font size on smaller screens */
+			font-size: small;
+		}
 	}
 
 	body {
@@ -44,7 +59,7 @@
 		transform-origin: center center;
 		background-image: var(--bg-image);
 		background-size: cover;
-		background-position: top center;
+		background-position: var(--bg-positionx, center) var(--bg-positiony, top);
 		z-index: -10;
 		pointer-events: none;
 	}

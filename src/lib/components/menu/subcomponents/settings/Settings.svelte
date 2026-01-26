@@ -131,13 +131,13 @@
 	<div class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black">
 		<button on:click={() => toggleIsMenuOpen('')} on:contextmenu|preventDefault draggable="false" class="text-white absolute left-0 pl-4"
 			><Arrow /></button>
-		<span class="text-gray-400 text-center" style="font-size: xxx-large;">{ $_('settings') }</span>
+		<span class="text-white text-center" style="font-size: 2rem;">{ $_('settings') }</span>
 	</div>
 
-	<div class="w-full text-center text-white mt-4 flex flex-col items-center">
+	<div class="w-full text-center text-white mt-2 flex flex-col items-center">
 		<!-- Player Count -->
 		<div class="w-3/4">
-			<div><span style="font-size: xx-large;">{ $_('players') }</span></div>
+			<div><span style="font-size: 1.5rem;">{ $_('players') }</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [2, 3, 4, 5, 6] as playerCount}
 					{#key $appSettings.playerCount}
@@ -186,13 +186,11 @@
 					</div>
 				</div>
 			{/if}
-
-				<!-- reset button moved to bottom of menu -->
 		</div>
 
 		<!-- Starting Life Total -->
 		<div class="mt-6 w-3/4">
-			<div><span style="font-size: xx-large;">{ $_('starting_life') }</span></div>
+			<div><span style="font-size: 1.5rem;">{ $_('starting_life') }</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [20, 25, 30, 40, 'custom'] as lifeTotal}
 					{#key $appSettings.startingLifeTotal}
@@ -246,8 +244,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- Reset local storage placed at the bottom so user can scroll to it -->
-		<div class="w-full flex justify-center mt-4 mb-4">
+		<div class="w-full flex justify-center mt-2 mb-2">
 				<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
@@ -258,7 +255,7 @@
 					<span class="ml-2 text-lg font-semibold">{ $_('allow_negative_life_global') }</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-2 mb-4">
+		<div class="w-full flex justify-center mt-2 mb-2">
 			<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
@@ -269,7 +266,7 @@
 				<span class="ml-2 text-lg font-semibold">{ $_('prevent_screen_sleep') }</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-2 mb-4">
+		<div class="w-full flex justify-center mt-2 mb-2">
 			<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
@@ -280,7 +277,8 @@
 				<span class="ml-2 text-lg font-semibold">{ $_('haptic_feedback') }</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-8 mb-8">
+		<!-- Reset local storage placed at the bottom so user can scroll to it -->
+		<div class="w-full flex justify-center mt-2 mb-2">
 			<button
 				class="bg-red-900 text-white px-4 py-2 rounded-full"
 				on:click={resetLocalStorage}

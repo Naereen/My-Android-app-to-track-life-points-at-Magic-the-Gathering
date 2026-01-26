@@ -36,9 +36,12 @@
 		? `background-image: url('${$players[index].backgroundImage}'); background-size: cover; background-position: center right;`
 		: `background: ${bg};`;
 	$: bgRotation = '0deg';
+	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
+	$: bgPositionX = orientation === 'up' ? 'center' : orientation === 'right' ? 'center' : 'center';
+	$: bgPositionY = orientation === 'up' ? 'top' : orientation === 'down' ? 'bottom' : 'center';
 	$: styleVars = $players[index].backgroundImage
-		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}`
-		: `--bg-rotation: ${bgRotation}; --bg-image: none`;
+		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY};`
+		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none;`;
 	$: status = $players[index].statusEffects ?? {};
 	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter((k) => status[k]);
 	$: poisonCount = $players[index].poison ?? 0;
