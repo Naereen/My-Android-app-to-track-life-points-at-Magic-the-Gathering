@@ -333,18 +333,18 @@ export const manageLifeTotal = (
 
 				if (type === 'add') {
 					newLifeTotal += amount;
-					withinBounds = newLifeTotal <= 999; // Check if within bounds
+					withinBounds = newLifeTotal <= 9999; // Check if within bounds
 				} else if (type === 'subtract') {
 					newLifeTotal -= amount;
-					withinBounds = newLifeTotal >= 0; // Check if within bounds
+					withinBounds = newLifeTotal >= -9999; // Check if within bounds
 				}
 
 				// Ensure the life total is within acceptable bounds
 				// allow negative life totals when enabled globally or per-player
 				const globalAllow = get(appSettings).allowNegativeLife || false;
 				const allowNegative = globalAllow || !!player.allowNegativeLife;
-				const minAllowed = allowNegative ? -999 : 0;
-				newLifeTotal = Math.max(minAllowed, Math.min(999, newLifeTotal));
+				const minAllowed = allowNegative ? -9999 : 0;
+				newLifeTotal = Math.max(minAllowed, Math.min(9999, newLifeTotal));
 
 				return {
 					...player,
@@ -407,7 +407,7 @@ export const setTempLifeDiff = (
 							return p;
 						});
 					});
-				}, 2000);
+				}, 3000);
 
 				return {
 					...player,
