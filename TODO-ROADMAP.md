@@ -36,12 +36,15 @@
   - [x] German
   - [x] Italian
 
-- [ ] Add a language selection menu in the settings dialog
+- [x] Add a language selection menu in the settings dialog
+  - [ ] Reduce the size ot the labels of each language
 
 ## Bugs fixing:
 
 - [x] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
 - [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks) - FIXME: I couldn't reproduce this bug anymore...
+
+- [ ] When throwing a die, the result is displayed too close to the die icon, spacen then a bit more!
 
 ## Player status and visualization improvements
 
