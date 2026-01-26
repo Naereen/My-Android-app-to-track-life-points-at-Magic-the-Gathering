@@ -17,7 +17,8 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
-	import { manageLifeTotal, players } from '$lib/store/player';
+	import { manageLifeTotal, players, setPlayerLifeAbsolute } from '$lib/store/player';
+	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 
 	export let orientation: App.Player.Orientation = 'up';
@@ -101,6 +102,40 @@
 		clearTimeout(timeout);
 		timeout = 0;
 		isHolding = false;
+	};
+
+	let editing = false;
+	let editValue = '';
+
+	const openPromptSetLife = () => {
+		const current = $players[index].lifeTotal;
+		const input = prompt($_('set_life_total') ?? 'Set life total', String(current));
+		if (input === null) return;
+		const val = Number(input);
+		if (!Number.isNaN(val)) {
+			setPlayerLifeAbsolute(id, val);
+		}
+	};
+
+	const startEdit = async () => {
+		editing = true;
+		editValue = String($players[index].lifeTotal);
+		await tick();
+		const el = document.getElementById(`life-input-${id}`) as HTMLInputElement | null;
+		el?.focus();
+		el?.select();
+	};
+
+	const saveEdit = () => {
+		const val = Number(editValue);
+		if (!Number.isNaN(val)) {
+			setPlayerLifeAbsolute(id, val);
+		}
+		editing = false;
+	};
+
+	const cancelEdit = () => {
+		editing = false;
 	};
 </script>
 
@@ -189,12 +224,24 @@
 								<br>
 							</div>
 						{/if}
-						<span
-							class="text-shadow-white text-shadow-xl text-black text-7xl flex items-center text-center"
-							class:text-5xl={$appSettings.playerCount >= 5}
-							class:-rotate-180={orientation === 'left'}
-							class:opacity-25={isDead}
-							>{$players[index].lifeTotal}</span>
+						{#if !editing}
+							<button on:dblclick={startEdit} on:contextmenu|preventDefault={openPromptSetLife} class="pointer-events-auto bg-transparent border-none p-0 m-0">
+								<span
+									class="text-shadow-white text-shadow-xl text-black text-7xl flex items-center text-center"
+									class:text-5xl={$appSettings.playerCount >= 5}
+									class:-rotate-180={orientation === 'left'}
+									class:opacity-25={isDead}
+									>{$players[index].lifeTotal}</span>
+							</button>
+						{:else}
+							<div class="pointer-events-auto">
+								<input id={`life-input-${id}`} type="number" bind:value={editValue} on:keydown={(e) => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') cancelEdit(); }} class="w-32 text-center rounded-md px-2 py-1 text-3xl" placeholder={$_('enter_life_total_placeholder')} />
+								<div class="flex gap-2 mt-1 justify-center">
+									<button on:click={saveEdit} class="px-2 py-1 bg-green-600 text-white rounded">{$_('set_life_total_save')}</button>
+									<button on:click={cancelEdit} class="px-2 py-1 bg-gray-600 text-white rounded">{$_('set_life_total_cancel')}</button>
+								</div>
+							</div>
+						{/if}
 					</div>
 					<span
 						class="h-16 text-center"

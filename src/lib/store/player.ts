@@ -234,6 +234,42 @@ export const setPlayerLifeTotal = (playerId: number, amount: number) => {
 	});
 };
 
+// Set the player's life total to an absolute value (clamped according to settings)
+export const setPlayerLifeAbsolute = (playerId: number, value: number) => {
+	const currentPlayers = get(players);
+	const player = currentPlayers.find((p) => p.id === playerId);
+	if (!player) return;
+
+	const globalAllow = get(appSettings).allowNegativeLife || false;
+	const allowNegative = globalAllow || !!player.allowNegativeLife;
+	const minAllowed = allowNegative ? -999 : 0;
+
+	const newLifeTotal = Math.max(minAllowed, Math.min(999, Math.trunc(value)));
+	const diff = newLifeTotal - player.lifeTotal;
+
+	// Update the life total
+	players.update((currentPlayers) => {
+		return currentPlayers.map((p) => {
+			if (p.id === playerId) {
+				return {
+					...p,
+					lifeTotal: newLifeTotal
+				};
+			}
+			return p;
+		});
+	});
+
+	// Show a temporary diff indicator similar to incremental changes
+	if (diff !== 0) {
+		if (diff > 0) {
+			setTempLifeDiff(playerId, 'add', Math.abs(diff));
+		} else {
+			setTempLifeDiff(playerId, 'subtract', Math.abs(diff));
+		}
+	}
+};
+
 export const manageLifeTotal = (
 	type: App.Player.LifeMoveType,
 	playerId: number,

@@ -73,6 +73,10 @@
     "tooltip_status_energy": "Energy counters",
     "tooltip_status_experience": "Experience counters",
     "tooltip_status_rad": "Radiation counters",
-    "tooltip_status_command_tax": "Command tax counters"
-    ,"haptic_feedback": "Haptic feedback"
+    "tooltip_status_command_tax": "Command tax counters",
+    "haptic_feedback": "Haptic feedback",
+    "set_life_total": "Set life total",
+    "enter_life_total_placeholder": "Enter life total",
+    "set_life_total_save": "Save",
+    "set_life_total_cancel": "Cancel"
 }

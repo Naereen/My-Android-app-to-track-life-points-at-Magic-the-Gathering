@@ -74,5 +74,9 @@
     "tooltip_status_experience": "Contatori di esperienza",
     "tooltip_status_rad": "Contatori di radiazioni",
     "tooltip_status_command_tax": "Contatori di tassa del comandante",
-    "haptic_feedback": "Feedback aptico"
+    "haptic_feedback": "Feedback aptico",
+    "set_life_total": "Imposta punti vita",
+    "enter_life_total_placeholder": "Inserisci punti vita",
+    "set_life_total_save": "Salva",
+    "set_life_total_cancel": "Annulla"
 }

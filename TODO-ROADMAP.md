@@ -1,5 +1,9 @@
 # TODO / Roadmap
 
+This file is a life list of features to implement, bugs to fix, and improvements to make to the app.
+
+Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep everything in this single file, easier to manage offline for a small personal project like this one.
+
 ## "Small" improvements to the usability of the app
 
 - [x] Maximize to full screen on mobile devices: the "window" should take all the screen space, especially on the left/right sides
@@ -63,14 +67,17 @@
 
 - [x] Keep the small "medal" which indicates who started the game, during all the game (not only at the beginning)
 
-- [ ] Add a way to directly set the life total to a specific value, in the player pane
+- [x] Add a way to directly set the life total to a specific value, in the player pane
 
 - [x] Add a small section on the bottom of each player panel to show the current status effects on that player
   - [x] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
   - [x] Maybe even use small icons for that?
   - [x] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
   - [x] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax
-  - [ ] Harder to track: Commander Damage (from each opponent).
+  - [ ] TODO: improve this section visually, make it prettier (nicer icons, better layout, etc.)
+
+- [ ] Harder to track: implement the Commander Damage tracker (from each opponent).
+  - [ ] make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Add support for the poison counter: can you die to them?
   - [x] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
@@ -137,7 +144,8 @@
   - [x] With a card search to pick a card as background
   - [x] Align the top of the illustration with the top of background area (crop the card image if needed)
   - [x] Works fine for cards with different illustrations for the same name and edition
-  - [ ] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
+  - [x] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
+  - [ ] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two different colors)
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders
 
 - [ ] Commander damage type tracking
@@ -155,7 +163,7 @@
 Random ideas:
 
 - [ ] Sound effects on button clicks (life up/down, commander damage up/down, etc.)
-- [ ] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.)
+- [ ] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). TODO: Needs testing on mobile devices. I wasn't convinced by the results yet on my Android phone.
 
 Nope:
 
