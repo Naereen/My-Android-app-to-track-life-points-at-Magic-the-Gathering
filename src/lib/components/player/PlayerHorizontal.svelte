@@ -3,6 +3,7 @@
 	import Minus from '$lib/assets/icons/Minus.svelte';
 	import Plus from '$lib/assets/icons/Plus.svelte';
 	import Skull from '$lib/assets/icons/Skull.svelte';
+	import StatusSkull from '$lib/assets/icons/StatusSkull.svelte';
 	import Crown from '$lib/assets/icons/Crown.svelte';
 	import Initiative from '$lib/assets/icons/Initiative.svelte';
 	import Ascend from '$lib/assets/icons/Ascend.svelte';
@@ -12,6 +13,7 @@
 	import Experience from '$lib/assets/icons/Experience.svelte';
 	import Rad from '$lib/assets/icons/Rad.svelte';
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
+	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
@@ -202,34 +204,34 @@
 				<div class="grow w-1/3 vert"></div>
 			</div>
 				<!-- Status effects bar -->
-				<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none">
+				<div class="absolute top-0 bottom-0 flex justify-center pointer-events-none vert" class:left-2={orientation === 'right'} class:right-2={orientation === 'left'}>
 					<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
 						{#if poisonCount > 0}
-							<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><PoisonIcon /> <span> {poisonCount}/10</span></div>
+							<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><PoisonIcon /> <span> {poisonCount}/10</span></div>
 						{/if}
 						{#if energyCount > 0}
-							<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><Energy /> <span>{energyCount}</span></div>
+							<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Energy /> <span>{energyCount}</span></div>
 						{/if}
 						{#if experienceCount > 0}
-							<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><Experience /> <span>{experienceCount}</span></div>
+							<div title={$_('tooltip_status_experience')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Experience /> <span>{experienceCount}</span></div>
 						{/if}
 						{#if radCount > 0}
-							<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><Rad /> <span>{radCount}</span></div>
+							<div title={$_('tooltip_status_rad')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Rad /> <span>{radCount}</span></div>
 						{/if}
 						{#if commandTaxCount > 0}
-							<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><CommandTax /> <span>{commandTaxCount}</span></div>
+							<div title={$_('tooltip_status_command_tax')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><CommandTax /> <span>{commandTaxCount}</span></div>
 						{/if}
 						{#each booleanStatuses as s}
 							{#if s === 'monarch'}
-								<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><Crown /></div>
+								<div title={$_('tooltip_status_monarch')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Crown /></div>
 							{:else if s === 'initiative'}
-								<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><Initiative /></div>
+								<div title={$_('tooltip_status_initiative')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Initiative /></div>
 							{:else if s === 'ascend'}
-								<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><Ascend /></div>
+								<div title={$_('tooltip_status_ascend')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Ascend /></div>
 							{:else if s === 'dayNight'}
-								<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><DayNight /></div>
+								<div title={$_('tooltip_status_day_night')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><DayNight /></div>
 							{:else if s === 'ko'}
-								<div class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center"><Skull /></div>
+								<div title={$_('tooltip_status_ko')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><StatusSkull /></div>
 							{/if}
 						{/each}
 					</div>

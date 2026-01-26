@@ -60,25 +60,30 @@
 
 - [x] Keep the small "medal" which indicates who started the game, during all the game (not only at the beginning)
 
-- [ ] Add a way to directly set the life total to a specific value, in the player panel
+- [ ] Add a way to directly set the life total to a specific value, in the player pane
 
+- [x] Add a small section on the bottom of each player panel to show the current status effects on that player
+  - [x] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
+  - [x] Maybe even use small icons for that?
+  - [x] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
+  - [x] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax
+  - [ ] Harder to track: Commander Damage (from each opponent).
 
-- [ ] Add a small section on the bottom of each player panel to show the current status effects on that player
-  - [ ] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
-  - [ ] Maybe even use small icons for that?
-  - [ ] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
-  - [ ] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax, Commander Damage (from each opponent).
-
-- [ ] Add support for the poison counter
-  - [ ] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
-  - [ ] Add a way to increment/decrement poison counter with clicks on some buttons in the player panel (like for life total)
-  - [ ] Show the poison counter next to the life total, as soon as it is > 0
-  - [ ] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
+- [x] Add support for the poison counter: can you die to them?
+  - [x] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
+  - [x] Add a way to increment/decrement poison counter with clicks on some buttons in the player panel (like for life total)
+  - [x] Show the poison counter next to the life total, as soon as it is > 0
+  - [x] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
 
 - [ ] Implement a way to know whose turn it is
   - [ ] A button to advance to the next player's turn
   - [ ] A button to go back to the previous player's turn
   - [ ] Show the current player's turn somewhere on the screen
+
+  [ ] Implement (after that) a timer for each turn (like in Lifetap app)
+  - [ ] A way to set the timer duration (global setting)
+  - [ ] Show the remaining time for the current player's turn
+  - [ ] Sound an alarm when the time is up
 
 - [ ] Improve the visibility of the "current player" (the one whose turn it is)
   - [ ] Maybe a glowing border around their panel?
@@ -114,7 +119,7 @@
 - [x] Implement the "settings" dialog
 - [x] Implement the "about" dialog
 
-- [ ] Improve the spacing of the mana/storm count : reduce the size of the mana symbols ?
+- [ ] Improve the spacing of the mana/storm count : reduce the size of the mana symbols ? NOPE, not important.
 
 ---------------------------------------------------------------------------
 
@@ -129,7 +134,7 @@
   - [x] With a card search to pick a card as background
   - [x] Align the top of the illustration with the top of background area (crop the card image if needed)
   - [x] Works fine for cards with different illustrations for the same name and edition
-  - [ ] Add a "clear background" button to go back to default background
+  - [ ] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders
 
 - [ ] Commander damage type tracking
@@ -137,8 +142,8 @@
 
 ## Variants already existing in Lifetap but not yet implemented here
 
-- PlaneChase support (background changes every turn or on a click)
-- Archenemy support (extra damage tracking)
+- [ ] PlaneChase support (background changes every turn or on a click)
+- [ ] Archenemy support (extra damage tracking)
 
 ---------------------------------------------------------------------------
 
@@ -148,24 +153,28 @@ Random ideas:
 
 - [ ] Sound effects on button clicks (life up/down, commander damage up/down, etc.)
 - [ ] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.)
-- [ ] Customizable button sizes (small, medium, large)
-- [ ] Customizable layout options (compact mode, expanded mode)
-- [ ] Night mode / dark theme
-- [ ] Customizable fonts (font family, font size)
-- [ ] Multiplayer online mode (connect with friends over the internet)
+
+Nope:
+
+- [ ] ~~Customizable button sizes (small, medium, large)~~
+- [ ] ~~Customizable layout options (compact mode, expanded mode)~~
+- [x] ~~Night mode / dark theme~~
+- [ ] ~~Customizable fonts (font family, font size)~~
 
 ## Variants to implement here, not existing in Lifetap
 
-- Treachery support (hidden role to check once when the game starts, and hidden after that)
-- 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
+- [ ] Treachery support (hidden role to check once when the game starts, and hidden after that)
+- [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
+- [ ] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities)
 
 ---------------------------------------------------------------------------
 
 ## Dream features, they'll never happen!
 
 - [ ] Game history and undo functionality
-- [ ] Enhanced statistics and analytics
-- [ ] Cloud sync and backup
+- [ ] Enhanced statistics and analytics, à la Mythic.Tools
+- [ ] Cloud sync and backup, à la Mythic.Tools
+- [ ] Multiplayer online mode (connect with friends over the internet)
 - [ ] Customizable themes and UI options
 
 ## On the development side

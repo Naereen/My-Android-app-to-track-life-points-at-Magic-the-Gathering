@@ -12,7 +12,7 @@ async function fetchJson(url: string) {
     return res.json();
 }
 
-export async function searchCards(query: string, limit = 12): Promise<ScryfallCard[]> {
+export async function searchCards(query: string, limit = 1000): Promise<ScryfallCard[]> {
     if (!query || query.trim().length === 0) return [];
     const q = encodeURIComponent(query);
     const url = `https://api.scryfall.com/cards/search?q=${q}&order=released&unique=art`;

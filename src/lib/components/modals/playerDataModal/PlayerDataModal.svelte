@@ -41,6 +41,8 @@
 	const toggleColorSelection = (playerId: number, c: string) => {
 		if (!gradientMode) {
 			setPlayerColor(playerId, c);
+			// when choosing a color, clear any background image so the color is visible
+			setPlayerBackgroundImage(playerId, null);
 			return;
 		}
 
@@ -54,14 +56,19 @@
 		// update store with joined comma-separated list (or single color)
 		if (selectedColors.length > 0) {
 			setPlayerColor(playerId, selectedColors.join(','));
+			// clear any previously selected image when using colors
+			setPlayerBackgroundImage(playerId, null);
 		} else {
 			setPlayerColor(playerId, 'white');
+			setPlayerBackgroundImage(playerId, null);
 		}
 	};
 
 	const clearSelection = (playerId: number) => {
 		selectedColors = [];
 		setPlayerColor(playerId, 'white');
+		// also clear any chosen background image
+		setPlayerBackgroundImage(playerId, null);
 	};
 
 	const handleOnKeyPress = (event: KeyboardEvent) => {
@@ -133,6 +140,7 @@
 							<div class="flex gap-2">
 								<input type="text" class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black" bind:value={searchQuery} placeholder={ $_('scryfall_search') + "..." } />
 								<button class="px-3 py-2 bg-blue-500 text-white rounded-lg" on:click={doSearch} disabled={isSearching}>{isSearching ? $_('scryfall_searching') : $_('scryfall_search')}</button>
+								<button class="px-3 py-2 bg-red-500 text-white rounded-lg" on:click={() => setPlayerBackgroundImage($playerModalData.playerId, null)}>{ $_('clear_background') }</button>
 							</div>
 						</div>
 						<div class="w-full max-h-60 overflow-auto">
@@ -184,8 +192,8 @@
 									{/if}
 								</button>
 							{/each}
+							<div class="-h-1" />
 							<hr class="w-full" />
-							<div class="h-1" />
 							{#each ['mud', 'metalicgray'] as c}
 								<button
 									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
@@ -201,8 +209,8 @@
 									{/if}
 								</button>
 							{/each}
+							<div class="-h-1" />
 							<hr class="w-full" />
-							<div class="h-1" />
 							{#each ['gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
 								<button
 									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
@@ -229,46 +237,46 @@
 
 						<!-- Status effects controls -->
 						<div class="mt-4 w-full border-t pt-4">
-							<div class="font-semibold mb-2">Status Effects</div>
+							<div class="font-semibold mb-2">{ $_('status_effects') }</div>
 							<div class="flex flex-wrap gap-3 mb-3">
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'monarch', !($players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false))} /> <Crown /> Monarch</label>
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'initiative', !($players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false))} /> <Initiative /> Initiative</label>
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ascend', !($players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false))} /> <Ascend /> Ascend</label>
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight /> Day/Night</label>
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ko ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ko', !($players[$playerModalData.playerId - 1].statusEffects?.ko ?? false))} /> <StatusSkull /> K.O.</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'monarch', !($players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false))} /> <Crown title={$_('tooltip_status_monarch')} /> { $_('monarch') }</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'initiative', !($players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false))} /> <Initiative title={$_('tooltip_status_initiative')} /> { $_('initiative') }</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ascend', !($players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false))} /> <Ascend title={$_('tooltip_status_ascend')} /> { $_('ascend') }</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight title={$_('tooltip_status_day_night')} /> { $_('day_night') }</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ko ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ko', !($players[$playerModalData.playerId - 1].statusEffects?.ko ?? false))} /> <StatusSkull title={$_('tooltip_status_ko')} /> { $_('ko') }</label>
 							</div>
 
 							<div class="grid grid-cols-2 gap-3">
 								<div class="flex items-center gap-2">
-									<span class="w-24 flex items-center gap-2"><PoisonIcon /> Poison</span>
+									<span class="w-24 flex items-center gap-2"><PoisonIcon title={$_('tooltip_status_poison')} /> { $_('poison') }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerPoison($playerModalData.playerId, Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerPoison($playerModalData.playerId, Math.min(99, ($players[$playerModalData.playerId - 1].poison ?? 0) + 1))}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-24 flex items-center gap-2"><Energy /> Energy</span>
+									<span class="w-24 flex items-center gap-2"><Energy title={$_('tooltip_status_energy')} /> { $_('energy') }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'energy', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'energy', ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) + 1)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-24 flex items-center gap-2"><Experience /> Experience</span>
+									<span class="w-24 flex items-center gap-2"><Experience title={$_('tooltip_status_experience')} /> { $_('experience') }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'experience', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'experience', ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) + 1)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-24 flex items-center gap-2"><Rad /> Rad</span>
+									<span class="w-24 flex items-center gap-2"><Rad title={$_('tooltip_status_rad')} /> { $_('rad') }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'rad', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'rad', ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-24 flex items-center gap-2"><CommandTax /> CmdTax</span>
+									<span class="w-24 flex items-center gap-2"><CommandTax title={$_('tooltip_status_command_tax')} /> { $_('command_tax') }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'commandTax', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'commandTax', ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) + 1)}>+</button>
