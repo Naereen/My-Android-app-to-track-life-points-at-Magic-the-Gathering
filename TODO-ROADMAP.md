@@ -96,9 +96,9 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Show the poison counter next to the life total, as soon as it is > 0
   - [x] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
 
-- [ ] Implement a way to know whose turn it is
-  - [ ] A button to advance to the next player's turn, in the middle of the buttons for mana and randomizer
-  - [ ] A button to go back to the previous player's turn
+- [ ] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
+  - [ ] A button to advance to the next player's turn, it should be located in the middle of the buttons for mana and randomizer?
+  - [ ] A button to go back to the previous player's turn (long click on the previous button, that will be enough)
   - [ ] Show the current player's turn somewhere on the screen
 
   [ ] Implement (after that) a timer for each turn (like in Lifetap app)
@@ -125,7 +125,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [ ] Test it on my devices
 - [ ] Publish it as a beta on the Google Play Store
 
-
+BUUUUT so far I'm testing on the PWA installed from Chrome on Android, which works pretty well already!
 
 ## Better menus and dialogs
 
@@ -139,7 +139,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] Improve the spacing of the mana/storm count : reduce the size of the mana symbols?
 
-- [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right)
+- [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right). It should be hard!
 
 ---------------------------------------------------------------------------
 
@@ -156,7 +156,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Works fine for cards with different illustrations for the same name and edition
   - [x] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
   - [x] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two colors)
-    - [ ] Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG)
+    - [ ] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG)
   - [x] Allow partners and backgrounds and all pairs of legendary commanders. XXX: Not yet, it's too complicated to manage a background with two illustrations side by side properly.
 
 - [ ] Commander damage type tracking
@@ -174,7 +174,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 Random ideas:
 
 - [ ] Sound effects on button clicks (life up/down, commander damage up/down, etc.) ?
-- [x] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). Needs more testing on mobile devices. I wasn't convinced by the results yet on my Android phone.
+- [x] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). TODO: Needs more testing on mobile devices. I wasn't convinced by the results yet on my Android phone.
 
 Nope:
 

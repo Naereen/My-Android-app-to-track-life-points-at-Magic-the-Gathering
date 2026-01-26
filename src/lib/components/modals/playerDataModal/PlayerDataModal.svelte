@@ -260,37 +260,37 @@ const chooseBackground = (playerId: number, imageUrl: string | null) => {
 									<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ko ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ko', !($players[$playerModalData.playerId - 1].statusEffects?.ko ?? false))} /> <StatusSkull title={$_('tooltip_status_ko')} /> { $_('ko') }</label>
 								</div>
 
-								<div class="grid grid-cols-2 gap-3">
+								<div class="grid grid-cols-1 gap-3">
 									<div class="flex items-center gap-2">
-										<span class="w-24 flex items-center gap-2"><PoisonIcon title={$_('tooltip_status_poison')} /> { $_('poison') }</span>
+										<span class="w-35 flex items-center gap-2"><PoisonIcon title={$_('tooltip_status_poison')} /> { $_('poison') }</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerPoison($playerModalData.playerId, Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1))}>-</button>
 										<span class="px-2">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerPoison($playerModalData.playerId, Math.min(99, ($players[$playerModalData.playerId - 1].poison ?? 0) + 1))}>+</button>
 									</div>
 
 									<div class="flex items-center gap-2">
-										<span class="w-24 flex items-center gap-2"><Energy title={$_('tooltip_status_energy')} /> { $_('energy') }</span>
+										<span class="w-35 flex items-center gap-2"><Energy title={$_('tooltip_status_energy')} /> { $_('energy') }</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'energy', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) - 1))}>-</button>
 										<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'energy', ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) + 1)}>+</button>
 									</div>
 
 									<div class="flex items-center gap-2">
-										<span class="w-24 flex items-center gap-2"><Experience title={$_('tooltip_status_experience')} /> { $_('experience') }</span>
+										<span class="w-35 flex items-center gap-2"><Experience title={$_('tooltip_status_experience')} /> { $_('experience') }</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'experience', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) - 1))}>-</button>
 										<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'experience', ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) + 1)}>+</button>
 									</div>
 
 									<div class="flex items-center gap-2">
-										<span class="w-24 flex items-center gap-2"><Rad title={$_('tooltip_status_rad')} /> { $_('rad') }</span>
+										<span class="w-35 flex items-center gap-2"><Rad title={$_('tooltip_status_rad')} /> { $_('rad') }</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'rad', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) - 1))}>-</button>
 										<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'rad', ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1)}>+</button>
 									</div>
 
 									<div class="flex items-center gap-2">
-										<span class="w-24 flex items-center gap-2"><CommandTax title={$_('tooltip_status_command_tax')} /> { $_('command_tax') }</span>
+										<span class="w-35 flex items-center gap-2"><CommandTax title={$_('tooltip_status_command_tax')} /> { $_('command_tax') }</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'commandTax', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) - 1))}>-</button>
 										<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
 										<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'commandTax', ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) + 1)}>+</button>
