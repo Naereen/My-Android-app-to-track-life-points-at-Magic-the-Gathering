@@ -85,7 +85,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [ ] TODO: improve this section visually, make it prettier (nicer icons, better layout, etc.)
   - [ ] FIXME: when clicking the "K.O." status effect, it doesn't change the player's isDead status (gray out life total and skull icon). Needs fixing.
 
-- [ ] TODO: Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
+- [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
 - [ ] TODO: Harder to track: implement the Commander Damage tracker (from each opponent).
   - [ ] make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
@@ -137,7 +137,9 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Implement the "settings" dialog
 - [x] Implement the "about" dialog
 
-- [ ] Improve the spacing of the mana/storm count : reduce the size of the mana symbols ? NOPE, not important.
+- [x] Improve the spacing of the mana/storm count : reduce the size of the mana symbols?
+
+- [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right)
 
 ---------------------------------------------------------------------------
 

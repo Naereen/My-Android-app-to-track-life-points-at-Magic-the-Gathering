@@ -167,9 +167,15 @@ export const setPlayerBackgroundImage = (playerId: number, imageUrl: string | nu
 
 export const setPlayerStatusBoolean = (playerId: number, key: string, value: boolean) => {
 	players.update((currentPlayers) => {
+		// If setting a unique status (monarch/initiative) to true,
+		// remove it from all other players so only one has it.
+		const uniqueKeys = ['monarch', 'initiative'];
+
 		return currentPlayers.map((player) => {
+			const statusEffects = player.statusEffects ? { ...player.statusEffects } : {};
+
 			if (player.id === playerId) {
-				const statusEffects = player.statusEffects ? { ...player.statusEffects } : {};
+				// set the requested value for the target player
 				// @ts-ignore
 				statusEffects[key] = value;
 				return {
@@ -177,6 +183,20 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 					statusEffects
 				};
 			}
+
+			// if we're enabling a unique key, ensure others don't have it
+			if (value === true && uniqueKeys.indexOf(key) !== -1) {
+				// @ts-ignore
+				if (statusEffects[key]) {
+					// @ts-ignore
+					statusEffects[key] = false;
+					return {
+						...player,
+						statusEffects
+					};
+				}
+			}
+
 			return player;
 		});
 	});

@@ -20,6 +20,7 @@
 	import { manageLifeTotal, players, setPlayerLifeAbsolute } from '$lib/store/player';
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
+	import { haptic } from '$lib/utils/haptics';
 
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
@@ -165,6 +166,7 @@
 					on:touchstart={() => handleTouchStart('subtract')}
 					on:touchend={() => handleTouchEnd('subtract')}
 					on:contextmenu|preventDefault draggable="false"
+					use:haptic={10}
 					class="w-full h-1/2 flex justify-center {orientation === 'left'
 						? 'items-end rounded-b-3xl'
 						: 'items-start rounded-t-3xl'} active:bg-player-light select-none"
@@ -177,6 +179,7 @@
 					on:touchstart={() => handleTouchStart('add')}
 					on:touchend={() => handleTouchEnd('add')}
 					on:contextmenu|preventDefault draggable="false"
+					use:haptic={10}
 					class="w-full h-1/2 flex justify-center {orientation === 'left'
 						? 'items-start rounded-t-3xl'
 						: 'items-end rounded-b-3xl'} active:bg-player-light select-none"
@@ -258,7 +261,7 @@
 				<div class="absolute top-0 bottom-0 flex justify-center pointer-events-none vert" class:left-2={orientation === 'right'} class:right-2={orientation === 'left'}>
 					<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
 						{#if poisonCount > 0}
-							<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><PoisonIcon /> <span> {poisonCount}/10</span></div>
+							<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><PoisonIcon /> <span> {poisonCount}</span></div>
 						{/if}
 						{#if energyCount > 0}
 							<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Energy /> <span>{energyCount}</span></div>

@@ -20,6 +20,7 @@
 	import { manageLifeTotal, players, setPlayerLifeAbsolute } from '$lib/store/player';
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
+	import { haptic } from '$lib/utils/haptics';
 
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
@@ -162,6 +163,7 @@
 				on:touchstart={() => handleTouchStart('subtract')}
 				on:touchend={() => handleTouchEnd('subtract')}
 				on:contextmenu|preventDefault draggable="false"
+				use:haptic={10}
 				class="w-1/2 flex justify-start items-center active:bg-player-light rounded-l-2xl select-none"
 			>
 				<Minus />
@@ -172,6 +174,7 @@
 				on:touchstart={() => handleTouchStart('add')}
 				on:touchend={() => handleTouchEnd('add')}
 				on:contextmenu|preventDefault draggable="false"
+				use:haptic={10}
 				class="w-1/2 flex justify-end items-center active:bg-player-light rounded-r-3xl select-none"
 			>
 				<Plus />
@@ -232,7 +235,7 @@
 		<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none">
 			<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
 				{#if poisonCount > 0}
-					<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><PoisonIcon /> <span> {poisonCount}/10</span></div>
+					<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><PoisonIcon /> <span> {poisonCount}</span></div>
 				{/if}
 				{#if energyCount > 0}
 					<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Energy /> <span>{energyCount}</span></div>
