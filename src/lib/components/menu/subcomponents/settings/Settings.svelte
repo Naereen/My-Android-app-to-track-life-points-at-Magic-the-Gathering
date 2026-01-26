@@ -277,7 +277,7 @@
 					on:change={handleHapticsChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">Haptic feedback</span>
+				<span class="ml-2 text-lg font-semibold">{ $_('haptic_feedback') }</span>
 			</label>
 		</div>
 		<div class="w-full flex justify-center mt-8 mb-8">

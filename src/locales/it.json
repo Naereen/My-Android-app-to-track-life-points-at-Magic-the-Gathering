@@ -73,5 +73,6 @@
     "tooltip_status_energy": "Contatori di energia",
     "tooltip_status_experience": "Contatori di esperienza",
     "tooltip_status_rad": "Contatori di radiazioni",
-    "tooltip_status_command_tax": "Contatori di tassa del comandante"
+    "tooltip_status_command_tax": "Contatori di tassa del comandante",
+    "haptic_feedback": "Feedback aptico"
 }

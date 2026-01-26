@@ -74,4 +74,5 @@
     "tooltip_status_experience": "Experience counters",
     "tooltip_status_rad": "Radiation counters",
     "tooltip_status_command_tax": "Command tax counters"
+    ,"haptic_feedback": "Haptic feedback"
 }

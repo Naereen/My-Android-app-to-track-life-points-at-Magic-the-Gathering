@@ -6,13 +6,19 @@ A web-based life point tracker for Magic: The Gathering, inspired by the [Lifeta
 
 **The application can be used on Android or Apple devices, via a simple web browser**, or by downloading the apk file for Android (coming soon!).
 
-![Demo of the webpage (1/4)](screenshots/screenshot-demo-1.png)
+![Demo of the webpage (5/4)](screenshots/screenshot-demo-5.png)
 
 You can find it live here: <https://naereen.github.io/My-Android-app-to-track-life-points-at-Magic-the-Gathering/>
 
 > (Backup URL: <https://perso.crans.org/besson/publis/My-Android-app-to-track-life-points-at-Magic-the-Gathering/> but could be not up-to-date)
 
 ## 📸 Screenshots
+
+![Demo of the webpage (6/4)](screenshots/screenshot-demo-6.png)
+
+![Demo of the webpage (7/4)](screenshots/screenshot-demo-7.png)
+
+Older screenshots:
 
 ![Demo of the webpage (2/4)](screenshots/screenshot-demo-2.png)
 

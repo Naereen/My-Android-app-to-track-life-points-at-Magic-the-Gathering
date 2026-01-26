@@ -73,5 +73,6 @@
     "tooltip_status_energy": "Energiezähler",
     "tooltip_status_experience": "Erfahrungszähler",
     "tooltip_status_rad": "Strahlungszähler",
-    "tooltip_status_command_tax": "Kommandantensteuer-Zähler"
+    "tooltip_status_command_tax": "Kommandantensteuer-Zähler",
+    "haptic_feedback": "Haptisches Feedback"
 }
