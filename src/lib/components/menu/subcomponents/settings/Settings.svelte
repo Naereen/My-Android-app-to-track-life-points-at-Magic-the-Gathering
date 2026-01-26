@@ -230,7 +230,7 @@
 		<div class="w-full flex justify-center mt-6 mb-4">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
 				<div class="text-2xl mb-2">{ $_('choose_your_language') }</div>
-				<div class="flex gap-2 justify-center">
+				<div class="grid grid-cols-3 gap-2 justify-center">
 					{#each languages as lang}
 						<button
 							class="px-3 py-1 rounded-full"
