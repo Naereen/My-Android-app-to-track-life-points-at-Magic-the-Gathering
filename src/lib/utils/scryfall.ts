@@ -34,6 +34,7 @@ export async function searchCards(query: string, limit = 256): Promise<ScryfallC
                 name: c.name,
                 set_name: c.set_name,
                 artist: c.artist,
+                cardImage: c.image_uris.large || image,
                 image
             } as ScryfallCard;
         });

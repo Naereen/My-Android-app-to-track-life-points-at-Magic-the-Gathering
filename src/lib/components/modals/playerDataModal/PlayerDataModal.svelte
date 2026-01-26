@@ -20,7 +20,7 @@ let gradientMode = false;
 let selectedColors: string[] = [];
 let mode: 'colors' | 'backgrounds' | 'status_effects' = 'colors';
 let searchQuery = '';
-let searchResults: Array<{ id: string; name: string; set_name?: string; artist?: string; image?: string | null | undefined }> = [];
+let searchResults: Array<{ id: string; name: string; set_name?: string; artist?: string; cardImage?: string | null | undefined; image?: string | null | undefined }> = [];
 let isSearching = false;
 
 import { searchCards, randomCards } from '$lib/utils/scryfall';
@@ -165,9 +165,9 @@ const chooseBackground = (playerId: number, imageUrl: string | null) => {
 						<button class="px-3 py-1 rounded-full border" on:click={() => mode = 'status_effects'} class:underline={mode === 'status_effects'} class:font-bold={mode === 'status_effects'}>{ $_('status_effects') }</button>
 					</div>
 					{#if mode === 'backgrounds'}
-						<div class="w-full mb-3">
+						<div class="w-100 mb-3">
 							<div class="gap-2">
-								<input type="text" class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black" bind:value={searchQuery} placeholder={ $_('scryfall_search') + "..." } />
+								<input type="text" class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black" bind:value={searchQuery} placeholder={ $_('scryfall_search') + " (Scryfall)..." } />
 								<button class="px-3 py-2 bg-blue-500 text-white rounded-lg" on:click={doSearch} disabled={isSearching}>{isSearching ? $_('scryfall_searching') : $_('scryfall_search')}</button>
 								<button class="px-3 py-2 bg-purple-600 text-white rounded-lg" on:click={() => chooseRandom($playerModalData.playerId)} disabled={isSearching}>{ $_('scryfall_search_choose_random') }</button>
 								<button class="px-3 py-2 bg-red-500 text-white rounded-lg" on:click={() => setPlayerBackgroundImage($playerModalData.playerId, null)}>{ $_('clear_background') }</button>
@@ -189,8 +189,8 @@ const chooseBackground = (playerId: number, imageUrl: string | null) => {
 										</div>
 									</div>
 									<div class="w-32 flex-shrink-0">
-										{#if r.image}
-											<img src={r.image} alt={r.name} class="w-full h-auto object-cover" />
+										{#if r.cardImage}
+											<img src={r.cardImage} alt={r.name} class="w-full h-auto object-cover" />
 										{:else}
 											<div class="w-full h-40 bg-gray-200 flex items-center justify-center text-sm">No image</div>
 										{/if}
