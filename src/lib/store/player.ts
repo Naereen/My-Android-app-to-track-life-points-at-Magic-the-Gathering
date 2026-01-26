@@ -93,7 +93,35 @@ const defaultPlayers: App.Player.Data[] = [
 	}
 ];
 
-export const players: Writable<App.Player.Data[]> = persist('players', defaultPlayers);
+// Helper to decide initial players array.
+const getInitialPlayers = (): App.Player.Data[] => {
+	// If running in browser and no saved players exist, assign random colors
+	if (typeof window !== 'undefined') {
+		try {
+			const raw = localStorage.getItem('players');
+			if (!raw) {
+				// choose between all the colors for backgrounds
+				const first_choices = [
+					'white','blue','black','red','green'
+				];
+				const second_choices = [
+					'mud', 'metalicgray',
+					'gold', 'purple', 'pink', 'orange', 'lightgreen'
+				];
+				return defaultPlayers.map((p) => ({
+					...p,
+					color: `${first_choices[Math.floor(Math.random() * first_choices.length)]},${second_choices[Math.floor(Math.random() * second_choices.length)]}`
+				}));
+			}
+		} catch (e) {
+			// if any error, fall back to defaults
+		}
+	}
+
+	return defaultPlayers;
+};
+
+export const players: Writable<App.Player.Data[]> = persist('players', getInitialPlayers());
 
 export const setPlayerColor = (playerId: number, color: string) => {
 	players.update((currentPlayers) => {

@@ -11,7 +11,7 @@ const isEnabled = (): boolean => {
 
 const canVibrate = (): boolean => typeof navigator !== 'undefined' && 'vibrate' in navigator;
 
-export const tap = (pattern: number | number[] = 10) => {
+export const tap = (pattern: number | number[] = 20) => {
 	if (!isEnabled()) return;
 	if (!canVibrate()) return;
 	try {

@@ -5,7 +5,7 @@
 
 <button
 	on:click
-	use:haptic={10}
+	use:haptic={20}
 	on:contextmenu|preventDefault
 	draggable="false"
 	class="no-longpress border rounded-md px-2 w-20 {type === 'light'

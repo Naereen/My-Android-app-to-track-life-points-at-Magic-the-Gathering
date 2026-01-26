@@ -117,7 +117,7 @@
 	>
 		<div class="flex flex-col justify-center">
 			<div class="flex flex-col justify-center items-center">
-				<h2 class="text-lg font-semibold my-2 relative w-full text-center">
+				<h2 class="text-xl font-semibold my-2 relative w-full text-center">
 					{ $_('customize_player') }<button on:click={resetPlayerModalData} on:contextmenu|preventDefault draggable="false" class="absolute -right-0 top-0"
 						><X /></button>
 				</h2>
