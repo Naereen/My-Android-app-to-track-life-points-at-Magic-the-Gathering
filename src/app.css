@@ -64,7 +64,6 @@
 		pointer-events: none;
 	}
 
-
 	/* Overlay qui apparaît au-dessus du background (non interactif) */
 	.bg-rotated-overlay {
 		position: absolute;
@@ -87,6 +86,11 @@
 
 	/* Make active state on buttons inside player not full white */
 	.bg-rotated button:active {
+		background-color: rgba(255,255,255,0.65) !important;
+	}
+
+	/* Keep the active background while JS marks the button as held */
+	.bg-rotated button.holding {
 		background-color: rgba(255,255,255,0.65) !important;
 	}
 

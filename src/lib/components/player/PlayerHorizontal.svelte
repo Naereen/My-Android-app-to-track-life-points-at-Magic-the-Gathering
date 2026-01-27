@@ -17,10 +17,10 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
-	import { manageLifeTotal, players, setPlayerLifeAbsolute } from '$lib/store/player';
+	import { manageLifeTotal, players, setPlayerLifeAbsolute, setPlayerHighlighted } from '$lib/store/player';
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
-	import { haptic } from '$lib/utils/haptics';
+	import { haptic, vibrate } from '$lib/utils/haptics';
 
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
@@ -28,8 +28,9 @@
 	let interval: number;
 	let timeout: number;
 	let isHolding = false;
+	let holdingType: App.Player.LifeMoveType | null = null;
 	$: innerWidth = 0;
-	$: isMobile = innerWidth < 640;
+	$: isMobile = false; // Assume mobile by default // FIXME: improve detection if needed
 	$: index = id - 1;
 	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10);
 	$: bg = colorToBg($players[index].color ?? 'white');
@@ -51,11 +52,14 @@
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
 			isHolding = true;
+			holdingType = type;
+			setPlayerHighlighted(id, true);
 
 			timeout = setTimeout(() => {
 				manageLifeTotal(type, id, 10);
 				if (isHolding) {
 					interval = setInterval(() => {
+						vibrate(10);
 						manageLifeTotal(type, id, 10);
 					}, 1000);
 				}
@@ -74,16 +78,21 @@
 			clearTimeout(timeout);
 			timeout = 0;
 			isHolding = false;
+			holdingType = null;
+			setPlayerHighlighted(id, false);
 		}
 	};
 
 	const handleTouchStart = (type: App.Player.LifeMoveType) => {
 		isHolding = true;
+		holdingType = type;
+		setPlayerHighlighted(id, true);
 
 		timeout = setTimeout(() => {
 			manageLifeTotal(type, id, 10);
 			if (isHolding) {
 				interval = setInterval(() => {
+					vibrate(10);
 					manageLifeTotal(type, id, 10);
 				}, 1000);
 			}
@@ -100,6 +109,21 @@
 		clearTimeout(timeout);
 		timeout = 0;
 		isHolding = false;
+		holdingType = null;
+		setPlayerHighlighted(id, false);
+	};
+
+	const handleCancelHold = () => {
+		// Called on mouseleave / touchcancel — stop repeating and remove highlight without applying a final single change
+		if (interval) {
+			clearInterval(interval);
+			interval = 0;
+		}
+		clearTimeout(timeout);
+		timeout = 0;
+		isHolding = false;
+		holdingType = null;
+		setPlayerHighlighted(id, false);
 	};
 
 	let editing = false;
@@ -150,7 +174,7 @@
 <div
 	class="flex w-full rounded-2xl flex-grow h-6"
 	class:h-full={!$appState.isMenuOpen}
-	class:opacity-85={$players[index].highlighted}
+	class:opacity-35={$players[index].highlighted}
 	class:bg-player-dark={isDead}
 	style="background: ${bg};"
 >
@@ -167,6 +191,9 @@
 					class="w-full h-1/2 flex justify-center {orientation === 'left'
 						? 'items-end rounded-b-3xl'
 						: 'items-start rounded-t-3xl'} active:bg-player-light select-none"
+					class:holding={holdingType === 'subtract'}
+					on:mouseleave={handleCancelHold}
+					on:touchcancel={handleCancelHold}
 				>
 					<div class="rotate-90"><Minus /></div>
 				</button>
@@ -180,6 +207,9 @@
 					class="w-full h-1/2 flex justify-center {orientation === 'left'
 						? 'items-start rounded-t-3xl'
 						: 'items-end rounded-b-3xl'} active:bg-player-light select-none"
+					class:holding={holdingType === 'add'}
+					on:mouseleave={handleCancelHold}
+					on:touchcancel={handleCancelHold}
 				>
 					<Plus />
 				</button>

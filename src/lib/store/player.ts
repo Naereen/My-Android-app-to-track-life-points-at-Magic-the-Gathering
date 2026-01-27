@@ -219,6 +219,20 @@ export const setPlayerStatusNumeric = (playerId: number, key: string, value: num
 	});
 };
 
+export const setPlayerHighlighted = (playerId: number, highlighted: boolean) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					highlighted
+				};
+			}
+			return player;
+		});
+	});
+};
+
 export const setPlayerPoison = (playerId: number, amount: number) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
