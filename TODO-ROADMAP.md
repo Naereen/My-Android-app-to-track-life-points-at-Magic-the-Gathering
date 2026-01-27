@@ -86,15 +86,16 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Maybe even use small icons for that?
   - [x] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
   - [x] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax
-  - [ ] FIXME: when clicking the "K.O." status effect, it doesn't change the player's isDead status (gray out life total and skull icon). Needs fixing.
+  - [x] When clicking the "K.O." status effect, it should change the player's isDead status (gray out life total and skull icon)
   - [ ] TODO: improve this section visually, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
 - [ ] TODO: Harder to track: implement the Commander Damage tracker (from each opponent).
-  - [ ] make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
+  - [ ] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Iniciativa) or not (Ascend, etc)
+  - [ ] After, make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
 
-- [x] Add support for the poison counter: can you die to them?
+- [x] Add support for the poison counter: you can die to them!
   - [x] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
   - [x] Add a way to increment/decrement poison counter with clicks on some buttons in the player panel (like for life total)
   - [x] Show the poison counter next to the life total, as soon as it is > 0

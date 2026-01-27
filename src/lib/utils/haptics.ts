@@ -24,8 +24,8 @@ export const tap = (pattern: number | number[] = 20) => {
 export const confirm = () => tap([20, 10, 20]);
 export const error = () => tap([40, 20, 40]);
 
-export function vibrate(intensity: number) {
-	return tap([intensity, intensity, intensity]);
+export function vibrate(intensity: number = 10) {
+	return tap([2*intensity, intensity, 2*intensity]);
 }
 
 // Svelte action to attach haptic feedback to an element without stopping event forwarding
