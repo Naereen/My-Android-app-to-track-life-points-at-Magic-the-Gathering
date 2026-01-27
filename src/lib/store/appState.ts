@@ -1,6 +1,7 @@
 import { persist } from './persist';
 import { get } from 'svelte/store';
 import { appSettings } from './appSettings';
+import { vibrate } from '$lib/utils/haptics';
 
 export const appState = persist('appState', {
 	isMenuOpen: false,
@@ -10,6 +11,7 @@ export const appState = persist('appState', {
 });
 
 export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
+	vibrate(10);
 	appState.update((data) => ({ ...data, activeMenu: menu, isMenuOpen: !data.isMenuOpen }));
 };
 
@@ -18,11 +20,13 @@ export const setCurrentTurn = (index: number) => {
 };
 
 export const nextTurn = () => {
+	vibrate(10);
 	const totalPlayers = get(appSettings).playerCount || 4;
 	appState.update((data) => ({ ...data, currentTurn: (data.currentTurn + 1) % totalPlayers }));
 };
 
 export const prevTurn = () => {
+	vibrate(10);
 	const totalPlayers = get(appSettings).playerCount || 4;
 	appState.update((data) => ({ ...data, currentTurn: (data.currentTurn - 1 + totalPlayers) % totalPlayers }));
 };

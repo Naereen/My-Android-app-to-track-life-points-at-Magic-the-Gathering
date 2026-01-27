@@ -184,7 +184,7 @@
 				on:touchend={() => handleTouchEnd('subtract')}
 				on:contextmenu|preventDefault draggable="false"
 				use:haptic={10}
-				class="w-1/2 flex justify-start items-center active:bg-player-light rounded-l-2xl select-none"
+				class="minus w-1/2 flex justify-start items-center active:bg-player-light rounded-l-2xl select-none"
 				class:holding={holdingType === 'subtract'}
 				on:mouseleave={handleCancelHold}
 				on:touchcancel={handleCancelHold}
@@ -198,7 +198,7 @@
 				on:touchend={() => handleTouchEnd('add')}
 				on:contextmenu|preventDefault draggable="false"
 				use:haptic={10}
-				class="w-1/2 flex justify-end items-center active:bg-player-light rounded-r-3xl select-none"
+				class="plus w-1/2 flex justify-end items-center active:bg-player-light rounded-r-3xl select-none"
 				class:holding={holdingType === 'add'}
 				on:mouseleave={handleCancelHold}
 				on:touchcancel={handleCancelHold}

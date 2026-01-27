@@ -4,6 +4,7 @@ import { _ } from 'svelte-i18n'; // i18n language toggle
 import { showConfirm } from '$lib/store/modal';
 import { setCurrentTurn } from './appState';
 import { persist } from './persist';
+import { vibrate } from '$lib/utils/haptics';
 
 const playerBaseName = get(_)('player') || 'Player';
 
@@ -348,6 +349,7 @@ export const manageLifeTotal = (
 ) => {
 	// removeFirstPlace();
 	let withinBounds = false; // Flag to determine if setTempLifeDiff should be called
+	vibrate(10);
 
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {

@@ -188,14 +188,16 @@ const cancelEdit = () => {
 						on:touchend={() => handleTouchEnd('subtract')}
 						on:contextmenu|preventDefault draggable="false"
 						use:haptic={10}
-						class="w-full h-1/2 flex justify-center {orientation === 'left'
+						class="minus w-full h-1/2 flex justify-center {orientation === 'left'
 							? 'items-end rounded-b-3xl'
 							: 'items-start rounded-t-3xl'} active:bg-player-light select-none"
 						class:holding={holdingType === 'subtract'}
 						on:mouseleave={handleCancelHold}
 						on:touchcancel={handleCancelHold}
 					>
-						<div class="rotate-90"><Minus /></div>
+						<div class="rotate-90">
+							<Minus />
+						</div>
 					</button>
 					<button
 						on:mousedown={() => handleMouseDown('add')}
@@ -204,7 +206,7 @@ const cancelEdit = () => {
 						on:touchend={() => handleTouchEnd('add')}
 						on:contextmenu|preventDefault draggable="false"
 						use:haptic={10}
-						class="w-full h-1/2 flex justify-center {orientation === 'left'
+						class="plus w-full h-1/2 flex justify-center {orientation === 'left'
 							? 'items-start rounded-t-3xl'
 							: 'items-end rounded-b-3xl'} active:bg-player-light select-none"
 						class:holding={holdingType === 'add'}
