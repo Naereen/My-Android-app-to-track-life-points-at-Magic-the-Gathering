@@ -25,6 +25,13 @@ export default defineConfig({
 				orientation: 'portrait',
 				display: 'standalone',
 				background_color: '#000000',
+				screenshots: [
+					{
+						src: 'screenshots/screenshot1.png',
+						sizes: '750x889',
+						type: 'image/png'
+					}
+				],
 				icons: [
 					{
 						src: "icons/icon-128x128.png",

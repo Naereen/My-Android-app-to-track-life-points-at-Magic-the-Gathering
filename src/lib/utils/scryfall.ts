@@ -52,9 +52,18 @@ export async function randomCards(query: string, limit = 256): Promise<ScryfallC
     const url = `https://api.scryfall.com/cards/random?q=${q}&unique=art`;
     try {
         const data = await fetchJson(url);
-        if (!data || !data.data) return [];
 
-        const cards = data.data.slice(0, limit).map((c: any) => {
+        // The /cards/random endpoint returns a single card object (not a { data: [] } list).
+        // Normalize the response to an array of cards so callers can treat it like searchCards.
+        let rawCards: any[] = [];
+        if (data) {
+            if (Array.isArray(data.data)) rawCards = data.data;
+            else rawCards = [data];
+        }
+
+        if (rawCards.length === 0) return [];
+
+        const cards = rawCards.slice(0, limit).map((c: any) => {
             let image: string | null = null;
             if (c.image_uris) {
                 image = c.image_uris.art_crop || c.image_uris.large || c.image_uris.normal || null;

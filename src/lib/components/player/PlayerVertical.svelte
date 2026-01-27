@@ -33,7 +33,7 @@
 	$: innerWidth = 0;
 	$: isMobile = false; // Assume mobile by default // FIXME: improve detection if needed
 	$: index = id - 1;
-	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10);
+	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10) || (status?.ko === true) || ($players[index].isDead === true);
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgRotation = '0deg';
 	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
@@ -215,7 +215,7 @@
 						class="py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
 						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						><div class="flex">
-							<span style="font-size: xx-large; color: white;" style:text-decoration={isDead ? 'line-through' : 'none'}>{$players[index].playerName}</span>
+							<span style="font-size: xx-large; color: white;" style:text-decoration={isDead ? 'line-through' : 'none'}>{index === $appState.currentTurn ? '* ' : ''}{$players[index].playerName}</span>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center ml-2">
 									<FirstPlace />

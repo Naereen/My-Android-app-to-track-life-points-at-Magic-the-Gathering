@@ -2,6 +2,7 @@ import { get, type Writable } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { _ } from 'svelte-i18n'; // i18n language toggle
 import { showConfirm } from '$lib/store/modal';
+import { setCurrentTurn } from './appState';
 import { persist } from './persist';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -178,6 +179,14 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 				// set the requested value for the target player
 				// @ts-ignore
 				statusEffects[key] = value;
+				// If toggling K.O., keep the isDead flag in sync
+				if (key === 'ko') {
+					return {
+						...player,
+						statusEffects,
+						isDead: !!value
+					};
+				}
 				return {
 					...player,
 					statusEffects
@@ -483,6 +492,8 @@ const spinToSelectFirstPlayer = () => {
 						};
 					});
 				});
+				// set the current turn to the selected starting player
+				setCurrentTurn((currentIndex - 1 + totalPlayers) % totalPlayers);
 			}, finalPauseTime);
 		}
 	};

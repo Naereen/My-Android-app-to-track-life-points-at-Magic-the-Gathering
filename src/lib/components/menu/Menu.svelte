@@ -1,14 +1,52 @@
-<script>
+<script lang="ts">
 	import Dsix from '$lib/assets/icons/Dsix.svelte';
 	import ManaPentagon from '$lib/assets/icons/ManaPentagon.svelte';
 	import Reset from '$lib/assets/icons/Reset.svelte';
 	import { appSettings } from '$lib/store/appSettings';
 	import { resetLifeTotals } from '$lib/store/player';
-	import { appState, toggleIsMenuOpen } from '$lib/store/appState';
+	import { appState, toggleIsMenuOpen, nextTurn, prevTurn } from '$lib/store/appState';
 	import CircularButton from '../shared/circularButton/CircularButton.svelte';
 	import Randomizer from './subcomponents/randomizer/Randomizer.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
+
+	let turnPrevTimeout: number | null = null;
+	let turnPrevTriggered = false;
+
+	const handleTurnDown = (e) => {
+		// start long-press to go to previous player (on Next button)
+		if (turnPrevTimeout) clearTimeout(turnPrevTimeout);
+		turnPrevTimeout = setTimeout(() => {
+			turnPrevTriggered = true;
+			prevTurn();
+		}, 700);
+	};
+
+	const handleTurnUp = (e) => {
+		if (turnPrevTimeout) {
+			clearTimeout(turnPrevTimeout);
+			turnPrevTimeout = null;
+		}
+		// reset trigger after a small delay so that click handler can check it
+		if (turnPrevTriggered) {
+			setTimeout(() => {
+				turnPrevTriggered = false;
+			}, 50);
+		}
+	};
+
+	const handleManaClick = (e) => {
+		toggleIsMenuOpen('resources');
+	};
+
+	const handleNextClick = (e) => {
+		if (turnPrevTriggered) {
+			// consumed by long-press
+			turnPrevTriggered = false;
+			return;
+		}
+		nextTurn();
+	};
 </script>
 
 {#if !$appState.isMenuOpen}
@@ -24,8 +62,25 @@
 			/>
 		</div>
 		<div class="flex justify-center items-center flex-grow">
-			<button on:click={() => toggleIsMenuOpen('resources')} on:contextmenu|preventDefault draggable="false">
+			<button on:click={handleManaClick} on:contextmenu|preventDefault draggable="false">
 				<ManaPentagon />
+			</button>
+		</div>
+		<div class="flex justify-center items-center flex-grow">
+			<button
+				on:mousedown={handleTurnDown}
+				on:mouseup={handleTurnUp}
+				on:mouseleave={handleTurnUp}
+				on:touchstart={handleTurnDown}
+				on:touchend={handleTurnUp}
+				on:touchcancel={handleTurnUp}
+				on:click={handleNextClick}
+				on:contextmenu|preventDefault
+				draggable="false"
+				class="px-2 py-1 rounded bg-gray-700 text-white"
+				title="Next player"
+			>
+				▶
 			</button>
 		</div>
 		<div class="flex justify-center items-center flex-grow">

@@ -1,6 +1,6 @@
 <script>
 	export let size = '3rem';
-	export let light = false;
+	export let light = true;
 </script>
 
 <svg

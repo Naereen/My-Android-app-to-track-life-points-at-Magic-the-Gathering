@@ -46,9 +46,13 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 ## Bugs fixing:
 
 - [x] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
-- [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks) - FIXME: I couldn't reproduce this bug anymore...
+- [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks). I couldn't reproduce this bug anymore...
 
 - [x] When throwing a die, the result is displayed too close to the die icon, spacen then a bit more!
+
+### The image background
+
+- [ ] FIXME: Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
 
 ## Player status and visualization improvements
 
@@ -75,15 +79,15 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] In the PlayerDataModal.svelte, add a third virtual "tab" (first two are Backgrounds and Colors), the "status_effects" should live in a separate pseudo tab view, to save some space?
 
 - [x] In the PlayerDataModal.svelte, when selecting a card from Scryfall as background, after a search success, add a "Choose at random" button to pick a random card from the search results (instead of having to pick one by one). Also translate into fr/es/it/de the "Choose at random" text.
-  - [ ] TODO: if there is not yet a research result, clicking on this button shouldn't do nothing, it should just chose a random card from the full Scryfall database (just one random card from the entire database of cards/illustrations). The function is already implemented in the Scryfall utils (`randomCards`), just need to call it here when there is no search result yet. FIXME: currently, this doesn't work.
+  - [x] If there is not yet a research result, clicking on this button shouldn't do nothing, it should just chose a random card from the full Scryfall database (just one random card from the entire database of cards/illustrations). The function is already implemented in the Scryfall utils (`randomCards`), just need to call it here when there is no search result yet.
 
 - [x] Add a small section on the bottom of each player panel to show the current status effects on that player
   - [x] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
   - [x] Maybe even use small icons for that?
   - [x] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
   - [x] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax
-  - [ ] TODO: improve this section visually, make it prettier (nicer icons, better layout, etc.)
   - [ ] FIXME: when clicking the "K.O." status effect, it doesn't change the player's isDead status (gray out life total and skull icon). Needs fixing.
+  - [ ] TODO: improve this section visually, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
@@ -96,17 +100,17 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Show the poison counter next to the life total, as soon as it is > 0
   - [x] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
 
-- [ ] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
-  - [ ] A button to advance to the next player's turn, it should be located in the middle of the buttons for mana and randomizer?
-  - [ ] A button to go back to the previous player's turn (long click on the previous button, that will be enough)
-  - [ ] Show the current player's turn somewhere on the screen
+- [x] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
+  - [x] A button to advance to the next player's turn, it should be located in the middle of the buttons for mana and randomizer?
+  - [x] An independent button to go back to the previous player's turn would consume too much screen space, so just use a long click on the previous button, that will be enough!
+  - [x] Show the current player's turn somewhere on the screen (prefix this player's name with "▶" or something like that)
 
   [ ] Implement (after that) a timer for each turn (like in Lifetap app)
   - [ ] A way to set the timer duration (global setting)
   - [ ] Show the remaining time for the current player's turn
   - [ ] Sound an alarm when the time is up
 
-- [ ] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing border around their panel?
+- [ ] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel?
 
 - [x] Implement two layouts for the four-players mode:
   - [x] A "1 / 2 / 1" layout, if players are seated on a round table
@@ -126,6 +130,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [ ] Publish it as a beta on the Google Play Store
 
 BUUUUT so far I'm testing on the PWA installed from Chrome on Android, which works pretty well already!
+
+I've also tried using the PWA Builder website, but the generated apk file couldn't be installed on my phone.
 
 ## Better menus and dialogs
 
