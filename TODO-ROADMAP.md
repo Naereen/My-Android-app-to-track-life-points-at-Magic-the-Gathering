@@ -4,6 +4,8 @@ This file is a life list of features to implement, bugs to fix, and improvements
 
 Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep everything in this single file, easier to manage offline for a small personal project like this one.
 
+---------------------------------------------------------------------------
+
 ## "Small" improvements to the usability of the app
 
 - [x] Maximize to full screen on mobile devices: the "window" should take all the screen space, especially on the left/right sides
@@ -20,7 +22,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Turn off the feature of mobile devices to show the "download / share / print" menu on long click (it breaks the UI)
 
 - [x] Reduce the vertical space taken by the "ressources" menu (mana/storm symbols) ==> NOPE
-- [x] Increase the font-size of the names of the players, especially on mobile devices
+- [x] Increase the font-size of the names of the players, especially on mobile devices. DONE but don't do it too much!
 
 ## State saving improvements
 
@@ -28,6 +30,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Save the app settings (number of players, starting life total, etc.)
   - [x] Save the players state (life totals, commander damage, etc.)
   - [x] Add a button to reset the local storage (clear saved settings and game state)
+
+---------------------------------------------------------------------------
 
 ## DONE - Translating the app : 5 languages so far!
 
@@ -43,6 +47,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Add a language selection menu in the settings dialog
   - [x] Reduce the size ot the labels of each language
 
+---------------------------------------------------------------------------
+
 ## Bugs fixing:
 
 - [x] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
@@ -50,9 +56,11 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] When throwing a die, the result is displayed too close to the die icon, spacen then a bit more!
 
-### The image background
+### The image background bug
 
 - [ ] FIXME: Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
+
+---------------------------------------------------------------------------
 
 ## Player status and visualization improvements
 
@@ -71,7 +79,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] Keep the small "medal" which indicates who started the game, during all the game (not only at the beginning)
 
-- [x] Add a way to directly set the life total to a specific value, in the player pane
+- [x] Add a way to directly set the life total to a specific value, in the player pane. This is a new feature from LifeTap app!
 
 - [x] Improve the text contrast of the life total number, especially on mobile devices (hard to read sometimes) : add a white shadow, and make it bold
 
@@ -114,12 +122,12 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [ ] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel?
 
 - [x] Implement two layouts for the four-players mode:
-  - [x] A "1 / 2 / 1" layout, if players are seated on a round table
-  - [x] A "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
+  - [x] The "1 / 2 / 1" layout, if players are seated on a round table
+  - [x] The "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
 
 - [ ] (much later, I never play with 6 players) Implement two layouts for the six-players mode:
-  - [ ] A "|::|" layout (one long | player on the left and the right, and in the middle like a Two-Headed Giant layout), if players are seated on a round table
-  - [ ] A ":::" layout (2 lines of 3 columns), if players are seated on opposite sides of a rectangular table (classic mode for Emperor mode, it is already implemented)
+  - [ ] The "|::|" layout (one long | player on the left and the right, and in the middle like a Two-Headed Giant layout), if players are seated on a round table
+  - [x] Default mode for 6-player right now: the ":::" layout (2 lines of 3 columns), if players are seated on opposite sides of a rectangular table (classic mode for Emperor mode, it is already implemented)
 
 ## Successfully build a working apk file
 
@@ -146,7 +154,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 - [x] Improve the spacing of the mana/storm count : reduce the size of the mana symbols?
 
-- [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right). It should be hard!
+- [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right). I expect this feature to be hard to implement...
 
 ---------------------------------------------------------------------------
 
@@ -155,7 +163,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 - [x] Custom Player backgrounds
   - [x] With a simple color picker : one color of mana, and that's it
   - [x] If clicking on a color after it is already selected, deselect it (go back to default background)
-  - [x] With a color gradient picker: two colors of mana, gradient between the two
+  - [x] With a color gradient picker: two colors of mana, gradient between the two. Works with any number of colors (from 1 to 12).
 
 - [x] Even better custom Player backgrounds
   - [x] With a card search to pick a card as background
@@ -163,8 +171,8 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
   - [x] Works fine for cards with different illustrations for the same name and edition
   - [x] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
   - [x] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two colors)
-    - [ ] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG)
-  - [x] Allow partners and backgrounds and all pairs of legendary commanders. XXX: Not yet, it's too complicated to manage a background with two illustrations side by side properly.
+    - [x] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG) - I already added a "random background" button!
+  - [ ] Allow partners and backgrounds and all pairs of legendary commanders. XXX: Not yet, it's too complicated to manage a background with two illustrations side by side properly.
 
 - [ ] Commander damage type tracking
 - [ ] Multiplayer game modes (Two-Headed Giant, Commander, etc.)
@@ -180,8 +188,13 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 Random ideas:
 
-- [ ] Sound effects on button clicks (life up/down, commander damage up/down, etc.) ?
+- [ ] Sound effects on button clicks (big life up/down, big commander damage up/down, K.O. of a player, victory of the last remaining at the table, etc.). Should be enable by default, but should be possible to disable them from the settings!
 - [x] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). TODO: Needs more testing on mobile devices. I wasn't convinced by the results yet on my Android phone.
+
+Active turn indicator:
+
+- [ ] even if the timer of the current turn is not shown (it should be possible to enable/disable it in the settings), the app could count the time of each turn in the background, and display some statistics at the end: Akroma played for 19% of the time of the game, while Cho-Manno played for 32% of the total time.
+- [ ] implement a timer that can be shown and decreases / increases (which is best?). Add a discrete but long vibration when the timer reaches 0 seconds (if decreasing) or X minutes (if increasing).
 
 Nope:
 
@@ -190,15 +203,22 @@ Nope:
 - [x] ~~Night mode / dark theme~~
 - [ ] ~~Customizable fonts (font family, font size)~~
 
+## Additional visualizations: dungeons (initiative, etc), The Ring emblem, your speed
+
+- [ ] Additional visualizations: dungeons (initiative, etc)
+- [ ] Additional visualizations: The Ring bearer emblem (Lord of the Rings)
+- [ ] Additional visualizations: Your speed (Aetherdrift) : 0/1/2/3/4(max)
+
 ## Variants to implement here, not existing in Lifetap
 
+- [ ] The "scry0 / scry1 scry1 / scry2" special rule for turn 1 in 4-player mode, or ".. scry 3" for 5-player mode
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
 - [ ] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities)
-- [ ] Treachery support (hidden role to check once when the game starts, and hidden after that)
+- [ ] Shogun / Treachery support (hidden role to check once when the game starts, and hidden after that)
 
 ---------------------------------------------------------------------------
 
-## Dream features, they'll never happen!
+## Dream/weird features, they'll never happen!
 
 - [ ] Game history and undo functionality
 - [ ] Enhanced statistics and analytics, à la Mythic.Tools
@@ -206,6 +226,8 @@ Nope:
 - [ ] Multiplayer online mode (connect with friends over the internet)
 - [ ] Customizable themes and UI options
 
+---------------------------------------------------------------------------
+
 ## On the development side
 
-- [ ] Tests? I literally have no idea how to write tests for a SvelteKit app.
+- [ ] Automated tests? I literally have no idea how to write tests for a graphical web app (SvelteKit app). Thus, I should/could learn!
