@@ -30,7 +30,7 @@ let timeout: number;
 let isHolding = false;
 let holdingType: App.Player.LifeMoveType | null = null;
 $: innerWidth = 0;
-$: isMobile = false; // Assume mobile by default // FIXME: improve detection if needed
+$: isMobile = innerWidth < 768; // Assume mobile by default // FIXME: improve detection if needed
 $: index = id - 1;
 $: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10) || (status?.ko === true) || ($players[index].isDead === true);
 $: bg = colorToBg($players[index].color ?? 'white');
