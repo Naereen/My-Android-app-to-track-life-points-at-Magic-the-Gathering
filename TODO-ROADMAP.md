@@ -56,7 +56,11 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] When throwing a die, the result is displayed too close to the die icon, spacen then a bit more!
 
-### The image background bug
+### The +2/-2 bug
+
+- [ ] On mobile right now, when doing a very short touch (click) on the +1/-1 buttons, it sometimes adds/subtracts 2 points at once instead of 1 point at a time.
+
+### The image background
 
 - [ ] FIXME: Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
 
@@ -117,7 +121,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   [ ] Implement (after that) a timer for each turn (like in Lifetap app)
   - [ ] A way to set the timer duration (global setting)
   - [ ] Show the remaining time for the current player's turn
-  - [ ] Sound an alarm when the time is up
+  - [ ] Haptic vibrate when the time is up
+  - [ ] and sound an discrete tiny alarm when the time is up
 
 - [ ] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel?
 
