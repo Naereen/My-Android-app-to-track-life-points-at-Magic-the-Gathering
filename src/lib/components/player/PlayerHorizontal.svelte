@@ -188,7 +188,6 @@
 						on:touchstart={() => handleTouchStart('subtract')}
 						on:touchend={() => handleTouchEnd('subtract')}
 						on:contextmenu|preventDefault draggable="false"
-						use:haptic={10}
 						class="minus w-full h-1/2 flex justify-center {orientation === 'left'
 							? 'items-end rounded-b-3xl'
 							: 'items-start rounded-t-3xl'} active:bg-player-light select-none"
@@ -206,7 +205,6 @@
 						on:touchstart={() => handleTouchStart('add')}
 						on:touchend={() => handleTouchEnd('add')}
 						on:contextmenu|preventDefault draggable="false"
-						use:haptic={10}
 						class="plus w-full h-1/2 flex justify-center {orientation === 'left'
 							? 'items-start rounded-t-3xl'
 							: 'items-end rounded-b-3xl'} active:bg-player-light select-none"
@@ -245,7 +243,7 @@
 						class:flex-row-reverse={orientation === 'left'}
 					>
 						<span
-							class="h-16 text-center text-2xl text-shadow-xl text-shadow-black text-black"
+							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black"
 							style="text-shadow: 0 0 20px black;"
 							class:rotate-180={orientation === 'left'}
 							class:h-8={$appSettings.playerCount >= 5}
@@ -260,8 +258,9 @@
 							{#if !editing}
 								<button on:dblclick={startEdit} on:contextmenu|preventDefault={openPromptSetLife} class="bg-transparent border-none p-0 m-0 pointer-events-auto">
 									<span
-										class="text-shadow-black text-shadow-xl text-white text-7xl font-bold flex items-center text-center"
-										class:text-5xl={$appSettings.playerCount >= 5}
+										class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center"
+										class:text-8xl={$appSettings.playerCount <= 4}
+										class:text-6xl={$appSettings.playerCount >= 5}
 										class:-rotate-180={orientation === 'left'}
 										class:opacity-25={isDead}
 										style="text-shadow: 0 0 40px black;"
@@ -278,7 +277,7 @@
 							{/if}
 						</div>
 						<span
-							class="h-16 text-center text-2xl text-shadow-xl text-shadow-black text-black"
+							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black"
 							style="text-shadow: 0 0 20px black;"
 							class:rotate-180={orientation === 'left'}
 							class:h-8={$appSettings.playerCount >= 5}

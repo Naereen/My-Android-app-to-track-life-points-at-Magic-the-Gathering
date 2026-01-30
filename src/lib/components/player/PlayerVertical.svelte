@@ -184,7 +184,6 @@
 				on:touchstart={() => handleTouchStart('subtract')}
 				on:touchend={() => handleTouchEnd('subtract')}
 				on:contextmenu|preventDefault draggable="false"
-				use:haptic={10}
 				class="minus w-1/2 flex justify-start items-center active:bg-player-light rounded-l-2xl select-none"
 				class:holding={holdingType === 'subtract'}
 				on:mouseleave={handleCancelHold}
@@ -198,7 +197,6 @@
 				on:touchstart={() => handleTouchStart('add')}
 				on:touchend={() => handleTouchEnd('add')}
 				on:contextmenu|preventDefault draggable="false"
-				use:haptic={10}
 				class="plus w-1/2 flex justify-end items-center active:bg-player-light rounded-r-3xl select-none"
 				class:holding={holdingType === 'add'}
 				on:mouseleave={handleCancelHold}
@@ -227,7 +225,7 @@
 				</div>
 				<div class="h-1/3 flex justify-center items-center flex-row">
 					<span
-						class="h-16 text-center text-2xl text-shadow-xl text-shadow-black text-black"
+						class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black"
 						style="text-shadow: 0 0 20px black;"
 						>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span>
 					<div class="relative flex items-center justify-center">
@@ -238,8 +236,7 @@
 						{/if}
 						{#if !editing}
 							<button on:dblclick={startEdit} on:contextmenu|preventDefault={openPromptSetLife} class="pointer-events-auto bg-transparent border-none p-0 m-0">
-								<span class="text-shadow-xl/120 text-white text-8xl font-bold" class:opacity-25={isDead} style="text-shadow: 0 0 40px black;">
-									{$players[index].lifeTotal}</span>
+								<span class="flex items-center text-center text-shadow-xl/120 text-white font-bold" class:opacity-25={isDead} class:text-8xl={$appSettings.playerCount <= 4} class:text-6xl={$appSettings.playerCount >= 5} style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span>
 							</button>
 						{:else}
 							<div class="pointer-events-auto flex flex-col items-center">
@@ -251,8 +248,7 @@
 							</div>
 						{/if}
 					</div>
-					<span class="w-16 text-center text-2xl text-shadow-xl text-shadow-black text-black" style="text-shadow: 0 0 20px black;"
-						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span>
+					<span class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black" style="text-shadow: 0 0 20px black;">{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span>
 				</div>
 				<div class="grow h-1/3"></div>
 			</div>

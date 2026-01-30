@@ -115,7 +115,9 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Show the poison counter next to the life total, as soon as it is > 0
   - [x] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
 
-- [ ] Increase font-size and change color to full-white with a shadow, for the -X/+X numbers that appear when changing life total, to improve visibility on mobile devices or on image backgrounds
+- [x] Increase font-size and change color to full-white with a shadow, for the -X/+X numbers that appear when changing life total, to improve visibility on mobile devices or on image backgrounds
+
+- [ ] Rotate to the left/right or 180deg the CONTENT of the panel showing the status effects, depending on the player's position, so that the text is always readable (not upside down or left/right). I expect this feature to be hard to implement...
 
 - [x] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
   - [x] A button to advance to the next player's turn, it should be located in the middle of the buttons for mana and randomizer?
@@ -226,6 +228,12 @@ Nope:
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
 - [ ] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities)
 - [ ] Shogun / Treachery support (hidden role to check once when the game starts, and hidden after that)
+
+## Customize the probabilities of whose player starts the game
+
+- [ ] Allow to customize the probabilities of each player starting the game (instead of uniform distribution)
+  - [ ] E.g. Player 1 has 50% chance to start, Player 2 has 25%, Player 3 has 15%, Player 4 has 10%
+  - [ ] Add a way to set these probabilities in the settings dialog
 
 ---------------------------------------------------------------------------
 
