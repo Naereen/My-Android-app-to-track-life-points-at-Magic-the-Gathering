@@ -1,56 +1,90 @@
 <script lang="ts">
-import FirstPlace from '$lib/assets/icons/FirstPlace.svelte';
-import Minus from '$lib/assets/icons/Minus.svelte';
-import Plus from '$lib/assets/icons/Plus.svelte';
-import Skull from '$lib/assets/icons/Skull.svelte';
-import StatusSkull from '$lib/assets/icons/StatusSkull.svelte';
-import Crown from '$lib/assets/icons/Crown.svelte';
-import Initiative from '$lib/assets/icons/Initiative.svelte';
-import Ascend from '$lib/assets/icons/Ascend.svelte';
-import DayNight from '$lib/assets/icons/DayNight.svelte';
-import PoisonIcon from '$lib/assets/icons/Poison.svelte';
-import Energy from '$lib/assets/icons/Energy.svelte';
-import Experience from '$lib/assets/icons/Experience.svelte';
-import Rad from '$lib/assets/icons/Rad.svelte';
-import CommandTax from '$lib/assets/icons/CommandTax.svelte';
-import { _ } from 'svelte-i18n';
-import { appSettings } from '$lib/store/appSettings';
-import { appState } from '$lib/store/appState';
-import { openPlayerModal } from '$lib/store/modal';
-import { manageLifeTotal, players, setPlayerLifeAbsolute, setPlayerHighlighted } from '$lib/store/player';
-import { tick } from 'svelte';
-import { colorToBg } from '$lib/components/colorToBg';
-import { haptic, vibrate } from '$lib/utils/haptics';
+	import FirstPlace from '$lib/assets/icons/FirstPlace.svelte';
+	import Minus from '$lib/assets/icons/Minus.svelte';
+	import Plus from '$lib/assets/icons/Plus.svelte';
+	import Skull from '$lib/assets/icons/Skull.svelte';
+	import StatusSkull from '$lib/assets/icons/StatusSkull.svelte';
+	import Crown from '$lib/assets/icons/Crown.svelte';
+	import Initiative from '$lib/assets/icons/Initiative.svelte';
+	import Ascend from '$lib/assets/icons/Ascend.svelte';
+	import DayNight from '$lib/assets/icons/DayNight.svelte';
+	import PoisonIcon from '$lib/assets/icons/Poison.svelte';
+	import Energy from '$lib/assets/icons/Energy.svelte';
+	import Experience from '$lib/assets/icons/Experience.svelte';
+	import Rad from '$lib/assets/icons/Rad.svelte';
+	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
+	import { _ } from 'svelte-i18n';
+	import { appSettings } from '$lib/store/appSettings';
+	import { appState } from '$lib/store/appState';
+	import { openPlayerModal } from '$lib/store/modal';
+	import { manageLifeTotal, players, setPlayerLifeAbsolute, setPlayerHighlighted } from '$lib/store/player';
+	import { tick } from 'svelte';
+	import { colorToBg } from '$lib/components/colorToBg';
+	import { haptic, vibrate } from '$lib/utils/haptics';
+	import { isMobileDevice } from '$lib/utils/detectMobile';
 
-export let orientation: App.Player.Orientation = 'up';
-export let id: number;
+	export let orientation: App.Player.Orientation = 'up';
+	export let id: number;
 
-let interval: number;
-let timeout: number;
-let isHolding = false;
-let holdingType: App.Player.LifeMoveType | null = null;
-$: innerWidth = 0;
-$: isMobile = innerWidth < 768; // Assume mobile by default // FIXME: improve detection if needed
-$: index = id - 1;
-$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10) || (status?.ko === true) || ($players[index].isDead === true);
-$: bg = colorToBg($players[index].color ?? 'white');
-$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
-// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
-$: bgPositionX = orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
-$: bgPositionY = orientation === 'left' ? 'right' : orientation === 'right' ? 'left' : 'center';
-$: styleVars = $players[index].backgroundImage
-	? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY};`
-	: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none;`;
-$: status = $players[index].statusEffects ?? {};
-$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter((k) => status[k]);
-$: poisonCount = $players[index].poison ?? 0;
-$: energyCount = status.energy ?? 0;
-$: experienceCount = status.experience ?? 0;
-$: radCount = status.rad ?? 0;
-$: commandTaxCount = status.commandTax ?? 0;
+	let interval: number;
+	let timeout: number;
+	let isHolding = false;
+	let holdingType: App.Player.LifeMoveType | null = null;
+	$: innerWidth = 0;
+	$: isMobile = isMobileDevice(innerWidth);
+	$: index = id - 1;
+	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10) || (status?.ko === true) || ($players[index].isDead === true);
+	$: bg = colorToBg($players[index].color ?? 'white');
+	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
+	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
+	$: bgPositionX = orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
+	$: bgPositionY = orientation === 'left' ? 'right' : orientation === 'right' ? 'left' : 'center';
+	$: styleVars = $players[index].backgroundImage
+		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY};`
+		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none;`;
+	$: status = $players[index].statusEffects ?? {};
+	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter((k) => status[k]);
+	$: poisonCount = $players[index].poison ?? 0;
+	$: energyCount = status.energy ?? 0;
+	$: experienceCount = status.experience ?? 0;
+	$: radCount = status.rad ?? 0;
+	$: commandTaxCount = status.commandTax ?? 0;
 
-const handleMouseDown = (type: App.Player.LifeMoveType) => {
-	if (!isMobile) {
+	const handleMouseDown = (type: App.Player.LifeMoveType) => {
+		if (!isMobile) {
+			isHolding = true;
+			holdingType = type;
+			setPlayerHighlighted(id, true);
+
+			timeout = setTimeout(() => {
+				manageLifeTotal(type, id, 10);
+				if (isHolding) {
+					interval = setInterval(() => {
+						vibrate(10);
+						manageLifeTotal(type, id, 10);
+					}, 1000);
+				}
+			}, 1000);
+		}
+	};
+
+	const handleMouseUp = (type: App.Player.LifeMoveType) => {
+		if (!isMobile) {
+			if (interval) {
+				clearInterval(interval);
+				interval = 0;
+			} else {
+				manageLifeTotal(type, id);
+			}
+			clearTimeout(timeout);
+			timeout = 0;
+			isHolding = false;
+			holdingType = null;
+			setPlayerHighlighted(id, false);
+		}
+	};
+
+	const handleTouchStart = (type: App.Player.LifeMoveType) => {
 		isHolding = true;
 		holdingType = type;
 		setPlayerHighlighted(id, true);
@@ -64,11 +98,9 @@ const handleMouseDown = (type: App.Player.LifeMoveType) => {
 				}, 1000);
 			}
 		}, 1000);
-	}
-};
+	};
 
-const handleMouseUp = (type: App.Player.LifeMoveType) => {
-	if (!isMobile) {
+	const handleTouchEnd = (type: App.Player.LifeMoveType) => {
 		if (interval) {
 			clearInterval(interval);
 			interval = 0;
@@ -80,85 +112,54 @@ const handleMouseUp = (type: App.Player.LifeMoveType) => {
 		isHolding = false;
 		holdingType = null;
 		setPlayerHighlighted(id, false);
-	}
-};
+	};
 
-const handleTouchStart = (type: App.Player.LifeMoveType) => {
-	isHolding = true;
-	holdingType = type;
-	setPlayerHighlighted(id, true);
-
-	timeout = setTimeout(() => {
-		manageLifeTotal(type, id, 10);
-		if (isHolding) {
-			interval = setInterval(() => {
-				vibrate(10);
-				manageLifeTotal(type, id, 10);
-			}, 1000);
+	const handleCancelHold = () => {
+		// Called on mouseleave / touchcancel — stop repeating and remove highlight without applying a final single change
+		if (interval) {
+			clearInterval(interval);
+			interval = 0;
 		}
-	}, 1000);
-};
+		clearTimeout(timeout);
+		timeout = 0;
+		isHolding = false;
+		holdingType = null;
+		setPlayerHighlighted(id, false);
+	};
 
-const handleTouchEnd = (type: App.Player.LifeMoveType) => {
-	if (interval) {
-		clearInterval(interval);
-		interval = 0;
-	} else {
-		manageLifeTotal(type, id);
-	}
-	clearTimeout(timeout);
-	timeout = 0;
-	isHolding = false;
-	holdingType = null;
-	setPlayerHighlighted(id, false);
-};
+	let editing = false;
+	let editValue = '';
 
-const handleCancelHold = () => {
-	// Called on mouseleave / touchcancel — stop repeating and remove highlight without applying a final single change
-	if (interval) {
-		clearInterval(interval);
-		interval = 0;
-	}
-	clearTimeout(timeout);
-	timeout = 0;
-	isHolding = false;
-	holdingType = null;
-	setPlayerHighlighted(id, false);
-};
+	const openPromptSetLife = () => {
+		const current = $players[index].lifeTotal;
+		const input = prompt($_('set_life_total') ?? 'Set life total', String(current));
+		if (input === null) return;
+		const val = Number(input);
+		if (!Number.isNaN(val)) {
+			setPlayerLifeAbsolute(id, val);
+		}
+	};
 
-let editing = false;
-let editValue = '';
+	const startEdit = async () => {
+		editing = true;
+		editValue = String($players[index].lifeTotal);
+		await tick();
+		const el = document.getElementById(`life-input-${id}`) as HTMLInputElement | null;
+		el?.focus();
+		el?.select();
+	};
 
-const openPromptSetLife = () => {
-	const current = $players[index].lifeTotal;
-	const input = prompt($_('set_life_total') ?? 'Set life total', String(current));
-	if (input === null) return;
-	const val = Number(input);
-	if (!Number.isNaN(val)) {
-		setPlayerLifeAbsolute(id, val);
-	}
-};
+	const saveEdit = () => {
+		const val = Number(editValue);
+		if (!Number.isNaN(val)) {
+			setPlayerLifeAbsolute(id, val);
+		}
+		editing = false;
+	};
 
-const startEdit = async () => {
-	editing = true;
-	editValue = String($players[index].lifeTotal);
-	await tick();
-	const el = document.getElementById(`life-input-${id}`) as HTMLInputElement | null;
-	el?.focus();
-	el?.select();
-};
-
-const saveEdit = () => {
-	const val = Number(editValue);
-	if (!Number.isNaN(val)) {
-		setPlayerLifeAbsolute(id, val);
-	}
-	editing = false;
-};
-
-const cancelEdit = () => {
-	editing = false;
-};
+	const cancelEdit = () => {
+		editing = false;
+	};
 </script>
 
 <svelte:window bind:innerWidth />

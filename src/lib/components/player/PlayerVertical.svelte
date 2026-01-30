@@ -21,6 +21,7 @@
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { haptic, vibrate } from '$lib/utils/haptics';
+	import { isMobileDevice } from '$lib/utils/detectMobile';
 
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
@@ -31,7 +32,7 @@
 	let holdingType: App.Player.LifeMoveType | null = null;
 
 	$: innerWidth = 0;
-	$: isMobile = innerWidth < 768; // Assume mobile by default // FIXME: improve detection if needed
+	$: isMobile = isMobileDevice(innerWidth);
 	$: index = id - 1;
 	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10) || (status?.ko === true) || ($players[index].isDead === true);
 	$: bg = colorToBg($players[index].color ?? 'white');
