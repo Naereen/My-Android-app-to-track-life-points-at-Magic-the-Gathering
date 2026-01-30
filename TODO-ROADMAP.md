@@ -56,9 +56,9 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] When throwing a die, the result is displayed too close to the die icon, spacen then a bit more!
 
-### The +2/-2 bug
+### The +2/-2 bug : should be fixed!
 
-- [ ] On mobile right now, when doing a very short touch (click) on the +1/-1 buttons, it sometimes adds/subtracts 2 points at once instead of 1 point at a time.
+- [x] On mobile right now, when doing a very short touch (click) on the +1/-1 buttons, it sometimes adds/subtracts 2 points at once instead of 1 point at a time.
 
 ### The image background
 
@@ -99,7 +99,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
   - [x] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax
   - [x] When clicking the "K.O." status effect, it should change the player's isDead status (gray out life total and skull icon)
-  - [ ] TODO: improve this section visually, make it prettier (nicer icons, better layout, etc.)
+  - [x] Improve this section visually, make it prettier with **nicer icons**
+  - [ ] TODO: improve this section visually, make it prettier with **better layout**
 
 - [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
@@ -210,9 +211,10 @@ Nope:
 
 ## Additional visualizations: dungeons (initiative, etc), The Ring emblem, your speed
 
-- [ ] Additional visualizations: dungeons (initiative, etc)
-- [ ] Additional visualizations: The Ring bearer emblem (Lord of the Rings)
-- [ ] Additional visualizations: Your speed (Aetherdrift) : 0/1/2/3/4(max)
+- [ ] Additional visualizations: The Ring bearer emblem (Lord of the Rings) : <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?front> and <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?back>
+- [ ] Additional visualizations: Your speed (Aetherdrift) : 0/1/2/3/4(max) <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?front> and <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?back>
+- [ ] Additional visualizations: dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>
+- [ ] Additional visualizations: the dungeon made by some friend over at Colmar
 
 ## Variants to implement here, not existing in Lifetap
 
