@@ -110,7 +110,8 @@
 		{ code: 'fr', label: 'Français' },
 		{ code: 'es', label: 'Español' },
 		{ code: 'de', label: 'Deutsch' },
-		{ code: 'it', label: 'Italiano' }
+		{ code: 'it', label: 'Italiano' },
+		{ code: 'pt', label: 'Português' }
 	];
 
 	const handleChangeLocale = (code: string) => {

@@ -43,6 +43,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Spanish
   - [x] German
   - [x] Italian
+  - [ ] Portuguese
 
 - [x] Add a language selection menu in the settings dialog
   - [x] Reduce the size ot the labels of each language
