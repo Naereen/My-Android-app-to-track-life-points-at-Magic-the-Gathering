@@ -349,7 +349,11 @@ export const manageLifeTotal = (
 ) => {
 	// removeFirstPlace();
 	let withinBounds = false; // Flag to determine if setTempLifeDiff should be called
-	vibrate(10);
+	if (amount <= 1) {
+		vibrate(10);
+	} else {
+		vibrate(40);
+	}
 
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {

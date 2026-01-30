@@ -245,11 +245,11 @@
 						class:flex-row-reverse={orientation === 'left'}
 					>
 						<span
-							class="h-16 text-center"
+							class="h-16 text-center text-2xl text-shadow-xl text-shadow-black text-black"
+							style="text-shadow: 0 0 20px black;"
 							class:rotate-180={orientation === 'left'}
 							class:h-8={$appSettings.playerCount >= 5}
-							>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span
-						>
+							>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span>
 						<div class="relative flex items-center justify-center">
 							{#if isDead}
 								<div class="z-10 text-black" class:rotate-90={orientation === 'right'} class:-rotate-90={orientation === 'left'} class:-translate-x-0={orientation === 'right'} class:translate-x-0={orientation === 'left'} style="width: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; height: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; opacity: 1;">
@@ -260,7 +260,7 @@
 							{#if !editing}
 								<button on:dblclick={startEdit} on:contextmenu|preventDefault={openPromptSetLife} class="bg-transparent border-none p-0 m-0 pointer-events-auto">
 									<span
-										class="text-shadow-white text-shadow-xl text-white text-7xl font-bold flex items-center text-center"
+										class="text-shadow-black text-shadow-xl text-white text-7xl font-bold flex items-center text-center"
 										class:text-5xl={$appSettings.playerCount >= 5}
 										class:-rotate-180={orientation === 'left'}
 										class:opacity-25={isDead}
@@ -278,11 +278,11 @@
 							{/if}
 						</div>
 						<span
-							class="h-16 text-center"
+							class="h-16 text-center text-2xl text-shadow-xl text-shadow-black text-black"
+							style="text-shadow: 0 0 20px black;"
 							class:rotate-180={orientation === 'left'}
 							class:h-8={$appSettings.playerCount >= 5}
-							>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
-						>
+							>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span>
 					</div>
 
 					<div class="grow w-1/3 vert"></div>

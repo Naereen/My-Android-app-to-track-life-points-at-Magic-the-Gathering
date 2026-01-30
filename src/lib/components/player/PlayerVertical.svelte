@@ -226,9 +226,10 @@
 					</button>
 				</div>
 				<div class="h-1/3 flex justify-center items-center flex-row">
-					<span class="w-16 text-center"
-						>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span
-					>
+					<span
+						class="h-16 text-center text-2xl text-shadow-xl text-shadow-black text-black"
+						style="text-shadow: 0 0 20px black;"
+						>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span>
 					<div class="relative flex items-center justify-center">
 						{#if isDead}
 							<div class="absolute z-10 text-black" style="width: {$appSettings.playerCount >= 5 ? '2.75rem' : '3.5rem'}; height: {$appSettings.playerCount >= 5 ? '2.75rem' : '3.5rem'}; opacity: 1;">
@@ -250,9 +251,8 @@
 							</div>
 						{/if}
 					</div>
-					<span class="w-16 text-center"
-						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
-					>
+					<span class="w-16 text-center text-2xl text-shadow-xl text-shadow-black text-black" style="text-shadow: 0 0 20px black;"
+						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span>
 				</div>
 				<div class="grow h-1/3"></div>
 			</div>
