@@ -17,6 +17,7 @@ export const tap = (pattern: number | number[] = 20) => {
 	try {
 		navigator.vibrate(pattern as any);
 	} catch (e) {
+		console.log("Haptics vibration error:", e);
 		// ignore
 	}
 };
@@ -37,7 +38,7 @@ export function haptic(node: HTMLElement, pattern: number | number[] = 10) {
 			if (!canVibrate()) return;
 			navigator.vibrate(currentPattern as any);
 		} catch (e) {
-			// ignore
+			console.log("Haptics vibration error:", e);
 		}
 	};
 
