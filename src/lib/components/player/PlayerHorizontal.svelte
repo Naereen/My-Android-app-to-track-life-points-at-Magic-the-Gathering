@@ -231,7 +231,7 @@
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						>
 							<div class="flex items-center">
-								<span style="font-size: xx-large; color: white;" style:text-decoration={isDead ? 'line-through' : 'none'}>{index === $appState.currentTurn ? '* ' : ''}{$players[index].playerName}</span>
+								<span style="font-size: xx-large; color: white;" style:text-decoration={isDead ? 'line-through' : ''}{index === $appState.currentTurn ? 'underline' : ''}>{$players[index].playerName}</span>
 								{#if $players[index].isFirst}
 									<div class="flex justify-center items-center mt-2 rotate-90">
 										<FirstPlace />

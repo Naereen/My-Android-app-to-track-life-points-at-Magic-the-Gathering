@@ -55,9 +55,11 @@
 		/* 200% permet de couvrir les cas de rotation sans couper l'image */
 		width: 200%;
 		height: 200%;
-		transform: translate(-50%, -50%) rotate(var(--bg-rotation, 0deg));
+		/* translateX to center horizontally, rotate around the top center so top stays aligned */
+		transform: translateX(-50%) translateY(-50%) rotate(var(--bg-rotation, 0deg));
 		transform-origin: center center;
 		background-image: var(--bg-image);
+		/* keep the full card visible (no cropping) while fitting inside the enlarged pseudo-element */
 		background-size: contain;
 		background-position: var(--bg-positionx, center) var(--bg-positiony, center);
 		z-index: -10;

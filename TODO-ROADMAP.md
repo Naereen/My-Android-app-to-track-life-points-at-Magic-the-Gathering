@@ -43,7 +43,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Spanish
   - [x] German
   - [x] Italian
-  - [ ] Portuguese
+  - [x] Portuguese
 
 - [x] Add a language selection menu in the settings dialog
   - [x] Reduce the size ot the labels of each language
@@ -115,12 +115,15 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Show the poison counter next to the life total, as soon as it is > 0
   - [x] When poison counter >= 10, the player is dead (show the skull icon, gray out their life total)
 
+- [ ] Increase font-size and change color to full-white with a shadow, for the -X/+X numbers that appear when changing life total, to improve visibility on mobile devices or on image backgrounds
+
 - [x] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
   - [x] A button to advance to the next player's turn, it should be located in the middle of the buttons for mana and randomizer?
   - [x] An independent button to go back to the previous player's turn would consume too much screen space, so just use a long click on the previous button, that will be enough!
   - [x] Show the current player's turn somewhere on the screen (prefix this player's name with "▶" or something like that)
+  - [x] If a player is dead, skip their turn when going to the next player's turn
 
-  [ ] Implement (after that) a timer for each turn (like in Lifetap app)
+- [ ] Implement (after that) a timer for each turn (like in Lifetap app)
   - [ ] A way to set the timer duration (global setting)
   - [ ] Show the remaining time for the current player's turn
   - [ ] Haptic vibrate when the time is up
