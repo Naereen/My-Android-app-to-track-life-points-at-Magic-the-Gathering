@@ -9,11 +9,13 @@
 	import Randomizer from './subcomponents/randomizer/Randomizer.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
+	import { vibrate } from '$lib/utils/haptics';
 
 	let turnPrevTimeout: number | null = null;
 	let turnPrevTriggered = false;
 
 	const handleTurnDown = (e) => {
+		vibrate(20);
 		// start long-press to go to previous player (on Next button)
 		if (turnPrevTimeout) clearTimeout(turnPrevTimeout);
 		turnPrevTimeout = setTimeout(() => {
@@ -23,6 +25,7 @@
 	};
 
 	const handleTurnUp = (e) => {
+		vibrate(20);
 		if (turnPrevTimeout) {
 			clearTimeout(turnPrevTimeout);
 			turnPrevTimeout = null;
@@ -36,10 +39,12 @@
 	};
 
 	const handleManaClick = (e) => {
+		vibrate(20);
 		toggleIsMenuOpen('resources');
 	};
 
 	const handleNextClick = (e) => {
+		vibrate(20);
 		if (turnPrevTriggered) {
 			// consumed by long-press
 			turnPrevTriggered = false;
@@ -77,7 +82,7 @@
 				on:click={handleNextClick}
 				on:contextmenu|preventDefault
 				draggable="false"
-				class="px-2 py-1 rounded bg-gray-700 text-white"
+				class="px-2 py-1 rounded-3xl bg-gray-700 text-white"
 				title="Next player"
 			>
 				▶
