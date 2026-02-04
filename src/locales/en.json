@@ -22,6 +22,7 @@
     "window_confirm_change_life_total": "Are you sure you want to continue with these life totals?",
     "window_confirm_change_player_count": "Are you sure you want to continue with this number of players?",
     "window_confirm_reset_game": "Are you sure you want to reset the game?",
+    "reset_player_profiles_checkbox": "Also reset player profiles (colors)",
     "player_background_color": "Customize Colors",
     "clear_gradient": "Clear",
     "clear_background": "Clear background",

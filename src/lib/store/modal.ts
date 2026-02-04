@@ -44,24 +44,42 @@ export const resetPlayerModalData = () => {
 type ConfirmModalState = {
 	isOpen: boolean;
 	message: string;
-	resolve: ((value: boolean) => void) | null;
+	resolve: ((value: boolean | { confirmed: boolean; checkboxValue?: boolean }) => void) | null;
+	checkboxLabel?: string;
+	checkboxDefaultValue?: boolean;
 };
 
 const initialConfirmModalState: ConfirmModalState = { isOpen: false, message: '', resolve: null };
 
 export const confirmModalData = writable<ConfirmModalState>(initialConfirmModalState);
 
-export const showConfirm = (message: string) => {
-	return new Promise<boolean>((resolve) => {
-		confirmModalData.set({ isOpen: true, message, resolve });
+export const showConfirm = (
+	message: string,
+	options?: { checkboxLabel?: string; checkboxDefaultValue?: boolean }
+) => {
+	return new Promise<boolean | { confirmed: boolean; checkboxValue?: boolean }>((resolve) => {
+		confirmModalData.set({
+			isOpen: true,
+			message,
+			resolve,
+			checkboxLabel: options?.checkboxLabel,
+			checkboxDefaultValue: options?.checkboxDefaultValue ?? false
+		});
 	});
 };
 
-export const respondConfirm = (value: boolean) => {
+export const respondConfirm = (
+	value: boolean,
+	checkboxValue?: boolean
+) => {
 	const current = get(confirmModalData);
 	if (current && current.resolve) {
 		try {
-			current.resolve(value);
+			if (current.checkboxLabel !== undefined) {
+				current.resolve({ confirmed: value, checkboxValue });
+			} else {
+				current.resolve(value);
+			}
 		} catch (e) {
 			// ignore
 		}
