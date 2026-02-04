@@ -22,6 +22,7 @@
     "window_confirm_change_life_total": "Êtes-vous sûr de vouloir continuer avec ces totaux de points de vie ?",
     "window_confirm_change_player_count": "Êtes-vous sûr de vouloir continuer avec ce nombre de joueurs ?",
     "window_confirm_reset_game": "Êtes-vous sûr de vouloir recommencer la partie ?",
+    "reset_player_profiles_checkbox": "Réinitialiser également les profils des joueurs (couleurs)",
     "player_background_color": "Couleurs",
     "clear_gradient": "Effacer",
     "clear_background": "Effacer l'arrière-plan",

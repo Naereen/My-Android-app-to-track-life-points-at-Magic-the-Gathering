@@ -261,10 +261,28 @@ export const setPlayerPoison = (playerId: number, amount: number) => {
 const resetTimers: { [key: number]: number } = {};
 
 export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
+	let resetProfiles = false;
+
 	if (!alreadyConfirmed) {
-		const confirm = await showConfirm(get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?');
-		if (!confirm) {
-			return;
+		const result = await showConfirm(
+			get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?',
+			{
+				checkboxLabel: get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
+				checkboxDefaultValue: false
+			}
+		);
+
+		if (typeof result === 'boolean') {
+			// Backwards compatibility: if result is just a boolean, use it as confirmation
+			if (!result) {
+				return;
+			}
+		} else {
+			// New behavior: result is an object with confirmed and checkboxValue
+			if (!result.confirmed) {
+				return;
+			}
+			resetProfiles = result.checkboxValue ?? false;
 		}
 	}
 
@@ -279,13 +297,21 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 				delete resetTimers[player.id]; // Remove the timer reference
 			}
 
-			return {
+			const updatedPlayer = {
 				...player,
 				lifeTotal: startingLifeTotal,
 				tempLifeDiff: 0, // Reset tempLifeDiff to 0
 				poison: 0,
 				statusEffects: {}
 			};
+
+			// If resetProfiles is enabled, reset color and backgroundImage to defaults
+			if (resetProfiles) {
+				updatedPlayer.color = 'white';
+				updatedPlayer.backgroundImage = null;
+			}
+
+			return updatedPlayer;
 		});
 	});
 

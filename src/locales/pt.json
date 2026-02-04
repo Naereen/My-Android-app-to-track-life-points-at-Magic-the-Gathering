@@ -22,6 +22,7 @@
     "window_confirm_change_life_total": "Tem certeza que quer continuar com esses totais de vida?",
     "window_confirm_change_player_count": "Tem certeza que quer continuar com esse número de jogadores?",
     "window_confirm_reset_game": "Tem certeza de que deseja reiniciar o jogo?",
+    "reset_player_profiles_checkbox": "Redefinir também os perfis dos jogadores (cores)",
     "player_background_color": "Personalizar Cores",
     "clear_gradient": "Limpar",
     "clear_background": "Limpar plano de fundo",
