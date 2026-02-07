@@ -2,7 +2,7 @@
 import Pen from '$lib/assets/icons/Pen.svelte';
 import X from '$lib/assets/icons/X.svelte';
 import { playerModalData, resetPlayerModalData } from '$lib/store/modal';
-import { players, setPlayerColor, setPlayerAllowNegative, setPlayerStatusBoolean, setPlayerStatusNumeric, setPlayerPoison } from '$lib/store/player';
+import { players, setPlayerColor, setPlayerAllowNegative, setPlayerStatusBoolean, setPlayerStatusNumeric, setPlayerPoison, setCommanderDamage } from '$lib/store/player';
 import StatusSkull from '$lib/assets/icons/StatusSkull.svelte';
 import Crown from '$lib/assets/icons/Crown.svelte';
 import Initiative from '$lib/assets/icons/Initiative.svelte';
@@ -15,8 +15,10 @@ import Rad from '$lib/assets/icons/Rad.svelte';
 import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
+import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
 import { colorToBg } from '$lib/components/colorToBg';
 import { _ } from 'svelte-i18n';
+import { appSettings } from '$lib/store/appSettings';
 
 let gradientMode = false;
 let selectedColors: string[] = [];
@@ -24,6 +26,9 @@ let mode: 'colors' | 'backgrounds' | 'status_effects' = 'status_effects';
 let searchQuery = '';
 let searchResults: Array<{ id: string; name: string; set_name?: string; artist?: string; cardImage?: string | null | undefined; image?: string | null | undefined }> = [];
 let isSearching = false;
+
+// Translation for damage from player label
+$: damageFromPlayerLabel = String($_('damage_from_player'));
 
 import { searchCards, randomCards } from '$lib/utils/scryfall';
 import { setPlayerBackgroundImage } from '$lib/store/player';
@@ -261,6 +266,26 @@ const chooseBackground = (playerId: number, imageUrl: string | null) => {
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'startYourEngineSpeed', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'startYourEngineSpeed', Math.min(4, ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) + 1))}>+</button>
+								</div>
+							</div>
+
+							<!-- Commander Damage Section -->
+							<div class="mt-6 w-full flex flex-col items-center text-center border-t pt-4">
+								<h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+									<CommanderDamage /> { String($_('commander_damage')) }
+								</h3>
+								<div class="text-sm text-gray-600 mb-3">{ String($_('commander_damage_help')) }</div>
+								<div class="grid grid-cols-1 gap-2 w-full">
+									{#each Array($appSettings.playerCount) as _, i}
+										{@const fromPlayerId = i + 1}
+										{@const dmg = ($players[$playerModalData.playerId - 1].statusEffects?.commanderDamage ?? [])[i] ?? 0}
+										<div class="flex items-center gap-2">
+											<span class="w-40 text-left">{damageFromPlayerLabel} {fromPlayerId}:</span>
+											<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg - 1)}>-</button>
+											<span class="px-3 py-1 bg-gray-100 rounded min-w-[3rem] text-center">{dmg}</span>
+											<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg + 1)}>+</button>
+										</div>
+									{/each}
 								</div>
 							</div>
 						</div>
