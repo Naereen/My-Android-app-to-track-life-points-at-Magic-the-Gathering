@@ -291,7 +291,7 @@
 		<!-- About section (larger text per request) -->
 		<div class="w-full text-center text-gray-400 mt-4 mb-8 px-6">
 			<div class="text-white text-2xl mb-2 font-semibold">{ $_('about_title') }</div>
-			<div class="text-base mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.2.0'}</div>
+			<div class="text-base mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.3.0'}</div>
 			<div class="text-base mb-1">{ $_('about_author') }: Naereen</div>
 			<div class="text-base mb-2">{ $_('about_license') }: MIT</div>
 			<div class="text-base mb-2">{ $_('about_thanks') }</div>

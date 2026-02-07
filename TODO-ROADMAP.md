@@ -232,6 +232,8 @@ Nope:
 - [ ] Additional visualizations: be able to see, on a click in the menu, The Ring bearer emblem (Lord of the Rings) : <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?front> and <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?back>
 - [ ] Additional visualizations: be able to see, on a click in the menu, Your speed (Aetherdrift) : 0/1/2/3/4(max) <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?front> and <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?back>
 
+- [ ] Additional visualizations: be able to see, on a click and a searh in the menu, any dungeon or Planeswalker's emblem, by a search from Scryfall
+
 - [ ] Additional visualizations: be able to see, on a click in the menu, dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>
 - [ ] Additional visualizations: the dungeon made by some friend over at Colmar
 
