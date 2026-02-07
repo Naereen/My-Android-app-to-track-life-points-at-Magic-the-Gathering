@@ -77,6 +77,8 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 ### The image background
 
+- [ ] The card search form seems to be broken sometimes: for instance, searching for *Jace Beleren* fails completely, even though there are many cards with this name in the Scryfall database. I don't know how to fix this bug, but it is a problem for the image background feature, as it relies on the search form to find the card to use as background.
+
 - [ ] FIXME: Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
 
 ### The 4-player secondary layout bug

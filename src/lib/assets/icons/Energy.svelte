@@ -9,6 +9,7 @@
 	stroke-width="1.5"
 	stroke-linecap="round"
 	stroke-linejoin="round"
+	style="display:inline-block; vertical-align:middle;"
 >
 	<path
 		id="path4182"

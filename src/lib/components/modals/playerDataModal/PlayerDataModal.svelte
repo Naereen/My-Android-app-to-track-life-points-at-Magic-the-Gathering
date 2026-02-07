@@ -544,7 +544,7 @@
 
 							<!-- Commander Damage Section -->
 							<div class="mt-6 w-full flex flex-col items-center text-center border-t pt-4">
-								<h3 class="text-2xl font-bold mb-3 flex items-center gap-2 underline">
+								<h3 class="text-xl font-bold mb-3 flex items-center gap-2 underline">
 									<CommanderDamage />
 									{String($_('commander_damage'))}
 								</h3>
@@ -557,7 +557,7 @@
 												[])[i] ?? 0}
 										{@const fromPlayerName = $players[i]?.playerName ?? `Player ${fromPlayerId}`}
 										<div class="flex items-center gap-2">
-											<span class="w-40 text-left">{damageFromPlayerLabel} {fromPlayerName} :</span>
+											<span class="w-full text-left ml-4">{damageFromPlayerLabel} {fromPlayerName} :</span>
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
 												on:click={() =>
@@ -568,7 +568,7 @@
 												>{dmg}</span
 											>
 											<button
-												class="px-2 py-1 bg-gray-200 rounded"
+												class="px-2 py-1 bg-gray-200 rounded mr-10"
 												on:click={() =>
 													setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg + 1)}
 												>+</button
