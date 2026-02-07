@@ -12,14 +12,20 @@
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { resetLifeTotals } from '$lib/store/player';
 	import { showConfirm } from '$lib/store/modal';
-	import { setAllowNegativeLife, setPreventScreenSleep, setHapticsEnabled } from '$lib/store/appSettings';
+	import {
+		setAllowNegativeLife,
+		setPreventScreenSleep,
+		setHapticsEnabled
+	} from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
 
 	const resetLocalStorage = async () => {
 		const confirmReset = await showConfirm($_('window_confirm_reset_local_storage'));
 		if (!confirmReset) return;
 		try {
-			['appSettings', 'resourceCounter', 'appState', 'players'].forEach((k) => localStorage.removeItem(k));
+			['appSettings', 'resourceCounter', 'appState', 'players'].forEach((k) =>
+				localStorage.removeItem(k)
+			);
 		} catch (e) {
 			// ignore
 		}
@@ -121,7 +127,6 @@
 
 <svelte:window bind:innerHeight />
 
-
 <div
 	class="w-full overflow-y-auto scrollbar-hidden h-full"
 	style="max-height: {innerHeight - 80}px; -webkit-overflow-scrolling: touch;"
@@ -129,16 +134,22 @@
 	role="region"
 	aria-label={$_('settings')}
 >
-	<div class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black">
-		<button on:click={() => toggleIsMenuOpen('')} on:contextmenu|preventDefault draggable="false" class="text-white absolute left-0 pl-4"
-			><Arrow /></button>
-		<span class="text-white text-center" style="font-size: 2rem;">{ $_('settings') }</span>
+	<div
+		class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black"
+	>
+		<button
+			on:click={() => toggleIsMenuOpen('')}
+			on:contextmenu|preventDefault
+			draggable="false"
+			class="text-white absolute left-0 pl-4"><Arrow /></button
+		>
+		<span class="text-white text-center" style="font-size: 2rem;">{$_('settings')}</span>
 	</div>
 
 	<div class="w-full text-center text-white mt-2 flex flex-col items-center">
 		<!-- Player Count -->
 		<div class="w-3/4">
-			<div><span style="font-size: 1.5rem;">{ $_('players') }</span></div>
+			<div><span style="font-size: 1.5rem;">{$_('players')}</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [2, 3, 4, 5, 6] as playerCount}
 					{#key $appSettings.playerCount}
@@ -154,7 +165,7 @@
 			</div>
 			{#if $appSettings.playerCount === 4}
 				<div class="mt-4">
-					<div class="text-lg mb-2">{ $_('choose_4players_layout') }</div>
+					<div class="text-lg mb-2">{$_('choose_4players_layout')}</div>
 					<div class="flex gap-3 justify-center">
 						<button
 							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
@@ -191,7 +202,7 @@
 
 		<!-- Starting Life Total -->
 		<div class="mt-6 w-3/4">
-			<div><span style="font-size: 1.5rem;">{ $_('starting_life') }</span></div>
+			<div><span style="font-size: 1.5rem;">{$_('starting_life')}</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [20, 25, 30, 40, 'custom'] as lifeTotal}
 					{#key $appSettings.startingLifeTotal}
@@ -230,7 +241,7 @@
 		<!-- Language selection -->
 		<div class="w-full flex justify-center mt-6 mb-4">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl mb-2">{ $_('choose_your_language') }</div>
+				<div class="text-2xl mb-2">{$_('choose_your_language')}</div>
 				<div class="grid grid-cols-3 gap-2 justify-center w-full">
 					{#each languages as lang}
 						<button
@@ -246,57 +257,70 @@
 			</div>
 		</div>
 		<div class="w-full flex justify-center mt-2 mb-2">
-				<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
 				<input
 					type="checkbox"
 					checked={$appSettings.allowNegativeLife}
 					on:change={handleGlobalAllowChange}
 					class="h-5 w-5"
 				/>
-					<span class="ml-2 text-lg font-semibold">{ $_('allow_negative_life_global') }</span>
+				<span class="ml-2 text-lg font-semibold">{$_('allow_negative_life_global')}</span>
 			</label>
 		</div>
 		<div class="w-full flex justify-center mt-2 mb-2">
-			<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
 				<input
 					type="checkbox"
 					checked={$appSettings.preventScreenSleep}
 					on:change={handlePreventSleepChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{ $_('prevent_screen_sleep') }</span>
+				<span class="ml-2 text-lg font-semibold">{$_('prevent_screen_sleep')}</span>
 			</label>
 		</div>
 		<div class="w-full flex justify-center mt-2 mb-2">
-			<label class="flex items-center gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
 				<input
 					type="checkbox"
 					checked={$appSettings.hapticsEnabled}
 					on:change={handleHapticsChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{ $_('haptic_feedback') }</span>
+				<span class="ml-2 text-lg font-semibold">{$_('haptic_feedback')}</span>
 			</label>
 		</div>
 		<!-- Reset local storage placed at the bottom so user can scroll to it -->
 		<div class="w-full flex justify-center mt-2 mb-2">
-			<button
-				class="bg-red-900 text-white px-4 py-2 rounded-full"
-				on:click={resetLocalStorage}
-			>
-				{ $_('reset_local_storage') }
+			<button class="bg-red-900 text-white px-4 py-2 rounded-full" on:click={resetLocalStorage}>
+				{$_('reset_local_storage')}
 			</button>
 		</div>
 
 		<!-- About section (larger text per request) -->
 		<div class="w-full text-center text-gray-400 mt-4 mb-8 px-6">
-			<div class="text-white text-2xl mb-2 font-semibold">{ $_('about_title') }</div>
-			<div class="text-base mb-1">{ $_('about_version') }: {import.meta.env.VITE_APP_VERSION || '0.3.0'}</div>
-			<div class="text-base mb-1">{ $_('about_author') }: Naereen</div>
-			<div class="text-base mb-2">{ $_('about_license') }: MIT</div>
-			<div class="text-base mb-2">{ $_('about_thanks') }</div>
+			<div class="text-white text-2xl mb-2 font-semibold">{$_('about_title')}</div>
+			<div class="text-base mb-1">
+				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.3.0'}
+			</div>
+			<div class="text-base mb-1">{$_('about_author')}: Naereen</div>
+			<div class="text-base mb-2">{$_('about_license')}: MIT</div>
+			<div class="text-base mb-2">{$_('about_thanks')}</div>
 			<div class="flex justify-center gap-4 mt-2">
-				<a class="text-blue-400 underline text-base" href="https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering" target="_blank" rel="noreferrer">{ $_('about_github') }</a>
+				<a
+					class="text-blue-400 underline text-base"
+					href="https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering"
+					target="_blank"
+					rel="noreferrer">{$_('about_github')}</a
+				>
 				<!-- TODO: Optional links: Play Store / Feedback - shown as placeholders -->
 				<!-- <a class="text-blue-400 underline text-base" href="#" on:click|preventDefault={() => null}>{ $_('about_playstore') }</a> -->
 				<!-- <a class="text-blue-400 underline text-base" href="#" on:click|preventDefault={() => null}>{ $_('about_feedback') }</a> -->

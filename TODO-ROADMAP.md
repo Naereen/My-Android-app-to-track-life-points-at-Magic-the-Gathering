@@ -4,13 +4,14 @@ This file is a life list of features to implement, bugs to fix, and improvements
 
 Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep everything in this single file, easier to manage offline for a small personal project like this one.
 
----------------------------------------------------------------------------
+---
 
 ## "Small" improvements to the usability of the app
 
 - [x] Maximize to full screen on mobile devices: the "window" should take all the screen space, especially on the left/right sides
 
 - [x] Write a `manifest.json` for PWA support
+
   - [x] It had MANY issues! I think I fixed them all now.
   - [x] Test installing the PWA on desktop (Windows, macOS, Linux)
   - [x] Test installing the PWA on Android devices
@@ -31,15 +32,17 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Save the players state (life totals, commander damage, etc.)
   - [x] Add a button to reset the local storage (clear saved settings and game state)
 
----------------------------------------------------------------------------
+---
 
 ## DONE - Translating the app : 5 languages so far!
 
 - [x] Add internationalization (i18n) support
+
   - [x] English (default)
   - [x] French (my native language)
 
 - [x] Add more languages, if the technical framework is working well:
+
   - [x] Spanish
   - [x] German
   - [x] Italian
@@ -48,7 +51,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Add a language selection menu in the settings dialog
   - [x] Reduce the size ot the labels of each language
 
----------------------------------------------------------------------------
+---
 
 ## Bugs fixing:
 
@@ -71,17 +74,19 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] In this layout, the "K.O." player dark overlay is displayed with a stronger "z-index" that it should have? So when a player is K.O.'d, the "K.O." overlay is displayed above all the other panels, including the "edit player" panel, which makes it impossible to edit a K.O.'d player. This bug is not present in the default layout (the "2 x 2" layout), only in the "1 / 2 / 1" layout.
 
----------------------------------------------------------------------------
+---
 
 ## Player status and visualization improvements
 
 - [x] Dead player icon: when a player is dead (life <= 0 or poison >= 10), show a skull icon next to their name, and gray out their life total
+
   - [x] Allow a player to not be dead if life is below 0 (e.g. with a "Lich's Mastery" effect), by adding a toggle for that feature, in the player edit dialog (playerwise)
   - [x] Allow negative life totals! (global setting)
 
 - [x] Replace all `window.confirm` calls with custom modal dialogs integrated in the app, much nicer and prettier
 
 - [x] Add a « about section » at the bottom of the settings menu, with:
+
   - [x] App version, name of the author, license
   - [x] Huge thank you to Michael Bourkas for the Lifetap app, which this is a personnal clone of
   - [x] Link to the GitHub repository
@@ -98,9 +103,11 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] In the PlayerDataModal.svelte, add a third virtual "tab" (first two are Backgrounds and Colors), the "status_effects" should live in a separate pseudo tab view, to save some space?
 
 - [x] In the PlayerDataModal.svelte, when selecting a card from Scryfall as background, after a search success, add a "Choose at random" button to pick a random card from the search results (instead of having to pick one by one). Also translate into fr/es/it/de the "Choose at random" text.
+
   - [x] If there is not yet a research result, clicking on this button shouldn't do nothing, it should just chose a random card from the full Scryfall database (just one random card from the entire database of cards/illustrations). The function is already implemented in the Scryfall utils (`randomCards`), just need to call it here when there is no search result yet.
 
 - [x] Add a small section on the bottom of each player panel to show the current status effects on that player
+
   - [x] E.g. "Poisoned X/10", "Monarch", commander damage from the opponents, etc.
   - [x] Maybe even use small icons for that?
   - [x] List of boolean status effects (e.g. "Monarch"): Monarch, Initiative, Ascend, Day/Night, K.O.
@@ -112,10 +119,12 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
 - [ ] TODO: Harder to track: implement the Commander Damage tracker (from each opponent).
+
   - [ ] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Inicie) or not (Ascend, etc)
   - [ ] After, make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Add support for the poison counter: you can die to them!
+
   - [x] A +1/-1 button for poison counter, in the "commander damage" section, like the Lifetap app
   - [x] Add a way to increment/decrement poison counter with clicks on some buttons in the player panel (like for life total)
   - [x] Show the poison counter next to the life total, as soon as it is > 0
@@ -128,12 +137,14 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Move the unique status effects (Monarch, Initiative) to the player name area, before/after the player's name, with a small icon, so that they are always visible and don't consume too much space in the status effect section at the bottom of the panel. This will also make it easier to implement the "rotate the content of the status effect section" feature, as there will be less text to rotate.
 
 - [x] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
+
   - [x] A button to advance to the next player's turn, it should be located in the middle of the buttons for mana and randomizer?
   - [x] An independent button to go back to the previous player's turn would consume too much screen space, so just use a long click on the previous button, that will be enough!
   - [x] Show the current player's turn somewhere on the screen (prefix this player's name with "▶" or something like that)
   - [x] If a player is dead, skip their turn when going to the next player's turn
 
 - [ ] Implement (after that) a timer for each turn (like in Lifetap app)
+
   - [ ] A way to set the timer duration (global setting)
   - [ ] Show the remaining time for the current player's turn
   - [ ] Haptic vibrate when the time is up
@@ -142,6 +153,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [ ] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel?
 
 - [x] Implement two layouts for the four-players mode:
+
   - [x] The "1 / 2 / 1" layout, if players are seated on a round table
   - [x] The "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
 
@@ -165,6 +177,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 ## Better menus and dialogs
 
 - [x] Confirmation menus overhaul
+
   - [x] Improve the "reset game" dialog
   - [x] Improve the "new player" dialog
   - [x] Improve the "edit player" dialog
@@ -176,16 +189,18 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 - [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right). I expect this feature to be hard to implement...
 
----------------------------------------------------------------------------
+---
 
 ## Very cool features from "Lifetap" app to implement
 
 - [x] Custom Player backgrounds
+
   - [x] With a simple color picker : one color of mana, and that's it
   - [x] If clicking on a color after it is already selected, deselect it (go back to default background)
   - [x] With a color gradient picker: two colors of mana, gradient between the two. Works with any number of colors (from 1 to 12).
 
 - [x] Even better custom Player backgrounds
+
   - [x] With a card search to pick a card as background
   - [x] Align the top of the illustration with the top of background area (crop the card image if needed)
   - [x] Works fine for cards with different illustrations for the same name and edition
@@ -202,7 +217,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 - [ ] PlaneChase support (background changes every turn or on a click)
 - [ ] Archenemy support (extra damage tracking)
 
----------------------------------------------------------------------------
+---
 
 ## New features to implement
 
@@ -225,9 +240,9 @@ Nope:
 
 ## Additional visualizations: dungeons (initiative, etc), The Ring emblem, your speed
 
-- [x] Add the "Ring Bearer" emblem (from Lord of the Rings) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `TheRingerBearer.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is *not* a unique status, every player has his own "the Ring Bearer" count, from 0 to 4.
+- [x] Add the "Ring Bearer" emblem (from Lord of the Rings) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `TheRingerBearer.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is _not_ a unique status, every player has his own "the Ring Bearer" count, from 0 to 4.
 
-- [x] Add the "Start your Engine / Your Speed" emblem (from Aetherdrift) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `StartYourEngineSpeed.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is *not* a unique status, every player has his own "Start your Engine / Your Speed" count, from 0 to 4.
+- [x] Add the "Start your Engine / Your Speed" emblem (from Aetherdrift) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `StartYourEngineSpeed.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is _not_ a unique status, every player has his own "Start your Engine / Your Speed" count, from 0 to 4.
 
 - [ ] Additional visualizations: be able to see, on a click in the menu, The Ring bearer emblem (Lord of the Rings) : <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?front> and <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?back>
 - [ ] Additional visualizations: be able to see, on a click in the menu, Your speed (Aetherdrift) : 0/1/2/3/4(max) <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?front> and <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?back>
@@ -250,7 +265,7 @@ Nope:
   - [ ] E.g. Player 1 has 50% chance to start, Player 2 has 25%, Player 3 has 15%, Player 4 has 10%
   - [ ] Add a way to set these probabilities in the settings dialog
 
----------------------------------------------------------------------------
+---
 
 ## Dream/weird features, they'll never happen!
 
@@ -260,7 +275,7 @@ Nope:
 - [ ] Multiplayer online mode (connect with friends over the internet)
 - [ ] Customizable themes and UI options
 
----------------------------------------------------------------------------
+---
 
 ## On the development side
 

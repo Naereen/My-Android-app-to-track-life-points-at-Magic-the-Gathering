@@ -17,7 +17,7 @@ export const tap = (pattern: number | number[] = 20) => {
 	try {
 		navigator.vibrate(pattern as any);
 	} catch (e) {
-		console.log("Haptics vibration error:", e);
+		console.log('Haptics vibration error:', e);
 		// ignore
 	}
 };
@@ -26,7 +26,7 @@ export const confirm = () => tap([20, 10, 20]);
 export const error = () => tap([40, 20, 40]);
 
 export function vibrate(intensity: number = 10) {
-	return tap([2*intensity, intensity, 2*intensity]);
+	return tap([2 * intensity, intensity, 2 * intensity]);
 }
 
 // Svelte action to attach haptic feedback to an element without stopping event forwarding
@@ -38,7 +38,7 @@ export function haptic(node: HTMLElement, pattern: number | number[] = 10) {
 			if (!canVibrate()) return;
 			navigator.vibrate(currentPattern as any);
 		} catch (e) {
-			console.log("Haptics vibration error:", e);
+			console.log('Haptics vibration error:', e);
 		}
 	};
 

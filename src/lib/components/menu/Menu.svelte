@@ -57,7 +57,12 @@
 {#if !$appState.isMenuOpen}
 	<div class="flex justify-around py-1.5 items-center" class:h-14={!$appState.isMenuOpen}>
 		<div class="flex justify-center items-center flex-grow">
-			<button on:click={() => resetLifeTotals(false)} on:contextmenu|preventDefault draggable="false" class="h-10 w-10"><Reset /></button>
+			<button
+				on:click={() => resetLifeTotals(false)}
+				on:contextmenu|preventDefault
+				draggable="false"
+				class="h-10 w-10"><Reset /></button
+			>
 		</div>
 		<div class="flex justify-center items-center flex-grow">
 			<CircularButton
@@ -89,7 +94,11 @@
 			</button>
 		</div>
 		<div class="flex justify-center items-center flex-grow">
-			<button on:click={() => toggleIsMenuOpen('randomizer')} on:contextmenu|preventDefault draggable="false">
+			<button
+				on:click={() => toggleIsMenuOpen('randomizer')}
+				on:contextmenu|preventDefault
+				draggable="false"
+			>
 				<Dsix />
 			</button>
 		</div>

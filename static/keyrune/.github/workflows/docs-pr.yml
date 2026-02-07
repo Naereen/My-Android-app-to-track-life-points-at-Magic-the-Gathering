@@ -7,8 +7,8 @@ on:
       - master
 
 permissions:
-  contents: write         # push to gh-pages
-  pull-requests: write    # create/update PR comment
+  contents: write # push to gh-pages
+  pull-requests: write # create/update PR comment
 
 concurrency:
   group: docs-preview-${{ github.event.pull_request.number }}

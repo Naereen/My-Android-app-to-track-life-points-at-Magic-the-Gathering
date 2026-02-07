@@ -26,13 +26,13 @@ Older screenshots:
 
 ![Demo of the webpage (4/4)](screenshots/screenshot-demo-4.png)
 
-------------------------------------
+---
 
 ## Download the Android application (apk)
 
 TODO: finish building and deploying the apk file!
 
-------------------------------------
+---
 
 ## 📋 Prerequisites (to build the app)
 

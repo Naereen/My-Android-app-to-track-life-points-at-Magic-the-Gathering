@@ -68,10 +68,7 @@ export const showConfirm = (
 	});
 };
 
-export const respondConfirm = (
-	value: boolean,
-	checkboxValue?: boolean
-) => {
+export const respondConfirm = (value: boolean, checkboxValue?: boolean) => {
 	const current = get(confirmModalData);
 	if (current && current.resolve) {
 		try {

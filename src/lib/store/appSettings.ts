@@ -31,7 +31,7 @@ export const setCustomRandomNumber = (customRandomNumber: number) => {
 };
 
 export const setAllowNegativeLife = (allowNegativeLife: boolean) => {
-    appSettings.update((data) => ({ ...data, allowNegativeLife }));
+	appSettings.update((data) => ({ ...data, allowNegativeLife }));
 };
 
 export const setPreventScreenSleep = (preventScreenSleep: boolean) => {
@@ -39,7 +39,7 @@ export const setPreventScreenSleep = (preventScreenSleep: boolean) => {
 };
 
 export const setHapticsEnabled = (hapticsEnabled: boolean) => {
-    appSettings.update((data) => ({ ...data, hapticsEnabled }));
+	appSettings.update((data) => ({ ...data, hapticsEnabled }));
 };
 
 export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {

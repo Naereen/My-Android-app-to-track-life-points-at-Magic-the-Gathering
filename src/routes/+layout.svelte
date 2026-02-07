@@ -6,20 +6,20 @@
 </script>
 
 <svelte:head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, height=device-height, viewport-fit=cover" />
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<meta name="mobile-web-app-capable" content="yes">
+	<meta
+		name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, height=device-height, viewport-fit=cover"
+	/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="mobile-web-app-capable" content="yes" />
 </svelte:head>
 
 <svelte:window bind:innerHeight contextmenu="return false" />
 
 <!-- outer full-width container avoids visible body background at the sides -->
 <div class="w-full max-h-screen font-sans flex justify-center overflow-hidden">
-	<div
-		class="mx-auto max-w-[1000px] flex justify-center w-full"
-		style="height: {innerHeight}px;"
-	>
+	<div class="mx-auto max-w-[1000px] flex justify-center w-full" style="height: {innerHeight}px;">
 		<slot />
 	</div>
 </div>

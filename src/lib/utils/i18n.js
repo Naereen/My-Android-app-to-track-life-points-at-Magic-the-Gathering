@@ -9,7 +9,7 @@ register('it', () => import('../../locales/it.json'));
 register('pt', () => import('../../locales/pt.json'));
 
 init({
-    fallbackLocale: 'fr', // Langue par défaut si la détection échoue
-    initialLocale: getLocaleFromNavigator() // Détecte la langue du téléphone
-    // initialLocale: 'fr' // Détecte la langue du téléphone
+	fallbackLocale: 'fr', // Langue par défaut si la détection échoue
+	initialLocale: getLocaleFromNavigator() // Détecte la langue du téléphone
+	// initialLocale: 'fr' // Détecte la langue du téléphone
 });

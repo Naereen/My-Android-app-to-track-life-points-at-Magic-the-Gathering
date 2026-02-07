@@ -19,22 +19,28 @@ To use Keyrune via source, NPM, or Bower, move the font files to your `/fonts` d
 **NEW:** you can now include Keyrune via CDN thanks to the amazing [jsDelivr](http://jsdelivr.com) project! To include the latest version, reference:
 
 ```html
-<link href="//cdn.jsdelivr.net/npm/keyrune@latest/css/keyrune.css" rel="stylesheet" type="text/css" />
+<link
+	href="//cdn.jsdelivr.net/npm/keyrune@latest/css/keyrune.css"
+	rel="stylesheet"
+	type="text/css"
+/>
 ```
 
 **Note:** as of v3.1.1 (June 2017) the URL format for jsDelivr changed to the above. They still maintain backwards compatibility for everything prior to that but going forward please use the above URL. You no longer need to explicitly include the font-family via `@font-face` as well, but if you still would like to here is the css ruleset:
 
 ```css
 @font-face {
-  font-family: 'Keyrune';
-  src: url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.eot');
-  src: url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.eot?#iefix') format('embedded-opentype'),
-    url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.woff2') format('woff2'),
-    url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.woff') format('woff'),
-    url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.ttf') format('truetype'),
-    url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.svg') format('svg');
-  font-weight: normal;
-  font-style: normal;
+	font-family: 'Keyrune';
+	src: url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.eot');
+	src:
+		url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.eot?#iefix')
+			format('embedded-opentype'),
+		url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.woff2') format('woff2'),
+		url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.woff') format('woff'),
+		url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.ttf') format('truetype'),
+		url('//cdn.jsdelivr.net/npm/keyrune@latest/fonts/keyrune.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
 ```
 

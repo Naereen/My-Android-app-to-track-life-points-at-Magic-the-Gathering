@@ -406,7 +406,9 @@
 								>
 									<PoisonIcon />
 								</div>
-								<span> {poisonCount}</span>
+								<span style="transform: rotate({statusRotation}); display: inline-block;">
+									{poisonCount}</span
+								>
 							</div>
 						{/if}
 						{#if energyCount > 0}
@@ -420,7 +422,9 @@
 								>
 									<Energy />
 								</div>
-								<span> {energyCount}</span>
+								<span style="transform: rotate({statusRotation}); display: inline-block;">
+									{energyCount}</span
+								>
 							</div>
 						{/if}
 						{#if experienceCount > 0}
@@ -434,7 +438,9 @@
 								>
 									<Experience />
 								</div>
-								<span> {experienceCount}</span>
+								<span style="transform: rotate({statusRotation}); display: inline-block;">
+									{experienceCount}</span
+								>
 							</div>
 						{/if}
 						{#if radCount > 0}
@@ -448,7 +454,9 @@
 								>
 									<Rad />
 								</div>
-								<span> {radCount}</span>
+								<span style="transform: rotate({statusRotation}); display: inline-block;">
+									{radCount}</span
+								>
 							</div>
 						{/if}
 						{#if commandTaxCount > 0}
@@ -462,7 +470,9 @@
 								>
 									<CommandTax />
 								</div>
-								<span> {commandTaxCount}</span>
+								<span style="transform: rotate({statusRotation}); display: inline-block;">
+									{commandTaxCount}</span
+								>
 							</div>
 						{/if}
 						{#if ringBearerCount > 0}
@@ -476,7 +486,9 @@
 								>
 									<TheRingerBearer />
 								</div>
-								<span> {ringBearerCount}</span>
+								<span style="transform: rotate({statusRotation}); display: inline-block;">
+									{ringBearerCount}</span
+								>
 							</div>
 						{/if}
 						{#if startYourEngineSpeedCount > 0}
@@ -490,7 +502,9 @@
 								>
 									<StartYourEngineSpeed />
 								</div>
-								<span> {startYourEngineSpeedCount}</span>
+								<span style="transform: rotate({statusRotation}); display: inline-block;">
+									{startYourEngineSpeedCount}</span
+								>
 							</div>
 						{/if}
 						{#each commanderDamageArray as dmg, i}
@@ -505,7 +519,9 @@
 									>
 										<CommanderDamage playerIndex={i} />
 									</div>
-									<span> {dmg}</span>
+									<span style="transform: rotate({statusRotation}); display: inline-block;">
+										{dmg}</span
+									>
 								</div>
 							{/if}
 						{/each}

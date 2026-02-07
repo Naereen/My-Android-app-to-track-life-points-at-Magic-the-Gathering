@@ -9,6 +9,7 @@ Generate the CSS files with the following commands:
 ```bash
 npm run less && npm run lessmin
 ```
+
 If you prefer to use the Sass source, run these instead:
 
 ```bash
@@ -22,5 +23,5 @@ npm run sass && npm run sassmin
 Yaay 🎉 you have generated the CSS files! Now you can use the new icon(s) that were added, if any. Follow the [Usage inside README.md](../README.md#usage)
 
 ---
-**Go to the next step: [Update the documentation](./UpdateDocumentation.md)**
----
+
+## **Go to the next step: [Update the documentation](./UpdateDocumentation.md)**
