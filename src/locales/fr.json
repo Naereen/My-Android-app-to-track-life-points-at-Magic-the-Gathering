@@ -88,5 +88,6 @@
     "set_life_total_save": "Enregistrer",
     "set_life_total_cancel": "Annuler",
     "random_player": "Joueur Aléatoire",
-    "random_opponent": "Adversaire Aléatoire"
+    "random_opponent": "Adversaire Aléatoire",
+    "select_active_player": "Sélectionner le Joueur Actif"
 }

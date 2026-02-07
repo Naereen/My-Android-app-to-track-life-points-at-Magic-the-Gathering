@@ -88,5 +88,6 @@
     "set_life_total_save": "Save",
     "set_life_total_cancel": "Cancel",
     "random_player": "Random Player",
-    "random_opponent": "Random Opponent"
+    "random_opponent": "Random Opponent",
+    "select_active_player": "Select Active Player"
 }

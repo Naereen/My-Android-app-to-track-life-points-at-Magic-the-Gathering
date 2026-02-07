@@ -86,5 +86,6 @@
     "set_life_total_save": "Guardar",
     "set_life_total_cancel": "Cancelar",
     "random_player": "Jugador Aleatorio",
-    "random_opponent": "Oponente Aleatorio"
+    "random_opponent": "Oponente Aleatorio",
+    "select_active_player": "Seleccionar Jugador Activo"
 }

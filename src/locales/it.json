@@ -86,5 +86,6 @@
     "set_life_total_save": "Salva",
     "set_life_total_cancel": "Annulla",
     "random_player": "Giocatore Casuale",
-    "random_opponent": "Avversario Casuale"
+    "random_opponent": "Avversario Casuale",
+    "select_active_player": "Seleziona Giocatore Attivo"
 }
