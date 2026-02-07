@@ -69,7 +69,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] In 4-player, when switching to the secondary layout (the "1 / 2 / 1" layout, the secondary layout mode (the one which is not 2 players on each side of the table)), some overlay panels are not displayed correctly.
 
-- [ ] In this layout, the "K.O." player dark overlay is displayed with a stronger "z-index" that it should have? So when a player is K.O.'d, the "K.O." overlay is displayed above all the other panels, including the "edit player" panel, which makes it impossible to edit a K.O.'d player. This bug is not present in the default layout (the "2 x 2" layout), only in the "1 / 2 / 1" layout.
+- [x] In this layout, the "K.O." player dark overlay is displayed with a stronger "z-index" that it should have? So when a player is K.O.'d, the "K.O." overlay is displayed above all the other panels, including the "edit player" panel, which makes it impossible to edit a K.O.'d player. This bug is not present in the default layout (the "2 x 2" layout), only in the "1 / 2 / 1" layout.
 
 ---------------------------------------------------------------------------
 
