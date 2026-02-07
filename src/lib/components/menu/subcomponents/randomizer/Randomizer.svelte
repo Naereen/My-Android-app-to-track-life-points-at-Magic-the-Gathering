@@ -7,13 +7,17 @@
 	import Dtwelve from '$lib/assets/icons/Dtwelve.svelte';
 	import Dtwenty from '$lib/assets/icons/Dtwenty.svelte';
 	import Dtwo from '$lib/assets/icons/Dtwo.svelte';
+	import RandomPlayer from '$lib/assets/icons/RandomPlayer.svelte';
 	import { appSettings, setCustomRandomNumber } from '$lib/store/appSettings';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
-	import { generateRandomNumber } from '$lib/store/modal';
+	import { generateRandomNumber, selectRandomPlayer, selectRandomOpponent } from '$lib/store/modal';
+	import { players } from '$lib/store/player';
 	import DiceCard from './subcomponents/diceCard/RandomizerButton.svelte';
 	import { _ } from 'svelte-i18n';
 
 	$: innerHeight = 0;
+	let selectedActivePlayer: number | null = null;
+	let showOpponentSelector = false;
 
 	const handleCustomRandomizerKeyPress = (event: KeyboardEvent) => {
 		const { key } = event;
@@ -29,6 +33,16 @@
 		} else if ($appSettings.customRandomNumber > 999) {
 			setCustomRandomNumber(999);
 		}
+	};
+
+	const handleRandomOpponent = () => {
+		showOpponentSelector = true;
+	};
+
+	const selectPlayerAsActive = (playerId: number) => {
+		selectedActivePlayer = playerId;
+		selectRandomOpponent(playerId);
+		showOpponentSelector = false;
 	};
 </script>
 
@@ -49,7 +63,7 @@
 		</div>
 
 		<div class="w-full flex justify-center">
-			<div class="grid grid-rows-3 grid-cols-6 gap-y-8 gap-x-4">
+			<div class="grid grid-rows-4 grid-cols-6 gap-y-8 gap-x-4">
 				<div class="col-span-2 col-start-2">
 					<DiceCard
 						on:click={() => {
@@ -132,7 +146,47 @@
 						text="{ $_('roll') } d20"><Dtwenty size="4rem" /></DiceCard
 					>
 				</div>
+				<div class="col-span-2 col-start-2">
+					<DiceCard
+						on:click={() => {
+							selectRandomPlayer();
+						}}
+						text="{ $_('random_player') }"><RandomPlayer size="4rem" /></DiceCard
+					>
+				</div>
+				<div class="col-span-2">
+					<DiceCard
+						on:click={() => {
+							handleRandomOpponent();
+						}}
+						text="{ $_('random_opponent') }"><RandomPlayer size="4rem" /></DiceCard
+					>
+				</div>
 			</div>
 		</div>
+		
+		{#if showOpponentSelector}
+		<div class="fixed inset-0 bg-black/70 flex justify-center items-center z-50" on:click={() => showOpponentSelector = false} role="button" on:keydown={() => null} tabindex="0">
+			<div class="bg-[#2d2f30] rounded-[2rem] p-6 max-w-md" on:click|stopPropagation role="button" on:keydown={() => null} tabindex="0">
+				<h2 class="text-white text-2xl mb-4 text-center">{ $_('select_active_player') }</h2>
+				<div class="grid grid-cols-2 gap-4">
+					{#each $players.slice(0, $appSettings.playerCount) as player}
+						<button
+							class="bg-black/50 text-white p-4 rounded-xl hover:bg-black/70 transition-colors"
+							on:click={() => selectPlayerAsActive(player.id)}
+						>
+							<div class="text-lg font-bold">{player.playerName}</div>
+						</button>
+					{/each}
+				</div>
+				<button
+					class="mt-4 w-full bg-red-600 text-white p-2 rounded-xl"
+					on:click={() => showOpponentSelector = false}
+				>
+					{ $_('set_life_total_cancel') }
+				</button>
+			</div>
+		</div>
+		{/if}
 	</div>
 </div>

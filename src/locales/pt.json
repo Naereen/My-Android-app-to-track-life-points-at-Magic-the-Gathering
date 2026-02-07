@@ -84,5 +84,8 @@
     "set_life_total": "Definir total de vida",
     "enter_life_total_placeholder": "Digite o total de vida",
     "set_life_total_save": "Salvar",
-    "set_life_total_cancel": "Cancelar"
+    "set_life_total_cancel": "Cancelar",
+    "random_player": "Jogador Aleatório",
+    "random_opponent": "Oponente Aleatório",
+    "select_active_player": "Selecionar Jogador Ativo"
 }
