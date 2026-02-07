@@ -1,9 +1,18 @@
 import { get, writable } from 'svelte/store';
 import { appSettings } from './appSettings';
+import { players } from './player';
 
-const initialRandomizerModalState = { isOpen: false, result: 0, type: '' };
+type RandomizerModalState = {
+	isOpen: boolean;
+	result: number;
+	type: string;
+	playerId: number | null;
+	playerName: string | null;
+};
 
-export const randomizerModalData = writable(initialRandomizerModalState);
+const initialRandomizerModalState: RandomizerModalState = { isOpen: false, result: 0, type: '', playerId: null, playerName: null };
+
+export const randomizerModalData = writable<RandomizerModalState>(initialRandomizerModalState);
 
 export const generateRandomNumber = (type: string) => {
 	const dieTypes: { [key: string]: number | null } = {
@@ -19,9 +28,51 @@ export const generateRandomNumber = (type: string) => {
 
 	const max = dieTypes[type] || 0;
 	const result = max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
-	randomizerModalData.set({ isOpen: true, result, type });
+	randomizerModalData.set({ isOpen: true, result, type, playerId: null, playerName: null });
 
 	return result;
+};
+
+export const selectRandomPlayer = () => {
+	const currentPlayers = get(players);
+	const playerCount = get(appSettings).playerCount;
+	
+	// Get only active players (up to playerCount)
+	const activePlayers = currentPlayers.slice(0, playerCount);
+	
+	if (activePlayers.length === 0) return;
+	
+	const randomIndex = Math.floor(Math.random() * activePlayers.length);
+	const selectedPlayer = activePlayers[randomIndex];
+	
+	randomizerModalData.set({
+		isOpen: true,
+		result: 0,
+		type: 'randomPlayer',
+		playerId: selectedPlayer.id,
+		playerName: selectedPlayer.playerName
+	});
+};
+
+export const selectRandomOpponent = (activePlayerId: number) => {
+	const currentPlayers = get(players);
+	const playerCount = get(appSettings).playerCount;
+	
+	// Get only active players (up to playerCount), excluding the active player
+	const activePlayers = currentPlayers.slice(0, playerCount).filter(p => p.id !== activePlayerId);
+	
+	if (activePlayers.length === 0) return;
+	
+	const randomIndex = Math.floor(Math.random() * activePlayers.length);
+	const selectedPlayer = activePlayers[randomIndex];
+	
+	randomizerModalData.set({
+		isOpen: true,
+		result: 0,
+		type: 'randomOpponent',
+		playerId: selectedPlayer.id,
+		playerName: selectedPlayer.playerName
+	});
 };
 
 export const resetRandomizer = () => {
