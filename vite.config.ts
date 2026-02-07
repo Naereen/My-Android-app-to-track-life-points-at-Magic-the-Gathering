@@ -16,11 +16,18 @@ export default defineConfig({
 			registerType: 'prompt',
 			injectRegister: 'inline',
 			selfDestroying: false,
-			includeAssets: ['icons/favicon.ico', 'icons/icon-128x128.png', 'icons/icon-192x192.png', 'icons/icon-256x256.png', 'icons/icon-512x512.png'],
+			includeAssets: [
+				'icons/favicon.ico',
+				'icons/icon-128x128.png',
+				'icons/icon-192x192.png',
+				'icons/icon-256x256.png',
+				'icons/icon-512x512.png'
+			],
 			manifest: {
 				name: "Naereen's MTG Life Tracker",
 				short_name: "Naereen's MTG Life Tracker",
-				description: "Naereen's Magic The Gathering Life Tracker, for Android and iOS devices. Keep track of your life points during games with ease! Work in progress...",
+				description:
+					"Naereen's Magic The Gathering Life Tracker, for Android and iOS devices. Keep track of your life points during games with ease! Work in progress...",
 				theme_color: '#062911',
 				orientation: 'portrait',
 				display: 'standalone',
@@ -34,47 +41,47 @@ export default defineConfig({
 				],
 				icons: [
 					{
-						src: "icons/icon-128x128.png",
-						sizes: "128x128",
-						type: "image/png",
-						purpose: "any maskable"
+						src: 'icons/icon-128x128.png',
+						sizes: '128x128',
+						type: 'image/png',
+						purpose: 'any maskable'
 					},
 					{
-						src: "icons/icon-192x192.png",
-						sizes: "192x192",
-						type: "image/png",
-						purpose: "any maskable"
+						src: 'icons/icon-192x192.png',
+						sizes: '192x192',
+						type: 'image/png',
+						purpose: 'any maskable'
 					},
 					{
-						src: "icons/icon-256x256.png",
-						sizes: "256x256",
-						type: "image/png",
-						purpose: "any maskable"
+						src: 'icons/icon-256x256.png',
+						sizes: '256x256',
+						type: 'image/png',
+						purpose: 'any maskable'
 					},
 					{
-						src: "icons/icon-512x512.png",
-						sizes: "512x512",
-						type: "image/png",
-						purpose: "any maskable"
+						src: 'icons/icon-512x512.png',
+						sizes: '512x512',
+						type: 'image/png',
+						purpose: 'any maskable'
 					},
 					{
-						src: "icons/icon-1024x1024.png",
-						sizes: "1024x1024",
-						type: "image/png",
-						purpose: "any maskable"
+						src: 'icons/icon-1024x1024.png',
+						sizes: '1024x1024',
+						type: 'image/png',
+						purpose: 'any maskable'
 					}
 				]
 			},
 			devOptions: {
 				enabled: true,
-				type: 'module',
+				type: 'module'
 				// navigateFallback: 'index.html'
 			},
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json,jpg,jpeg,woff2,woff,ttf,eot,otf}'],
 				clientsClaim: true,
 				skipWaiting: true,
-				maximumFileSizeToCacheInBytes: 64000000,
+				maximumFileSizeToCacheInBytes: 64000000
 			}
 		})
 	],

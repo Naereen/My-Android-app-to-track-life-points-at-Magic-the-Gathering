@@ -6,7 +6,7 @@ register('fr', () => import('./locales/fr.json'));
 register('en', () => import('./locales/es.json'));
 
 init({
-    fallbackLocale: 'fr', // Langue par défaut si la détection échoue
-    initialLocale: getLocaleFromNavigator() // Détecte la langue du téléphone
-    // initialLocale: 'fr' // Détecte la langue du téléphone
+	fallbackLocale: 'fr', // Langue par défaut si la détection échoue
+	initialLocale: getLocaleFromNavigator() // Détecte la langue du téléphone
+	// initialLocale: 'fr' // Détecte la langue du téléphone
 });

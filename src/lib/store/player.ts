@@ -103,12 +103,15 @@ const getInitialPlayers = (): App.Player.Data[] => {
 			const raw = localStorage.getItem('players');
 			if (!raw) {
 				// choose between all the colors for backgrounds
-				const first_choices = [
-					'white','blue','black','red','green'
-				];
+				const first_choices = ['white', 'blue', 'black', 'red', 'green'];
 				const second_choices = [
-					'mud', 'metalicgray',
-					'gold', 'purple', 'pink', 'orange', 'lightgreen'
+					'mud',
+					'metalicgray',
+					'gold',
+					'purple',
+					'pink',
+					'orange',
+					'lightgreen'
 				];
 				return defaultPlayers.map((p) => ({
 					...p,
@@ -268,7 +271,7 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 				}
 				// Update the damage from the specific player
 				commanderDamage[fromPlayerId - 1] = Math.max(0, Math.min(999, amount));
-				
+
 				return {
 					...player,
 					statusEffects: {
@@ -292,7 +295,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 		const result = await showConfirm(
 			get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?',
 			{
-				checkboxLabel: get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
+				checkboxLabel:
+					get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
 				checkboxDefaultValue: false
 			}
 		);

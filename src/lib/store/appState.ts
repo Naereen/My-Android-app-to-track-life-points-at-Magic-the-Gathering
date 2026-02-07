@@ -31,12 +31,13 @@ export const nextTurn = () => {
 	// Limit search to totalPlayers steps to avoid infinite loop
 	while (attempts < totalPlayers) {
 		const candidate = playersList[nextIndex];
-		const isDead = candidate ? (
-			((candidate.lifeTotal <= 0) && !(get(appSettings).allowNegativeLife || candidate.allowNegativeLife))
-			|| ((candidate.poison ?? 0) >= 10)
-			|| (candidate.statusEffects?.ko === true)
-			|| (candidate.isDead === true)
-		) : true;
+		const isDead = candidate
+			? (candidate.lifeTotal <= 0 &&
+					!(get(appSettings).allowNegativeLife || candidate.allowNegativeLife)) ||
+				(candidate.poison ?? 0) >= 10 ||
+				candidate.statusEffects?.ko === true ||
+				candidate.isDead === true
+			: true;
 		// If there's no candidate (defensive), treat as dead and continue
 		if (candidate && !isDead) {
 			appState.update((data) => ({ ...data, currentTurn: nextIndex }));
@@ -60,12 +61,13 @@ export const prevTurn = () => {
 	// Limit search to totalPlayers steps to avoid infinite loop
 	while (attempts < totalPlayers) {
 		const candidate = playersList[nextIndex];
-		const isDead = candidate ? (
-			((candidate.lifeTotal <= 0) && !(get(appSettings).allowNegativeLife || candidate.allowNegativeLife))
-			|| ((candidate.poison ?? 0) >= 10)
-			|| (candidate.statusEffects?.ko === true)
-			|| (candidate.isDead === true)
-		) : true;
+		const isDead = candidate
+			? (candidate.lifeTotal <= 0 &&
+					!(get(appSettings).allowNegativeLife || candidate.allowNegativeLife)) ||
+				(candidate.poison ?? 0) >= 10 ||
+				candidate.statusEffects?.ko === true ||
+				candidate.isDead === true
+			: true;
 		// If there's no candidate (defensive), treat as dead and continue
 		if (candidate && !isDead) {
 			appState.update((data) => ({ ...data, currentTurn: nextIndex }));

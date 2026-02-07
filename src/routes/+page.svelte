@@ -15,7 +15,7 @@
 	import { onMount, onDestroy } from 'svelte';
 
 	import '../lib/utils/i18n.js'; // Importation pour initialiser i18n
-	import { _ } from 'svelte-i18n';  // i18n language toggle
+	import { _ } from 'svelte-i18n'; // i18n language toggle
 
 	import { initWakeLock, setKeepAwake, stopWakeLockManager } from '$lib/utils/wakeLock';
 
