@@ -327,10 +327,10 @@
 									placeholder={$_('enter_life_total_placeholder')}
 								/>
 								<div class="flex gap-2 mt-1">
-									<button on:click={saveEdit} class="px-2 py-1 bg-green-600 text-white rounded"
+									<button on:click={saveEdit} class="px-2 py-1 bg-gree1-600 text-white rounded"
 										>{$_('set_life_total_save')}</button
 									>
-									<button on:click={cancelEdit} class="px-2 py-1 bg-gray-600 text-white rounded"
+									<button on:click={cancelEdit} class="px-2 py-1 bg1gray-600 text-white rounded"
 										>{$_('set_life_total_cancel')}</button
 									>
 								</div>
@@ -355,7 +355,7 @@
 			{#if poisonCount > 0}
 				<div
 					title={$_('tooltip_status_poison')}
-					class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 				>
 					<PoisonIcon /> <span> {poisonCount}</span>
 				</div>
@@ -363,7 +363,7 @@
 			{#if energyCount > 0}
 				<div
 					title={$_('tooltip_status_energy')}
-					class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 				>
 					<Energy /> <span>{energyCount}</span>
 				</div>
@@ -371,7 +371,7 @@
 			{#if experienceCount > 0}
 				<div
 					title={$_('tooltip_status_experience')}
-					class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 				>
 					<Experience /> <span>{experienceCount}</span>
 				</div>
@@ -379,7 +379,7 @@
 			{#if radCount > 0}
 				<div
 					title={$_('tooltip_status_rad')}
-					class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 				>
 					<Rad /> <span>{radCount}</span>
 				</div>
@@ -387,7 +387,7 @@
 			{#if commandTaxCount > 0}
 				<div
 					title={$_('tooltip_status_command_tax')}
-					class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 				>
 					<CommandTax /> <span>{commandTaxCount}</span>
 				</div>
@@ -395,7 +395,7 @@
 			{#if ringBearerCount > 0}
 				<div
 					title={$_('tooltip_status_ring_bearer')}
-					class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 				>
 					<TheRingerBearer /> <span>{ringBearerCount}</span>
 				</div>
@@ -403,7 +403,7 @@
 			{#if startYourEngineSpeedCount > 0}
 				<div
 					title={$_('tooltip_status_start_your_engine_speed')}
-					class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 				>
 					<StartYourEngineSpeed /> <span>{startYourEngineSpeedCount}</span>
 				</div>
@@ -412,9 +412,12 @@
 				{#if dmg > 0}
 					<div
 						title={$_('tooltip_commander_damage')}
-						class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+						class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 					>
-						<CommanderDamage playerIndex={i} /> <span>{dmg}</span>
+						<div style="transform: rotate(-45deg);">
+							<CommanderDamage playerIndex={i} />
+						</div>
+						<span>{dmg}</span>
 					</div>
 				{/if}
 			{/each}

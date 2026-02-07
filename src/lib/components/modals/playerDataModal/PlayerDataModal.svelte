@@ -266,12 +266,16 @@
 										<div class="text-sm text-gray-600">Artist: {r.artist}</div>
 										<div class="text-sm text-gray-600">© Wizards of the Coast</div>
 										<div class="mt-2">
-											<button
-												class="px-3 py-1 bg-green-600 text-white rounded"
-												on:click={() =>
-													r.image && chooseBackground($playerModalData.playerId, r.image)}
-												>{$_('scryfall_search_choose')}</button
-											>
+											{#if $players[$playerModalData.playerId - 1].backgroundImage === r.image}
+												<span class="inline-block px-2 py-1 bg-yellow-300 text-black rounded mr-2">{$_('scryfall_search_chosen')}</span>
+												<button class="px-3 py-1 bg-gray-400 text-white rounded" disabled>{$_('scryfall_search_choose')}</button>
+											{:else}
+												<button
+													class="px-3 py-1 bg-green-600 text-white rounded"
+													on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image)}
+													>{$_('scryfall_search_choose')}</button
+												>
+											{/if}
 										</div>
 									</div>
 									<div class="w-32 flex-shrink-0">

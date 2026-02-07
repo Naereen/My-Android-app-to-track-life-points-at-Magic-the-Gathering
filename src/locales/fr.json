@@ -89,5 +89,6 @@
     "set_life_total_cancel": "Annuler",
     "random_player": "Joueur aléatoire",
     "random_opponent": "Adversaire aléatoire",
-    "select_active_player": "Sélectionner le Joueur Actif"
+    "select_active_player": "Sélectionner le Joueur Actif",
+    "scryfall_search_chosen": "Choisi"
 }

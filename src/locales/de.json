@@ -76,7 +76,7 @@
     "tooltip_status_rad": "Strahlungszähler",
     "tooltip_status_command_tax": "Kommandantensteuer-Zähler",
     "ring_bearer": "Ringträger",
-    "tooltip_status_ring_bearer": "Ringträger-Zähler (0–4)",
+    "tooltip_status_ring_bearer": "Ringträger-Zähler (0 - 4)",
     "tooltip_commander_damage": "Gesamter Kommandantenschaden von allen Spielern erhalten",
     "commander_damage_help": "Verfolgen Sie den Schaden, der vom Kommandanten jedes Spielers erhalten wurde. Ein Spieler verliert, wenn er 21+ Kampfschaden von einem einzelnen Kommandanten erhält.",
     "damage_from_player": "Schaden von Spieler",
@@ -87,5 +87,6 @@
     "set_life_total_cancel": "Abbrechen",
     "random_player": "Zufälliger Spieler",
     "random_opponent": "Zufälliger Gegner",
-    "select_active_player": "Aktiven Spieler Auswählen"
+    "select_active_player": "Aktiven Spieler Auswählen",
+    "scryfall_search_chosen": "Ausgewählt"
 }

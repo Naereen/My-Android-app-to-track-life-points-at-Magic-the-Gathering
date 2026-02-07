@@ -76,7 +76,7 @@
     "tooltip_status_rad": "Contadores de radiación",
     "tooltip_status_command_tax": "Contadores de impuesto de comandante",
     "ring_bearer": "Portador del Anillo",
-    "tooltip_status_ring_bearer": "Contadores del Portador del Anillo (0–4)",
+    "tooltip_status_ring_bearer": "Contadores del Portador del Anillo (0 - 4)",
     "tooltip_commander_damage": "Daño total de comandante recibido de todos los jugadores",
     "commander_damage_help": "Rastrea el daño recibido del comandante de cada jugador. Un jugador pierde al recibir 21+ de daño de combate de un solo comandante.",
     "damage_from_player": "Daño del jugador",
@@ -87,5 +87,6 @@
     "set_life_total_cancel": "Cancelar",
     "random_player": "Jugador Aleatorio",
     "random_opponent": "Oponente Aleatorio",
-    "select_active_player": "Seleccionar Jugador Activo"
+    "select_active_player": "Seleccionar Jugador Activo",
+    "scryfall_search_chosen": "Seleccionado"
 }

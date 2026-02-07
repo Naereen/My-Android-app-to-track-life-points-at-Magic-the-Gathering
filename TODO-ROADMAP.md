@@ -224,9 +224,15 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
     - [x] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG) - I already added a "random background" button!
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders. XXX: Not yet, it's too complicated to manage a background with two illustrations side by side properly.
 
-- [ ] Improve the "search background" feature: after searching and choosing a background image, the "search background" dialog should keep in memory the chosen image, and display its status of "chosen image" in the result list.
+- [x] Improve the "search background" feature: after searching and choosing a background image, the "search background" dialog should keep in memory the chosen image, and display its status of "chosen image" in the result list.
+  - [ ] This information about the chosen background should always be display in the "search background" tab: if player number 1/2/3/4/5/6 has already chosen a background, when opening again the "search background" tab, the chosen background should be indicated as "chosen" in the search result list, and also when searching for another card, if the chosen background is in the search result, it should be indicated as "chosen" in the search result list.
+  - [ ] By default, when opening the "search background" panel, the search button/input form should be filled with the name of the player!
 
 - [x] Commander damage type tracking, in a simple and visual way, with a small icon for each opponent, and a number for the commander damage received from this opponent. It is a new feature from the Lifetap app, and it is very useful for Commander games!
+
+  - [ ] In the "Commander damage" panel in the PlayerDataModal.svelte, allow to double-click on a commander damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click multiple times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games!
+
+  - [ ] Move the "Commander damage" section to its onwn tab in the PlayerDataModal.svelte, instead of being in the bottom/end "Status effects" tab, as it is a very important information for Commander games, and it deserves to be more visible and easier to access.
 
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
   - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is supported by the Lifetap app, but not yet implemented here.
