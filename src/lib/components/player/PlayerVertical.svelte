@@ -214,7 +214,7 @@
 						class="py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
 						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						><div class="flex">
-							<span style="font-size: xx-large; color: white;" style:text-decoration={isDead ? 'line-through' : ''}{index === $appState.currentTurn ? 'underline' : ''}>{$players[index].playerName}</span>
+							<span style="font-size: x-large; color: white;" style:text-decoration={isDead ? 'line-through' : ''}{index === $appState.currentTurn ? 'underline' : ''}>{$players[index].playerName}</span>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center ml-2">
 									<FirstPlace />
