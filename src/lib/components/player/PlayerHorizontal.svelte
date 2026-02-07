@@ -265,6 +265,9 @@
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						>
 							<div class="flex items-center">
+								<div class="flex justify-center items-center mr-1 rotate-90">
+									<CommanderDamage playerIndex={index} />
+								</div>
 								<span
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
