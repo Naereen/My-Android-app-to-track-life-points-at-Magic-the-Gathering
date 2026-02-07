@@ -249,14 +249,14 @@
 						class="py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
 						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						><div class="flex">
-							<div class="flex justify-center items-center mr-1">
-								<CommanderDamage playerIndex={index} />
-							</div>
 							<span
 								style="font-size: x-large; color: white;"
 								style:text-decoration={isDead ? 'line-through' : ''}
 								class:underline={index === $appState.currentTurn}>{$players[index].playerName}</span
 							>
+							<div class="flex justify-center items-center ml-1">
+								<CommanderDamage playerIndex={index} />
+							</div>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center ml-2">
 									<FirstPlace />
