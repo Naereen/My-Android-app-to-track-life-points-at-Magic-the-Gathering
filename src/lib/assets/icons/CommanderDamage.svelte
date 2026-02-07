@@ -1,7 +1,7 @@
 <script lang="ts">
 	// Map player index to icon set
 	export let playerIndex: number = 0;
-	const iconSets = ['brb', 'btb', 'arn', 'ulg', 'mrd', 'mkm'];
+	const iconSets = ['brb', 'btd', 'arn', 'ulg', 'mrd', 'mkm'];
 	$: iconSet = iconSets[playerIndex % iconSets.length];
 </script>
 
