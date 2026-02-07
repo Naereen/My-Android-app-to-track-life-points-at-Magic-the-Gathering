@@ -20,7 +20,12 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
 	import { openPlayerModal } from '$lib/store/modal';
-	import { manageLifeTotal, players, setPlayerLifeAbsolute, setPlayerHighlighted } from '$lib/store/player';
+	import {
+		manageLifeTotal,
+		players,
+		setPlayerLifeAbsolute,
+		setPlayerHighlighted
+	} from '$lib/store/player';
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { haptic, vibrate } from '$lib/utils/haptics';
@@ -36,17 +41,26 @@
 	$: innerWidth = 0;
 	$: isMobile = isMobileDevice(innerWidth);
 	$: index = id - 1;
-	$: isDead = (($players[index].lifeTotal <= 0) && !($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) || (($players[index].poison ?? 0) >= 10) || (status?.ko === true) || ($players[index].isDead === true);
+	$: isDead =
+		($players[index].lifeTotal <= 0 &&
+			!($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) ||
+		($players[index].poison ?? 0) >= 10 ||
+		status?.ko === true ||
+		$players[index].isDead === true ||
+		maxCommanderDamage >= 21;
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
 	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
-	$: bgPositionX = orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
+	$: bgPositionX =
+		orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
 	$: bgPositionY = orientation === 'left' ? 'right' : orientation === 'right' ? 'left' : 'center';
 	$: styleVars = $players[index].backgroundImage
 		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY};`
 		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none;`;
 	$: status = $players[index].statusEffects ?? {};
-	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter((k) => status[k]);
+	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter(
+		(k) => status[k]
+	);
 	$: poisonCount = $players[index].poison ?? 0;
 	$: energyCount = status.energy ?? 0;
 	$: experienceCount = status.experience ?? 0;
@@ -55,8 +69,15 @@
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: commanderDamageArray = status.commanderDamage ?? [];
-	$: totalCommanderDamage = commanderDamageArray.reduce((sum: number, dmg: number) => sum + (dmg || 0), 0);
-	$: statusRotation = orientation === 'down' ? '180deg' : orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
+	$: maxCommanderDamage = Math.max(0, ...commanderDamageArray);
+	$: statusRotation =
+		orientation === 'down'
+			? '180deg'
+			: orientation === 'left'
+				? '-90deg'
+				: orientation === 'right'
+					? '90deg'
+					: '0deg';
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -179,7 +200,11 @@
 	style:background={!$players[index].backgroundImage ? bg : undefined}
 >
 	<!-- Overlay au-dessus du background (non-interactif) -->
-	<div class="bg-rotated-overlay" class:highlight={$players[index].highlighted} class:dead={isDead}></div>
+	<div
+		class="bg-rotated-overlay"
+		class:highlight={$players[index].highlighted}
+		class:dead={isDead}
+	></div>
 	<div
 		class="flex w-full rounded-2xl flex-grow h-6"
 		class:h-full={!$appState.isMenuOpen}
@@ -195,7 +220,8 @@
 						on:mouseup={() => handleMouseUp('subtract')}
 						on:touchstart={() => handleTouchStart('subtract')}
 						on:touchend={() => handleTouchEnd('subtract')}
-						on:contextmenu|preventDefault draggable="false"
+						on:contextmenu|preventDefault
+						draggable="false"
 						class="minus w-full h-1/2 flex justify-center {orientation === 'left'
 							? 'items-end rounded-b-3xl'
 							: 'items-start rounded-t-3xl'} active:bg-player-light select-none"
@@ -212,7 +238,8 @@
 						on:mouseup={() => handleMouseUp('add')}
 						on:touchstart={() => handleTouchStart('add')}
 						on:touchend={() => handleTouchEnd('add')}
-						on:contextmenu|preventDefault draggable="false"
+						on:contextmenu|preventDefault
+						draggable="false"
 						class="plus w-full h-1/2 flex justify-center {orientation === 'left'
 							? 'items-start rounded-t-3xl'
 							: 'items-end rounded-b-3xl'} active:bg-player-light select-none"
@@ -231,13 +258,22 @@
 					<div class="grow w-1/3 text-center flex justify-center items-center">
 						<button
 							on:click={() => openPlayerModal(id)}
-							on:contextmenu|preventDefault draggable="false"
+							on:contextmenu|preventDefault
+							draggable="false"
 							class="py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert shadow-lg"
 							class:rotate-180={orientation === 'left'}
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						>
 							<div class="flex items-center">
-								<span style="font-size: x-large; color: white;" style:text-decoration={isDead ? 'line-through' : ''} class:underline={index === $appState.currentTurn}>{$players[index].playerName}</span>
+								<span
+									style="font-size: x-large; color: white;"
+									style:text-decoration={isDead ? 'line-through' : ''}
+									class:underline={index === $appState.currentTurn}
+									>{$players[index].playerName}</span
+								>
+								<div class="flex justify-center items-center ml-1 rotate-90">
+									<CommanderDamage playerIndex={index} />
+								</div>
 								{#if $players[index].isFirst}
 									<div class="flex justify-center items-center mt-2 rotate-90">
 										<FirstPlace />
@@ -245,15 +281,25 @@
 								{/if}
 								{#each booleanStatuses as s}
 									{#if s === 'monarch'}
-										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><Crown /></div>
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1">
+											<Crown />
+										</div>
 									{:else if s === 'initiative'}
-										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><Initiative /></div>
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1">
+											<Initiative />
+										</div>
 									{:else if s === 'ascend'}
-										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><Ascend /></div>
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1">
+											<Ascend />
+										</div>
 									{:else if s === 'dayNight'}
-										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><DayNight /></div>
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1">
+											<DayNight />
+										</div>
 									{:else if s === 'ko'}
-										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><StatusSkull /></div>
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1">
+											<StatusSkull />
+										</div>
 									{/if}
 								{/each}
 							</div>
@@ -268,31 +314,63 @@
 							style="text-shadow: 0 0 20px black;"
 							class:rotate-180={orientation === 'left'}
 							class:h-8={$appSettings.playerCount >= 5}
-							>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span>
+							>{$players[index].tempLifeDiff < 0
+								? `-${$players[index].tempLifeDiff * -1}`
+								: ''}</span
+						>
 						<div class="relative flex items-center justify-center">
 							{#if isDead}
-								<div class="z-10 text-black" class:rotate-90={orientation === 'right'} class:-rotate-90={orientation === 'left'} class:-translate-x-0={orientation === 'right'} class:translate-x-0={orientation === 'left'} style="width: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; height: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; opacity: 1;">
+								<div
+									class="z-10 text-black"
+									class:rotate-90={orientation === 'right'}
+									class:-rotate-90={orientation === 'left'}
+									class:-translate-x-0={orientation === 'right'}
+									class:translate-x-0={orientation === 'left'}
+									style="width: {$appSettings.playerCount >= 5
+										? '2.5rem'
+										: '3.25rem'}; height: {$appSettings.playerCount >= 5
+										? '2.5rem'
+										: '3.25rem'}; opacity: 1;"
+								>
 									<Skull />
-									<br>
+									<br />
 								</div>
 							{/if}
 							{#if !editing}
-								<button on:dblclick={startEdit} on:contextmenu|preventDefault={openPromptSetLife} class="bg-transparent border-none p-0 m-0 pointer-events-auto">
+								<button
+									on:dblclick={startEdit}
+									on:contextmenu|preventDefault={openPromptSetLife}
+									class="bg-transparent border-none p-0 m-0 pointer-events-auto"
+								>
 									<span
 										class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center"
 										class:text-8xl={$appSettings.playerCount <= 4}
 										class:text-6xl={$appSettings.playerCount >= 5}
 										class:-rotate-180={orientation === 'left'}
 										class:opacity-25={isDead}
-										style="text-shadow: 0 0 40px black;"
-										>{$players[index].lifeTotal}</span>
+										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
+									>
 								</button>
 							{:else}
 								<div class="pointer-events-auto">
-									<input id={`life-input-${id}`} type="number" bind:value={editValue} on:keydown={(e) => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') cancelEdit(); }} class="w-20 h-20 center text-center rounded-md px-2 py-1 text-3xl" placeholder={$_('enter_life_total_placeholder')} />
+									<input
+										id={`life-input-${id}`}
+										type="number"
+										bind:value={editValue}
+										on:keydown={(e) => {
+											if (e.key === 'Enter') saveEdit();
+											if (e.key === 'Escape') cancelEdit();
+										}}
+										class="w-20 h-20 center text-center rounded-md px-2 py-1 text-3xl"
+										placeholder={$_('enter_life_total_placeholder')}
+									/>
 									<div class="flex gap-2 mt-1 justify-center">
-										<button on:click={saveEdit} class="px-2 py-1 bg-green-600 text-white rounded">{$_('set_life_total_save')}</button>
-										<button on:click={cancelEdit} class="px-2 py-1 bg-gray-600 text-white rounded">{$_('set_life_total_cancel')}</button>
+										<button on:click={saveEdit} class="px-2 py-1 bg-green-600 text-white rounded"
+											>{$_('set_life_total_save')}</button
+										>
+										<button on:click={cancelEdit} class="px-2 py-1 bg-gray-600 text-white rounded"
+											>{$_('set_life_total_cancel')}</button
+										>
 									</div>
 								</div>
 							{/if}
@@ -302,62 +380,135 @@
 							style="text-shadow: 0 0 20px black;"
 							class:rotate-180={orientation === 'left'}
 							class:h-8={$appSettings.playerCount >= 5}
-							>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span>
+							>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
+						>
 					</div>
 
 					<div class="grow w-1/3 vert"></div>
 				</div>
 				<!-- Status effects bar -->
-				<div class="absolute top-0 bottom-0 flex justify-center pointer-events-none vert" class:left-2={orientation === 'right'} class:right-2={orientation === 'left'}>
-					<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
+				<div
+					class="absolute top-0 bottom-0 flex justify-center pointer-events-none vert"
+					class:left-2={orientation === 'right'}
+					class:right-2={orientation === 'left'}
+				>
+					<div
+						class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto"
+					>
 						{#if poisonCount > 0}
-							<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
-								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><PoisonIcon /></div>
+							<div
+								title={$_('tooltip_status_poison')}
+								class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+							>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<PoisonIcon />
+								</div>
 								<span> {poisonCount}</span>
 							</div>
 						{/if}
 						{#if energyCount > 0}
-							<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
-								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Energy /></div>
+							<div
+								title={$_('tooltip_status_energy')}
+								class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+							>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Energy />
+								</div>
 								<span> {energyCount}</span>
 							</div>
 						{/if}
 						{#if experienceCount > 0}
-							<div title={$_('tooltip_status_experience')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
-								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Experience /></div>
+							<div
+								title={$_('tooltip_status_experience')}
+								class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+							>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Experience />
+								</div>
 								<span> {experienceCount}</span>
 							</div>
 						{/if}
 						{#if radCount > 0}
-							<div title={$_('tooltip_status_rad')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
-								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Rad /></div>
+							<div
+								title={$_('tooltip_status_rad')}
+								class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+							>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Rad />
+								</div>
 								<span> {radCount}</span>
 							</div>
 						{/if}
 						{#if commandTaxCount > 0}
-							<div title={$_('tooltip_status_command_tax')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
-								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><CommandTax /></div>
+							<div
+								title={$_('tooltip_status_command_tax')}
+								class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+							>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<CommandTax />
+								</div>
 								<span> {commandTaxCount}</span>
 							</div>
 						{/if}
 						{#if ringBearerCount > 0}
-							<div title={$_('tooltip_status_ring_bearer')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
-								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><TheRingerBearer /></div>
+							<div
+								title={$_('tooltip_status_ring_bearer')}
+								class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+							>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<TheRingerBearer />
+								</div>
 								<span> {ringBearerCount}</span>
 							</div>
 						{/if}
 						{#if startYourEngineSpeedCount > 0}
-							<div title={$_('tooltip_status_start_your_engine_speed')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
-								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><StartYourEngineSpeed /></div>
+							<div
+								title={$_('tooltip_status_start_your_engine_speed')}
+								class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+							>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<StartYourEngineSpeed />
+								</div>
 								<span> {startYourEngineSpeedCount}</span>
 							</div>
 						{/if}
-						{#if totalCommanderDamage > 0}
-							<div title={$_('tooltip_commander_damage')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
-								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><CommanderDamage /></div>
-								<span> {totalCommanderDamage}</span>
-							</div>
-						{/if}
+						{#each commanderDamageArray as dmg, i}
+							{#if dmg > 0}
+								<div
+									title={$_('tooltip_commander_damage')}
+									class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+								>
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<CommanderDamage playerIndex={i} />
+									</div>
+									<span> {dmg}</span>
+								</div>
+							{/if}
+						{/each}
 					</div>
 				</div>
 			</div>
