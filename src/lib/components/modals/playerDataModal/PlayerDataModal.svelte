@@ -45,9 +45,14 @@
 
 	// Translation for damage from player label
 	$: damageFromPlayerLabel = String($_('damage_from_player'));
+	$: enterLifeTotalPlaceholder = String($_('enter_life_total_placeholder'));
+	$: setLifeTotalSave = String($_('set_life_total_save'));
+	$: setLifeTotalCancel = String($_('set_life_total_cancel'));
+	$: setCommanderDamageString = String($_('set_commander_damage'));
 
 	import { searchCards, randomCards } from '$lib/utils/scryfall';
 	import { setPlayerBackgroundImage } from '$lib/store/player';
+	import { tick } from 'svelte';
 
 	// initialize selectedColors when modal/player changes
 	$: if ($playerModalData && $players) {
@@ -194,6 +199,33 @@
 		setPlayerBackgroundImage(playerId, { imageUrl, artist, set_name });
 		// clear color so background shows clearly
 		setPlayerColor(playerId, 'white');
+	};
+
+	// Inline editor state for commander damage (replaces native prompt)
+	let editingCommanderFrom: number | null = null;
+	let editingCommanderValue = '';
+
+	const startEditCommander = async (playerId: number, fromPlayerId: number, current: number) => {
+		vibrate(20);
+		editingCommanderFrom = fromPlayerId;
+		editingCommanderValue = String(current);
+		await tick();
+		const el = document.getElementById(`commander-input-${fromPlayerId}`) as HTMLInputElement | null;
+		el?.focus();
+		el?.select();
+	};
+
+	const saveEditCommander = () => {
+		if (editingCommanderFrom === null) return;
+		const v = parseInt(editingCommanderValue, 10);
+		if (!Number.isNaN(v)) {
+			setCommanderDamage($playerModalData.playerId, editingCommanderFrom, v);
+		}
+		editingCommanderFrom = null;
+	};
+
+	const cancelEditCommander = () => {
+		editingCommanderFrom = null;
 	};
 </script>
 
@@ -623,9 +655,27 @@
 													setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg - 1)}
 												>-</button
 											>
-											<span class="px-3 py-1 bg-gray-100 rounded min-w-[3rem] text-center"
-												>{dmg}</span
-											>
+											{#if editingCommanderFrom === fromPlayerId}
+												<div class="pointer-events-auto flex items-center gap-2">
+													<input
+														id={`commander-input-${fromPlayerId}`}
+														type="number"
+														bind:value={editingCommanderValue}
+														on:keydown={(e) => {
+															if (e.key === 'Enter') saveEditCommander();
+															if (e.key === 'Escape') cancelEditCommander();
+														}}
+														class="w-20 text-center rounded-md px-1 py-0.5"
+														placeholder={enterLifeTotalPlaceholder}
+													/>
+													<div class="flex gap-2">
+														<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+														<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+													</div>
+												</div>
+											{:else}
+												<span class="px-3 py-1 bg-gray-100 rounded min-w-[3rem] text-center" on:dblclick={() => startEditCommander($playerModalData.playerId, fromPlayerId, dmg)} title={setCommanderDamageString} >{dmg}</span>
+											{/if}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded mr-10"
 												on:click={() =>

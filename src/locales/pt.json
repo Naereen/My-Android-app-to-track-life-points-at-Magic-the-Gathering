@@ -82,6 +82,7 @@
     "damage_from_player": "Dano do jogador",
     "haptic_feedback": "Feedback Háptico",
     "set_life_total": "Definir total de vida",
+    "set_commander_damage": "Definir dano de comandante",
     "enter_life_total_placeholder": "Digite o total de vida",
     "set_life_total_save": "Salvar",
     "set_life_total_cancel": "Cancelar",

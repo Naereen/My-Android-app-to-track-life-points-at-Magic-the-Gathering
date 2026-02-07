@@ -84,6 +84,7 @@
     "damage_from_player": "Dégâts de",
     "haptic_feedback": "Retour haptique",
     "set_life_total": "Définir les points de vie",
+    "set_commander_damage": "Définir les dégâts de commandant",
     "enter_life_total_placeholder": "Entrez les points de vie",
     "set_life_total_save": "Enregistrer",
     "set_life_total_cancel": "Annuler",

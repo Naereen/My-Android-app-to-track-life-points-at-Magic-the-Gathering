@@ -82,6 +82,7 @@
     "damage_from_player": "Schaden von Spieler",
     "haptic_feedback": "Haptisches Feedback",
     "set_life_total": "Lebenspunkte setzen",
+    "set_commander_damage": "Kommandantenschaden setzen",
     "enter_life_total_placeholder": "Lebenspunkte eingeben",
     "set_life_total_save": "Speichern",
     "set_life_total_cancel": "Abbrechen",

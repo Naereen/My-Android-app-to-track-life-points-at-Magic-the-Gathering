@@ -151,6 +151,8 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] Move the unique status effects (Monarch, Initiative) to the player name area, before/after the player's name, with a small icon, so that they are always visible and don't consume too much space in the status effect section at the bottom of the panel. This will also make it easier to implement the "rotate the content of the status effect section" feature, as there will be less text to rotate.
 
+  - [ ] In the "status effect" panel in the PlayerDataModal.svelte, allow to double-click on any number damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click many times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games! For instance, adding +54 energy counters, one by one, is long and boring.
+
 - [x] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
 
   - [x] A button to advance to the next player's turn, it should be located in the middle of the buttons for mana and randomizer?
@@ -231,7 +233,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 - [x] Commander damage type tracking, in a simple and visual way, with a small icon for each opponent, and a number for the commander damage received from this opponent. It is a new feature from the Lifetap app, and it is very useful for Commander games!
 
-  - [ ] In the "Commander damage" panel in the PlayerDataModal.svelte, allow to double-click on a commander damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click multiple times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games!
+  - [x] In the "Commander damage" panel in the PlayerDataModal.svelte, allow to double-click on a commander damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click multiple times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games!
 
   - [ ] Move the "Commander damage" section to its onwn tab in the PlayerDataModal.svelte, instead of being in the bottom/end "Status effects" tab, as it is a very important information for Commander games, and it deserves to be more visible and easier to access.
 

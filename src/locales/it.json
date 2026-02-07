@@ -85,6 +85,7 @@
     "damage_from_player": "Danno dal giocatore",
     "haptic_feedback": "Feedback aptico",
     "set_life_total": "Imposta punti vita",
+    "set_commander_damage": "Imposta danno del comandante",
     "enter_life_total_placeholder": "Inserisci punti vita",
     "set_life_total_save": "Salva",
     "set_life_total_cancel": "Annulla",
