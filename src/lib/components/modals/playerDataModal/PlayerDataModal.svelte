@@ -205,6 +205,10 @@
 	let editingCommanderFrom: number | null = null;
 	let editingCommanderValue = '';
 
+	// Inline editor state for numeric status effects (poison, energy, etc.)
+	let editingStat: string | null = null;
+	let editingStatValue = '';
+
 	const startEditCommander = async (playerId: number, fromPlayerId: number, current: number) => {
 		vibrate(20);
 		editingCommanderFrom = fromPlayerId;
@@ -226,6 +230,35 @@
 
 	const cancelEditCommander = () => {
 		editingCommanderFrom = null;
+	};
+
+	const startEditStat = async (stat: string, current: number) => {
+		vibrate(20);
+		editingStat = stat;
+		editingStatValue = String(current);
+		await tick();
+		const el = document.getElementById(`stat-input-${stat}`) as HTMLInputElement | null;
+		el?.focus();
+		el?.select();
+	};
+
+	const saveEditStat = () => {
+		if (!editingStat) return;
+		const v = parseInt(editingStatValue, 10);
+		if (Number.isNaN(v)) {
+			editingStat = null;
+			return;
+		}
+		if (editingStat === 'poison') {
+			setPlayerPoison($playerModalData.playerId, Math.max(0, v));
+		} else {
+			setPlayerStatusNumeric($playerModalData.playerId, editingStat, Math.max(0, v));
+		}
+		editingStat = null;
+	};
+
+	const cancelEditStat = () => {
+		editingStat = null;
 	};
 </script>
 
@@ -427,8 +460,7 @@
 
 							<div class="w-full flex flex-col items-center text-center border-t pt-4">
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"
-										><PoisonIcon /> {String($_('poison'))}</span
+									<span class="w-60 text-left"><PoisonIcon /> {String($_('poison'))}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -436,8 +468,7 @@
 											setPlayerPoison(
 												$playerModalData.playerId,
 												Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1)
-											)}>-</button
-									>
+											)}>-</button>
 									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -445,8 +476,7 @@
 											setPlayerPoison(
 												$playerModalData.playerId,
 												Math.min(99, ($players[$playerModalData.playerId - 1].poison ?? 0) + 1)
-											)}>+</button
-									>
+											)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
@@ -462,10 +492,28 @@
 													0,
 													($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) - 1
 												)
-											)}>-</button
-									>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span
-									>
+											)}>-</button>
+									{#if editingStat === 'energy'}
+										<div class="pointer-events-auto flex items-center gap-2">
+											<input
+												id="stat-input-energy"
+												type="number"
+												bind:value={editingStatValue}
+												on:keydown={(e) => {
+													if (e.key === 'Enter') saveEditStat();
+													if (e.key === 'Escape') cancelEditStat();
+												}}
+												class="w-20 text-center rounded-md px-1 py-0.5"
+												placeholder={enterLifeTotalPlaceholder}
+											/>
+											<div class="flex gap-2">
+												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+											</div>
+										</div>
+									{:else}
+										<span class="px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('energy', $players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
+									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -473,13 +521,11 @@
 												$playerModalData.playerId,
 												'energy',
 												($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) + 1
-											)}>+</button
-									>
+											)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"
-										><Experience /> {String($_('experience'))}</span
+									<span class="w-60 text-left"><Experience /> {String($_('experience'))}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -492,10 +538,28 @@
 													($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) -
 														1
 												)
-											)}>-</button
-									>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span
-									>
+											)}>-</button>
+									{#if editingStat === 'experience'}
+										<div class="pointer-events-auto flex items-center gap-2">
+											<input
+												id="stat-input-experience"
+												type="number"
+												bind:value={editingStatValue}
+												on:keydown={(e) => {
+													if (e.key === 'Enter') saveEditStat();
+													if (e.key === 'Escape') cancelEditStat();
+												}}
+												class="w-20 text-center rounded-md px-1 py-0.5"
+												placeholder={enterLifeTotalPlaceholder}
+											/>
+											<div class="flex gap-2">
+												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+											</div>
+										</div>
+									{:else}
+										<span class="px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('experience', $players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
+									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -503,8 +567,7 @@
 												$playerModalData.playerId,
 												'experience',
 												($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) + 1
-											)}>+</button
-									>
+											)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
@@ -519,10 +582,28 @@
 													0,
 													($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) - 1
 												)
-											)}>-</button
-									>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span
-									>
+											)}>-</button>
+									{#if editingStat === 'rad'}
+										<div class="pointer-events-auto flex items-center gap-2">
+											<input
+												id="stat-input-rad"
+												type="number"
+												bind:value={editingStatValue}
+												on:keydown={(e) => {
+													if (e.key === 'Enter') saveEditStat();
+													if (e.key === 'Escape') cancelEditStat();
+												}}
+												class="w-20 text-center rounded-md px-1 py-0.5"
+												placeholder={enterLifeTotalPlaceholder}
+											/>
+											<div class="flex gap-2">
+												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+											</div>
+										</div>
+									{:else}
+										<span class="px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('rad', $players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
+									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -530,13 +611,11 @@
 												$playerModalData.playerId,
 												'rad',
 												($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1
-											)}>+</button
-									>
+											)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"
-										><CommandTax /> {String($_('command_tax'))}</span
+									<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -549,10 +628,8 @@
 													($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) -
 														1
 												)
-											)}>-</button
-									>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span
-									>
+											)}>-</button>
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -560,13 +637,11 @@
 												$playerModalData.playerId,
 												'commandTax',
 												($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) + 1
-											)}>+</button
-									>
+											)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"
-										><TheRingerBearer /> {String($_('ring_bearer'))}</span
+									<span class="w-60 text-left"><TheRingerBearer /> {String($_('ring_bearer'))}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -579,8 +654,7 @@
 													($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) -
 														1
 												)
-											)}>-</button
-									>
+											)}>-</button>
 									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -593,14 +667,11 @@
 													($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) +
 														1
 												)
-											)}>+</button
-									>
+											)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"
-										><StartYourEngineSpeed /> {String($_('start_your_engine_speed'))}</span
-									>
+									<span class="w-60 text-left"><StartYourEngineSpeed /> {String($_('start_your_engine_speed'))}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -612,11 +683,8 @@
 													($players[$playerModalData.playerId - 1].statusEffects
 														?.startYourEngineSpeed ?? 0) - 1
 												)
-											)}>-</button
-									>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ??
-											0}</span
-									>
+											)}>-</button>
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -628,8 +696,7 @@
 													($players[$playerModalData.playerId - 1].statusEffects
 														?.startYourEngineSpeed ?? 0) + 1
 												)
-											)}>+</button
-									>
+											)}>+</button>
 								</div>
 							</div>
 

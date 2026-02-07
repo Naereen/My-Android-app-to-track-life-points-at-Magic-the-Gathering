@@ -151,7 +151,15 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] Move the unique status effects (Monarch, Initiative) to the player name area, before/after the player's name, with a small icon, so that they are always visible and don't consume too much space in the status effect section at the bottom of the panel. This will also make it easier to implement the "rotate the content of the status effect section" feature, as there will be less text to rotate.
 
-  - [ ] In the "status effect" panel in the PlayerDataModal.svelte, allow to double-click on any number damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click many times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games! For instance, adding +54 energy counters, one by one, is long and boring.
+  - [x] In the "status effect" panel in the PlayerDataModal.svelte, allow to double-click on any number damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click many times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games! For instance, adding +54 energy counters, one by one, is long and boring.
+
+- [ ] In the "status effect" edition panel in the PlayerDataModal.svelte, update the following line in order to keep a good-looking display of the **- VALUE +** buttons, even if the VALUE is more than ONE digit long
+
+```html
+<span class="w-60 text-left"><Rad /> {String($_('rad'))}</span>
+```
+
+- [ ] In the "status effect" panel, for the PlayerHorizontal.svelte and the right-facing players (player 3 in 3-player mode, player 3 and 4 in 4-player mode, player 3/4/5/6 in 5/6-player mode), everything is nice except the detail that the icons appear **after** the text, and not before the text, which is a bit weird. This is because of the "rotate the content of the status effect section" feature, which rotates everything (text and icons) to make it readable, but it also rotates the order of the icons and the text. To fix this, we could add a special case for these right-facing players, to display the icons before the text, even after rotating the content of the status effect section.
 
 - [x] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
 
