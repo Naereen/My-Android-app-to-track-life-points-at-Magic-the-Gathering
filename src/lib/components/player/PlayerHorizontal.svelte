@@ -265,7 +265,7 @@
 							on:click={() => openPlayerModal(id)}
 							on:contextmenu|preventDefault
 							draggable="false"
-							class="py-2 px-3 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert shadow-lg"
+							class="py-2 px-1 rounded-lg mt-1 text-lg pointer-events-auto whitespace-nowrap vert shadow-lg"
 							class:rotate-180={orientation === 'left'}
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						>
@@ -402,7 +402,7 @@
 					class:hidden={$appState.isMenuOpen}
 				>
 					<div
-						class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto"
+						class="bg-black/40 text-white text-xs rounded-full px-0 py-0 flex gap-1 items-center pointer-events-auto"
 						class:flex-row={orientation === 'left'}
 						class:flex-row-reverse={orientation === 'left'}
 					>

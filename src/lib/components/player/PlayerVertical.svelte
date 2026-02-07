@@ -246,7 +246,7 @@
 						on:click={() => openPlayerModal(id)}
 						on:contextmenu|preventDefault
 						draggable="false"
-						class="py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
+						class="py-1 px-2 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
 						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						><div class="flex">
 							<div class="flex justify-center items-center mr-1">
@@ -350,7 +350,7 @@
 	<!-- Status effects bar -->
 	<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
 		<div
-			class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto"
+			class="bg-black/40 text-white text-xs rounded-full px-1 py-0 flex gap-2 items-center pointer-events-auto"
 		>
 			{#if poisonCount > 0}
 				<div
