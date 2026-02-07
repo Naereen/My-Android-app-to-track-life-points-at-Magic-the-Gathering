@@ -114,13 +114,13 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] List of numeric status effects (e.g. "Poisoned 3/10"): Energy, Experience, Poison, Rad, Command Tax
   - [x] When clicking the "K.O." status effect, it should change the player's isDead status (gray out life total and skull icon)
   - [x] Improve this section visually, make it prettier with **nicer icons**
-  - [ ] TODO: improve this section visually, make it prettier with **better layout**
+  - [x] Improve this section visually, make it prettier with **better layout**
 
 - [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
-- [ ] TODO: Harder to track: implement the Commander Damage tracker (from each opponent).
+- [x]Harder to track: implement the Commander Damage tracker (from each opponent).
 
-  - [ ] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Inicie) or not (Ascend, etc)
+  - [x] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Inicie) or not (Ascend, etc)
   - [ ] After, make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Add support for the poison counter: you can die to them!

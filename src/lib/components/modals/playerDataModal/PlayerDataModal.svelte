@@ -551,7 +551,7 @@
 
 							<!-- Commander Damage Section -->
 							<div class="mt-6 w-full flex flex-col items-center text-center border-t pt-4">
-								<h3 class="text-lg font-semibold mb-3 flex items-center gap-2">
+								<h3 class="text-2xl font-bold mb-3 flex items-center gap-2">
 									<CommanderDamage />
 									{String($_('commander_damage'))}
 								</h3>
@@ -564,7 +564,7 @@
 												[])[i] ?? 0}
 										{@const fromPlayerName = $players[i]?.playerName ?? `Player ${fromPlayerId}`}
 										<div class="flex items-center gap-2">
-											<span class="w-40 text-left">{damageFromPlayerLabel} {fromPlayerName}:</span>
+											<span class="w-40 text-left">{damageFromPlayerLabel} {fromPlayerName} :</span>
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
 												on:click={() =>
@@ -656,7 +656,7 @@
 											!$players[$playerModalData.playerId - 1].allowNegativeLife
 										)}
 								/>
-								<span class="ml-2 block mb-2 font-semibold text-center"
+								<span class="ml-2 block mb-2 font-bold text-lg text-center"
 									>{$_('allow_negative_life')}</span
 								></label
 							>

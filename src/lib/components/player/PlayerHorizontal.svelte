@@ -270,15 +270,15 @@
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						>
 							<div class="flex items-center">
+								<div class="flex justify-center items-center mb-3 rotate-90">
+									<CommanderDamage playerIndex={index} />
+								</div>
 								<span
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
-									class:underline={index === $appState.currentTurn}
+									class:overline={index === $appState.currentTurn}
 									>{$players[index].playerName}</span
 								>
-								<div class="flex justify-center items-center ml-1 rotate-90">
-									<CommanderDamage playerIndex={index} />
-								</div>
 								{#if $players[index].isFirst}
 									<div class="flex justify-center items-center mt-2 rotate-90">
 										<FirstPlace />
