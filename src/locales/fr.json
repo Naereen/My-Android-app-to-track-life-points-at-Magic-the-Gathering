@@ -86,5 +86,7 @@
     "set_life_total": "Définir les points de vie",
     "enter_life_total_placeholder": "Entrez les points de vie",
     "set_life_total_save": "Enregistrer",
-    "set_life_total_cancel": "Annuler"
+    "set_life_total_cancel": "Annuler",
+    "random_player": "Joueur Aléatoire",
+    "random_opponent": "Adversaire Aléatoire"
 }

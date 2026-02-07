@@ -84,5 +84,7 @@
     "set_life_total": "Imposta punti vita",
     "enter_life_total_placeholder": "Inserisci punti vita",
     "set_life_total_save": "Salva",
-    "set_life_total_cancel": "Annulla"
+    "set_life_total_cancel": "Annulla",
+    "random_player": "Giocatore Casuale",
+    "random_opponent": "Avversario Casuale"
 }
