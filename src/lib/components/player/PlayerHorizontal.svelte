@@ -316,7 +316,7 @@
 						class="w-1/3 flex justify-center items-center vert"
 					>
 						<span
-							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black"
+							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
 							style="text-shadow: 0 0 20px black;"
 							class:rotate-180={orientation === 'left'}
 							class:h-8={$appSettings.playerCount >= 5}
@@ -382,7 +382,7 @@
 							{/if}
 						</div>
 						<span
-							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black"
+							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
 							style="text-shadow: 0 0 20px black;"
 							class:rotate-180={orientation === 'left'}
 							class:h-8={$appSettings.playerCount >= 5}

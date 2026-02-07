@@ -27,6 +27,7 @@
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
+	import { vibrate } from '$lib/utils/haptics';
 
 	let gradientMode = false;
 	let selectedColors: string[] = [];
@@ -155,6 +156,7 @@
 	};
 
 	const chooseBackground = (playerId: number, imageUrl: string | null) => {
+		vibrate(30);
 		setPlayerBackgroundImage(playerId, imageUrl);
 		// clear color so background shows clearly
 		setPlayerColor(playerId, 'white');

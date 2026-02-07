@@ -282,7 +282,7 @@
 				</div>
 				<div class="h-1/3 flex justify-center items-center flex-row">
 					<span
-						class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black"
+						class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
 						style="text-shadow: 0 0 20px black;"
 						>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span
 					>
@@ -338,7 +338,7 @@
 						{/if}
 					</div>
 					<span
-						class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black"
+						class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
 						style="text-shadow: 0 0 20px black;"
 						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
 					>

@@ -224,6 +224,8 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
     - [x] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG) - I already added a "random background" button!
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders. XXX: Not yet, it's too complicated to manage a background with two illustrations side by side properly.
 
+- [ ] Improve the "search background" feature: after searching and choosing a background image, the "search background" dialog should keep in memory the chosen image, and display its status of "chosen image" in the result list.
+
 - [x] Commander damage type tracking, in a simple and visual way, with a small icon for each opponent, and a number for the commander damage received from this opponent. It is a new feature from the Lifetap app, and it is very useful for Commander games!
 
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
