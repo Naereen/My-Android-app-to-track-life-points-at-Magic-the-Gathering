@@ -16,6 +16,8 @@ declare global {
 				color: string;
 				backgroundImage?: string | null;
 				tempLifeDiff: number;
+				backgroundArtist?: string | null;
+				backgroundSet?: string | null;
 				poison?: number;
 				statusEffects?: {
 					monarch?: boolean;

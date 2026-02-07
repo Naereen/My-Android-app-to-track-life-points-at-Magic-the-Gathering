@@ -61,6 +61,34 @@
 		}
 	}
 
+	// When entering the 'backgrounds' tab, prefill the search input with the player's name
+	$: if (mode === 'backgrounds' && $playerModalData && $players) {
+		const p = $players[$playerModalData.playerId - 1];
+		if (p && (!searchQuery || searchQuery.trim().length === 0)) {
+			searchQuery = p.playerName ?? '';
+		}
+
+		// Ensure the already chosen background (if any) is visible in the search results
+		// so it appears as "chosen" by default when opening the tab.
+		if (p && p.backgroundImage) {
+			const already = searchResults.find((r) => r.image === p.backgroundImage);
+			if (!already) {
+				// prepend a synthetic result representing the current chosen background
+				searchResults = [
+					{
+						id: 'current-bg',
+						name: `${p.playerName ?? 'Current'}'s background`,
+						set_name: p.backgroundSet ?? '',
+						artist: p.backgroundArtist ?? '',
+						cardImage: p.backgroundImage,
+						image: p.backgroundImage
+					},
+					...searchResults
+				];
+			}
+		}
+	}
+
 	const toggleColorSelection = (playerId: number, c: string) => {
 		if (!gradientMode) {
 			setPlayerColor(playerId, c);
@@ -107,6 +135,7 @@
 	};
 
 	const doSearch = async () => {
+		vibrate(20);
 		if (typeof document !== 'undefined') {
 			const ae = document.activeElement as HTMLElement | null;
 			if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable)) {
@@ -135,7 +164,7 @@
 			const withImage = searchResults.filter((r) => r.image);
 			const pool = withImage.length > 0 ? withImage : searchResults;
 			const pick = pool[Math.floor(Math.random() * pool.length)];
-			chooseBackground(playerId, pick.image ?? null);
+			chooseBackground(playerId, pick.image ?? null, pick.artist ?? null, pick.set_name ?? null);
 			return;
 		}
 
@@ -144,10 +173,10 @@
 			isSearching = true;
 			// use a broad query so the util can return a random art card
 			const cards = await randomCards('game:paper');
-			if (cards && cards.length > 0) {
-				const c = cards[0];
-				chooseBackground(playerId, c.image ?? null);
-			}
+				if (cards && cards.length > 0) {
+					const c = cards[0];
+					chooseBackground(playerId, c.image ?? null, c.artist ?? null, c.set_name ?? null);
+				}
 		} catch (err) {
 			console.warn('Failed to fetch random card', err);
 		} finally {
@@ -155,9 +184,14 @@
 		}
 	};
 
-	const chooseBackground = (playerId: number, imageUrl: string | null) => {
+	const chooseBackground = (
+		playerId: number,
+		imageUrl: string | null,
+		artist: string | null = null,
+		set_name: string | null = null
+	) => {
 		vibrate(30);
-		setPlayerBackgroundImage(playerId, imageUrl);
+		setPlayerBackgroundImage(playerId, { imageUrl, artist, set_name });
 		// clear color so background shows clearly
 		setPlayerColor(playerId, 'white');
 	};
@@ -227,8 +261,8 @@
 						>
 					</div>
 					{#if mode === 'backgrounds'}
-						<div class="w-100 mb-3">
-							<div class="gap-2">
+						<div class="w-8/10 mb-3">
+							<div class="gap-4">
 								<input
 									type="text"
 									class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black"
@@ -237,18 +271,18 @@
 									placeholder={$_('scryfall_search') + ' (Scryfall)...'}
 								/>
 								<button
-									class="px-3 py-2 bg-blue-500 text-white rounded-lg"
+									class="px-3 py-2 mt-2 bg-blue-500 text-white text-sm rounded-lg"
 									on:click={doSearch}
 									disabled={isSearching}
 									>{isSearching ? $_('scryfall_searching') : $_('scryfall_search')}</button
 								>
 								<button
-									class="px-3 py-2 bg-purple-600 text-white rounded-lg"
+									class="px-3 py-2 bg-purple-600 text-white text-sm rounded-lg"
 									on:click={() => chooseRandom($playerModalData.playerId)}
 									disabled={isSearching}>{$_('scryfall_search_choose_random')}</button
 								>
 								<button
-									class="px-3 py-2 bg-red-500 text-white rounded-lg"
+									class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg"
 									on:click={() => setPlayerBackgroundImage($playerModalData.playerId, null)}
 									>{$_('clear_background')}</button
 								>
@@ -262,17 +296,17 @@
 								<div class="flex gap-2 mb-3 p-2 border rounded-lg bg-white">
 									<div class="flex-1 text-left">
 										<div class="font-semibold text-xl">{r.name}</div>
-										<div class="text-sm text-gray-600">{r.set_name}</div>
+										<div class="text-sm text-gray-600">Set: {r.set_name}</div>
 										<div class="text-sm text-gray-600">Artist: {r.artist}</div>
 										<div class="text-sm text-gray-600">© Wizards of the Coast</div>
 										<div class="mt-2">
 											{#if $players[$playerModalData.playerId - 1].backgroundImage === r.image}
-												<span class="inline-block px-2 py-1 bg-yellow-300 text-black rounded mr-2">{$_('scryfall_search_chosen')}</span>
-												<button class="px-3 py-1 bg-gray-400 text-white rounded" disabled>{$_('scryfall_search_choose')}</button>
+												<span class="inline-block px-2 py-1 bg-yellow-300 text-black text-sm rounded mr-2">{$_('scryfall_search_chosen')}</span>
+												<button class="px-3 py-1 bg-gray-400 text-white text-sm rounded" disabled>{$_('scryfall_search_choose')}</button>
 											{:else}
 												<button
-													class="px-3 py-1 bg-green-600 text-white rounded"
-													on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image)}
+													class="px-3 py-1 bg-green-600 text-white text-sm rounded"
+													on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image, r.artist ?? null, r.set_name ?? null)}
 													>{$_('scryfall_search_choose')}</button
 												>
 											{/if}

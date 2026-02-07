@@ -15,6 +15,8 @@ const defaultPlayers: App.Player.Data[] = [
 		playerName: `${playerBaseName} 1` || 'Player 1',
 		color: 'white',
 		backgroundImage: null,
+		backgroundArtist: null,
+		backgroundSet: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
@@ -29,6 +31,8 @@ const defaultPlayers: App.Player.Data[] = [
 		playerName: `${playerBaseName} 2` || 'Player 2',
 		color: 'white',
 		backgroundImage: null,
+		backgroundArtist: null,
+		backgroundSet: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
@@ -43,6 +47,8 @@ const defaultPlayers: App.Player.Data[] = [
 		playerName: `${playerBaseName} 3` || 'Player 3',
 		color: 'white',
 		backgroundImage: null,
+		backgroundArtist: null,
+		backgroundSet: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
@@ -57,6 +63,8 @@ const defaultPlayers: App.Player.Data[] = [
 		playerName: `${playerBaseName} 4` || 'Player 4',
 		color: 'white',
 		backgroundImage: null,
+		backgroundArtist: null,
+		backgroundSet: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
@@ -71,6 +79,8 @@ const defaultPlayers: App.Player.Data[] = [
 		playerName: `${playerBaseName} 5` || 'Player 5',
 		color: 'white',
 		backgroundImage: null,
+		backgroundArtist: null,
+		backgroundSet: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
@@ -85,6 +95,8 @@ const defaultPlayers: App.Player.Data[] = [
 		playerName: `${playerBaseName} 6` || 'Player 6',
 		color: 'white',
 		backgroundImage: null,
+		backgroundArtist: null,
+		backgroundSet: null,
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
@@ -156,13 +168,30 @@ export const setPlayerAllowNegative = (playerId: number, allow: boolean) => {
 	});
 };
 
-export const setPlayerBackgroundImage = (playerId: number, imageUrl: string | null) => {
+export const setPlayerBackgroundImage = (
+	playerId: number,
+	imageUrlOrPayload: string | null | { imageUrl: string | null; artist?: string | null; set_name?: string | null }
+) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
+				let image: string | null = null;
+				let artist: string | null = null;
+				let set_name: string | null = null;
+
+				if (typeof imageUrlOrPayload === 'string' || imageUrlOrPayload === null) {
+					image = imageUrlOrPayload;
+				} else {
+					image = imageUrlOrPayload.imageUrl ?? null;
+					artist = imageUrlOrPayload.artist ?? null;
+					set_name = imageUrlOrPayload.set_name ?? null;
+				}
+
 				return {
 					...player,
-					backgroundImage: imageUrl
+					backgroundImage: image,
+					backgroundArtist: artist,
+					backgroundSet: set_name
 				};
 			}
 			return player;
