@@ -409,7 +409,7 @@
 						{#if poisonCount > 0}
 							<div
 								title={$_('tooltip_status_poison')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
 							>
 								<div
 									class="status-rotate-wrapper"
@@ -417,14 +417,14 @@
 								>
 									<PoisonIcon />
 								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-block;">{poisonCount}</span
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{poisonCount}</span
 								>
 							</div>
 						{/if}
 						{#if energyCount > 0}
 							<div
 								title={$_('tooltip_status_energy')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								<div
 									class="status-rotate-wrapper"
@@ -432,14 +432,14 @@
 								>
 									<Energy />
 								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-block;">{energyCount}</span
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{energyCount}</span
 								>
 							</div>
 						{/if}
 						{#if experienceCount > 0}
 							<div
 								title={$_('tooltip_status_experience')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								<div
 									class="status-rotate-wrapper"
@@ -447,14 +447,14 @@
 								>
 									<Experience />
 								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-block;">{experienceCount}</span
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{experienceCount}</span
 								>
 							</div>
 						{/if}
 						{#if radCount > 0}
 							<div
 								title={$_('tooltip_status_rad')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								<div
 									class="status-rotate-wrapper"
@@ -462,14 +462,14 @@
 								>
 									<Rad />
 								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-block;">{radCount}</span
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{radCount}</span
 								>
 							</div>
 						{/if}
 						{#if commandTaxCount > 0}
 							<div
 								title={$_('tooltip_status_command_tax')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
 							>
 								<div
 									class="status-rotate-wrapper"
@@ -477,14 +477,14 @@
 								>
 									<CommandTax />
 								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-block;">{commandTaxCount}</span
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{commandTaxCount}</span
 								>
 							</div>
 						{/if}
 						{#if ringBearerCount > 0}
 							<div
 								title={$_('tooltip_status_ring_bearer')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								<div
 									class="status-rotate-wrapper"
@@ -492,14 +492,14 @@
 								>
 									<TheRingerBearer />
 								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-block;">{ringBearerCount}</span
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{ringBearerCount}</span
 								>
 							</div>
 						{/if}
 						{#if startYourEngineSpeedCount > 0}
 							<div
 								title={$_('tooltip_status_start_your_engine_speed')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								<div
 									class="status-rotate-wrapper"
@@ -507,7 +507,7 @@
 								>
 									<StartYourEngineSpeed />
 								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-block;">{startYourEngineSpeedCount}</span
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{startYourEngineSpeedCount}</span
 								>
 							</div>
 						{/if}
@@ -515,7 +515,7 @@
 							{#if dmg > 0}
 								<div
 									title={$_('tooltip_commander_damage')}
-									class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
+									class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 								>
 									<div
 										class="status-rotate-wrapper"
@@ -525,7 +525,7 @@
 											<CommanderDamage playerIndex={i} />
 										</div>
 									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-block;">
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">
 										{dmg}</span
 									>
 								</div>
