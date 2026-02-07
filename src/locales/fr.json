@@ -1,7 +1,6 @@
 {
     "app_name": "Application de suivi de points de vie Magic de Naereen",
     "life": "Points de vie",
-    "poison": "Poison",
     "commander_damage": "Dégâts de commandant",
     "settings": "Paramètres",
     "reset_confirm": "Voulez-vous vraiment réinitialiser la partie ?",
@@ -76,6 +75,10 @@
     "tooltip_status_experience": "Compteurs d'expérience",
     "tooltip_status_rad": "Compteurs de radiation",
     "tooltip_status_command_tax": "Compteurs de taxe de commandant",
+    "ring_bearer": "Porteur de l'Anneau",
+    "tooltip_status_ring_bearer": "Niveau du porteur de l'Anneau (0 - 4)",
+    "start_your_engine_speed": "Allumez les moteurs ! Votre vitesse",
+    "tooltip_status_start_your_engine_speed": "Vitesse (0 - 4)",
     "haptic_feedback": "Retour haptique",
     "set_life_total": "Définir les points de vie",
     "enter_life_total_placeholder": "Entrez les points de vie",

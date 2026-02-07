@@ -13,6 +13,8 @@ import Energy from '$lib/assets/icons/Energy.svelte';
 import Experience from '$lib/assets/icons/Experience.svelte';
 import Rad from '$lib/assets/icons/Rad.svelte';
 import CommandTax from '$lib/assets/icons/CommandTax.svelte';
+import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
+import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
 import { colorToBg } from '$lib/components/colorToBg';
 import { _ } from 'svelte-i18n';
 
@@ -204,47 +206,61 @@ const chooseBackground = (playerId: number, imageUrl: string | null) => {
 						<!-- Status effects controls -->
 						<div class="mt-4 w-full flex flex-col items-center text-center">
 							<div class="flex flex-wrap gap-3 mb-3">
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'monarch', !($players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false))} /> <Crown title={$_('tooltip_status_monarch')} /> { $_('monarch') }</label>
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'initiative', !($players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false))} /> <Initiative title={$_('tooltip_status_initiative')} /> { $_('initiative') }</label>
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ascend', !($players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false))} /> <Ascend title={$_('tooltip_status_ascend')} /> { $_('ascend') }</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'monarch', !($players[$playerModalData.playerId - 1].statusEffects?.monarch ?? false))} /> <Crown /> { String($_('monarch')) }</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'initiative', !($players[$playerModalData.playerId - 1].statusEffects?.initiative ?? false))} /> <Initiative /> { String($_('initiative')) }</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ascend', !($players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false))} /> <Ascend /> { String($_('ascend')) }</label>
 								<!-- <label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight title={$_('tooltip_status_day_night')} /> { $_('day_night') }</label> -->
-								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ko ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ko', !($players[$playerModalData.playerId - 1].statusEffects?.ko ?? false))} /> <StatusSkull title={$_('tooltip_status_ko')} /> { $_('ko') }</label>
+								<label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.ko ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'ko', !($players[$playerModalData.playerId - 1].statusEffects?.ko ?? false))} /> <StatusSkull /> { String($_('ko')) }</label>
 							</div>
 
 							<div class="grid grid-cols-1 gap-3">
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"><PoisonIcon title={$_('tooltip_status_poison')} /> { $_('poison') }</span>
+									<span class="w-35 flex items-center gap-2"><PoisonIcon /> { String($_('poison')) }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerPoison($playerModalData.playerId, Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerPoison($playerModalData.playerId, Math.min(99, ($players[$playerModalData.playerId - 1].poison ?? 0) + 1))}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"><Energy title={$_('tooltip_status_energy')} /> { $_('energy') }</span>
+									<span class="w-35 flex items-center gap-2"><Energy /> { String($_('energy')) }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'energy', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'energy', ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) + 1)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"><Experience title={$_('tooltip_status_experience')} /> { $_('experience') }</span>
+									<span class="w-35 flex items-center gap-2"><Experience /> { String($_('experience')) }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'experience', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'experience', ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) + 1)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"><Rad title={$_('tooltip_status_rad')} /> { $_('rad') }</span>
+									<span class="w-35 flex items-center gap-2"><Rad /> { String($_('rad')) }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'rad', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'rad', ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"><CommandTax title={$_('tooltip_status_command_tax')} /> { $_('command_tax') }</span>
+									<span class="w-35 flex items-center gap-2"><CommandTax /> { String($_('command_tax')) }</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'commandTax', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) - 1))}>-</button>
 									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
 									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'commandTax', ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) + 1)}>+</button>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<span class="w-35 flex items-center gap-2"><TheRingerBearer /> { String($_('ring_bearer')) }</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'ringBearer', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) - 1))}>-</button>
+									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'ringBearer', Math.min(4, ($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) + 1))}>+</button>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<span class="w-35 flex items-center gap-2"><StartYourEngineSpeed /> { String($_('start_your_engine_speed')) }</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'startYourEngineSpeed', Math.max(0, ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) - 1))}>-</button>
+									<span class="px-2">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
+									<button class="px-2 py-1 bg-gray-200 rounded" on:click={() => setPlayerStatusNumeric($playerModalData.playerId, 'startYourEngineSpeed', Math.min(4, ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) + 1))}>+</button>
 								</div>
 							</div>
 						</div>

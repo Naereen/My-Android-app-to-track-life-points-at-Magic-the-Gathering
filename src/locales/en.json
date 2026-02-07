@@ -1,7 +1,6 @@
 {
     "app_name": "MTG Life Tracker by Naereen",
     "life": "Life Points",
-    "poison": "Poison",
     "commander_damage": "Commander Damage",
     "settings": "Settings",
     "reset_confirm": "Are you sure you want to reset the game?",
@@ -76,6 +75,10 @@
     "tooltip_status_experience": "Experience counters",
     "tooltip_status_rad": "Radiation counters",
     "tooltip_status_command_tax": "Command tax counters",
+    "ring_bearer": "Ring Bearer",
+    "tooltip_status_ring_bearer": "Ring bearer counters (0–4)",
+    "start_your_engine_speed": "Start your Engine / Your Speed",
+    "tooltip_status_start_your_engine_speed": "Start your Engine / Your Speed counters (0–4)",
     "haptic_feedback": "Haptic feedback",
     "set_life_total": "Set life total",
     "enter_life_total_placeholder": "Enter life total",

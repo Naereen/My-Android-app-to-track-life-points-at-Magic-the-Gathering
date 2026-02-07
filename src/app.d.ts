@@ -17,7 +17,7 @@ declare global {
 				backgroundImage?: string | null;
 				tempLifeDiff: number;
 				poison?: number;
-				statusEffects?: {
+					statusEffects?: {
 					monarch?: boolean;
 					initiative?: boolean;
 					ascend?: boolean;
@@ -28,6 +28,10 @@ declare global {
 					rad?: number;
 					commandTax?: number;
 					commanderDamage?: number[];
+					ringBearer?: number;
+						startYourEngineSpeed?: number;
+					// allow indexing for custom/unknown status keys
+					[key: string]: boolean | number | number[] | undefined;
 				};
 				allowNegativeLife?: boolean;
 				highlighted: boolean;

@@ -209,7 +209,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 Random ideas:
 
 - [ ] Sound effects on button clicks (big life up/down, big commander damage up/down, K.O. of a player, victory of the last remaining at the table, etc.). Should be enable by default, but should be possible to disable them from the settings!
-- [x] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). TODO: Needs more testing on mobile devices. I wasn't convinced by the results yet on my Android phone.
+- [x] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). TODO: Needs more testing on mobile devices, especially on Apple devices, as I don't have any for testing. It is enabled by default, and it is possible to disable it from the settings!
 
 Active turn indicator:
 
@@ -225,9 +225,14 @@ Nope:
 
 ## Additional visualizations: dungeons (initiative, etc), The Ring emblem, your speed
 
-- [ ] Additional visualizations: The Ring bearer emblem (Lord of the Rings) : <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?front> and <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?back>
-- [ ] Additional visualizations: Your speed (Aetherdrift) : 0/1/2/3/4(max) <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?front> and <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?back>
-- [ ] Additional visualizations: dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>
+- [x] Add the "Ring Bearer" emblem (from Lord of the Rings) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `TheRingerBearer.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is *not* a unique status, every player has his own "the Ring Bearer" count, from 0 to 4.
+
+- [x] Add the "Start your Engine / Your Speed" emblem (from Aetherdrift) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `StartYourEngineSpeed.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is *not* a unique status, every player has his own "Start your Engine / Your Speed" count, from 0 to 4.
+
+- [ ] Additional visualizations: be able to see, on a click in the menu, The Ring bearer emblem (Lord of the Rings) : <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?front> and <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?back>
+- [ ] Additional visualizations: be able to see, on a click in the menu, Your speed (Aetherdrift) : 0/1/2/3/4(max) <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?front> and <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?back>
+
+- [ ] Additional visualizations: be able to see, on a click in the menu, dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>
 - [ ] Additional visualizations: the dungeon made by some friend over at Colmar
 
 ## Variants to implement here, not existing in Lifetap

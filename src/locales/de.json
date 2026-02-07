@@ -1,7 +1,6 @@
 {
     "app_name": "MTG Lebenszähler von Naereen",
     "life": "Lebenspunkte",
-    "poison": "Gift",
     "commander_damage": "Kommandantenschaden",
     "settings": "Einstellungen",
     "reset_confirm": "Möchten Sie das Spiel wirklich zurücksetzen?",
@@ -76,6 +75,8 @@
     "tooltip_status_experience": "Erfahrungszähler",
     "tooltip_status_rad": "Strahlungszähler",
     "tooltip_status_command_tax": "Kommandantensteuer-Zähler",
+    "ring_bearer": "Ringträger",
+    "tooltip_status_ring_bearer": "Ringträger-Zähler (0–4)",
     "haptic_feedback": "Haptisches Feedback",
     "set_life_total": "Lebenspunkte setzen",
     "enter_life_total_placeholder": "Lebenspunkte eingeben",

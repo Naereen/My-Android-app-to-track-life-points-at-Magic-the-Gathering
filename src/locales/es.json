@@ -1,7 +1,6 @@
 {
     "app_name": "MTG Life Tracker por Naereen",
     "life": "Puntos de vida",
-    "poison": "Veneno",
     "commander_damage": "Daño de comandante",
     "settings": "Ajustes",
     "reset_confirm": "¿Estás seguro de que quieres reiniciar la partida?",
@@ -76,6 +75,8 @@
     "tooltip_status_experience": "Contadores de experiencia",
     "tooltip_status_rad": "Contadores de radiación",
     "tooltip_status_command_tax": "Contadores de impuesto de comandante",
+    "ring_bearer": "Portador del Anillo",
+    "tooltip_status_ring_bearer": "Contadores del Portador del Anillo (0–4)",
     "haptic_feedback": "Retroalimentación háptica",
     "set_life_total": "Establecer puntos de vida",
     "enter_life_total_placeholder": "Ingrese puntos de vida",

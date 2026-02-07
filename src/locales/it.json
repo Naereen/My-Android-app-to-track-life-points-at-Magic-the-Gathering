@@ -1,7 +1,6 @@
 {
     "app_name": "Tracciatore punti vita MTG di Naereen",
     "life": "Punti Vita",
-    "poison": "Veleno",
     "commander_damage": "Danno del comandante",
     "settings": "Impostazioni",
     "reset_confirm": "Sei sicuro di voler resettare la partita?",
@@ -76,6 +75,8 @@
     "tooltip_status_experience": "Contatori di esperienza",
     "tooltip_status_rad": "Contatori di radiazioni",
     "tooltip_status_command_tax": "Contatori di tassa del comandante",
+    "ring_bearer": "Portatore dell'Anello",
+    "tooltip_status_ring_bearer": "Contatori del Portatore dell'Anello (0–4)",
     "haptic_feedback": "Feedback aptico",
     "set_life_total": "Imposta punti vita",
     "enter_life_total_placeholder": "Inserisci punti vita",

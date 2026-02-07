@@ -492,8 +492,8 @@ const spinToSelectFirstPlayer = () => {
 	isSpinning = true;
 	let currentIndex = 0;
 	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 4;
-	let intervalTime = 100;
-	const finalPauseTime = 500;
+	let intervalTime = 25;
+	const finalPauseTime = 250;
 
 	const spin = () => {
 		players.update((currentPlayers) => {

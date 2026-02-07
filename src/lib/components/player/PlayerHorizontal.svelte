@@ -13,6 +13,8 @@
 	import Experience from '$lib/assets/icons/Experience.svelte';
 	import Rad from '$lib/assets/icons/Rad.svelte';
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
+	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
+	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
@@ -49,6 +51,8 @@
 	$: experienceCount = status.experience ?? 0;
 	$: radCount = status.rad ?? 0;
 	$: commandTaxCount = status.commandTax ?? 0;
+	$: ringBearerCount = status.ringBearer ?? 0;
+	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: statusRotation = orientation === 'down' ? '180deg' : orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
@@ -304,33 +308,45 @@
 				<div class="absolute top-0 bottom-0 flex justify-center pointer-events-none vert" class:left-2={orientation === 'right'} class:right-2={orientation === 'left'}>
 					<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
 						{#if poisonCount > 0}
-							<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+							<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
 								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><PoisonIcon /></div>
 								<span> {poisonCount}</span>
 							</div>
 						{/if}
 						{#if energyCount > 0}
-							<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+							<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
 								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Energy /></div>
 								<span> {energyCount}</span>
 							</div>
 						{/if}
 						{#if experienceCount > 0}
-							<div title={$_('tooltip_status_experience')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+							<div title={$_('tooltip_status_experience')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
 								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Experience /></div>
 								<span> {experienceCount}</span>
 							</div>
 						{/if}
 						{#if radCount > 0}
-							<div title={$_('tooltip_status_rad')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+							<div title={$_('tooltip_status_rad')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
 								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Rad /></div>
 								<span> {radCount}</span>
 							</div>
 						{/if}
 						{#if commandTaxCount > 0}
-							<div title={$_('tooltip_status_command_tax')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+							<div title={$_('tooltip_status_command_tax')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
 								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><CommandTax /></div>
 								<span> {commandTaxCount}</span>
+							</div>
+						{/if}
+						{#if ringBearerCount > 0}
+							<div title={$_('tooltip_status_ring_bearer')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
+								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><TheRingerBearer /></div>
+								<span> {ringBearerCount}</span>
+							</div>
+						{/if}
+						{#if startYourEngineSpeedCount > 0}
+							<div title={$_('tooltip_status_start_your_engine_speed')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1">
+								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><StartYourEngineSpeed /></div>
+								<span> {startYourEngineSpeedCount}</span>
 							</div>
 						{/if}
 					</div>
