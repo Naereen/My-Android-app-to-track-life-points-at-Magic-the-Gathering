@@ -49,6 +49,7 @@
 	$: experienceCount = status.experience ?? 0;
 	$: radCount = status.rad ?? 0;
 	$: commandTaxCount = status.commandTax ?? 0;
+	$: statusRotation = orientation === 'down' ? '180deg' : orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -229,7 +230,7 @@
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						>
 							<div class="flex items-center">
-								<span style="font-size: x-large; color: white;" style:text-decoration={isDead ? 'line-through' : ''}{index === $appState.currentTurn ? 'underline' : ''}>{$players[index].playerName}</span>
+								<span style="font-size: x-large; color: white;" style:text-decoration={isDead ? 'line-through' : ''} class:underline={index === $appState.currentTurn}>{$players[index].playerName}</span>
 								{#if $players[index].isFirst}
 									<div class="flex justify-center items-center mt-2 rotate-90">
 										<FirstPlace />
@@ -290,31 +291,56 @@
 				<div class="absolute top-0 bottom-0 flex justify-center pointer-events-none vert" class:left-2={orientation === 'right'} class:right-2={orientation === 'left'}>
 					<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
 						{#if poisonCount > 0}
-							<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><PoisonIcon /> <span> {poisonCount}</span></div>
+							<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><PoisonIcon /></div>
+								<span> {poisonCount}</span>
+							</div>
 						{/if}
 						{#if energyCount > 0}
-							<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Energy /> <span>{energyCount}</span></div>
+							<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Energy /></div>
+								<span> {energyCount}</span>
+							</div>
 						{/if}
 						{#if experienceCount > 0}
-							<div title={$_('tooltip_status_experience')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Experience /> <span>{experienceCount}</span></div>
+							<div title={$_('tooltip_status_experience')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Experience /></div>
+								<span> {experienceCount}</span>
+							</div>
 						{/if}
 						{#if radCount > 0}
-							<div title={$_('tooltip_status_rad')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Rad /> <span>{radCount}</span></div>
+							<div title={$_('tooltip_status_rad')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Rad /></div>
+								<span> {radCount}</span>
+							</div>
 						{/if}
 						{#if commandTaxCount > 0}
-							<div title={$_('tooltip_status_command_tax')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><CommandTax /> <span>{commandTaxCount}</span></div>
+							<div title={$_('tooltip_status_command_tax')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105">
+								<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><CommandTax /></div>
+								<span> {commandTaxCount}</span>
+							</div>
 						{/if}
 						{#each booleanStatuses as s}
 							{#if s === 'monarch'}
-								<div title={$_('tooltip_status_monarch')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Crown /></div>
+								<div title={$_('tooltip_status_monarch')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
+									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Crown /></div>
+								</div>
 							{:else if s === 'initiative'}
-								<div title={$_('tooltip_status_initiative')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Initiative /></div>
+								<div title={$_('tooltip_status_initiative')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
+									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Initiative /></div>
+								</div>
 							{:else if s === 'ascend'}
-								<div title={$_('tooltip_status_ascend')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Ascend /></div>
+								<div title={$_('tooltip_status_ascend')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
+									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Ascend /></div>
+								</div>
 							{:else if s === 'dayNight'}
-								<div title={$_('tooltip_status_day_night')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><DayNight /></div>
+								<div title={$_('tooltip_status_day_night')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
+									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><DayNight /></div>
+								</div>
 							{:else if s === 'ko'}
-								<div title={$_('tooltip_status_ko')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><StatusSkull /></div>
+								<div title={$_('tooltip_status_ko')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
+									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><StatusSkull /></div>
+								</div>
 							{/if}
 						{/each}
 					</div>

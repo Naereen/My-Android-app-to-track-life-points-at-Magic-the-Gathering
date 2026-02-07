@@ -50,6 +50,7 @@
 	$: experienceCount = status.experience ?? 0;
 	$: radCount = status.rad ?? 0;
 	$: commandTaxCount = status.commandTax ?? 0;
+	$: statusRotation = orientation === 'down' ? '180deg' : orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -214,7 +215,7 @@
 						class="py-2 px-3 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
 						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						><div class="flex">
-							<span style="font-size: x-large; color: white;" style:text-decoration={isDead ? 'line-through' : ''}{index === $appState.currentTurn ? 'underline' : ''}>{$players[index].playerName}</span>
+							<span style="font-size: x-large; color: white;" style:text-decoration={isDead ? 'line-through' : ''} class:underline={index === $appState.currentTurn}>{$players[index].playerName}</span>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center ml-2">
 									<FirstPlace />
@@ -254,38 +255,38 @@
 			</div>
 		</div>
 	{/if}
-		<!-- Status effects bar -->
-		<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none">
-			<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
-				{#if poisonCount > 0}
-					<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><PoisonIcon /> <span> {poisonCount}</span></div>
+	<!-- Status effects bar -->
+	<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none">
+		<div class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto">
+			{#if poisonCount > 0}
+				<div title={$_('tooltip_status_poison')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><PoisonIcon /> <span> {poisonCount}</span></div>
+			{/if}
+			{#if energyCount > 0}
+				<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Energy /> <span>{energyCount}</span></div>
+			{/if}
+			{#if experienceCount > 0}
+				<div title={$_('tooltip_status_experience')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Experience /> <span>{experienceCount}</span></div>
+			{/if}
+			{#if radCount > 0}
+				<div title={$_('tooltip_status_rad')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Rad /> <span>{radCount}</span></div>
+			{/if}
+			{#if commandTaxCount > 0}
+				<div title={$_('tooltip_status_command_tax')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><CommandTax /> <span>{commandTaxCount}</span></div>
+			{/if}
+			{#each booleanStatuses as s}
+				{#if s === 'monarch'}
+					<div title={$_('tooltip_status_monarch')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Crown /></div>
+				{:else if s === 'initiative'}
+					<div title={$_('tooltip_status_initiative')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Initiative /></div>
+				{:else if s === 'ascend'}
+					<div title={$_('tooltip_status_ascend')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Ascend /></div>
+				{:else if s === 'dayNight'}
+					<div title={$_('tooltip_status_day_night')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><DayNight /></div>
+				{:else if s === 'ko'}
+					<!-- TODO: the corresponding player should actually be counted as KO -->
+					<div title={$_('tooltip_status_ko')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><StatusSkull /></div>
 				{/if}
-				{#if energyCount > 0}
-					<div title={$_('tooltip_status_energy')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Energy /> <span>{energyCount}</span></div>
-				{/if}
-				{#if experienceCount > 0}
-					<div title={$_('tooltip_status_experience')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Experience /> <span>{experienceCount}</span></div>
-				{/if}
-				{#if radCount > 0}
-					<div title={$_('tooltip_status_rad')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><Rad /> <span>{radCount}</span></div>
-				{/if}
-				{#if commandTaxCount > 0}
-					<div title={$_('tooltip_status_command_tax')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1 transition-transform transform hover:scale-105"><CommandTax /> <span>{commandTaxCount}</span></div>
-				{/if}
-				{#each booleanStatuses as s}
-					{#if s === 'monarch'}
-						<div title={$_('tooltip_status_monarch')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Crown /></div>
-					{:else if s === 'initiative'}
-						<div title={$_('tooltip_status_initiative')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Initiative /></div>
-					{:else if s === 'ascend'}
-						<div title={$_('tooltip_status_ascend')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><Ascend /></div>
-					{:else if s === 'dayNight'}
-						<div title={$_('tooltip_status_day_night')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><DayNight /></div>
-					{:else if s === 'ko'}
-						<!-- TODO: the corresponding player should actually be counted as KO -->
-						<div title={$_('tooltip_status_ko')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105"><StatusSkull /></div>
-					{/if}
-				{/each}
-			</div>
+			{/each}
 		</div>
+	</div>
 </div>
