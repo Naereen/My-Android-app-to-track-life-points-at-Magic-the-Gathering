@@ -79,6 +79,11 @@
 					? '90deg'
 					: '0deg';
 
+	// Text rotation should be different for players on the right side (facing left)
+	// Players 4, 5, 6 with orientation="left" should have text rotated to face right (90deg)
+	$: statusTextRotation =
+		orientation === 'left' && (id === 4 || id === 5 || id === 6) ? '90deg' : statusRotation;
+
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
 			isHolding = true;
@@ -406,7 +411,7 @@
 								>
 									<PoisonIcon />
 								</div>
-								<span style="transform: rotate({statusRotation}); display: inline-block;">
+								<span style="transform: rotate({statusTextRotation}); display: inline-block;">
 									{poisonCount}</span
 								>
 							</div>
@@ -422,7 +427,7 @@
 								>
 									<Energy />
 								</div>
-								<span style="transform: rotate({statusRotation}); display: inline-block;">
+								<span style="transform: rotate({statusTextRotation}); display: inline-block;">
 									{energyCount}</span
 								>
 							</div>
@@ -438,7 +443,7 @@
 								>
 									<Experience />
 								</div>
-								<span style="transform: rotate({statusRotation}); display: inline-block;">
+								<span style="transform: rotate({statusTextRotation}); display: inline-block;">
 									{experienceCount}</span
 								>
 							</div>
@@ -454,7 +459,7 @@
 								>
 									<Rad />
 								</div>
-								<span style="transform: rotate({statusRotation}); display: inline-block;">
+								<span style="transform: rotate({statusTextRotation}); display: inline-block;">
 									{radCount}</span
 								>
 							</div>
@@ -470,7 +475,7 @@
 								>
 									<CommandTax />
 								</div>
-								<span style="transform: rotate({statusRotation}); display: inline-block;">
+								<span style="transform: rotate({statusTextRotation}); display: inline-block;">
 									{commandTaxCount}</span
 								>
 							</div>
@@ -486,7 +491,7 @@
 								>
 									<TheRingerBearer />
 								</div>
-								<span style="transform: rotate({statusRotation}); display: inline-block;">
+								<span style="transform: rotate({statusTextRotation}); display: inline-block;">
 									{ringBearerCount}</span
 								>
 							</div>
@@ -502,7 +507,7 @@
 								>
 									<StartYourEngineSpeed />
 								</div>
-								<span style="transform: rotate({statusRotation}); display: inline-block;">
+								<span style="transform: rotate({statusTextRotation}); display: inline-block;">
 									{startYourEngineSpeedCount}</span
 								>
 							</div>
@@ -519,7 +524,7 @@
 									>
 										<CommanderDamage playerIndex={i} />
 									</div>
-									<span style="transform: rotate({statusRotation}); display: inline-block;">
+									<span style="transform: rotate({statusTextRotation}); display: inline-block;">
 										{dmg}</span
 									>
 								</div>
