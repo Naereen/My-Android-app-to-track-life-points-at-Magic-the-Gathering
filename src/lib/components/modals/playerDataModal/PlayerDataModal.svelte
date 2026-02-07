@@ -181,7 +181,9 @@
 					{$_('customize_player')}
 					{$playerModalData.playerId}
 					<span class="inline-flex items-center" title="Commander Damage">
-						<CommanderDamage playerIndex = {$playerModalData.playerId - 1} />
+						<div style="transform: rotate(-45deg);">
+							<CommanderDamage playerIndex={$playerModalData.playerId - 1} />
+						</div>
 					</span>
 					<button
 						on:click={resetPlayerModalData}

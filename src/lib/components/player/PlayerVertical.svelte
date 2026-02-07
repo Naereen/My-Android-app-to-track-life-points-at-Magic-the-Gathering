@@ -250,7 +250,9 @@
 						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						><div class="flex">
 							<div class="flex justify-center items-center mr-1">
-								<CommanderDamage playerIndex={index} />
+								<div class="flex justify-center items-center mr-1" style="transform: rotate(-45deg);">
+									<CommanderDamage playerIndex={index} />
+								</div>
 							</div>
 							<span
 								style="font-size: x-large; color: white;"

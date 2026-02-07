@@ -271,7 +271,9 @@
 						>
 							<div class="flex items-center">
 								<div class="flex justify-center items-center mb-3 rotate-90">
-									<CommanderDamage playerIndex={index} />
+									<div class="flex justify-center items-center mr-1" style="transform: rotate(-45deg);">
+										<CommanderDamage playerIndex={index} />
+									</div>
 								</div>
 								<span
 									style="font-size: x-large; color: white;"
