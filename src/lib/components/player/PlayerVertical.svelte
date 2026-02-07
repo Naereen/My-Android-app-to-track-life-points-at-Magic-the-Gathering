@@ -409,7 +409,7 @@
 						title={$_('tooltip_commander_damage')}
 						class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"
 					>
-						<CommanderDamage /> <span>{dmg}</span>
+						<CommanderDamage playerIndex={i} /> <span>{dmg}</span>
 					</div>
 				{/if}
 			{/each}

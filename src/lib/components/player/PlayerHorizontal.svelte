@@ -500,7 +500,7 @@
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 									>
-										<CommanderDamage />
+										<CommanderDamage playerIndex={i} />
 									</div>
 									<span> {dmg}</span>
 								</div>
