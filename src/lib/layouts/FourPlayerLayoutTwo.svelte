@@ -5,7 +5,7 @@
 	import PlayerVertical from '$lib/components/player/PlayerVertical.svelte';
 </script>
 
-<div class="flex flex-col justify-between w-full h-full">
+<div class="flex flex-col justify-between w-full h-full bg-black relative">
     <div class="w-full pt-2"
         class:h-[32%]={!$appState.isMenuOpen}
         class:pt-2={$appState.isMenuOpen}

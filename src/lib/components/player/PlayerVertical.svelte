@@ -221,6 +221,19 @@
 									<FirstPlace />
 								</div>
 							{/if}
+							{#each booleanStatuses as s}
+								{#if s === 'monarch'}
+									<Crown />
+								{:else if s === 'initiative'}
+									<Initiative />
+								{:else if s === 'ascend'}
+									<Ascend />
+								{:else if s === 'dayNight'}
+									<DayNight />
+								{:else if s === 'ko'}
+									<StatusSkull />
+								{/if}
+							{/each}
 						</div>
 					</button>
 				</div>

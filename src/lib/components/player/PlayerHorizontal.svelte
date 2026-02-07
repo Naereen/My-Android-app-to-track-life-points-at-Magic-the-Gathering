@@ -236,6 +236,19 @@
 										<FirstPlace />
 									</div>
 								{/if}
+								{#each booleanStatuses as s}
+									{#if s === 'monarch'}
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><Crown /></div>
+									{:else if s === 'initiative'}
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><Initiative /></div>
+									{:else if s === 'ascend'}
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><Ascend /></div>
+									{:else if s === 'dayNight'}
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><DayNight /></div>
+									{:else if s === 'ko'}
+										<div class="flex justify-center items-center rotate-90 mt-1 mb-1"><StatusSkull /></div>
+									{/if}
+								{/each}
 							</div>
 						</button>
 					</div>
@@ -320,29 +333,6 @@
 								<span> {commandTaxCount}</span>
 							</div>
 						{/if}
-						{#each booleanStatuses as s}
-							{#if s === 'monarch'}
-								<div title={$_('tooltip_status_monarch')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
-									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Crown /></div>
-								</div>
-							{:else if s === 'initiative'}
-								<div title={$_('tooltip_status_initiative')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
-									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Initiative /></div>
-								</div>
-							{:else if s === 'ascend'}
-								<div title={$_('tooltip_status_ascend')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
-									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><Ascend /></div>
-								</div>
-							{:else if s === 'dayNight'}
-								<div title={$_('tooltip_status_day_night')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
-									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><DayNight /></div>
-								</div>
-							{:else if s === 'ko'}
-								<div title={$_('tooltip_status_ko')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center transition-transform transform hover:scale-105">
-									<div class="status-rotate-wrapper" style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"><StatusSkull /></div>
-								</div>
-							{/if}
-						{/each}
 					</div>
 				</div>
 			</div>
