@@ -4,6 +4,7 @@ export type ScryfallCard = {
 	set_name?: string;
 	artist?: string;
 	image?: string | null;
+	cardImage?: string | null;
 };
 
 async function fetchJson(url: string) {
@@ -22,11 +23,14 @@ export async function searchCards(query: string, limit = 256): Promise<ScryfallC
 
 		const cards = data.data.slice(0, limit).map((c: any) => {
 			let image: string | null = null;
+			let cardImage: string | null = null;
 			if (c.image_uris) {
 				image = c.image_uris.art_crop || c.image_uris.large || c.image_uris.normal || null;
+				cardImage = c.image_uris.large || c.image_uris.normal || c.image_uris.small || null;
 			} else if (c.card_faces && c.card_faces.length > 0) {
 				const face = c.card_faces[0];
 				image = (face.image_uris && (face.image_uris.art_crop || face.image_uris.large)) || null;
+				cardImage = (face.image_uris && (face.image_uris.large || face.image_uris.normal || face.image_uris.small)) || null;
 			}
 
 			return {
@@ -34,8 +38,8 @@ export async function searchCards(query: string, limit = 256): Promise<ScryfallC
 				name: c.name,
 				set_name: c.set_name,
 				artist: c.artist,
-				cardImage: c.image_uris.large || image,
-				image
+				cardImage: cardImage,
+				image: image
 			} as ScryfallCard;
 		});
 
@@ -65,11 +69,14 @@ export async function randomCards(query: string, limit = 256): Promise<ScryfallC
 
 		const cards = rawCards.slice(0, limit).map((c: any) => {
 			let image: string | null = null;
+			let cardImage: string | null = null;
 			if (c.image_uris) {
 				image = c.image_uris.art_crop || c.image_uris.large || c.image_uris.normal || null;
+				cardImage = c.image_uris.large || c.image_uris.normal || c.image_uris.small || null;
 			} else if (c.card_faces && c.card_faces.length > 0) {
 				const face = c.card_faces[0];
 				image = (face.image_uris && (face.image_uris.art_crop || face.image_uris.large)) || null;
+				cardImage = (face.image_uris && (face.image_uris.large || face.image_uris.normal || face.image_uris.small)) || null;
 			}
 
 			return {
@@ -77,7 +84,8 @@ export async function randomCards(query: string, limit = 256): Promise<ScryfallC
 				name: c.name,
 				set_name: c.set_name,
 				artist: c.artist,
-				image
+				cardImage: cardImage,
+				image: image
 			} as ScryfallCard;
 		});
 

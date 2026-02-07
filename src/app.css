@@ -125,6 +125,14 @@
 		writing-mode: vertical-rl;
 	}
 
+	.vert-left {
+		writing-mode: vertical-rl;
+	}
+
+	.vert-right {
+		writing-mode: vertical-lr;
+	}
+
 	/* Disable long-press and dragging on elements with the no-longpress class */
 	.no-longpress,
 	.no-longpress img,

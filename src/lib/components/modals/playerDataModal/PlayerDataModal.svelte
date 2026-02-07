@@ -106,6 +106,19 @@
 	};
 
 	const doSearch = async () => {
+		if (typeof document !== 'undefined') {
+			const ae = document.activeElement as HTMLElement | null;
+			if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable)) {
+				ae.blur();
+			}
+			// try Virtual Keyboard API if available
+			const nav = navigator as any;
+			if (nav.virtualKeyboard && typeof nav.virtualKeyboard.hide === 'function') {
+				try {
+					nav.virtualKeyboard.hide();
+				} catch {}
+			}
+		}
 		if (!searchQuery || searchQuery.trim().length === 0) {
 			searchResults = [];
 			return;
@@ -167,6 +180,9 @@
 				<h2 class="text-2xl font-semibold my-2 relative w-full text-center">
 					{$_('customize_player')}
 					{$playerModalData.playerId}
+					<span class="inline-flex items-center" title="Commander Damage">
+						<CommanderDamage playerIndex = {$playerModalData.playerId - 1} />
+					</span>
 					<button
 						on:click={resetPlayerModalData}
 						on:contextmenu|preventDefault
@@ -213,6 +229,7 @@
 									type="text"
 									class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black"
 									bind:value={searchQuery}
+									on:keypress={searchQuery.trim().length > 0 ? (e) => e.key === 'Enter' && doSearch() : null}
 									placeholder={$_('scryfall_search') + ' (Scryfall)...'}
 								/>
 								<button
@@ -544,9 +561,9 @@
 
 							<!-- Commander Damage Section -->
 							<div class="mt-6 w-full flex flex-col items-center text-center border-t pt-4">
-								<h3 class="text-xl font-bold mb-3 flex items-center gap-2 underline">
+								<h3 class="text-xl font-bold mb-3 flex items-center gap-2">
 									<CommanderDamage />
-									{String($_('commander_damage'))}
+									<span class="underline">{String($_('commander_damage'))}</span>
 								</h3>
 								<div class="text-sm text-gray-600 mb-3">{String($_('commander_damage_help'))}</div>
 								<div class="grid grid-cols-1 gap-2 w-full">

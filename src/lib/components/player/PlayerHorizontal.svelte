@@ -82,7 +82,7 @@
 	// Text rotation should be different for players on the right side (facing left)
 	// Players 4, 5, 6 with orientation="left" should have text rotated to face right (90deg)
 	$: statusTextRotation =
-		orientation === 'left' && (id === 4 || id === 5 || id === 6) ? '90deg' : statusRotation;
+		orientation === 'left' && (id === 4 || id === 5 || id === 6) ? '-180deg' : (orientation === 'right' && (id === 1 || id === 2 || id === 3) ? '0deg' : statusRotation);
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -312,7 +312,6 @@
 					</div>
 					<div
 						class="w-1/3 flex justify-center items-center vert"
-						class:flex-row-reverse={orientation === 'left'}
 					>
 						<span
 							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-black"
@@ -393,13 +392,17 @@
 				</div>
 				<!-- Status effects bar -->
 				<div
-					class="absolute top-0 bottom-0 flex justify-center pointer-events-none vert"
+					class="absolute top-0 bottom-0 flex justify-center pointer-events-none"
+					class:vert-left={orientation === 'left'}
+					class:vert-right={orientation === 'right'}
 					class:left-2={orientation === 'right'}
 					class:right-2={orientation === 'left'}
 					class:hidden={$appState.isMenuOpen}
 				>
 					<div
 						class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto"
+						class:flex-row={orientation === 'left'}
+						class:flex-row-reverse={orientation === 'left'}
 					>
 						{#if poisonCount > 0}
 							<div

@@ -77,7 +77,7 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 ### The image background
 
-- [ ] The card search form seems to be broken sometimes: for instance, searching for *Jace Beleren* fails completely, even though there are many cards with this name in the Scryfall database. I don't know how to fix this bug, but it is a problem for the image background feature, as it relies on the search form to find the card to use as background.
+- [x] The card search form seems to be broken sometimes: for instance, searching for *Jace Beleren* fails completely, even though there are many cards with this name in the Scryfall database.
 
 - [ ] FIXME: Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
 
@@ -147,7 +147,7 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] Increase font-size and change color to full-white with a shadow, for the -X/+X numbers that appear when changing life total, to improve visibility on mobile devices or on image backgrounds
 
-- [x] Rotate to the left/right or 180deg the CONTENT of the panel showing the status effects, depending on the player's position, so that the text is always readable (not upside down or left/right). I expect this feature to be hard to implement...
+- [x] Rotate to the left/right or 180deg the CONTENT of the panel showing the status effects, depending on the player's position, so that the text is always readable (not upside down or left/right).
 
 - [x] Move the unique status effects (Monarch, Initiative) to the player name area, before/after the player's name, with a small icon, so that they are always visible and don't consume too much space in the status effect section at the bottom of the panel. This will also make it easier to implement the "rotate the content of the status effect section" feature, as there will be less text to rotate.
 
@@ -224,8 +224,10 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
     - [x] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG) - I already added a "random background" button!
   - [ ] Allow partners and backgrounds and all pairs of legendary commanders. XXX: Not yet, it's too complicated to manage a background with two illustrations side by side properly.
 
-- [ ] Commander damage type tracking
-- [ ] Multiplayer game modes (Two-Headed Giant, Commander, etc.)
+- [x] Commander damage type tracking, in a simple and visual way, with a small icon for each opponent, and a number for the commander damage received from this opponent. It is a new feature from the Lifetap app, and it is very useful for Commander games!
+
+- [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
+  - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is supported by the Lifetap app, but not yet implemented here.
 
 ## Variants already existing in Lifetap but not yet implemented here
 
