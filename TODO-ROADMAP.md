@@ -65,6 +65,10 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [ ] FIXME: Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
 
+### The 4-player secondary layout bug
+
+- [x] In 4-player, when switching to the secondary layout (the "1 / 2 / 1" layout, the secondary layout mode (the one which is not 2 players on each side of the table)), some overlay panels are not displayed correctly.
+
 ---------------------------------------------------------------------------
 
 ## Player status and visualization improvements
@@ -106,7 +110,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
 - [ ] TODO: Harder to track: implement the Commander Damage tracker (from each opponent).
-  - [ ] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Iniciativa) or not (Ascend, etc)
+  - [ ] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Inicie) or not (Ascend, etc)
   - [ ] After, make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Add support for the poison counter: you can die to them!

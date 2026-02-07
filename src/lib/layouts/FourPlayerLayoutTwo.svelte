@@ -6,14 +6,14 @@
 </script>
 
 <div class="flex flex-col justify-between w-full h-full">
-    <div class="h-[28%] w-full px-2"
-        class:h-[28%]={!$appState.isMenuOpen}
+    <div class="w-full pt-2"
+        class:h-[32%]={!$appState.isMenuOpen}
         class:pt-2={$appState.isMenuOpen}
     >
         <PlayerVertical orientation="down" id={3} />
     </div>
 
-    <div class="h-[32%] flex gap-2 px-1">
+    <div class="pt-2 flex gap-2 pt-2" class:h-[32%]={!$appState.isMenuOpen}>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
             <PlayerHorizontal orientation="right" id={2} />
         </div>
@@ -22,12 +22,12 @@
         </div>
     </div>
 
-    <div class="bottom-0 sticky">
+    <div class="flex-grow">
         <Menu />
     </div>
 
-    <div class="h-[28%] flex items-end bg-black sticky bottom-0 pb-2"
-        class:h-[28%]={!$appState.isMenuOpen}
+    <div class="pt-2 flex items-end bg-black sticky bottom-0 pb-2"
+        class:h-[32%]={!$appState.isMenuOpen}
         class:pt-2={!$appState.isMenuOpen}
     >
         <PlayerVertical orientation="up" id={1} />

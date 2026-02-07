@@ -23,7 +23,7 @@
 			<button on:click={() => toggleIsMenuOpen('')} on:contextmenu|preventDefault draggable="false" class="text-white absolute left-0 pl-4">
 				<Arrow />
 			</button>
-			<span class="text-gray-400 text-center text-3xl">{ $_('mana_counter') }</span>
+			<span class="text-white text-center text-3xl">{ $_('mana_counter') }</span>
 		</div>
 
 		<div class="flex flex-col">
@@ -40,7 +40,7 @@
 				</div>
 			</div>
 			<div class="w-full text-center text-white my-2 flex flex-col items-center">
-				<span class="text-gray-400 text-center text-3xl">{ $_('storm_counter') }</span>
+				<span class="text-white text-center text-3xl">{ $_('storm_counter') }</span>
 				<div class="w-2/4 flex justify-center">
 					<ul class="w-full">
 						<ManaCoutner type="storm" />
