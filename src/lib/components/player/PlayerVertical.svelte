@@ -392,12 +392,12 @@
 					<CommandTax /> <span>{commandTaxCount}</span>
 				</div>
 			{/if}
-			{#if ringBearerCount > 0}
+				{#if ringBearerCount > 0}
 				<div
 					title={$_('tooltip_status_ring_bearer')}
 					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 				>
-					<TheRingerBearer /> <span>{ringBearerCount}</span>
+						<TheRingerBearer isMax={ringBearerCount === 4} /> <span>{ringBearerCount}</span>
 				</div>
 			{/if}
 			{#if startYourEngineSpeedCount > 0}
@@ -405,7 +405,7 @@
 					title={$_('tooltip_status_start_your_engine_speed')}
 					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 				>
-					<StartYourEngineSpeed /> <span>{startYourEngineSpeedCount}</span>
+						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} /> <span>{startYourEngineSpeedCount}</span>
 				</div>
 			{/if}
 			{#each commanderDamageArray as dmg, i}

@@ -490,7 +490,7 @@
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 								>
-									<TheRingerBearer />
+									<TheRingerBearer isMax={ringBearerCount === 4} />
 								</div>
 								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{ringBearerCount}</span
 								>
@@ -505,7 +505,7 @@
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 								>
-									<StartYourEngineSpeed />
+									<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
 								</div>
 								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{startYourEngineSpeedCount}</span
 								>

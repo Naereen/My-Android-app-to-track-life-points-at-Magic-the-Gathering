@@ -129,14 +129,14 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
   - [x] Improve this section visually, make it prettier with **nicer icons**
   - [x] Improve this section visually, make it prettier with **better layout**
 
-- [ ] For the "Ring Bearer" and the "Speed" status, if the value reaches the maximum (4), the icon should switch from "ss-uncommon" to "ss-rare" (with a golden gradient), to show that the maximum has been reached. This is a nice visual feedback for these two status effects, as they have a maximum value of 4.
+- [x] For the "Ring Bearer" and the "Speed" status, if the value reaches the maximum (4), the icon should switch from "ss-uncommon" to "ss-rare" (with a golden gradient), to show that the maximum has been reached. This is a nice visual feedback for these two status effects, as they have a maximum value of 4.
 
 - [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
 
-- [x]Harder to track: implement the Commander Damage tracker (from each opponent).
+- [x] Harder to track: implement the Commander Damage tracker (from each opponent).
 
   - [x] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Inicie) or not (Ascend, etc)
-  - [ ] After, make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
+  - [x] After, make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Add support for the poison counter: you can die to them!
 
@@ -153,11 +153,7 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
   - [x] In the "status effect" panel in the PlayerDataModal.svelte, allow to double-click on any number damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click many times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games! For instance, adding +54 energy counters, one by one, is long and boring.
 
-- [ ] In the "status effect" edition panel in the PlayerDataModal.svelte, update the following line in order to keep a good-looking display of the **- VALUE +** buttons, even if the VALUE is more than ONE digit long
-
-```html
-<span class="w-60 text-left"><Rad /> {String($_('rad'))}</span>
-```
+- [x] In the "status effect" edition panel in the PlayerDataModal.svelte, update the following line in order to keep a good-looking display of the **- VALUE +** buttons, even if the VALUE is more than ONE digit long.
 
 - [ ] In the "status effect" panel, for the PlayerHorizontal.svelte and the right-facing players (player 3 in 3-player mode, player 3 and 4 in 4-player mode, player 3/4/5/6 in 5/6-player mode), everything is nice except the detail that the icons appear **after** the text, and not before the text, which is a bit weird. This is because of the "rotate the content of the status effect section" feature, which rotates everything (text and icons) to make it readable, but it also rotates the order of the icons and the text. To fix this, we could add a special case for these right-facing players, to display the icons before the text, even after rotating the content of the status effect section.
 

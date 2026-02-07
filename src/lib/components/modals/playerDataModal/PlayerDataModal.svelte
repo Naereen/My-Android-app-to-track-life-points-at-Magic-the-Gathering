@@ -458,7 +458,7 @@
 								>
 							</div>
 
-							<div class="w-full flex flex-col items-center text-center border-t pt-4">
+							<div class="w-full grid grid-cols-1 items-center text-center border-t pt-4">
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><PoisonIcon /> {String($_('poison'))}</span
 									>
@@ -469,7 +469,7 @@
 												$playerModalData.playerId,
 												Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1)
 											)}>-</button>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
+									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -512,7 +512,7 @@
 											</div>
 										</div>
 									{:else}
-										<span class="px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('energy', $players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('energy', $players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -558,7 +558,7 @@
 											</div>
 										</div>
 									{:else}
-										<span class="px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('experience', $players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('experience', $players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -602,7 +602,7 @@
 											</div>
 										</div>
 									{:else}
-										<span class="px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('rad', $players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('rad', $players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -615,7 +615,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))}</span
+									<span class="w-60 text-left text-base"><CommandTax /> {String($_('command_tax'))}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -629,7 +629,7 @@
 														1
 												)
 											)}>-</button>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
+									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -641,7 +641,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><TheRingerBearer /> {String($_('ring_bearer'))}</span
+									<span class="w-60 text-left"><TheRingerBearer isMax={$players[$playerModalData.playerId - 1].statusEffects?.ringBearer === 4} /> {String($_('ring_bearer'))}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -655,7 +655,7 @@
 														1
 												)
 											)}>-</button>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
+									<span class="min-w-[1rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -671,7 +671,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><StartYourEngineSpeed /> {String($_('start_your_engine_speed'))}</span>
+									<span class="w-60 text-left"><StartYourEngineSpeed isMax={$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed === 4} /> {String($_('start_your_engine_speed'))}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -684,7 +684,7 @@
 														?.startYourEngineSpeed ?? 0) - 1
 												)
 											)}>-</button>
-									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
+									<span class="min-w-[1rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -701,7 +701,7 @@
 							</div>
 
 							<!-- Commander Damage Section -->
-							<div class="mt-6 w-full flex flex-col items-center text-center border-t pt-4">
+							<div class="mt-2 w-full flex flex-col items-center text-center border-t pt-4">
 								<h3 class="text-xl font-bold mb-3 flex items-center gap-2">
 									<CommanderDamage />
 									<span class="underline">{String($_('commander_damage'))}</span>
