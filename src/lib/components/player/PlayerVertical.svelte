@@ -15,6 +15,7 @@
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
+	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
@@ -54,6 +55,8 @@
 	$: commandTaxCount = status.commandTax ?? 0;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
+	$: commanderDamageArray = status.commanderDamage ?? [];
+	$: totalCommanderDamage = commanderDamageArray.reduce((sum: number, dmg: number) => sum + (dmg || 0), 0);
 	$: statusRotation = orientation === 'down' ? '180deg' : orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
@@ -295,6 +298,9 @@
 			{/if}
 			{#if startYourEngineSpeedCount > 0}
 				<div title={$_('tooltip_status_start_your_engine_speed')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><StartYourEngineSpeed /> <span>{startYourEngineSpeedCount}</span></div>
+			{/if}
+			{#if totalCommanderDamage > 0}
+				<div title={$_('tooltip_commander_damage')} class="px-2 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-1"><CommanderDamage /> <span>{totalCommanderDamage}</span></div>
 			{/if}
 		</div>
 	</div>

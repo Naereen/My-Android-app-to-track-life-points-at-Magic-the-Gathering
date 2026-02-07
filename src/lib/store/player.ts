@@ -257,6 +257,31 @@ export const setPlayerPoison = (playerId: number, amount: number) => {
 	});
 };
 
+export const setCommanderDamage = (playerId: number, fromPlayerId: number, amount: number) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				const commanderDamage = player.statusEffects?.commanderDamage || [];
+				// Ensure the array has enough entries (indexed by fromPlayerId - 1)
+				while (commanderDamage.length < fromPlayerId) {
+					commanderDamage.push(0);
+				}
+				// Update the damage from the specific player
+				commanderDamage[fromPlayerId - 1] = Math.max(0, Math.min(999, amount));
+				
+				return {
+					...player,
+					statusEffects: {
+						...player.statusEffects,
+						commanderDamage: [...commanderDamage]
+					}
+				};
+			}
+			return player;
+		});
+	});
+};
+
 // Object to store timeout references for each player
 const resetTimers: { [key: number]: number } = {};
 
@@ -302,7 +327,9 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 				lifeTotal: startingLifeTotal,
 				tempLifeDiff: 0, // Reset tempLifeDiff to 0
 				poison: 0,
-				statusEffects: {}
+				statusEffects: {
+					commanderDamage: [] // Reset commander damage
+				}
 			};
 
 			// If resetProfiles is enabled, reset color and backgroundImage to defaults
