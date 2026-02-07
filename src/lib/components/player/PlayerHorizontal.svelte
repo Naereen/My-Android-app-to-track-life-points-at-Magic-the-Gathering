@@ -396,6 +396,7 @@
 					class="absolute top-0 bottom-0 flex justify-center pointer-events-none vert"
 					class:left-2={orientation === 'right'}
 					class:right-2={orientation === 'left'}
+					class:hidden={$appState.isMenuOpen}
 				>
 					<div
 						class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto"

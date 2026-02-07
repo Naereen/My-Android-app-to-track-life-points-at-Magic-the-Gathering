@@ -346,7 +346,7 @@
 		</div>
 	{/if}
 	<!-- Status effects bar -->
-	<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none">
+	<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
 		<div
 			class="bg-black/40 text-white text-xs rounded-full px-2 py-1 flex gap-2 items-center pointer-events-auto"
 		>

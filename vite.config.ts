@@ -30,7 +30,7 @@ export default defineConfig({
 					"Naereen's Magic The Gathering Life Tracker, for Android and iOS devices. Keep track of your life points during games with ease! Work in progress...",
 				theme_color: '#062911',
 				orientation: 'portrait',
-				display: 'standalone',
+				display: 'fullscreen',
 				background_color: '#000000',
 				screenshots: [
 					{

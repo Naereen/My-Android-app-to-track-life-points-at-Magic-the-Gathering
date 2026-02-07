@@ -169,7 +169,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		{#if showOpponentSelector}
 		<div class="fixed inset-0 bg-black/70 flex justify-center items-center z-50" on:click={() => showOpponentSelector = false} role="button" on:keydown={() => null} tabindex="0">
 			<div class="bg-[#2d2f30] rounded-[2rem] p-6 max-w-md" on:click|stopPropagation role="button" on:keydown={() => null} tabindex="0">

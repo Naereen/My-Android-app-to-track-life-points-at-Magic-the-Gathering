@@ -269,9 +269,9 @@
 
 					{#if mode === 'status_effects'}
 						<!-- Status effects controls -->
-						<div class="mt-4 w-full flex flex-col items-center text-center">
-							<div class="flex flex-wrap gap-3 mb-3">
-								<label class="flex items-center gap-2"
+						<div class="mt-1 w-full flex flex-col items-center text-center">
+							<div class="flex flex-wrap gap-1 m-1">
+								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
 										checked={$players[$playerModalData.playerId - 1].statusEffects?.monarch ??
@@ -334,9 +334,9 @@
 								>
 							</div>
 
-							<div class="grid grid-cols-1 gap-3">
+							<div class="w-full flex flex-col items-center text-center border-t pt-4">
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"
+									<span class="w-60 text-left"
 										><PoisonIcon /> {String($_('poison'))}</span
 									>
 									<button
@@ -347,7 +347,7 @@
 												Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1)
 											)}>-</button
 									>
-									<span class="px-2">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -359,7 +359,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"><Energy /> {String($_('energy'))}</span
+									<span class="w-60 text-left"><Energy /> {String($_('energy'))}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -373,8 +373,7 @@
 												)
 											)}>-</button
 									>
-									<span class="px-2"
-										>{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -388,7 +387,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"
+									<span class="w-60 text-left"
 										><Experience /> {String($_('experience'))}</span
 									>
 									<button
@@ -404,8 +403,7 @@
 												)
 											)}>-</button
 									>
-									<span class="px-2"
-										>{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -419,7 +417,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"><Rad /> {String($_('rad'))}</span>
+									<span class="w-60 text-left"><Rad /> {String($_('rad'))}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -432,8 +430,7 @@
 												)
 											)}>-</button
 									>
-									<span class="px-2"
-										>{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -447,7 +444,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"
+									<span class="w-60 text-left"
 										><CommandTax /> {String($_('command_tax'))}</span
 									>
 									<button
@@ -463,8 +460,7 @@
 												)
 											)}>-</button
 									>
-									<span class="px-2"
-										>{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span
 									>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -478,7 +474,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"
+									<span class="w-60 text-left"
 										><TheRingerBearer /> {String($_('ring_bearer'))}</span
 									>
 									<button
@@ -494,9 +490,7 @@
 												)
 											)}>-</button
 									>
-									<span class="px-2"
-										>{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span
-									>
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
 										on:click={() =>
@@ -513,7 +507,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-35 flex items-center gap-2"
+									<span class="w-60 text-left"
 										><StartYourEngineSpeed /> {String($_('start_your_engine_speed'))}</span
 									>
 									<button
@@ -529,8 +523,7 @@
 												)
 											)}>-</button
 									>
-									<span class="px-2"
-										>{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ??
+									<span class="px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ??
 											0}</span
 									>
 									<button
@@ -551,7 +544,7 @@
 
 							<!-- Commander Damage Section -->
 							<div class="mt-6 w-full flex flex-col items-center text-center border-t pt-4">
-								<h3 class="text-2xl font-bold mb-3 flex items-center gap-2">
+								<h3 class="text-2xl font-bold mb-3 flex items-center gap-2 underline">
 									<CommanderDamage />
 									{String($_('commander_damage'))}
 								</h3>
