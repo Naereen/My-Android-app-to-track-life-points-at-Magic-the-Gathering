@@ -46,7 +46,8 @@
 			!($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) ||
 		($players[index].poison ?? 0) >= 10 ||
 		status?.ko === true ||
-		$players[index].isDead === true;
+		$players[index].isDead === true ||
+		maxCommanderDamage >= 21;
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
 	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
@@ -68,10 +69,7 @@
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: commanderDamageArray = status.commanderDamage ?? [];
-	$: totalCommanderDamage = commanderDamageArray.reduce(
-		(sum: number, dmg: number) => sum + (dmg || 0),
-		0
-	);
+	$: maxCommanderDamage = Math.max(0, ...commanderDamageArray);
 	$: statusRotation =
 		orientation === 'down'
 			? '180deg'
