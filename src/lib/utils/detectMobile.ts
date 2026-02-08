@@ -39,7 +39,7 @@ export function isMobileDevice(innerWidth?: number): boolean {
 
 		// Final fallback: use innerWidth when provided (threshold conservative)
 		if (typeof innerWidth === 'number') {
-			return innerWidth <= 900;
+			return innerWidth <= 700;
 		}
 	} catch (e) {
 		// defensive: don't crash in SSR or odd environments
