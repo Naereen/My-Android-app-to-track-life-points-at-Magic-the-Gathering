@@ -58,17 +58,20 @@
 	$: bgPositionY = orientation === 'left' ? 'left' : orientation === 'right' ? 'right' : 'center';
 	// FIXME: the bgWidth/bgHeight/bgSize logic is really hacky and doesn't work well in all cases, need to rethink how background images are handled in general
 	// It works fine for 2-player, but for 3+ players it gets really inconsistent and depends on the specific image used, some trial and error is needed to find the right settings for each image
-	$: bgWidth = (!isMobile) ? '200%' : ((layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? '140%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
-		: (numberOfPlayers >= 6 ? '140%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%')))));
-	$: bgHeight = (!isMobile) ? '90%' : ((layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '80%' : '125%'))))
-		: (numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '80%' : '125%')))));
-	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? (orientation === 'left' ? '45%' : '65%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '20%' : '35%') : '50%')));
-	$: bgLeft = (!isMobile) ? '50%' : ((numberOfPlayers === 3 || (numberOfPlayers === 6 && layout === 'two-by-two')) ? (orientation === 'left' ? '70%' : '30%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '55%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '35%' : '50%')) :'50%')));
-	$: bgSize = (!isMobile) ? 'cover' : ((layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain'))
-		: (numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain')));
+
+	$: bgWidth = (!isMobile) ? '200%' : (layout === 'two-by-two') ?
+		(numberOfPlayers === 6 ? '140%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
+		: (numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))));
+
+	$: bgHeight = (!isMobile) ? '90%' : (layout === 'two-by-two') ?
+		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '82%' : '125%'))))
+		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '82%' : '125%'))));
+
+	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '45%') : '50%')));
+
+	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '30%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '35%' : '50%')) :'50%'));
+
+	$: bgSize = 'contain';
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
@@ -81,12 +84,21 @@
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
-			// position first image left, second image right; both centered vertically
-			const posx = '-18%, right';
-			const posy = 'center, center';
-			// use contain or percentage sizes so both images display side-by-side
-			const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 100%, 57.1% 100%';
-			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%;`;
+			if (layout === 'one-two-one' || numberOfPlayers === 5 || (numberOfPlayers === 6 && (orientation === 'left' || orientation === 'right'))) {
+				// use contain or percentage sizes so both images display side-by-side
+				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
+				// position first image left, second image right; both centered vertically
+				const posx = '13%, 87%';
+				const posy = 'center, center';
+				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 85%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+			} else {
+				// use contain or percentage sizes so both images display side-by-side
+				const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 100%, 57.1% 100%';
+				// position first image left, second image right; both centered vertically
+				const posx = '-18%, right';
+				const posy = 'center, center';
+				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+			}
 		}
 
 		// single string image

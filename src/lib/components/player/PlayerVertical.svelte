@@ -76,8 +76,8 @@
 			const posx = '20%, right';
 			const posy = 'center, center';
 			// use contain or percentage sizes so both images display side-by-side
-			const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 100%, 57.1% 100%';
-			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-width: 150%; --bg-height: ${bgHeight};`;
+			const size = (!isMobile) ? '50% 100%, 50% 100%' : '37.5% 100%, 63% 100%';
+			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-top: 50%; --bg-left: 50%; --bg-width: 150%; --bg-height: 100%; --bg-repeat: no-repeat, no-repeat;`;
 		}
 
 		// single string image
