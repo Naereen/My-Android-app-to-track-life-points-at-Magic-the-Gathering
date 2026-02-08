@@ -707,18 +707,18 @@ export const setPlayerName = (playerId: number, playerName: string) => {
 // Reorder players array by moving element at fromIndex to toIndex (0-based indices)
 export const reorderPlayers = (fromIndex: number, toIndex: number) => {
 	players.update((currentPlayers) => {
-		const arr = currentPlayers.slice();
-		if (fromIndex < 0 || fromIndex >= arr.length) return arr;
-		if (toIndex < 0) toIndex = 0;
-		if (toIndex >= arr.length) toIndex = arr.length - 1;
-		// No-op when same position
-		if (fromIndex === toIndex) return arr;
+		const n = currentPlayers.length;
+		if (fromIndex < 0 || fromIndex >= n) return currentPlayers;
+		if (fromIndex === toIndex) return currentPlayers;
 
-		const [item] = arr.splice(fromIndex, 1);
-		// If removing an earlier element, the indices shift left — adjust target
-		const insertIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
-		arr.splice(insertIndex, 0, item);
-		return arr;
+		const newPlayers = currentPlayers.slice();
+		const [item] = newPlayers.splice(fromIndex, 1);
+
+		let targetIndex = toIndex;
+		if (targetIndex < 0) targetIndex = 0;
+		if (targetIndex >= n) targetIndex = n;
+		newPlayers.splice(targetIndex, 0, item);
+		return newPlayers;
 	});
 };
 

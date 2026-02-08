@@ -22,6 +22,16 @@
 		return index;
 	}
 
+	function handleDragEndPlayer1(e: any) {
+		const total = $appSettings.playerCount;
+		const fromIndex = 1 - 1;
+		const currentTarget = e.currentTarget as Element | null;
+		const containerEl = currentTarget ? currentTarget.closest('.flex.flex-col') as HTMLElement | null : null;
+		const container = containerEl ?? (document.body as HTMLElement);
+		const toIndex = computeIndexFromCoords(e.detail.x, e.detail.y, total, container);
+		reorderPlayers(fromIndex, toIndex);
+	}
+
 	function handleDragEndPlayer2(e: any) {
 		const total = $appSettings.playerCount;
 		const fromIndex = 2 - 1;
@@ -37,16 +47,6 @@
 		const fromIndex = 3 - 1;
 		const currentTarget = e.currentTarget as Element | null;
 		const containerEl = currentTarget ? currentTarget.closest('.w-full') as HTMLElement | null : null;
-		const container = containerEl ?? (document.body as HTMLElement);
-		const toIndex = computeIndexFromCoords(e.detail.x, e.detail.y, total, container);
-		reorderPlayers(fromIndex, toIndex);
-	}
-
-	function handleDragEndPlayer1(e: any) {
-		const total = $appSettings.playerCount;
-		const fromIndex = 1 - 1;
-		const currentTarget = e.currentTarget as Element | null;
-		const containerEl = currentTarget ? currentTarget.closest('.flex.flex-col') as HTMLElement | null : null;
 		const container = containerEl ?? (document.body as HTMLElement);
 		const toIndex = computeIndexFromCoords(e.detail.x, e.detail.y, total, container);
 		reorderPlayers(fromIndex, toIndex);
