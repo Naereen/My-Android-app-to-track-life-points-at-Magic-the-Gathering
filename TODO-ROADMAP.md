@@ -85,11 +85,19 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] On mobile right now, when doing a very short touch (click) on the +1/-1 buttons, it sometimes adds/subtracts 2 points at once instead of 1 point at a time.
 
+### The active player "glowing effect"
+
+- [x] When enabling the "active player glowing effect" setting, the glowing effect is not displayed correctly for the right/left facing players (player 3 in 3-player mode, player 3 and 4 in 4-player mode, etc). Currently, the glow effect is correctly displayed, but it disable the button on the playerName that opens the PlayerDataModal. This is a serious bug. This bug is not present for the bottom/top facing players (in various modes).
+
+- [x] When "spining" to select a random starting player or a random player, temporily disabl the "glowing effect" for the active player, as it can be confusing with the "spinning" animation of the randomizer, which also use a glowing effect. This is a minor issue, but it can improve the user experience.
+
 ### The image background
 
 - [x] The card search form seems to be broken sometimes: for instance, searching for *Jace Beleren* fails completely, even though there are many cards with this name in the Scryfall database.
 
-- [ ] FIXME: Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
+- [x] The card search form is kinda broken, because it constantly tries to fill its content with the playerName. Fix this, by removing this default feature as soon as the <input> form is being edited!
+
+- [x] Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
 
 ### The 4-player secondary layout bug
 
@@ -178,6 +186,8 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] If the settings "show_next_player_button" is disabled, force a disable of the other setting "enable_current_player_glow", as it doesn't make sense to show the player glow in gold, if it's impossible to go to the next player turn!
 
+- [ ] Implement a counter of the number of turns. It can be an integer betwen 0 and 99. It should be displayed next to the "▶" « next turn » button (in the gray-colored circle). In this section of the global horizontal menu, show the number of turns that have been played, starting from 1 at the beginning of the game, and incrementing by 1 each time the "next turn" button is clicked enough so that the initial starting player is the active player again. This can be useful for players to track the number of turns, especially for certain cards that have effects based on the number of turns (e.g. "[Serra Avenger](https://scryfall.com/card/tsp/40/serra-avenger)"), or for tournament games where there is a time limit of (60 minutes or) 12 turns, etc.
+
 - [ ] TODO: Implement a timer for each turn (like in Lifetap app). This feature should be optional, as it can be annoying for some people, especially if they are not used to play with a timer, but it can be useful for people who want to play with a timer, or for tournament games.
 
   - [ ] A way to set the timer duration (global setting). By default, it should be 4 minutes by turn.
@@ -257,7 +267,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
   - [x] Move the "Commander damage" section to its own tab in the PlayerDataModal.svelte, instead of being in the bottom/end "Status effects" tab, as it is a very important information for Commander games, and it deserves to be more visible and easier to access. The "background colors" and "background images" sections can be merged into a single "Background" tab, as they are both related to the background of the player panel.
 
-- [ ] For each of the status effect, do NOT display the "-" (MINUS) button if the value is currently 0, and do not display the "+" (PLUS) button if the value is currently at its maximum (e.g. 10 for poison counter, 4 for the Ring Bearer and Speed status effects, etc.). This is a nice visual feedback to show that the value cannot be decreased/increased anymore, and it can prevent some mistakes of clicking on the +1/-1 buttons when the value is already at its minimum/maximum.
+- [x] For each of the status effect, do NOT display the "-" (MINUS) button if the value is currently 0, and do not display the "+" (PLUS) button if the value is currently at its maximum (e.g. 10 for poison counter, 4 for the Ring Bearer and Speed status effects, etc.). This is a nice visual feedback to show that the value cannot be decreased/increased anymore, and it can prevent some mistakes of clicking on the +1/-1 buttons when the value is already at its minimum/maximum.
 
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
   - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is supported by the Lifetap app, but not yet implemented here.

@@ -24,11 +24,12 @@
 		manageLifeTotal,
 		players,
 		setPlayerLifeAbsolute,
-		setPlayerHighlighted
+		setPlayerHighlighted,
+		spinning
 	} from '$lib/store/player';
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
-	import { haptic, vibrate } from '$lib/utils/haptics';
+	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
 
 	export let orientation: App.Player.Orientation = 'up';
@@ -53,10 +54,15 @@
 	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
 	$: bgPositionX =
 		orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
-	$: bgPositionY = orientation === 'left' ? 'right' : orientation === 'right' ? 'left' : 'center';
+	$: bgPositionY = orientation === 'left' ? 'top' : orientation === 'right' ? 'top' : 'center';
+	$: bgWidth = '150%';
+	$: bgHeight = '85%';
+	$: bgTop = '50%';
+	$: bgLeft = '50%';
+	$: bgSize = 'cover';
 	$: styleVars = $players[index].backgroundImage
-		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY};`
-		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none;`;
+		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`
+		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
 	$: status = $players[index].statusEffects ?? {};
 	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter(
 		(k) => status[k]
@@ -206,8 +212,8 @@
 
 
 <div
-	class="rounded-2xl relative h-full w-full"
-	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow}
+	class="rounded-3xl relative h-full w-full"
+	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning}
 	class:bg-rotated={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
@@ -412,7 +418,7 @@
 					class:hidden={$appState.isMenuOpen}
 				>
 					<div
-						class="bg-black/40 text-white text-xs rounded-full px-0 py-0 flex gap-1 items-center pointer-events-auto"
+						class="bg-black/40 text-white text-xs rounded-full px-0 py-0 flex gap-0.5 items-center pointer-events-auto"
 						class:flex-row={orientation === 'left'}
 						class:flex-row-reverse={orientation === 'left'}
 					>
@@ -422,7 +428,7 @@
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
 							>
 								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{poisonCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{poisonCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -436,7 +442,7 @@
 									>
 										<PoisonIcon />
 									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{poisonCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{poisonCount}</span>
 								{/if}
 							</div>
 						{/if}
@@ -446,7 +452,7 @@
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{energyCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{energyCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -460,7 +466,7 @@
 									>
 										<Energy />
 									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{energyCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{energyCount}</span>
 								{/if}
 							</div>
 						{/if}
@@ -470,7 +476,7 @@
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{experienceCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{experienceCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -484,7 +490,7 @@
 									>
 										<Experience />
 									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{experienceCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{experienceCount}</span>
 								{/if}
 							</div>
 						{/if}
@@ -494,7 +500,7 @@
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{radCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{radCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -508,7 +514,7 @@
 									>
 										<Rad />
 									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{radCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{radCount}</span>
 								{/if}
 							</div>
 						{/if}
@@ -518,7 +524,7 @@
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
 							>
 								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{commandTaxCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{commandTaxCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -532,7 +538,7 @@
 									>
 										<CommandTax />
 									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{commandTaxCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{commandTaxCount}</span>
 								{/if}
 							</div>
 						{/if}
@@ -542,7 +548,7 @@
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{ringBearerCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ringBearerCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -556,7 +562,7 @@
 									>
 										<TheRingerBearer isMax={ringBearerCount === 4} />
 									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{ringBearerCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ringBearerCount}</span>
 								{/if}
 							</div>
 						{/if}
@@ -566,7 +572,7 @@
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{startYourEngineSpeedCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{startYourEngineSpeedCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -580,7 +586,7 @@
 									>
 										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
 									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{startYourEngineSpeedCount}</span>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{startYourEngineSpeedCount}</span>
 								{/if}
 							</div>
 						{/if}
@@ -591,7 +597,7 @@
 									class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 								>
 									{#if isRightFacingPlayer}
-										<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{dmg}</span>
+										<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
 										<div
 											class="status-rotate-wrapper"
 											style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -609,7 +615,7 @@
 												<CommanderDamage playerIndex={i} />
 											</div>
 										</div>
-										<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{dmg}</span>
+										<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
 									{/if}
 								</div>
 							{/if}

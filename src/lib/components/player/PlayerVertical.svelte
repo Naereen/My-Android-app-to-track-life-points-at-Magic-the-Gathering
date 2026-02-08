@@ -24,7 +24,8 @@
 		manageLifeTotal,
 		players,
 		setPlayerLifeAbsolute,
-		setPlayerHighlighted
+		setPlayerHighlighted,
+		spinning
 	} from '$lib/store/player';
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
@@ -53,10 +54,15 @@
 	$: bgRotation = '0deg';
 	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
 	$: bgPositionX = orientation === 'up' ? 'center' : orientation === 'right' ? 'center' : 'center';
-	$: bgPositionY = orientation === 'up' ? 'top' : orientation === 'down' ? 'bottom' : 'center';
+	$: bgPositionY = orientation === 'up' ? 'center' : orientation === 'down' ? 'center' : 'center';
+	$: bgWidth = '100%';
+	$: bgHeight = '100%';
+	$: bgTop = '50%';
+	$: bgLeft = '50%';
+	$: bgSize = 'cover';
 	$: styleVars = $players[index].backgroundImage
-		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY};`
-		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none;`;
+		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`
+		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
 	$: status = $players[index].statusEffects ?? {};
 	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter(
 		(k) => status[k]
@@ -193,8 +199,8 @@
 <svelte:window bind:innerWidth />
 
 <div
-	class="flex w-full rounded-2xl flex-grow h-6"
-	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow}
+	class="flex w-full rounded-3xl flex-grow h-6"
+	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning}
 	class:bg-rotated={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
@@ -352,12 +358,12 @@
 	<!-- Status effects bar -->
 	<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
 		<div
-			class="bg-black/40 text-white text-xs rounded-full px-1 py-0 flex gap-2 items-center pointer-events-auto"
+			class="bg-black/40 text-white text-xs rounded-full px-1 py-0 flex gap-0.5 items-center pointer-events-auto"
 		>
 			{#if poisonCount > 0}
 				<div
 					title={$_('tooltip_status_poison')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0 text-base"
 				>
 					<PoisonIcon /> <span>{poisonCount}</span>
 				</div>
@@ -365,7 +371,7 @@
 			{#if energyCount > 0}
 				<div
 					title={$_('tooltip_status_energy')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
 				>
 					<Energy /> <span>{energyCount}</span>
 				</div>
@@ -373,7 +379,7 @@
 			{#if experienceCount > 0}
 				<div
 					title={$_('tooltip_status_experience')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
 				>
 					<Experience /> <span>{experienceCount}</span>
 				</div>
@@ -381,7 +387,7 @@
 			{#if radCount > 0}
 				<div
 					title={$_('tooltip_status_rad')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
 				>
 					<Rad /> <span>{radCount}</span>
 				</div>
@@ -389,7 +395,7 @@
 			{#if commandTaxCount > 0}
 				<div
 					title={$_('tooltip_status_command_tax')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0 text-base"
 				>
 					<CommandTax /> <span>{commandTaxCount}</span>
 				</div>
@@ -397,7 +403,7 @@
 				{#if ringBearerCount > 0}
 				<div
 					title={$_('tooltip_status_ring_bearer')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
 				>
 						<TheRingerBearer isMax={ringBearerCount === 4} /> <span>{ringBearerCount}</span>
 				</div>
@@ -405,7 +411,7 @@
 			{#if startYourEngineSpeedCount > 0}
 				<div
 					title={$_('tooltip_status_start_your_engine_speed')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
 				>
 						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} /> <span>{startYourEngineSpeedCount}</span>
 				</div>
@@ -414,7 +420,7 @@
 				{#if dmg > 0}
 					<div
 						title={$_('tooltip_commander_damage')}
-						class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+						class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
 					>
 						<div style="transform: rotate(-45deg);">
 							<CommanderDamage playerIndex={i} />

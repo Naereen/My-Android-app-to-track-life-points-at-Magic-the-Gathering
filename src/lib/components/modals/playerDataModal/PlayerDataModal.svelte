@@ -33,6 +33,7 @@
 	let selectedColors: string[] = [];
 	let mode: 'background' | 'commander' | 'status_effects' = 'status_effects';
 	let searchQuery = '';
+	let searchEdited = false;
 	let searchResults: Array<{
 		id: string;
 		name: string;
@@ -56,6 +57,8 @@
 
 	// initialize selectedColors when modal/player changes
 	$: if ($playerModalData && $players) {
+		// reset edit flag when the modal or selected player changes
+		searchEdited = false;
 		const p = $players[$playerModalData.playerId - 1];
 		if (p && typeof p.color === 'string' && p.color.includes(',')) {
 			selectedColors = p.color.split(',').map((s) => s.trim());
@@ -69,7 +72,7 @@
 	// When entering the 'background' tab, prefill the search input with the player's name
 	$: if (mode === 'background' && $playerModalData && $players) {
 		const p = $players[$playerModalData.playerId - 1];
-		if (p && (!searchQuery || searchQuery.trim().length === 0)) {
+		if (p && (!searchQuery || searchQuery.trim().length === 0) && !searchEdited) {
 			searchQuery = p.playerName ?? '';
 		}
 
@@ -260,6 +263,11 @@
 	const cancelEditStat = () => {
 		editingStat = null;
 	};
+
+	// Status maxima used by the UI to hide + buttons when reached
+	const POISON_MAX = 10;
+	const RING_BEARER_MAX = 4;
+	const SPEED_MAX = 4;
 </script>
 
 <div
@@ -334,6 +342,7 @@
 									type="text"
 									class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black"
 									bind:value={searchQuery}
+									on:input={() => (searchEdited = true)}
 									on:keypress={searchQuery.trim().length > 0 ? (e) => e.key === 'Enter' && doSearch() : null}
 									placeholder={$_('scryfall_search') + ' (Scryfall)...'}
 								/>
@@ -450,26 +459,6 @@
 								</button>
 							{/each}
 						</div>
-						<!-- Allow negative life toggle placed after color options -->
-						<div class="mt-4 w-full flex flex-col items-center text-center">
-							<label class="flex items-center gap-2 justify-center"
-								><input
-									type="checkbox"
-									checked={$players[$playerModalData.playerId - 1].allowNegativeLife}
-									on:change={() =>
-										setPlayerAllowNegative(
-											$playerModalData.playerId,
-											!$players[$playerModalData.playerId - 1].allowNegativeLife
-										)}
-								/>
-								<span class="ml-2 block mb-2 font-bold text-lg text-center"
-									>{$_('allow_negative_life')}</span
-								></label
-							>
-							<div class="mt-2 text-sm text-gray-600 text-center">
-								{$_('allow_negative_life_help')}
-							</div>
-						</div>
 					{/if}
 
 					{#if mode === 'status_effects'}
@@ -542,39 +531,44 @@
 
 							<div class="w-full grid grid-cols-1 items-center text-center border-t pt-4">
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><PoisonIcon /> {String($_('poison'))}</span
-									>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerPoison(
-												$playerModalData.playerId,
-												Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1)
-											)}>-</button>
+									<span class="w-60 text-left"><PoisonIcon /> {String($_('poison'))}</span>
+									{#if ($players[$playerModalData.playerId - 1].poison ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerPoison(
+													$playerModalData.playerId,
+													Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1)
+												)}>-</button>
+									{/if}
 									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerPoison(
-												$playerModalData.playerId,
-												Math.min(99, ($players[$playerModalData.playerId - 1].poison ?? 0) + 1)
-											)}>+</button>
+									{#if ($players[$playerModalData.playerId - 1].poison ?? 0) < POISON_MAX}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerPoison(
+													$playerModalData.playerId,
+													Math.min(99, ($players[$playerModalData.playerId - 1].poison ?? 0) + 1)
+												)}>+</button>
+									{/if}
 								</div>
 
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><Energy /> {String($_('energy'))}</span
 									>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'energy',
-												Math.max(
-													0,
-													($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) - 1
-												)
-											)}>-</button>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'energy',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) - 1
+													)
+												)}>-</button>
+									{/if}
 									{#if editingStat === 'energy'}
 										<div class="pointer-events-auto flex items-center gap-2">
 											<input
@@ -609,18 +603,20 @@
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><Experience /> {String($_('experience'))}</span
 									>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'experience',
-												Math.max(
-													0,
-													($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) -
-														1
-												)
-											)}>-</button>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'experience',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) -
+															1
+													)
+												)}>-</button>
+									{/if}
 									{#if editingStat === 'experience'}
 										<div class="pointer-events-auto flex items-center gap-2">
 											<input
@@ -654,17 +650,19 @@
 
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><Rad /> {String($_('rad'))}</span>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'rad',
-												Math.max(
-													0,
-													($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) - 1
-												)
-											)}>-</button>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'rad',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) - 1
+													)
+												)}>-</button>
+									{/if}
 									{#if editingStat === 'rad'}
 										<div class="pointer-events-auto flex items-center gap-2">
 											<input
@@ -699,18 +697,20 @@
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left text-base"><CommandTax /> {String($_('command_tax'))}</span
 									>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'commandTax',
-												Math.max(
-													0,
-													($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) -
-														1
-												)
-											)}>-</button>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'commandTax',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) -
+															1
+													)
+												)}>-</button>
+									{/if}
 									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -723,62 +723,90 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><TheRingerBearer isMax={$players[$playerModalData.playerId - 1].statusEffects?.ringBearer === 4} /> {String($_('ring_bearer'))}</span
-									>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'ringBearer',
-												Math.max(
-													0,
-													($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) -
-														1
-												)
-											)}>-</button>
+									<span class="w-60 text-left"><TheRingerBearer isMax={$players[$playerModalData.playerId - 1].statusEffects?.ringBearer === 4} /> {String($_('ring_bearer'))}</span>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'ringBearer',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) -
+															1
+													)
+												)}>-</button>
+									{/if}
 									<span class="min-w-[1rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'ringBearer',
-												Math.min(
-													4,
-													($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) +
-														1
-												)
-											)}>+</button>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) < RING_BEARER_MAX}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'ringBearer',
+													Math.min(
+														4,
+														($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) +
+															1
+													)
+												)}>+</button>
+									{/if}
 								</div>
 
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><StartYourEngineSpeed isMax={$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed === 4} /> {String($_('start_your_engine_speed'))}</span>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'startYourEngineSpeed',
-												Math.max(
-													0,
-													($players[$playerModalData.playerId - 1].statusEffects
-														?.startYourEngineSpeed ?? 0) - 1
-												)
-											)}>-</button>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'startYourEngineSpeed',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects
+															?.startYourEngineSpeed ?? 0) - 1
+													)
+												)}>-</button>
+									{/if}
 									<span class="min-w-[1rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'startYourEngineSpeed',
-												Math.min(
-													4,
-													($players[$playerModalData.playerId - 1].statusEffects
-														?.startYourEngineSpeed ?? 0) + 1
-												)
-											)}>+</button>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) < SPEED_MAX}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'startYourEngineSpeed',
+													Math.min(
+														4,
+														($players[$playerModalData.playerId - 1].statusEffects
+															?.startYourEngineSpeed ?? 0) + 1
+													)
+												)}>+</button>
+									{/if}
+								</div>
+							</div>
+
+						<!-- Allow negative life toggle placed after color options -->
+						<div class="mt-4 w-full flex flex-col items-center text-center">
+							<label class="flex items-center gap-2 justify-center"
+								><input
+									type="checkbox"
+									checked={$players[$playerModalData.playerId - 1].allowNegativeLife}
+									on:change={() =>
+										setPlayerAllowNegative(
+											$playerModalData.playerId,
+											!$players[$playerModalData.playerId - 1].allowNegativeLife
+										)}
+								/>
+									<span class="ml-2 block font-bold text-lg text-center">
+										{$_('allow_negative_life')}
+									</span>
+								</label>
+								<div class="mt-2 text-sm text-gray-600 text-center">
+									{$_('allow_negative_life_help')}
 								</div>
 							</div>
 						</div>

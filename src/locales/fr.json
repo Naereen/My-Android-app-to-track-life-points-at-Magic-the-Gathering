@@ -33,7 +33,7 @@
     "cancel_modal": "Annuler",
     "main_checkboxes_settings": "Options",
     "allow_negative_life": "Autoriser un total de vie négatif",
-    "allow_negative_life_help": "Ne pas marquer le joueur comme mort si ses PV ≤ 0",
+    "allow_negative_life_help": "(Ne pas cacher un joueur aux PV négatifs)",
     "allow_negative_life_global": "Autoriser la vie négative (global)",
     "allow_negative_life_global_help": "Quand activé, aucun joueur n'est marqué comme mort pour PV ≤ 0 (sauf si le réglage joueur l'interdit)",
     "prevent_screen_sleep": "Toujours garder l'écran allumé",

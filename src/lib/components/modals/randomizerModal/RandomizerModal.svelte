@@ -117,11 +117,11 @@
 					>
 					<span class="text-white text-5xl font-bold text-center mt-16 beleren">
 						<!-- Uncomment to show the commanderDamage icon (one of the six set icons showing a random weapon) -->
-						<!-- {#if $randomizerModalData.playerId !== null}
+						{#if $randomizerModalData.playerId !== null}
 							<div class="scale-[3]">
 								<CommanderDamage playerIndex={$randomizerModalData.playerId - 1} />
 							</div>
-						{/if} -->
+						{/if}
 						{$randomizerModalData.playerName}
 					</span>
 				</div>

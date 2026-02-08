@@ -8,7 +8,8 @@ A web-based life point tracker for Magic: The Gathering, inspired by the [Lifeta
 
 ![Demo of the webpage (5/4)](screenshots/screenshot-demo-5.png)
 
-You can find it live here: <https://naereen.github.io/My-Android-app-to-track-life-points-at-Magic-the-Gathering/>
+You can find it live here: <https://naereen.github.io/My-Android-app-to-track-life-points-at-Magic-the-Gathering/>.
+It is updated after every commit I make on the codebase, so you can see the latest changes and improvements there.
 
 > (Backup URL: <https://perso.crans.org/besson/publis/My-Android-app-to-track-life-points-at-Magic-the-Gathering/> but could be not up-to-date)
 
@@ -312,6 +313,8 @@ Run tests:
 npm run test
 ```
 
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to:
@@ -320,19 +323,19 @@ Contributions are welcome! Feel free to:
 - Suggest new features
 - Submit pull requests
 
-## Authors
+## ✏️ Authors
 
 **Hacked with ❤️ by [@Naereen](https://github.com/Naereen) in France**
 **Initial work by [GuessImNick](https://github.com/GuessImNick)**
+**Huge inspiration from [Lifetap](https://play.google.com/store/apps/details?id=com.lifetap) by Mike Bourkas**
 
 ## 📋 TODO / Feature Ideas
 
-See the [TODO-ROADMAP.md](TODO-ROADMAP.md) file for a list of planned features and improvements.
+See the [TODO-ROADMAP.md](./TODO-ROADMAP.md) file for a list of planned features and improvements.
 
-## 📝 License
+## 📝 [License](./LICENSE)
 
-This project is open source and available for personal use.
-MIT Licensed.
+This project is open source and available for personal use: MIT Licensed.
 
 ## 🙏 Acknowledgments
 

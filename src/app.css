@@ -56,7 +56,7 @@
 
 	/* Style for the active player: a golden glow around the card */
 	.player--active {
-		z-index: -2; /* below the content but above the background */
+		z-index: 7; /* above the background and overlay but below the content (content uses z-index:10) */
 		box-shadow: 0 0 0 4px rgba(212,175,55,0.18), 0 0 30px rgba(212,175,55,0.6);
 		animation: playerGlow 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
@@ -85,17 +85,17 @@
 	.bg-rotated::before {
 		content: '';
 		position: absolute;
-		top: 50%;
-		left: 50%;
+		top: var(--bg-top, 50%);
+		left: var(--bg-left, 50%);
 		/* 200% permet de couvrir les cas de rotation sans couper l'image */
-		width: 200%;
-		height: 200%;
+		width: var(--bg-width, 100%);
+		height: var(--bg-height, 100%);
 		/* translateX to center horizontally, rotate around the top center so top stays aligned */
 		transform: translateX(-50%) translateY(-50%) rotate(var(--bg-rotation, 0deg));
 		transform-origin: center center;
 		background-image: var(--bg-image);
 		/* keep the full card visible (no cropping) while fitting inside the enlarged pseudo-element */
-		background-size: contain;
+		background-size: var(--bg-size, cover);
 		background-position: var(--bg-positionx, center) var(--bg-positiony, center);
 		z-index: -10;
 		pointer-events: none;

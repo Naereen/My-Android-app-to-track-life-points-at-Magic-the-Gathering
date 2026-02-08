@@ -1,4 +1,4 @@
-import { get, type Writable } from 'svelte/store';
+import { get, writable, type Writable } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { _ } from 'svelte-i18n'; // i18n language toggle
 import { showConfirm, selectRandomPlayer } from '$lib/store/modal';
@@ -543,13 +543,13 @@ export const removeFirstPlace = () => {
 	});
 };
 
-let isSpinning = false;
+export const spinning = writable(false);
 
 export const spinToSelectFirstPlayer = () => {
 	const totalPlayers = get(appSettings).playerCount;
 	if (totalPlayers === 0) return;
 
-	isSpinning = true;
+	spinning.set(true);
 	let currentIndex = 0;
 	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 4;
 	let intervalTime = 25;
@@ -573,7 +573,7 @@ export const spinToSelectFirstPlayer = () => {
 			setTimeout(spin, intervalTime);
 		} else {
 			setTimeout(() => {
-				isSpinning = false;
+				spinning.set(false);
 				players.update((currentPlayers) => {
 					return currentPlayers.map((player, index) => {
 						return {
@@ -597,7 +597,7 @@ export const spinToSelectRandomPlayer = () => {
 	const totalPlayers = get(appSettings).playerCount;
 	if (totalPlayers === 0) return;
 
-	isSpinning = true;
+	spinning.set(true);
 	let currentIndex = 0;
 	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 2;
 	let intervalTime = 10;
@@ -621,7 +621,7 @@ export const spinToSelectRandomPlayer = () => {
 			setTimeout(spin, intervalTime);
 		} else {
 			setTimeout(() => {
-				isSpinning = false;
+				spinning.set(false);
 				players.update((currentPlayers) => {
 					return currentPlayers.map((player, index) => {
 						return {
