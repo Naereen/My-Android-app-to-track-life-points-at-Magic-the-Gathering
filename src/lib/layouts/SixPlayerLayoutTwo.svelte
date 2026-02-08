@@ -17,6 +17,8 @@
 			</div>
 		</div>
 	</div>
+
+	{#if !$appState.isMenuOpen}
 	<div
 		class="pt-2 flex gap-2 pt-2 bg-black sticky top-0"
 		class:h-[24%]={!$appState.isMenuOpen}
@@ -29,9 +31,13 @@
             <PlayerHorizontal orientation="left" layout="one-two-one" id={5} />
 		</div>
 	</div>
+	{/if}
+
 	<div class="flex-grow">
 		<Menu />
 	</div>
+
+	{#if !$appState.isMenuOpen}
 	<div
 		class="pt-2 flex gap-2 pt-2 bg-black sticky top-0 bd-2"
 		class:h-[24%]={!$appState.isMenuOpen}
@@ -44,6 +50,8 @@
             <PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
         </div>
 	</div>
+	{/if}
+
 	<div
 		class="flex flex-col gap-2 bg-black sticky bottom-0"
 		class:h-[24%]={!$appState.isMenuOpen}

@@ -242,7 +242,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 
 <div
 	class="flex w-full rounded-3xl flex-grow h-6"
-	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning}
+	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen}
 	class:bg-rotated={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
