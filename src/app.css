@@ -58,12 +58,12 @@
 	.player--active {
 		z-index: 7; /* above the background and overlay but below the content (content uses z-index:10) */
 		box-shadow: 0 0 0 4px rgba(212,175,55,0.18), 0 0 30px rgba(212,175,55,0.6);
-		animation: playerGlow 1s ease-in-out infinite;
+		animation: player-glow 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
 		border-radius: 1rem;
 	}
 
-	@keyframes playerGlow {
+	@keyframes player-glow {
 		0% {
 			box-shadow: 0 0 0 0 rgba(212,175,55,0.0), 0 0 10px rgba(212,175,55,0.2);
 		}
@@ -72,6 +72,27 @@
 		}
 		100% {
 			box-shadow: 0 0 0 0 rgba(212,175,55,0.0), 0 0 10px rgba(212,175,55,0.2);
+		}
+	}
+
+	/* Style for the active player and the timer is over: a red glow around the card */
+	.player--active-timer-over {
+		z-index: 7; /* above the background and overlay but below the content (content uses z-index:10) */
+		box-shadow: 0 0 0 4px rgba(255,0,0,0.2), 0 0 30px rgba(255,0,0,0.4);
+		animation: player-glow-timer-over 1s ease-in-out infinite;
+		/* keep rounded corners consistent with .rounded-2xl */
+		border-radius: 1rem;
+	}
+
+	@keyframes player-glow-timer-over {
+		0% {
+			box-shadow: 0 0 0 0 rgba(255,0,0,0.0), 0 0 10px rgba(255,0,0,0.2);
+		}
+		50% {
+			box-shadow: 0 0 0 6px rgba(255,0,0,0.25), 0 0 40px rgba(255,0,0,1.0);
+		}
+		100% {
+			box-shadow: 0 0 0 0 rgba(255,0,0,0.0), 0 0 10px rgba(255,0,0,0.2);
 		}
 	}
 

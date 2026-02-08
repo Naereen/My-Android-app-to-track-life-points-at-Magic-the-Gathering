@@ -155,9 +155,9 @@
 
 		if (typeof document !== 'undefined') {
 			const ae = document.activeElement as HTMLElement | null;
-			if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable)) {
-				ae.blur();
-			}
+			// if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable)) {
+			// 	ae.blur();
+			// }
 			// try Virtual Keyboard API if available
 			const nav = navigator as any;
 			if (nav.virtualKeyboard && typeof nav.virtualKeyboard.hide === 'function') {

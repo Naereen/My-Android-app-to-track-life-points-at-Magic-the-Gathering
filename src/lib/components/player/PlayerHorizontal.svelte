@@ -64,8 +64,8 @@
 	$: bgHeight = (!isMobile) ? '90%' : ((layout === 'two-by-two') ?
 		(numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '80%' : '125%'))))
 		: (numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '80%' : '125%')))));
-	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? ((numberOfPlayers != 5 && orientation === 'left' ? '45%' : '65%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '20%' : '35%') : '50%')));
-	$: bgLeft = (!isMobile) ? '50%' : ((numberOfPlayers === 3 || (numberOfPlayers === 6 && layout === 'two-by-two')) ? (numberOfPlayers != 5 && orientation === 'left' ? '70%' : '30%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '55%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) :'50%')));
+	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? ((orientation === 'left' ? '45%' : '65%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '20%' : '35%') : '50%')));
+	$: bgLeft = (!isMobile) ? '50%' : ((numberOfPlayers === 3 || (numberOfPlayers === 6 && layout === 'two-by-two')) ? (orientation === 'left' ? '70%' : '30%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '55%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) :'50%')));
 	$: bgSize = (!isMobile) ? 'cover' : ((layout === 'two-by-two') ?
 		(numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain'))
 		: (numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain')));
