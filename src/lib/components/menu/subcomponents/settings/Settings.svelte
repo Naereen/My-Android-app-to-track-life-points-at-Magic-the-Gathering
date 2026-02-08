@@ -139,8 +139,8 @@
 <svelte:window bind:innerHeight />
 
 <div
-	class="w-full overflow-y-auto scrollbar-hidden h-full"
-	style="max-height: {innerHeight - 80}px; -webkit-overflow-scrolling: touch;"
+	class="w-full overflow-y-auto h-full"
+	style="max-height: {innerHeight - 100}px; -webkit-overflow-scrolling: touch;"
 	tabindex="-1"
 	role="region"
 	aria-label={$_('settings')}
@@ -160,7 +160,7 @@
 	<div class="w-full text-center text-white mt-2 flex flex-col items-center">
 		<!-- Player Count -->
 		<div class="w-3/4">
-			<div><span style="font-size: 1.5rem;">{$_('players')}</span></div>
+			<div><span style="font-size: 1.5rem;" class="font-bold">{$_('players')}</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [2, 3, 4, 5, 6] as playerCount}
 					{#key $appSettings.playerCount}
@@ -213,7 +213,7 @@
 
 		<!-- Starting Life Total -->
 		<div class="mt-6 w-3/4">
-			<div><span style="font-size: 1.5rem;">{$_('starting_life')}</span></div>
+			<div><span style="font-size: 1.5rem;" class="font-bold">{$_('starting_life')}</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [20, 25, 30, 40, 'custom'] as lifeTotal}
 					{#key $appSettings.startingLifeTotal}
@@ -249,10 +249,87 @@
 			</div>
 		</div>
 
+		<!-- All the main checkboxes -->
+		<div class="w-full flex justify-center mt-6 mb-2">
+			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
+				<div class="text-2xl font-bold">{$_('main_checkboxes_settings')}</div>
+			</div>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.allowNegativeLife}
+					on:change={handleGlobalAllowChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('allow_negative_life_global') || 'Allow negative life (global)'}</span>
+			</label>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.preventScreenSleep}
+					on:change={handlePreventSleepChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('prevent_screen_sleep') || 'Prevent screen sleep'}</span>
+			</label>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.hapticsEnabled}
+					on:change={handleHapticsChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('haptic_feedback') || 'Enable haptic feedback'}</span>
+			</label>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.enableCurrentPlayerGlow}
+					on:change={handleEnableGlowChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('enable_current_player_glow') || 'Enable current player glow'}</span>
+			</label>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.showNextPlayerButton}
+					on:change={handleShowNextButtonChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('show_next_player_button') || 'Show next-player button'}</span>
+			</label>
+		</div>
+
 		<!-- Language selection -->
 		<div class="w-full flex justify-center mt-6 mb-4">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl mb-2">{$_('choose_your_language')}</div>
+				<div class="text-2xl mb-2 font-bold">{$_('choose_your_language')}</div>
 				<div class="grid grid-cols-3 gap-2 justify-center w-full">
 					{#each languages as lang}
 						<button
@@ -267,76 +344,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="w-full flex justify-center mt-2 mb-2">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.allowNegativeLife}
-					on:change={handleGlobalAllowChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('allow_negative_life_global')}</span>
-			</label>
-		</div>
-		<div class="w-full flex justify-center mt-2 mb-2">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.preventScreenSleep}
-					on:change={handlePreventSleepChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('prevent_screen_sleep')}</span>
-			</label>
-		</div>
-		<div class="w-full flex justify-center mt-2 mb-2">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.hapticsEnabled}
-					on:change={handleHapticsChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('haptic_feedback')}</span>
-			</label>
-		</div>
-		<div class="w-full flex justify-center mt-2 mb-2">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.enableCurrentPlayerGlow}
-					on:change={handleEnableGlowChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('enable_current_player_glow') || 'Enable current player glow'}</span>
-			</label>
-		</div>
-		<div class="w-full flex justify-center mt-2 mb-2">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showNextPlayerButton}
-					on:change={handleShowNextButtonChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_next_player_button') || 'Show next-player button'}</span>
-			</label>
-		</div>
+
 		<!-- Reset local storage placed at the bottom so user can scroll to it -->
 		<div class="w-full flex justify-center mt-2 mb-2">
 			<button class="bg-red-900 text-white px-4 py-2 rounded-full" on:click={resetLocalStorage}>
@@ -345,8 +353,8 @@
 		</div>
 
 		<!-- About section (larger text per request) -->
-		<div class="w-full text-center text-gray-400 mt-4 mb-8 px-6">
-			<div class="text-white text-2xl mb-2 font-semibold">{$_('about_title')}</div>
+		<div class="w-full text-center text-gray-300 mt-4 mb-8 px-6">
+			<div class="text-white text-2xl mb-2 font-bold">{$_('about_title')}</div>
 			<div class="text-base mb-1">
 				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.3.1'}
 			</div>
@@ -360,9 +368,10 @@
 					target="_blank"
 					rel="noreferrer">{$_('about_github')}</a
 				>
-				<!-- TODO: Optional links: Play Store / Feedback - shown as placeholders -->
+				<!-- TODO: Optional links: Play Store direct link -->
 				<!-- <a class="text-blue-400 underline text-base" href="#" on:click|preventDefault={() => null}>{ $_('about_playstore') }</a> -->
-				<!-- <a class="text-blue-400 underline text-base" href="#" on:click|preventDefault={() => null}>{ $_('about_feedback') }</a> -->
+				<!-- Additional links: Feedback form or feedback email -->
+				<a class="text-blue-400 underline text-base" href="mailto:naereen@crans.org?Subject=Feedback%20for%20Magic%20Life%20Points%20Tracker" target="_blank" rel="noreferrer">{ $_('about_feedback') }</a>
 			</div>
 		</div>
 	</div>

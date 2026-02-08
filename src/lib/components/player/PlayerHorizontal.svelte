@@ -287,9 +287,10 @@
 									class="beleren"
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
-									class:overline={index === $appState.currentTurn}
+									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}
 									>{$players[index].playerName}</span
 								>
+								<!-- FIXME: use the class:overline only if the glowing gold animation is disabled and if the next player button is enabled -->
 								{#if $players[index].isFirst}
 									<div class="flex justify-center items-center mt-2 rotate-90">
 										<FirstPlace />

@@ -67,9 +67,9 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 ## Bugs fixing:
 
 - [x] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
-- [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks). I couldn't reproduce this bug anymore...
-
 - [x] When throwing a die, the result is displayed too close to the die icon, spacen then a bit more!
+
+- [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks). I couldn't reproduce this bug anymore...
 
 - [ ] FIXME: enable again the day/night switch setting in the player status effects, which is currently disabled because I was lazy to implement the day/night cycle feature, but I want to enable it again, even if the day/night cycle is not implemented yet, as it can be useful for players to track this status effect, even without the full day/night cycle feature.
 
@@ -114,7 +114,7 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
   - [x] Huge thank you to Mike Bourkas for the Lifetap app, which this is a personnal clone of
   - [x] Link to the GitHub repository
   - [ ] ?? Link to the Google Play Store page (when published)
-  - [ ] ?? Link to a feedback form (Google Forms or similar)
+  - [x] Link to a way to reach me out by email (also possible: Google Forms or similar)
 
 - [x] Keep the small "medal" which indicates who started the game, during all the game (not only at the beginning)
 
@@ -176,12 +176,12 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
   - [x] Show the current player's turn somewhere on the screen (prefix this player's name with "▶" or something like that)
   - [x] If a player is dead, skip their turn when going to the next player's turn
 
-- [ ] Implement (after that) a timer for each turn (like in Lifetap app)
+- [ ] TODO: Implement a timer for each turn (like in Lifetap app). This feature should be optional, as it can be annoying for some people, especially if they are not used to play with a timer, but it can be useful for people who want to play with a timer, or for tournament games.
 
-  - [ ] A way to set the timer duration (global setting)
+  - [ ] A way to set the timer duration (global setting). By default, it should be 4 minutes by turn.
   - [ ] Show the remaining time for the current player's turn
-  - [ ] Haptic vibrate when the time is up
-  - [ ] and sound an discrete tiny alarm when the time is up
+  - [ ] (Strong) haptic vibration feedbak, when the time is up
+  - [ ] ? and play a discrete tiny alarm sound, when the time is up?
 
 - [x] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel. DONE!
   - [ ] Add a setting in the global setting menu, to enable/disable this glowing border for the current player, as it can be too much for some people, especially on mobile devices (it can be too much visual noise, especially with image backgrounds, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to know whose turn it is, but it should be possible to disable it from the settings.

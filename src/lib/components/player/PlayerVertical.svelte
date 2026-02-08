@@ -259,7 +259,7 @@
 								class="beleren"
 								style="font-size: x-large; color: white;"
 								style:text-decoration={isDead ? 'line-through' : ''}
-								class:overline={index === $appState.currentTurn}>{$players[index].playerName}</span
+								class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}>{$players[index].playerName}</span
 							>
 							{#if $players[index].isFirst}
 								<div class="flex justify-center items-center ml-2">

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	// Icons are rendered dynamically via dicefont classes so the face
-	// can change during the rolling animation.
+	// Icons are rendered dynamically via dicefont classes so the face can change during the rolling animation.
 	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
 	import { resetRandomizer, randomizerModalData } from '$lib/store/modal';
 	import { appSettings } from '$lib/store/appSettings';
@@ -14,17 +13,17 @@
 	let iconSize = '6rem';
 	let rollingMs = 0;
 
-	function getPrefix(type: string) {
-		const map = {
-			'd2': 'df-d2',
-			'd4': 'df-d4',
-			'd6': 'df-small-dot-d6',
-			'd8': 'df-d8',
-			'd10': 'df-d10',
-			'd12': 'df-d12',
-			'd20': 'df-d20'
+	function getPrefix(type?: string) {
+		if (!type || type === '') return null;
+		const map: Record<string, string> = {
+			d2: 'df-d2',
+			d4: 'df-d4',
+			d6: 'df-small-dot-d6',
+			d8: 'df-d8',
+			d10: 'df-d10',
+			d12: 'df-d12',
+			d20: 'df-d20'
 		};
-
 		return map[type] || null;
 	}
 
@@ -32,8 +31,17 @@
 	$: prefix = getPrefix($randomizerModalData.type);
 	$: diceClass = prefix && face ? `${prefix}-${face}` : '';
 
-	function getMaxSides(type: string) {
-		const map = { 'd2': 2, 'd4': 4, 'd6': 6, 'd8': 8, 'd10': 10, 'd12': 12, 'd20': 20 };
+	function getMaxSides(type?: string) {
+		if (!type || type === '') return 0;
+		const map: Record<string, number> = {
+			d2: 2,
+			d4: 4,
+			d6: 6,
+			d8: 8,
+			d10: 10,
+			d12: 12,
+			d20: 20
+		};
 		if (type === 'custom') return $appSettings.customRandomNumber || 0;
 		return map[type] || 0;
 	}
@@ -107,7 +115,7 @@
 				<div
 					class="flex flex-col items-center p-4"
 					>
-					<span class="text-white text-5xl font-bold text-center mt-16">
+					<span class="text-white text-5xl font-bold text-center mt-16 beleren">
 						<!-- Uncomment to show the commanderDamage icon (one of the six set icons showing a random weapon) -->
 						<!-- {#if $randomizerModalData.playerId !== null}
 							<div class="scale-[3]">

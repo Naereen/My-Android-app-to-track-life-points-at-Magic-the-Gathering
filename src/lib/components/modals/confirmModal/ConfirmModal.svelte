@@ -42,7 +42,7 @@
 					respondConfirm(false, checkboxValue);
 				}
 			}}
-			class="bg-white max-w-80 w-11/12 max-h-80 rounded-[1rem] flex flex-col justify-center items-center text-black p-4 relative"
+			class="bg-white max-w-[85%] w-11/12 max-h-80 rounded-[1rem] flex flex-col justify-center items-center text-black p-5 relative"
 		>
 			<button
 				class="absolute right-3 top-3"
@@ -50,8 +50,8 @@
 				on:contextmenu|preventDefault
 				draggable="false"><X /></button
 			>
-			<div class="p-4 text-center">
-				<p class="text-lg font-semibold mb-4">{$confirmModalData.message}</p>
+			<div class="p-5 text-center max-w-[120%]">
+				<p class="text-xl font-bold mb-4">{$confirmModalData.message}</p>
 				{#if $confirmModalData.checkboxLabel}
 					<div class="mb-4 flex items-center justify-center gap-2">
 						<input type="checkbox" id="confirm-checkbox" bind:checked={checkboxValue} />
@@ -64,7 +64,7 @@
 						on:click={() => respondConfirm(false, checkboxValue)}>{cancelText}</button
 					>
 					<button
-						class="px-4 py-2 rounded-lg text-lg bg-red-600 text-white"
+						class="px-4 py-2 rounded-lg text-lg bg-cyan-600 text-white"
 						on:click={() => respondConfirm(true, checkboxValue)}>{confirmText}</button
 					>
 				</div>

@@ -10,7 +10,6 @@
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
 	import { vibrate } from '$lib/utils/haptics';
-	// import { selectRandomPlayer } from '$lib/store/modal';
 
 	let turnPrevTimeout: number | null = null;
 	let turnPrevTriggered = false;
@@ -49,7 +48,7 @@
 		randomPlayerTimeout = setTimeout(() => {
 			randomPlayerTriggered = true;
 			spinToSelectRandomPlayer();
-		}, 700);
+		}, 500);
 	};
 
 	const handleRandomPlayerUp = () => {

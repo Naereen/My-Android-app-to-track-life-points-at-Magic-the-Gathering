@@ -599,8 +599,8 @@ export const spinToSelectRandomPlayer = () => {
 
 	isSpinning = true;
 	let currentIndex = 0;
-	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 4;
-	let intervalTime = 25;
+	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 2;
+	let intervalTime = 10;
 	const finalPauseTime = 100;
 
 	const spin = () => {

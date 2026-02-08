@@ -31,6 +31,7 @@
     "window_confirm_reset_local_storage": "Isso limpará as configurações salvas e o estado do jogo do armazenamento local. Continuar?",
     "confirm_modal": "Confirmar?",
     "cancel_modal": "Cancelar",
+    "main_checkboxes_settings": "Opções",
     "allow_negative_life": "Permitir vida negativa",
     "allow_negative_life_help": "O jogador não é marcado como morto quando a vida ≤ 0",
     "allow_negative_life_global": "Permitir vida negativa (global)",
