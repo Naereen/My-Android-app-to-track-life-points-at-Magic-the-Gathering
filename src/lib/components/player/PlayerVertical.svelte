@@ -262,7 +262,16 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 		{#if !$appState.isMenuOpen}
 			<div class="flex w-full relative">
 				{#if $appSettings.turnTimerEnabled && index === $appState.currentTurn}
-					<div class="absolute top-2 left-2 z-30 pointer-events-none">
+					<div class="absolute top-2 left-2 z-30 pointer-events-auto cursor-pointer"
+						on:click={() => {
+							try {
+								// If the timer is finished (no remaining seconds), reset/start it for the current player
+								if ($turnTimer?.remaining <= 0) {
+									turnTimer.resetForCurrent();
+								}
+							} catch (e) { console.log(e); }
+						}}
+					>
 						<div class="w-10 h-10 flex items-center justify-center bg-black/40 rounded-full text-white text-sm">
 							<svg viewBox="0 0 40 40" class="w-10 h-10">
 								<circle cx="20" cy="20" r="18" stroke="#444" stroke-width="3" fill="none" />

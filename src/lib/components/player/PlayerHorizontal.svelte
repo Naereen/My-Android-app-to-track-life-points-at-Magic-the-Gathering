@@ -331,11 +331,18 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 			<div class="flex flex-col w-full relative">
 				<div class="h-full flex flex-col" class:flex-col-reverse={orientation === 'left'}>
 					{#if $appSettings.turnTimerEnabled && index === $appState.currentTurn}
-						<div class="absolute z-30 pointer-events-none status-rotate-wrapper"
+						<div class="absolute z-30 pointer-events-auto cursor-pointer status-rotate-wrapper"
 							class:bottom-2={orientation === 'left'}
 							class:left-2={orientation === 'left'}
 							class:right-2={orientation === 'right'}
 							class:top-2={orientation === 'right'}
+							on:click={() => {
+								try {
+									if ($turnTimer?.remaining <= 0) {
+										turnTimer.resetForCurrent();
+									}
+								} catch (e) { console.log(e); }
+							}}
 							style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 						>
 							<div class="w-10 h-10 flex items-center justify-center bg-black/40 rounded-full text-white text-sm">
