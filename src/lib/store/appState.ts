@@ -18,6 +18,24 @@ export const appState = persist('appState', {
 
 export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 	vibrate(10);
+	// Pause/resume timer when opening/closing the global menu to avoid resetting it
+	try {
+		const wasOpen = get(appState).isMenuOpen;
+		if (!wasOpen) {
+			// opening
+			if ((get(appSettings)?.turnTimerEnabled)) {
+				try { turnTimer.pause(); } catch (e) {}
+			}
+		} else {
+			// closing
+			if ((get(appSettings)?.turnTimerEnabled)) {
+				try { turnTimer.resume(); } catch (e) {}
+			}
+		}
+	} catch (e) {
+		// ignore
+	}
+
 	appState.update((data) => ({ ...data, activeMenu: menu, isMenuOpen: !data.isMenuOpen }));
 };
 

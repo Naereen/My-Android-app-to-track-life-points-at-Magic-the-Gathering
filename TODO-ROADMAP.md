@@ -206,6 +206,7 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
   - [x] Show the remaining time for the current player's turn: show it in the top left corner of the player's panel, with a small circular progress bar around it, to show the remaining time visually.
   - [x] (Strong) haptic vibration feedbak, when the time is up
   - [x] ? and play a discrete tiny alarm sound, when the time is up?
+  - [x] The timer gets reset every time a global menu is opened, this is a serious bug, as it can be used to "cheat" by opening the menu to reset the timer, so it should be fixed as soon as possible. The timer should not be reset when opening the global menu, but it should be paused, and then resumed when closing the global menu.
 
 - [x] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel. DONE!
   - [x] Add a setting in the global setting menu, to enable/disable this glowing border for the current player, as it can be too much for some people, especially on mobile devices (it can be too much visual noise, especially with image backgrounds, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to know whose turn it is, but it should be possible to disable it from the settings.

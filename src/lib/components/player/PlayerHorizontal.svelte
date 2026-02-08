@@ -60,7 +60,7 @@
 	// It works fine for 2-player, but for 3+ players it gets really inconsistent and depends on the specific image used, some trial and error is needed to find the right settings for each image
 
 	$: bgWidth = (!isMobile) ? '200%' : (layout === 'two-by-two') ?
-		(numberOfPlayers === 6 ? '140%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
+		(numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
 		: (numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))));
 
 	$: bgHeight = (!isMobile) ? '90%' : (layout === 'two-by-two') ?
@@ -69,7 +69,7 @@
 
 	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '45%') : '50%')));
 
-	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '30%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '35%' : '50%')) :'50%'));
+	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '35%' : '50%')) :'50%'));
 
 	$: bgSize = 'contain';
 
@@ -84,13 +84,42 @@
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
-			if (layout === 'one-two-one' || numberOfPlayers === 5 || (numberOfPlayers === 6 && (orientation === 'left' || orientation === 'right'))) {
+			if (numberOfPlayers === 5) {
 				// use contain or percentage sizes so both images display side-by-side
 				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
 				// position first image left, second image right; both centered vertically
 				const posx = '13%, 87%';
 				const posy = 'center, center';
 				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 85%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+			} else if (layout === 'two-by-two' && numberOfPlayers === 6) {
+				// use contain or percentage sizes so both images display side-by-side
+				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
+				// position first image left, second image right; both centered vertically
+				const posx = '13%, 87%';
+				const posy = 'center, center';
+				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 100%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+			} else if (layout === 'one-two-one' && numberOfPlayers === 6) {
+				// use contain or percentage sizes so both images display side-by-side
+				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
+				// position first image left, second image right; both centered vertically
+				const posx = '13%, 87%';
+				const posy = 'center, center';
+				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 110%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+			} else if (numberOfPlayers === 4) {
+				// use contain or percentage sizes so both images display side-by-side
+				const size = (!isMobile) ? '50% 100%, 50% 100%' : layout === 'two-by-two' ? '57.1% 100%, 57.1% 100%' : '44% 100%, 75% 100%';
+				// position first image left, second image right; both centered vertically
+				const posx = layout === 'two-by-two' ? '-18%, right' : '10%, 95%';
+				const posy = 'center, center';
+				const bgHeight = layout === 'two-by-two' ? '57.5%' : '85%';
+				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 190%; --bg-height: ${bgHeight}; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+			} else if (numberOfPlayers === 3) {
+				// use contain or percentage sizes so both images display side-by-side
+				const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 75%, 57.1% 75%';
+				// position first image left, second image right; both centered vertically
+				const posx = '-15%, right';
+				const posy = 'center, center';
+				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 210%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
 			} else {
 				// use contain or percentage sizes so both images display side-by-side
 				const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 100%, 57.1% 100%';
@@ -102,7 +131,7 @@
 		}
 
 		// single string image
-		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize}; --bg-repeat: space;`;
 	})();
 
 	$: status = $players[index].statusEffects ?? {};
