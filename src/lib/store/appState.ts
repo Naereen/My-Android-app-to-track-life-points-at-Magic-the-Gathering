@@ -8,8 +8,7 @@ export const appState = persist('appState', {
 	isMenuOpen: false,
 	activeMenu: '',
 	// index of the current player's turn (0-based). Default to -1, to indicate no turn yet.
-	currentTurn: -1
-	,
+	currentTurn: -1,
 	// number of turns played. 0 = not started, otherwise 1..99
 	turnCount: 0,
 	// index of the starting player for the current round tracking
@@ -21,7 +20,7 @@ export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 	appState.update((data) => ({ ...data, activeMenu: menu, isMenuOpen: !data.isMenuOpen }));
 };
 
-export const setCurrentTurn = (index: number) => {
+export const setCurrentTurn = (index: number, updateIsPositive: boolean) => {
 	appState.update((data) => {
 		const newData = { ...data, currentTurn: index } as any;
 
@@ -39,7 +38,8 @@ export const setCurrentTurn = (index: number) => {
 
 		// If we moved back to the starting player, increment the turn counter
 		if (index === data.startingPlayerIndex) {
-			const nextCount = Math.min(99, (data.turnCount || 0) + 1);
+			vibrate(50);
+			const nextCount = Math.max(0, Math.min(99, (data.turnCount || 0) + (updateIsPositive ? 1 : -1)));
 			newData.turnCount = nextCount;
 			return newData;
 		}
@@ -68,7 +68,7 @@ export const nextTurn = () => {
 			: true;
 		// If there's no candidate (defensive), treat as dead and continue
 		if (candidate && !isDead) {
-			setCurrentTurn(nextIndex);
+			setCurrentTurn(nextIndex, true);
 			return;
 		}
 		nextIndex = (nextIndex + 1) % totalPlayers;
@@ -98,7 +98,7 @@ export const prevTurn = () => {
 			: true;
 		// If there's no candidate (defensive), treat as dead and continue
 		if (candidate && !isDead) {
-			setCurrentTurn(nextIndex);
+			setCurrentTurn(nextIndex, false);
 			return;
 		}
 		nextIndex = (nextIndex - 1 + totalPlayers) % totalPlayers;
