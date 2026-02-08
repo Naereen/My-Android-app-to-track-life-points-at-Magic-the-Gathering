@@ -112,16 +112,14 @@
 			class="flex flex-col justify-center items-center"
 		>
 			{#if $randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
-				<div
-					class="flex flex-col items-center p-4"
-					>
-					<span class="text-white text-5xl font-bold text-center mt-16 beleren">
+				<div class="flex flex-col items-center p-4" >
+					<span class="text-white text-5xl font-bold text-center mt-24 mb-0 beleren">
 						<!-- Show the commanderDamage icon (one of the six set icons showing a random weapon) -->
-						{#if $randomizerModalData.playerId !== null}
+						<!-- {#if $randomizerModalData.playerId !== null}
 							<div class="mb-14 scale-[6]">
 								<CommanderDamage playerIndex={$randomizerModalData.playerId - 1} color="inherit" extraEffects="ss-mythic ss-grad" extraRotationEffect="transform: rotate(0deg);" />
 							</div>
-						{/if}
+						{/if} -->
 						{$randomizerModalData.playerName}
 					</span>
 				</div>

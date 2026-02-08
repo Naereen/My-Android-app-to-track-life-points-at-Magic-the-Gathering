@@ -11,15 +11,15 @@
 		class:h-[32%]={!$appState.isMenuOpen}
 		class:pt-2={$appState.isMenuOpen}
 	>
-		<PlayerVertical orientation="down" id={3} />
+		<PlayerVertical orientation="down" layout="one-two-one" id={3} />
 	</div>
 
 	<div class="pt-2 flex gap-2 pt-2 bg-black sticky top-0" class:h-[32%]={!$appState.isMenuOpen}>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-			<PlayerHorizontal orientation="right" id={2} />
+			<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
 		</div>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-			<PlayerHorizontal orientation="left" id={4} />
+			<PlayerHorizontal orientation="left" layout="one-two-one" id={4} />
 		</div>
 	</div>
 
@@ -32,6 +32,6 @@
 		class:h-[32%]={!$appState.isMenuOpen}
 		class:pt-2={!$appState.isMenuOpen}
 	>
-		<PlayerVertical orientation="up" id={1} />
+		<PlayerVertical orientation="up" layout="one-two-one" id={1} />
 	</div>
 </div>

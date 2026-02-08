@@ -34,6 +34,7 @@
 
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
+	export let layout: 'two-by-two' | 'one-two-one' | '' = '';
 
 	let interval: number;
 	let timeout: number;
@@ -55,7 +56,7 @@
 	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
 	$: bgPositionX = orientation === 'up' ? 'center' : orientation === 'right' ? 'center' : 'center';
 	$: bgPositionY = orientation === 'up' ? 'center' : orientation === 'down' ? 'center' : 'center';
-	$: bgWidth = '100%';
+	$: bgWidth = layout === 'two-by-two' ? '105%' : '100%';
 	$: bgHeight = '100%';
 	$: bgTop = '50%';
 	$: bgLeft = '50%';
