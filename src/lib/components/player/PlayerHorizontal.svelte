@@ -285,8 +285,8 @@
 						>
 							<div class="flex items-center">
 								<div class="flex justify-center items-center mb-3 rotate-90">
-									<div class="flex justify-center items-center mr-1" style="transform: rotate(-45deg);">
-										<CommanderDamage playerIndex={index} />
+									<div class="flex justify-center items-center mr-1">
+										<CommanderDamage playerIndex={index} color="white" />
 									</div>
 								</div>
 								<span
@@ -602,18 +602,14 @@
 											class="status-rotate-wrapper"
 											style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 										>
-											<div style="transform: rotate(-45deg);">
-												<CommanderDamage playerIndex={i} />
-											</div>
+											<CommanderDamage playerIndex={i} color="white" />
 										</div>
 									{:else}
 										<div
 											class="status-rotate-wrapper"
 											style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 										>
-											<div style="transform: rotate(-45deg);">
-												<CommanderDamage playerIndex={i} />
-											</div>
+											<CommanderDamage playerIndex={i} color="white" />
 										</div>
 										<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
 									{/if}

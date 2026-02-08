@@ -97,7 +97,7 @@
 >
 	<div
 		on:click|stopPropagation
-		class="bg-[#2d2f30] opacity-100 rounded-[2rem] flex justify-center items-center"
+		class="bg-[#2d2f30] opacity-100 rounded-[2.5rem] flex justify-center items-center"
 		class:w-40={$randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent'}
 		class:h-40={$randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent'}
 		class:w-80={$randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
@@ -116,10 +116,10 @@
 					class="flex flex-col items-center p-4"
 					>
 					<span class="text-white text-5xl font-bold text-center mt-16 beleren">
-						<!-- Uncomment to show the commanderDamage icon (one of the six set icons showing a random weapon) -->
+						<!-- Show the commanderDamage icon (one of the six set icons showing a random weapon) -->
 						{#if $randomizerModalData.playerId !== null}
-							<div class="scale-[3]">
-								<CommanderDamage playerIndex={$randomizerModalData.playerId - 1} />
+							<div class="mb-14 scale-[6]">
+								<CommanderDamage playerIndex={$randomizerModalData.playerId - 1} color="inherit" extraEffects="ss-mythic ss-grad" extraRotationEffect="transform: rotate(0deg);" />
 							</div>
 						{/if}
 						{$randomizerModalData.playerName}

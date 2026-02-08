@@ -9,6 +9,11 @@ export const appState = persist('appState', {
 	activeMenu: '',
 	// index of the current player's turn (0-based). Default to -1, to indicate no turn yet.
 	currentTurn: -1
+	,
+	// number of turns played. 0 = not started, otherwise 1..99
+	turnCount: 0,
+	// index of the starting player for the current round tracking
+	startingPlayerIndex: null as number | null
 });
 
 export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
@@ -17,7 +22,30 @@ export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 };
 
 export const setCurrentTurn = (index: number) => {
-	appState.update((data) => ({ ...data, currentTurn: index }));
+	appState.update((data) => {
+		const newData = { ...data, currentTurn: index } as any;
+
+		// If index is negative (no active player), keep startingPlayerIndex as-is
+		if (index < 0) {
+			return newData;
+		}
+
+		// If we don't yet have a starting player for the ongoing game, set it
+		if (data.startingPlayerIndex === null) {
+			newData.startingPlayerIndex = index;
+			newData.turnCount = 1;
+			return newData;
+		}
+
+		// If we moved back to the starting player, increment the turn counter
+		if (index === data.startingPlayerIndex) {
+			const nextCount = Math.min(99, (data.turnCount || 0) + 1);
+			newData.turnCount = nextCount;
+			return newData;
+		}
+
+		return newData;
+	});
 };
 
 export const nextTurn = () => {
@@ -40,7 +68,7 @@ export const nextTurn = () => {
 			: true;
 		// If there's no candidate (defensive), treat as dead and continue
 		if (candidate && !isDead) {
-			appState.update((data) => ({ ...data, currentTurn: nextIndex }));
+			setCurrentTurn(nextIndex);
 			return;
 		}
 		nextIndex = (nextIndex + 1) % totalPlayers;
@@ -70,7 +98,7 @@ export const prevTurn = () => {
 			: true;
 		// If there's no candidate (defensive), treat as dead and continue
 		if (candidate && !isDead) {
-			appState.update((data) => ({ ...data, currentTurn: nextIndex }));
+			setCurrentTurn(nextIndex);
 			return;
 		}
 		nextIndex = (nextIndex - 1 + totalPlayers) % totalPlayers;

@@ -257,9 +257,7 @@
 						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						><div class="flex">
 							<div class="flex justify-center items-center mr-1">
-								<div class="flex justify-center items-center mr-1" style="transform: rotate(-45deg);">
-									<CommanderDamage playerIndex={index} />
-								</div>
+								<CommanderDamage playerIndex={index} color="white" />
 							</div>
 							<span
 								class="beleren"
@@ -422,9 +420,7 @@
 						title={$_('tooltip_commander_damage')}
 						class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
 					>
-						<div style="transform: rotate(-45deg);">
-							<CommanderDamage playerIndex={i} />
-						</div>
+						<CommanderDamage playerIndex={i} color="white" />
 						<span>{dmg}</span>
 					</div>
 				{/if}

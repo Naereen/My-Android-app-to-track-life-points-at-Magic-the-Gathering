@@ -118,7 +118,12 @@
 					class="px-2 py-1 rounded-3xl bg-gray-700 text-white"
 					title="Next player"
 				>
-					▶
+						<span class="inline-flex items-center">
+							<span>▶</span>
+							{#if $appState.turnCount > 0}
+								<span class="ml-2 w-6 h-6 rounded-full bg-gray-600 text-xs flex items-center justify-center">{$appState.turnCount}</span>
+							{/if}
+						</span>
 				</button>
 			</div>
 		{/if}
