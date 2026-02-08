@@ -256,25 +256,24 @@ const getInitialPlayers = (): App.Player.Data[] => {
 			if (!raw) {
 				// choose between all the colors for backgrounds
 				const first_choices = ['white', 'blue', 'black', 'red', 'green'];
-				const second_choices = [
-					'mud',
-					'metalicgray',
-					'gold',
-					'purple',
-					'pink',
-					'orange',
-					'lightgreen'
-				];
+				const second_choices = [ 'mud', 'metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen' ];
 				return defaultPlayers.map((p) => ({
 					...p,
 					color: `${first_choices[Math.floor(Math.random() * first_choices.length)]},${second_choices[Math.floor(Math.random() * second_choices.length)]}`
 				}));
+			}
+
+			// If saved players exist, try to parse and return them synchronously
+			const parsed = JSON.parse(raw as string);
+			if (Array.isArray(parsed)) {
+				return parsed as App.Player.Data[];
 			}
 		} catch (e) {
 			// if any error, fall back to defaults
 		}
 	}
 
+	// Fallback: return default players (async image fetching is handled elsewhere)
 	return defaultPlayers;
 };
 
@@ -454,21 +453,6 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 	});
 };
 
-// Object to store timeout references for each player
-const resetTimers: { [key: number]: number } = {};
-
-export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
-	let resetProfiles = false;
-
-	if (!alreadyConfirmed) {
-		const result = await showConfirm(
-			get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?',
-			{
-				checkboxLabel:
-					get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
-				checkboxDefaultValue: false
-			}
-		);
 // Try to fetch a random card image from Scryfall matching a given name.
 // Returns a payload compatible with `setPlayerBackgroundImage` helper or null on failure.
 const fetchScryfallImageForName = async (name: string) => {
@@ -484,12 +468,14 @@ const fetchScryfallImageForName = async (name: string) => {
 
 		// try common image locations
 		let imageUrl: string | null = null;
-		if (data.image_uris && data.image_uris.large) {
+		if (data.image_uris && data.image_uris.art_crop) {
+			imageUrl = data.image_uris.art_crop;
+		} else if (data.image_uris && data.image_uris.large) {
 			imageUrl = data.image_uris.large;
 		} else if (data.image_uris && data.image_uris.normal) {
 			imageUrl = data.image_uris.normal;
 		} else if (data.card_faces && data.card_faces[0] && data.card_faces[0].image_uris) {
-			imageUrl = data.card_faces[0].image_uris.large || data.card_faces[0].image_uris.normal || null;
+			imageUrl = data.card_faces[0].image_uris.art_crop || data.card_faces[0].image_uris.large || data.card_faces[0].image_uris.normal || null;
 		}
 
 		const artist = data.artist ?? (data.card_faces && data.card_faces[0] && data.card_faces[0].artist_name) ?? null;
@@ -508,7 +494,8 @@ const fetchScryfallImageForName = async (name: string) => {
 // a thematic background image for each randomly-generated player name.
 if (typeof window !== 'undefined') {
 	try {
-		const raw = localStorage.getItem('players');
+		// const raw = localStorage.getItem('players');
+		const raw = undefined;
 		if (!raw) {
 			// run async initialisation without blocking module load
 			(async () => {
@@ -527,6 +514,22 @@ if (typeof window !== 'undefined') {
 		// ignore
 	}
 }
+
+// Object to store timeout references for each player
+const resetTimers: { [key: number]: number } = {};
+
+export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
+	let resetProfiles = false;
+
+	if (!alreadyConfirmed) {
+		const result = await showConfirm(
+			get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?',
+			{
+				checkboxLabel:
+					get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
+				checkboxDefaultValue: false
+			}
+		);
 
 		if (typeof result === 'boolean') {
 			// Backwards compatibility: if result is just a boolean, use it as confirmation

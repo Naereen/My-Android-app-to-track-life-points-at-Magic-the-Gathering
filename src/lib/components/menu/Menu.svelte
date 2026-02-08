@@ -142,7 +142,7 @@ $: if ($appState.turnCount !== prevTurnCount) {
 					on:click={handleNextClick}
 					on:contextmenu|preventDefault
 					draggable="false"
-					class="px-2 py-1 rounded-3xl bg-gray-700 text-white"
+					class="px-2 py-1 rounded-3xl bg-gray-800 text-white"
 					title="Next player"
 				>
 					<span class="inline-flex items-center">
