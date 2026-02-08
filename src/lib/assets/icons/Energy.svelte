@@ -4,7 +4,7 @@
 	height="1.25rem"
 	viewBox="0 0 480 486.75"
 	enable-background="new 0 0 480 486.75"
-	fill="yellow"
+	fill="gold"
 	stroke="currentColor"
 	stroke-width="1.5"
 	stroke-linecap="round"

@@ -25,7 +25,10 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Reduce the vertical space taken by the "ressources" menu (mana/storm symbols) ==> NOPE
 - [x] Increase the font-size of the names of the players, especially on mobile devices. DONE but don't do it too much!
 
--[ ] Add an animation showing the dice D6/D8/D10/etc rolling a little bit (like for 1 seconds, 6 different results appearing one after the other, before showing the final result). I don't know how to do that yet, but it would be a nice improvement for the randomizer feature!
+- [ ] When showing the playerName, truncate it to max 20 caracters, in order to be sure that it will not be too large?
+
+- [ ] Add an animation showing the dice D6/D8/D10/etc rolling a little bit (like for 1 seconds, 6 different results appearing one after the other, before showing the final result). TODO: the animation is implemented, but so far it shows the maximum face of the dice (eg. a face showing 20 for a D20), and a number moving randomly, below this face of the dice. TODO: What I want is more subtle and more interesting: I want the face of the dice to change during the animation, showing different faces of the dice, and not only the maximum face. I also want to completely remove the number being displayed below the face of the dice, as it is not very useful and it can be confusing, especially for D20 dice, where the maximum face is 20, but the result can be 1, which is very different from 20. So I want to show only the face of the dice during the animation, and not the number below it.
+
 - [x] In the different menus (Randomizer, ManaStorm, etc.), the status effects should NOT be displayed for the player 1 (the one in the bottom).
 
 - [x] Add the Beleren2016-bold font for the player' names.
