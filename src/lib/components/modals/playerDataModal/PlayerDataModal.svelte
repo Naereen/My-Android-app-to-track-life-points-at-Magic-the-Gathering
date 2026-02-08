@@ -341,9 +341,11 @@
 				<h2 class="text-2xl font-semibold my-2 relative w-full text-center">
 					{$_('customize_player')}
 					{$playerModalData.playerId}
-					<span class="inline-flex items-center" title="Commander Damage">
-						<CommanderDamage playerIndex={$playerModalData.playerId - 1} />
-					</span>
+					{#if $appSettings.playerCount !== 2}
+						<span class="inline-flex items-center" title="Commander Damage">
+							<CommanderDamage playerIndex={$playerModalData.playerId - 1} />
+						</span>
+					{/if}
 					<button
 						on:click={resetPlayerModalData}
 						on:contextmenu|preventDefault
@@ -388,12 +390,14 @@
 								class:underline={mode === 'status_effects'}
 								class:font-bold={mode === 'status_effects'}>{$_('status_effects')}</button
 							>
-							<button
-								class="px-3 py-1 rounded-full border"
-								on:click={() => (mode = 'commander')}
-								class:underline={mode === 'commander'}
-								class:font-bold={mode === 'commander'}>{$_('commander_damage_short')}</button
-							>
+							{#if $appSettings.playerCount !== 2}
+								<button
+									class="px-3 py-1 rounded-full border"
+									on:click={() => (mode = 'commander')}
+									class:underline={mode === 'commander'}
+									class:font-bold={mode === 'commander'}>{$_('commander_damage_short')}</button
+								>
+							{/if}
 						</div>
 
 					{#if mode === 'background'}
@@ -904,7 +908,7 @@
 						</div>
 					{/if}
 
-					{#if mode === 'commander'}
+					{#if mode === 'commander' && $appSettings.playerCount !== 2}
 						<!-- Commander Damage Section (now its own tab) -->
 						<div class="mt-2 w-full flex flex-col items-center text-center border-t pt-4">
 							<div class="text-sm text-gray-600 mb-3">{String($_('commander_damage_help'))}</div>

@@ -15,7 +15,7 @@
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
-	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
+    
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
@@ -313,9 +313,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							class="py-1 px-2 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 							><div class="flex">
-								<div class="flex justify-center items-center mr-1">
-									<CommanderDamage playerIndex={index} color="white" />
-								</div>
+								<!-- CommanderDamage removed -->
 								<span
 									class="beleren"
 									style="font-size: x-large; color: white;"
@@ -472,17 +470,18 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} /> <span>{startYourEngineSpeedCount}</span>
 				</div>
 			{/if}
-			{#each commanderDamageArray as dmg, i}
-				{#if dmg > 0}
-					<div
-						title={$_('tooltip_commander_damage')}
-						class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
-					>
-						<CommanderDamage playerIndex={i} color="white" />
-						<span>{dmg}</span>
-					</div>
-				{/if}
-			{/each}
+			{#if numberOfPlayers !== 2}
+				{#each commanderDamageArray as dmg, i}
+					{#if dmg > 0}
+						<div
+							title={$_('tooltip_commander_damage')}
+							class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+						>
+							<span class="px-1">{dmg}</span>
+						</div>
+					{/if}
+				{/each}
+			{/if}
 		</div>
 	</div>
 </div>

@@ -36,6 +36,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] Add the Beleren2016-bold font for the player' names.
 
+- [x] ONLY FOR THE TWO-PLAYERS MODE: do not include the EDH damage panel (in the PlayerDataModal.svelte) and remove all the inclusions of the CommanderDamage svelte component (**only for the 2-player mode**).
+
 ## State saving improvements
 
 - [x] Save the state in the local storage of the browser, so that reloading the page does not reset everything
@@ -71,7 +73,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks). I couldn't reproduce this bug anymore...
 
-- [ ] FIXME: enable again the day/night switch setting in the player status effects, which is currently disabled because I was lazy to implement the day/night cycle feature, but I want to enable it again, even if the day/night cycle is not implemented yet, as it can be useful for players to track this status effect, even without the full day/night cycle feature.
+- [ ] FIXME: enable again the day/night switch setting in the player status effects, which is currently disabled because I was lazy to implement the day/night cycle feature, but I want to enable it again (some day), even if the day/night cycle is not implemented yet, as it can be useful for players to track this status effect, even without the full day/night cycle feature.
 
 ### About the ServiceWorker.js script
 
@@ -268,7 +270,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
   - [x] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
   - [x] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two colors)
     - [x] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG) - I already added a "random background" button!
-  - [ ] TODO: Allow partners and backgrounds and all pairs of legendary commanders. TODO: Be careful, it is probably quite complicated to manage a background with two illustrations *side by side* properly.
+  - [x] Allow partners and backgrounds and all pairs of legendary commanders (actually, any pair of cards). Be careful, it is probably quite complicated to manage a background with two illustrations *side by side* properly.
 
 - [x] Improve the "search background" feature: after searching and choosing a background image, the "search background" dialog should keep in memory the chosen image, and display its status of "chosen image" in the result list.
   - [x] This information about the chosen background should always be display in the "search background" tab: if player number 1/2/3/4/5/6 has already chosen a background, when opening again the "search background" tab, the chosen background should be displayed (and indicated as "chosen") in the search result list by default, and also when searching for another card, if the chosen background is in the search result, it should be indicated as "chosen" in the search result list.
@@ -276,6 +278,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
   - [x] By default, when opening the "search background" panel, the search button/input form should be filled with the name of the player! That's fun, and it can help to find a card that matches the player's name (e.g. if the player is named "Jace", they can search for "Jace" and find all the Jace planeswalkers, which are pretty cool as backgrounds!)
 
 - [x] Commander damage type tracking, in a simple and visual way, with a small icon for each opponent, and a number for the commander damage received from this opponent. It is a new feature from the Lifetap app, and it is very useful for Commander games!
+  - [ ] For the "Commander damage" panel, try as much as possible to keep the same layout and design as the Lifetap app, as it is already very good and optimized for mobile devices, so it can be a good inspiration for this feature. The "Commander damage" panel should be located in the "Status effects" tab of the PlayerDataModal.svelte, as it is a status effect that can be tracked for each player, and it is not related to the background of the player panel. This part of the status effects should look like a "minimap" of the entire screen, showing tiny areas with the same image backgrounds/color-gradients as the player panels, with small icons for each opponent, and a number for the commander damage received from this opponent. It should be very visual and easy to understand at a glance, especially on mobile devices. See the attached screenshot, in the middle on the bottom of the screen, for an example of how it looks in the Lifetap app.
 
   - [x] In the "Commander damage" panel in the PlayerDataModal.svelte, allow to double-click on a commander damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click multiple times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games!
 
