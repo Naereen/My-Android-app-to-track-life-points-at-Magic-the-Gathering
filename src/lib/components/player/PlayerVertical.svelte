@@ -67,18 +67,17 @@
 		const bgValue = $players[index].backgroundImage;
 		// default single-image behavior
 		if (!bgValue) {
-			return `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+			return `--bg-image: none; --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
 		}
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
 			// position first image top, second image bottom; both centered horizontally
-			const posx = 'center, center';
-			const posy = 'top, bottom';
+			const posx = '20%, right';
+			const posy = 'center, center';
 			// use contain or percentage sizes so both images display side-by-side
-			const size = (isMobile) ? '50% 75%, 50% 75%' : 'contain, contain';
-			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy};`;
-			// --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${size}; // IGNORE
+			const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 100%, 57.1% 100%';
+			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-width: 150%; --bg-height: ${bgHeight};`;
 		}
 
 		// single string image
@@ -237,6 +236,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
 	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
 	class:bg-rotated={!!$players[index].backgroundImage}
+	class:overflow-hidden={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
 	class:h-full={!$appState.isMenuOpen}

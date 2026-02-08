@@ -106,19 +106,22 @@
 	.bg-rotated::before {
 		content: '';
 		position: absolute;
-		top: var(--bg-top, 50%);
-		left: var(--bg-left, 50%);
+		top: var(--bg-top);
+		left: var(--bg-left);
 		/* 200% permet de couvrir les cas de rotation sans couper l'image */
-		width: var(--bg-width, 100%);
-		height: var(--bg-height, 100%);
+		width: var(--bg-width);
+		height: var(--bg-height);
 		/* translateX to center horizontally, rotate around the top center so top stays aligned */
 		transform: translateX(-50%) translateY(-50%) rotate(var(--bg-rotation, 0deg));
 		transform-origin: center center;
 		background-image: var(--bg-image);
-		/* keep the full card visible (no cropping) while fitting inside the enlarged pseudo-element */
+		/* keep the full illustration card visible (no cropping) while fitting inside the enlarged pseudo-element */
 		background-size: var(--bg-size, cover);
-		background-position: var(--bg-positionx, center) var(--bg-positiony, center);
-		z-index: 3;
+		background-position-x: var(--bg-positionx);
+		background-position-y: var(--bg-positiony);
+		background-repeat: var(--bg-repeat, no-repeat);
+		background-clip: var(--bg-clip, border-box);
+		z-index: 5;
 		pointer-events: none;
 	}
 

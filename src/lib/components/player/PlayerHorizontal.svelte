@@ -64,8 +64,8 @@
 	$: bgHeight = (!isMobile) ? '90%' : ((layout === 'two-by-two') ?
 		(numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '80%' : '125%'))))
 		: (numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '80%' : '125%')))));
-	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? ((orientation === 'left' ? '45%' : '65%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '20%' : '35%') : '50%')));
-	$: bgLeft = (!isMobile) ? '50%' : ((numberOfPlayers === 3 || (numberOfPlayers === 6 && layout === 'two-by-two')) ? (orientation === 'left' ? '70%' : '30%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '55%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) :'50%')));
+	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? (orientation === 'left' ? '45%' : '65%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '20%' : '35%') : '50%')));
+	$: bgLeft = (!isMobile) ? '50%' : ((numberOfPlayers === 3 || (numberOfPlayers === 6 && layout === 'two-by-two')) ? (orientation === 'left' ? '70%' : '30%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '55%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '35%' : '50%')) :'50%')));
 	$: bgSize = (!isMobile) ? 'cover' : ((layout === 'two-by-two') ?
 		(numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain'))
 		: (numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain')));
@@ -82,12 +82,11 @@
 			const two = bgValue.slice(0, 2);
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
 			// position first image left, second image right; both centered vertically
-			const posx = 'left, right';
+			const posx = '-18%, right';
 			const posy = 'center, center';
 			// use contain or percentage sizes so both images display side-by-side
-			const size = (isMobile) ? '0% 100%, 50% 100%' : 'contain, contain';
-			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy};`;
-			// --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-size: ${size};  --bg-top: ${bgTop}; --bg-left: ${bgLeft}; // IGNORE
+			const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 100%, 57.1% 100%';
+			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%;`;
 		}
 
 		// single string image
@@ -265,6 +264,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
 	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
 	class:bg-rotated={!!$players[index].backgroundImage}
+	class:overflow-hidden={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
 	class:h-full={!$appState.isMenuOpen}
