@@ -104,23 +104,25 @@
 				<ManaPentagon />
 			</button>
 		</div>
-		<div class="flex justify-center items-center flex-grow">
-			<button
-				on:mousedown={handleTurnDown}
-				on:mouseup={handleTurnUp}
-				on:mouseleave={handleTurnUp}
-				on:touchstart={handleTurnDown}
-				on:touchend={handleTurnUp}
-				on:touchcancel={handleTurnUp}
-				on:click={handleNextClick}
-				on:contextmenu|preventDefault
-				draggable="false"
-				class="px-2 py-1 rounded-3xl bg-gray-700 text-white"
-				title="Next player"
-			>
-				▶
-			</button>
-		</div>
+		{#if $appSettings.showNextPlayerButton}
+			<div class="flex justify-center items-center flex-grow">
+				<button
+					on:mousedown={handleTurnDown}
+					on:mouseup={handleTurnUp}
+					on:mouseleave={handleTurnUp}
+					on:touchstart={handleTurnDown}
+					on:touchend={handleTurnUp}
+					on:touchcancel={handleTurnUp}
+					on:click={handleNextClick}
+					on:contextmenu|preventDefault
+					draggable="false"
+					class="px-2 py-1 rounded-3xl bg-gray-700 text-white"
+					title="Next player"
+				>
+					▶
+				</button>
+			</div>
+		{/if}
 		<div class="flex justify-center items-center flex-grow"
 		>
 			<button

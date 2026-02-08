@@ -194,6 +194,7 @@
 
 <div
 	class="flex w-full rounded-2xl flex-grow h-6"
+	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow}
 	class:bg-rotated={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
@@ -255,6 +256,7 @@
 								</div>
 							</div>
 							<span
+								class="beleren"
 								style="font-size: x-large; color: white;"
 								style:text-decoration={isDead ? 'line-through' : ''}
 								class:overline={index === $appState.currentTurn}>{$players[index].playerName}</span
@@ -308,8 +310,8 @@
 								<span
 									class="flex items-center text-center text-shadow-xl/120 text-white font-bold"
 									class:opacity-25={isDead}
-									class:text-8xl={$appSettings.playerCount <= 4}
-									class:text-6xl={$appSettings.playerCount >= 5}
+									class:text-7xl={$appSettings.playerCount <= 4}
+									class:text-5xl={$appSettings.playerCount >= 5}
 									style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
 								>
 							</button>
@@ -323,14 +325,14 @@
 										if (e.key === 'Enter') saveEdit();
 										if (e.key === 'Escape') cancelEdit();
 									}}
-									class="w-20 h-20text-center rounded-md px-2 py-1 text-3xl"
+									class="w-20 h-20 text-center rounded-md px-2 py-1 text-3xl"
 									placeholder={$_('enter_life_total_placeholder')}
 								/>
 								<div class="flex gap-2 mt-1">
-									<button on:click={saveEdit} class="px-2 py-1 bg-gree1-600 text-white rounded"
+									<button on:click={saveEdit} class="px-2 py-1 bg-green-600 text-white rounded"
 										>{$_('set_life_total_save')}</button
 									>
-									<button on:click={cancelEdit} class="px-2 py-1 bg1gray-600 text-white rounded"
+									<button on:click={cancelEdit} class="px-2 py-1 bg-gray-600 text-white rounded"
 										>{$_('set_life_total_cancel')}</button
 									>
 								</div>

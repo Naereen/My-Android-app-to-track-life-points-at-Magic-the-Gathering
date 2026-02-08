@@ -26,7 +26,9 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Increase the font-size of the names of the players, especially on mobile devices. DONE but don't do it too much!
 
 -[ ] Add an animation showing the dice D6/D8/D10/etc rolling a little bit (like for 1 seconds, 6 different results appearing one after the other, before showing the final result). I don't know how to do that yet, but it would be a nice improvement for the randomizer feature!
-- [ ] In the different menus (Randomizer, ManaStorm, etc.), the status effects should NOT be displayed for the player 1 (the one in the bottom).
+- [x] In the different menus (Randomizer, ManaStorm, etc.), the status effects should NOT be displayed for the player 1 (the one in the bottom).
+
+- [x] Add the Beleren2016-bold font for the player' names.
 
 ## State saving improvements
 
@@ -101,7 +103,7 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 - [x] Add a « about section » at the bottom of the settings menu, with:
 
   - [x] App version, name of the author, license
-  - [x] Huge thank you to Michael Bourkas for the Lifetap app, which this is a personnal clone of
+  - [x] Huge thank you to Mike Bourkas for the Lifetap app, which this is a personnal clone of
   - [x] Link to the GitHub repository
   - [ ] ?? Link to the Google Play Store page (when published)
   - [ ] ?? Link to a feedback form (Google Forms or similar)
@@ -173,7 +175,9 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
   - [ ] Haptic vibrate when the time is up
   - [ ] and sound an discrete tiny alarm when the time is up
 
-- [ ] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel?
+- [x] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel. DONE!
+  - [ ] Add a setting in the global setting menu, to enable/disable this glowing border for the current player, as it can be too much for some people, especially on mobile devices (it can be too much visual noise, especially with image backgrounds, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to know whose turn it is, but it should be possible to disable it from the settings.
+  - [ ] Also add a setting to enable/disable the "next player" button from the main menu, as it can be too much for some people, especially on mobile devices (it can consume more screen space, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to have a button to advance to the next player's turn, but it should be possible to disable it from the settings.
 
 - [x] Implement two layouts for the four-players mode:
 

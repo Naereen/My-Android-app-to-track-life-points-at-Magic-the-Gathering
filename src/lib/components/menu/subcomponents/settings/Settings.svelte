@@ -17,6 +17,7 @@
 		setPreventScreenSleep,
 		setHapticsEnabled
 	} from '$lib/store/appSettings';
+	import { setEnableCurrentPlayerGlow, setShowNextPlayerButton } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
 
 	const resetLocalStorage = async () => {
@@ -109,6 +110,16 @@
 	const handleHapticsChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setHapticsEnabled(!!target.checked);
+	};
+
+	const handleEnableGlowChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setEnableCurrentPlayerGlow(!!target.checked);
+	};
+
+	const handleShowNextButtonChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setShowNextPlayerButton(!!target.checked);
 	};
 
 	const languages = [
@@ -298,6 +309,34 @@
 				<span class="ml-2 text-lg font-semibold">{$_('haptic_feedback')}</span>
 			</label>
 		</div>
+		<div class="w-full flex justify-center mt-2 mb-2">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.enableCurrentPlayerGlow}
+					on:change={handleEnableGlowChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('enable_current_player_glow') || 'Enable current player glow'}</span>
+			</label>
+		</div>
+		<div class="w-full flex justify-center mt-2 mb-2">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.showNextPlayerButton}
+					on:change={handleShowNextButtonChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('show_next_player_button') || 'Show next-player button'}</span>
+			</label>
+		</div>
 		<!-- Reset local storage placed at the bottom so user can scroll to it -->
 		<div class="w-full flex justify-center mt-2 mb-2">
 			<button class="bg-red-900 text-white px-4 py-2 rounded-full" on:click={resetLocalStorage}>
@@ -309,7 +348,7 @@
 		<div class="w-full text-center text-gray-400 mt-4 mb-8 px-6">
 			<div class="text-white text-2xl mb-2 font-semibold">{$_('about_title')}</div>
 			<div class="text-base mb-1">
-				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.3.0'}
+				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.3.1'}
 			</div>
 			<div class="text-base mb-1">{$_('about_author')}: Naereen</div>
 			<div class="text-base mb-2">{$_('about_license')}: MIT</div>

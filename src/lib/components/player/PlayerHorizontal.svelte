@@ -204,8 +204,10 @@
 
 <svelte:window bind:innerWidth />
 
+
 <div
 	class="rounded-2xl relative h-full w-full"
+	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow}
 	class:bg-rotated={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
@@ -282,6 +284,7 @@
 									</div>
 								</div>
 								<span
+									class="beleren"
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
 									class:overline={index === $appState.currentTurn}
@@ -356,8 +359,8 @@
 								>
 									<span
 										class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center"
-										class:text-8xl={$appSettings.playerCount <= 4}
-										class:text-6xl={$appSettings.playerCount >= 5}
+										class:text-7xl={$appSettings.playerCount <= 4}
+										class:text-5xl={$appSettings.playerCount >= 5}
 										class:-rotate-180={orientation === 'left'}
 										class:opacity-25={isDead}
 										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
