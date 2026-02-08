@@ -6,6 +6,7 @@
 	import FourPlayerLayoutTwo from '$lib/layouts/FourPlayerLayoutTwo.svelte';
 	import FivePlayerLayout from '$lib/layouts/FivePlayerLayout.svelte';
 	import SixPlayerLayoutOne from '$lib/layouts/SixPlayerLayoutOne.svelte';
+	import SixPlayerLayoutTwo from '$lib/layouts/SixPlayerLayoutTwo.svelte';
 	import { playerModalData, randomizerModalData, confirmModalData } from '$lib/store/modal';
 	import RandomizerModal from '$lib/components/modals/randomizerModal/RandomizerModal.svelte';
 	import PlayerDataModal from '$lib/components/modals/playerDataModal/PlayerDataModal.svelte';
@@ -51,7 +52,11 @@
 	{:else if $appSettings.playerCount === 5}
 		<FivePlayerLayout />
 	{:else if $appSettings.playerCount === 6}
-		<SixPlayerLayoutOne />
+		{#if $appSettings.sixPlayerLayout === 'two'}
+			<SixPlayerLayoutTwo />
+		{:else}
+			<SixPlayerLayoutOne />
+		{/if}
 	{/if}
 	{#if $randomizerModalData.isOpen}
 		<RandomizerModal />

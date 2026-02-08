@@ -206,9 +206,10 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
   - [x] The "1 / 2 / 1" layout, if players are seated on a round table
   - [x] The "2 x 2" layout, if players are seated on opposite sides of a rectangular table (classic mode for Two-Headed Giant mode, it is already implemented)
 
-- [ ] (much later, I never play with 6 players) Implement two layouts for the six-players mode:
-  - [ ] The "|::|" layout (one long | player on the left and the right, and in the middle like a Two-Headed Giant layout), if players are seated on a round table
-  - [x] Default mode for 6-player right now: the ":::" layout (2 lines of 3 columns), if players are seated on opposite sides of a rectangular table (classic mode for Emperor mode, it is already implemented)
+- [x] Implement the secondary layouts for the six-players mode:
+  - [x] The "|::|" layout (one long | player on the left and the right, and in the middle like a Two-Headed Giant layout), if players are seated on a round table. It is implemented in `SixPlayerLayoutTwo.svelte`, but it is not yet available in the settings menu.
+  - [x] Default mode for 6-player right now: the ":::" layout (3 lines of 2 columns), if players are seated on opposite sides of a rectangular table (classic mode for Emperor mode, it is already implemented). It is implemented in `SixPlayerLayoutOne.svelte`, but it is not yet available in the settings menu.
+  - [x] Copy what is done for the settings menu, for the case of 4-players mode, and adapt it to the choice of Layouts (One or Two) for the 6-players mode.
 
 ## Successfully build a working apk file
 

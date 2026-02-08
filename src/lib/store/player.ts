@@ -8,11 +8,152 @@ import { vibrate } from '$lib/utils/haptics';
 
 const playerBaseName = get(_)('player') || 'Player';
 
+const generateRandomPlayerName = () => {
+	// List of planeswalker names from Magic: The Gathering, to use as random player names. Source: https://mtg.wiki/Planeswalkers and https://yawgatog.com/resources/magic-rules/#R2053j
+	const popularPlaneswalkerNames : Record<string, string[]> = {
+		'A' : [
+			'Ajani',
+			'Aminatou',
+			'Angrath',
+			'Arlinn',
+			'Ashiok',
+		],
+		'B': [
+			'Bahamut',
+			'Basri',
+			'Bolas',
+		],
+		'C': [
+			'Calix',
+			'Chandra',
+			'Comet',
+		],
+		'D': [
+			'Dack',
+			'Dakkon',
+			'Daretti',
+			'Davriel',
+			'Dihada',
+			'Domri',
+			'Dovin',
+		],
+		'E': [
+			'Ellywick',
+			'Elminster',
+			'Elspeth',
+			'Estrid',
+		],
+		'F': [
+			'Freyalise',
+		],
+		'G': [
+			'Garruk',
+			'Gideon',
+			'Grist',
+			'Guff',
+		],
+		'H': [
+			'Huatli',
+		],
+		'J': [
+			'Jace',
+			'Jared',
+			'Jaya',
+			'Jeska',
+		],
+		'K': [
+			'Kaito',
+			'Karn',
+			'Kasmina',
+			'Kaya',
+			'Kiora',
+			'Koth',
+		],
+		'L': [
+			'Liliana',
+			'Lolth',
+			'Lukka',
+		],
+		'M': [
+			'Minsc',
+			'Mordenkainen',
+		],
+		'N': [
+			'Nahiri',
+			'Narset',
+			'Niko',
+			'Nissa',
+			'Nixilis',
+		],
+		'O': [
+			'Oko',
+		],
+		'Q': [
+			'Quintorius',
+		],
+		'R': [
+			'Ral',
+			'Rowan',
+		],
+		'S': [
+			'Saheeli',
+			'Samut',
+			'Sarkhan',
+			'Serra',
+			'Sivitri',
+			'Sorin',
+			'Szat',
+		],
+		'T': [
+			'Tamiyo',
+			'Tasha',
+			'Teferi',
+			'Teyo',
+			'Tezzeret',
+			'Tibalt',
+			'Tyvar',
+		],
+		'U': [
+			'Ugin',
+			'Urza',
+		],
+		'V': [
+			'Venser',
+			'Vivien',
+			'Vraska',
+			'Vronos',
+		],
+		'W': [
+			'Will',
+			'Windgrace',
+			'Wrenn',
+		],
+		'X': [
+			'Xenagos',
+		],
+		'Y': [
+			'Yanggu',
+			'Yanling',
+		],
+		'Z': [
+			'Zariel',
+		],
+	};
+	const randomKey = Object.keys(popularPlaneswalkerNames)[
+		Math.floor(Math.random() * Object.keys(popularPlaneswalkerNames).length)
+	];
+	const namesForKey = popularPlaneswalkerNames[randomKey];
+	const randomName = namesForKey[Math.floor(Math.random() * namesForKey.length)];
+	return randomName;
+	// const randomNumber = Math.floor(Math.random() * 1000);
+	// return `${randomName} ${randomNumber}`;
+}
+
 const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 1,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: `${playerBaseName} 1` || 'Player 1',
+		playerName: generateRandomPlayerName() || 'Player 1',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -28,7 +169,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 2,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: `${playerBaseName} 2` || 'Player 2',
+		playerName: generateRandomPlayerName() || 'Player 2',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -44,7 +185,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 3,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: `${playerBaseName} 3` || 'Player 3',
+		playerName: generateRandomPlayerName() || 'Player 3',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -60,7 +201,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 4,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: `${playerBaseName} 4` || 'Player 4',
+		playerName: generateRandomPlayerName() || 'Player 4',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -76,7 +217,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 5,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: `${playerBaseName} 5` || 'Player 5',
+		playerName: generateRandomPlayerName() || 'Player 5',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -92,7 +233,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 6,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: `${playerBaseName} 6` || 'Player 6',
+		playerName: generateRandomPlayerName() || 'Player 6',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,

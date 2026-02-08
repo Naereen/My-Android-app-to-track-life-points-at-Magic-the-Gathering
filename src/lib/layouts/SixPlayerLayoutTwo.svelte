@@ -5,9 +5,9 @@
 	import PlayerVertical from '$lib/components/player/PlayerVertical.svelte';
 </script>
 
-<div class="flex flex-col h-full justify-between">
+<div class="flex flex-col gap-0 h-full justify-between">
 	<div
-		class="flex flex-col gap-2 bg-black sticky bottom-0 pb-2"
+		class="flex flex-col gap-2 bg-black sticky top-0 pb-2"
 		class:h-[24%]={!$appState.isMenuOpen}
 		class:pt-2={$appState.isMenuOpen}
 	>
@@ -18,36 +18,36 @@
 		</div>
 	</div>
 	<div
-		class="flex flex-col gap-2 bg-black sticky bottom-0 pb-2"
+		class="pt-2 flex gap-2 pt-2 bg-black sticky top-0"
 		class:h-[24%]={!$appState.isMenuOpen}
 		class:pt-2={$appState.isMenuOpen}
 	>
-		<div class="h-full w-full flex justify-between gap-2">
-			<div class="w-full">
-				<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
-				<PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
-			</div>
+        <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
+            <PlayerHorizontal orientation="right" layout="one-two-one" id={3} />
+        </div>
+        <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
+            <PlayerHorizontal orientation="left" layout="one-two-one" id={5} />
 		</div>
 	</div>
 	<div class="flex-grow">
 		<Menu />
 	</div>
 	<div
-		class="flex flex-col gap-2 bg-black sticky bottom-0 pb-2"
+		class="pt-2 flex gap-2 pt-2 bg-black sticky top-0 bd-2"
 		class:h-[24%]={!$appState.isMenuOpen}
 		class:pt-2={$appState.isMenuOpen}
 	>
-		<div class="h-full w-full flex justify-between gap-2">
-			<div class="w-full">
-				<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
-				<PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
-			</div>
-		</div>
+        <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
+            <PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
+        </div>
+        <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
+            <PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
+        </div>
 	</div>
 	<div
-		class="flex flex-col gap-2 bg-black sticky bottom-0 pb-2"
+		class="flex flex-col gap-2 bg-black sticky bottom-0"
 		class:h-[24%]={!$appState.isMenuOpen}
-		class:pt-2={$appState.isMenuOpen}
+		class:pt-2={!$appState.isMenuOpen}
 	>
 		<div class="h-full w-full flex justify-between gap-2">
 			<div class="w-full">

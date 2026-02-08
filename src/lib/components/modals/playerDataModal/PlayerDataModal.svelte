@@ -43,6 +43,7 @@
 		image?: string | null | undefined;
 	}> = [];
 	let isSearching = false;
+	let hasSearched = false;
 
 	// Translation for damage from player label
 	$: damageFromPlayerLabel = String($_('damage_from_player'));
@@ -159,11 +160,13 @@
 		}
 		if (!searchQuery || searchQuery.trim().length === 0) {
 			searchResults = [];
+			hasSearched = false;
 			return;
 		}
 		isSearching = true;
 		searchResults = await searchCards(searchQuery);
 		isSearching = false;
+		hasSearched = true;
 	};
 
 	const chooseRandom = async (playerId: number) => {
@@ -381,7 +384,7 @@
 								>
 								<button
 									class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg"
-									on:click={() => setPlayerBackgroundImage($playerModalData.playerId, null)}
+									on:click={() => { hasSearched = false; setPlayerBackgroundImage($playerModalData.playerId, null); }}
 									>{$_('clear_background')}</button
 								>
 							</div>
@@ -424,7 +427,7 @@
 						</div>
 					{/if}
 
-					{#if mode === 'background'}
+					{#if (mode === 'background' && !hasSearched)}
 						<label class="block mb-2 font-semibold">{ $_('player_background_color') }</label>
 						<div class="flex items-center gap-3 mb-2">
 							<label class="flex items-center gap-2 text-sm"

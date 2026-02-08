@@ -63,8 +63,8 @@
 		(numberOfPlayers >= 6 ? '200%' : (numberOfPlayers === 3 ? '220%' : (numberOfPlayers === 4 ? '200%' : '150%')))
 		: (numberOfPlayers >= 6 ? '200%' : (numberOfPlayers === 3 ? '220%' : '150%'));
 	$: bgHeight = (layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? '115%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : '125%')))
-		: (numberOfPlayers >= 6 ? '115%' : (numberOfPlayers === 3 ? '90%' : '85%'));
+		(numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : '125%')))
+		: (numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : '125%')));
 	$: bgTop = numberOfPlayers === 5 ? '55%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? '40%' : '50%');
 	$: bgLeft = (numberOfPlayers === 3 || (numberOfPlayers != 4 && layout === 'two-by-two')) ? '25%' : '50%';
 	$: bgSize = (layout === 'two-by-two') ?

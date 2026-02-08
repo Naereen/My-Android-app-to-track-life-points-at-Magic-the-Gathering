@@ -5,6 +5,7 @@
 		setPlayerCount,
 		setStartingLifeTotal,
 		setFourPlayerLayout,
+		setSixPlayerLayout,
 		setAppLocale
 	} from '$lib/store/appSettings';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
@@ -222,6 +223,44 @@
 					</div>
 				</div>
 			{/if}
+
+				{#if $appSettings.playerCount === 6}
+					<div class="mt-4">
+						<div class="text-lg mb-2">{$_('choose_6players_layout')}</div>
+						<div class="flex gap-3 justify-center">
+							<button
+								class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+								class:border-blue-400={$appSettings.sixPlayerLayout === 'one'}
+								on:click={() => setSixPlayerLayout('one')}
+							>
+								<div class="w-full h-full grid grid-rows-3 grid-cols-2 gap-1">
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700" />
+								</div>
+								<div class="mt-1 text-sm">3 x 2</div>
+							</button>
+							<button
+								class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+								class:border-blue-400={$appSettings.sixPlayerLayout === 'two'}
+								on:click={() => setSixPlayerLayout('two')}
+							>
+								<div class="w-full h-full grid grid-rows-4 grid-cols-2 gap-1">
+									<div class="bg-gray-700 col-span-2" />
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700" />
+									<div class="bg-gray-700 col-span-2" />
+								</div>
+								<div class="mt-1 text-sm">1 / 2 / 2 / 1</div>
+							</button>
+						</div>
+					</div>
+				{/if}
 		</div>
 
 		<!-- Starting Life Total -->

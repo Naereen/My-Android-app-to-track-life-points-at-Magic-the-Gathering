@@ -16,6 +16,8 @@ export const appSettings: Writable<App.Settings> = persist('appSettings', {
 	preventScreenSleep: true,
 	// layout for 4-players games: 'matrix' (2x2) or 'stacked' (1/2/1)
 	fourPlayerLayout: 'matrix',
+	// layout for 6-players games: 'one' ("3 x 2") or 'two' ("|::|")
+	sixPlayerLayout: 'one',
 	// whether to enable haptic feedback (vibration) for certain actions like incrementing/decrementing life totals (default is true)
 	hapticsEnabled: true,
 	// app locale (default is 'fr' for French, but it will be overridden by the device locale if it's supported by the app)
@@ -64,6 +66,10 @@ export const setShowNextPlayerButton = (show: boolean) => {
 
 export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {
 	appSettings.update((data) => ({ ...data, fourPlayerLayout: layout }));
+};
+
+export const setSixPlayerLayout = (layout: 'one' | 'two') => {
+	appSettings.update((data) => ({ ...data, sixPlayerLayout: layout }));
 };
 
 export const setAppLocale = (locale: string) => {
