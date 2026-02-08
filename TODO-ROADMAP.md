@@ -191,6 +191,8 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] A long-click on the dice randomizer button in the main UI should launch the "select a random player" feature. Also document this, in the randomizer menu, with a small text "Long click on the dice to select a random player!" (translated in fr/es/it/de/pt/etc).
 
+- [x] FIXED: the customDice was broken
+
 - [x] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
 
   - [x] A button to advance to the next player's turn, it should be located in the middle of the buttons for mana and randomizer?
@@ -280,6 +282,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 - [x] Commander damage type tracking, in a simple and visual way, with a small icon for each opponent, and a number for the commander damage received from this opponent. It is a new feature from the Lifetap app, and it is very useful for Commander games!
   - [x] For the "Commander damage" panel, try as much as possible to keep the same layout and design as the Lifetap app, as it is already very good and optimized for mobile devices, so it can be a good inspiration for this feature. The "Commander damage" panel should be located in the "Status effects" tab of the PlayerDataModal.svelte, as it is a status effect that can be tracked for each player, and it is not related to the background of the player panel. This part of the status effects should look like a "minimap" of the entire screen, showing tiny areas with the same image backgrounds/color-gradients as the player panels, with small icons for each opponent, and a number for the commander damage received from this opponent. It should be very visual and easy to understand at a glance, especially on mobile devices. See the attached screenshot, in the middle on the bottom of the screen, for an example of how it looks in the Lifetap app.
+
   - [ ] TODO: improve the layout and flex/grid classes of the Minimap component, to make it look better and more visually appealing, especially on mobile devices. The current layout is a simple grid of numberOfPlayers columns and 1 rows, but it can be improved to be more compact and more visually appealing, especially for the left- and right-facing players (player 3 in 3-player mode, player 3 and 4 in 4-player mode, etc), as the current layout is not very good for them. It should be more compact and more visually appealing, with a better use of the space, especially on mobile devices.
 
   - [x] In the "Commander damage" panel in the PlayerDataModal.svelte, allow to double-click on a commander damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click multiple times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games!
@@ -291,7 +294,9 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
   - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is supported by the Lifetap app, but not yet implemented here.
 
-- [ ] Allow to « drag-and-drop » the players to change their position around the table, and thus change the layout of the app. This is a very cool feature, but it can be hard to implement, especially on mobile devices, so it is a "nice to have" feature for later.
+- [x] (improve the UX) TODO: allow to « drag-and-drop » each of the entire player panel, to change their position around the table, and thus change the layout of the app. This is a very cool feature, but it can be hard to implement, especially on mobile devices, so it is a "nice to have" feature for later.
+  - [x] This has been implemented, so far only for the 3-player mode.
+  - [ ] TODO: add for the 2-player, the two 4-player, the 5-player and the two 6-player modes
 
 ## Variants already existing in Lifetap but not yet implemented here
 

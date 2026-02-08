@@ -9,7 +9,7 @@ type RandomizerModalState = {
 	type: string;
 	playerId: number | null;
 	playerName: string | null;
-		backgroundImage?: string | string[] | null;
+	backgroundImage?: string | string[] | null;
 };
 
 const initialRandomizerModalState: RandomizerModalState = { isOpen: false, result: 0, type: '', playerId: null, playerName: null, backgroundImage: null };
@@ -31,7 +31,11 @@ export const generateRandomNumber = (type: string) => {
 
 	const max = dieTypes[type] || 0;
 	const result = max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
-	randomizerModalData.set({ isOpen: true, result, type, playerId: null, playerName: null, backgroundImage: null });
+	if (type === 'custom') {
+		randomizerModalData.set({ isOpen: true, result, type, playerId: null, playerName: null, backgroundImage: null });
+	} else {
+		randomizerModalData.set({ isOpen: true, result, type, playerId: null, playerName: null, backgroundImage: null });
+	}
 
 	return result;
 };

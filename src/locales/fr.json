@@ -13,7 +13,8 @@
     "set_dice": "Dé ?",
     "flip_coin": "Une pièce",
     "custom_number": "Choisir",
-    "sided_die": "face(s)",
+    "sided_die_before": "Dé à",
+    "sided_die": "faces",
     "mana_counter": "Compteur de manas",
     "storm_counter": "Compteur de déluge",
     "close": "Fermer",
@@ -106,6 +107,6 @@
     "random_opponent": "Adversaire aléatoire",
     "select_active_player": "Sélectionner le joueur actif",
     "scryfall_search_chosen": "Choisi",
-    "long_click_random_player": "Astuce : appuyez longuement sur le Dé 6 (dans le menu principal) pour sélectionner un joueur au hasard !"
-    ,"me": "moi"
+    "long_click_random_player": "Astuce : appuyez longuement sur le Dé 6 (dans le menu principal) pour sélectionner un joueur au hasard !",
+    "me": "moi"
 }

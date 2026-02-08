@@ -12,6 +12,7 @@
     "set_dice": "Setzen",
     "flip_coin": "Münze werfen",
     "custom_number": "Benutzerdefiniert",
+    "sided_die_before": "",
     "sided_die": "seitiger Würfel",
     "mana_counter": "Mana-Zähler",
     "storm_counter": "Sturmzähler",

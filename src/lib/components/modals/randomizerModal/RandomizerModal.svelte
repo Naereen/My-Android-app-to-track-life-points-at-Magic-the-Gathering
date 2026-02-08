@@ -74,6 +74,10 @@
 	$: if ($randomizerModalData.isOpen && $randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent') {
 		// When modal opens for a die, start the rolling animation
 		startRollAnimation();
+	} else if ($randomizerModalData.type === 'custom') {
+		// For custom random number, show the final value directly without animation
+		abort = true;
+		displayResult = $randomizerModalData.result;
 	} else if (!$randomizerModalData.isOpen) {
 		// reset when modal closed
 		abort = true;
@@ -126,7 +130,16 @@
 			{:else}
 				<div class="h-[49px] items-center flex justify-center">
 					{#if $randomizerModalData.type === 'custom'}
-						{$appSettings.customRandomNumber || 0} - { $_('sided_die') }
+						<div class="grid grid-cols-1 items-center justify-items-center">
+							<div class="text-large text-white relative -mt-8">
+								{ $_('sided_die_before') }
+								{ $appSettings.customRandomNumber || 0}
+								{ $_('sided_die') }
+							</div>
+							<div class="text-5xl text-white mt-6 relative -bottom-2">
+								{ $randomizerModalData.result}
+							</div>
+						</div>
 					{:else}
 						<i
 							class="{diceClass} text-white"

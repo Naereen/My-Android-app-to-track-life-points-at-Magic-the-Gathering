@@ -704,6 +704,24 @@ export const setPlayerName = (playerId: number, playerName: string) => {
 	});
 };
 
+// Reorder players array by moving element at fromIndex to toIndex (0-based indices)
+export const reorderPlayers = (fromIndex: number, toIndex: number) => {
+	players.update((currentPlayers) => {
+		const arr = currentPlayers.slice();
+		if (fromIndex < 0 || fromIndex >= arr.length) return arr;
+		if (toIndex < 0) toIndex = 0;
+		if (toIndex >= arr.length) toIndex = arr.length - 1;
+		// No-op when same position
+		if (fromIndex === toIndex) return arr;
+
+		const [item] = arr.splice(fromIndex, 1);
+		// If removing an earlier element, the indices shift left — adjust target
+		const insertIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
+		arr.splice(insertIndex, 0, item);
+		return arr;
+	});
+};
+
 export const setTempLifeDiff = (
 	playerId: number,
 	type: App.Player.LifeMoveType,

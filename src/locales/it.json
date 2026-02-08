@@ -12,6 +12,7 @@
     "set_dice": "Imposta",
     "flip_coin": "Lancia moneta",
     "custom_number": "Personalizzato",
+    "sided_die_before": "",
     "sided_die": "facce",
     "mana_counter": "Contatore mana",
     "storm_counter": "Contatore Tempesta",

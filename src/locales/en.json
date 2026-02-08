@@ -12,6 +12,7 @@
     "set_dice": "Set",
     "flip_coin": "Flip coin",
     "custom_number": "Custom",
+    "sided_die_before": "",
     "sided_die": "sided die",
     "mana_counter": "Mana Counter",
     "storm_counter": "Storm Counter",
@@ -105,6 +106,6 @@
     "random_opponent": "Random Opponent",
     "select_active_player": "Select Active Player",
     "scryfall_search_chosen": "Chosen",
-    "long_click_random_player": "Tip: long click on the dice (in the main menu) to select a random player!"
-    ,"me": "me"
+    "long_click_random_player": "Tip: long click on the dice (in the main menu) to select a random player!",
+    "me": "me"
 }

@@ -12,6 +12,7 @@
     "set_dice": "Establecer",
     "flip_coin": "Lanzar moneda",
     "custom_number": "Personalizado",
+    "sided_die_before": "",
     "sided_die": "caras",
     "mana_counter": "Contador de maná",
     "storm_counter": "Contador de storm",

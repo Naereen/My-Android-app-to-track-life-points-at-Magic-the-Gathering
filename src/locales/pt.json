@@ -13,6 +13,7 @@
     "set_dice": "Definir",
     "flip_coin": "Lançar moeda",
     "custom_number": "Personalizado",
+    "sided_die_before": "",
     "sided_die": "dado de lados",
     "mana_counter": "Contador de Mana",
     "storm_counter": "Contador de Tempestade",
