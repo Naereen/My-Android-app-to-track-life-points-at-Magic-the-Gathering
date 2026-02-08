@@ -1,7 +1,7 @@
 import { get, type Writable } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { _ } from 'svelte-i18n'; // i18n language toggle
-import { showConfirm } from '$lib/store/modal';
+import { showConfirm, selectRandomPlayer } from '$lib/store/modal';
 import { setCurrentTurn } from './appState';
 import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
@@ -545,7 +545,7 @@ export const removeFirstPlace = () => {
 
 let isSpinning = false;
 
-const spinToSelectFirstPlayer = () => {
+export const spinToSelectFirstPlayer = () => {
 	const totalPlayers = get(appSettings).playerCount;
 	if (totalPlayers === 0) return;
 
@@ -553,7 +553,7 @@ const spinToSelectFirstPlayer = () => {
 	let currentIndex = 0;
 	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 4;
 	let intervalTime = 25;
-	const finalPauseTime = 250;
+	const finalPauseTime = 100;
 
 	const spin = () => {
 		players.update((currentPlayers) => {
@@ -591,4 +591,50 @@ const spinToSelectFirstPlayer = () => {
 	};
 
 	spin();
+};
+
+export const spinToSelectRandomPlayer = () => {
+	const totalPlayers = get(appSettings).playerCount;
+	if (totalPlayers === 0) return;
+
+	isSpinning = true;
+	let currentIndex = 0;
+	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 4;
+	let intervalTime = 25;
+	const finalPauseTime = 100;
+
+	const spin = () => {
+		players.update((currentPlayers) => {
+			return currentPlayers.map((player, index) => {
+				return {
+					...player,
+					highlighted: index === currentIndex % totalPlayers
+				};
+			});
+		});
+
+		currentIndex++;
+		spinCount--;
+
+		if (spinCount > 0) {
+			intervalTime += 10;
+			setTimeout(spin, intervalTime);
+		} else {
+			setTimeout(() => {
+				isSpinning = false;
+				players.update((currentPlayers) => {
+					return currentPlayers.map((player, index) => {
+						return {
+							...player,
+							highlighted: false,
+						};
+					});
+				});
+				const chosenIndex = (currentIndex - 1) % totalPlayers;
+				selectRandomPlayer(chosenIndex);
+			}, finalPauseTime);
+		}
+	};
+
+	return spin();
 };

@@ -36,7 +36,7 @@ export const generateRandomNumber = (type: string) => {
 	return result;
 };
 
-export const selectRandomPlayer = () => {
+export const selectRandomPlayer = (randomIndex: number | null = null) => {
 	vibrate(20);
 	const currentPlayers = get(players);
 	const playerCount = get(appSettings).playerCount;
@@ -46,8 +46,8 @@ export const selectRandomPlayer = () => {
 
 	if (activePlayers.length === 0) return;
 
-	const randomIndex = Math.floor(Math.random() * activePlayers.length);
-	const selectedPlayer = activePlayers[randomIndex];
+	const index = randomIndex !== null ? randomIndex : Math.floor(Math.random() * activePlayers.length);
+	const selectedPlayer = activePlayers[index];
 
 	randomizerModalData.set({
 		isOpen: true,

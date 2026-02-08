@@ -3,14 +3,14 @@
 	import ManaPentagon from '$lib/assets/icons/ManaPentagon.svelte';
 	import Reset from '$lib/assets/icons/Reset.svelte';
 	import { appSettings } from '$lib/store/appSettings';
-	import { resetLifeTotals } from '$lib/store/player';
+	import { resetLifeTotals, spinToSelectRandomPlayer } from '$lib/store/player';
 	import { appState, toggleIsMenuOpen, nextTurn, prevTurn } from '$lib/store/appState';
 	import CircularButton from '../shared/circularButton/CircularButton.svelte';
 	import Randomizer from './subcomponents/randomizer/Randomizer.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
 	import { vibrate } from '$lib/utils/haptics';
-	import { selectRandomPlayer } from '$lib/store/modal';
+	// import { selectRandomPlayer } from '$lib/store/modal';
 
 	let turnPrevTimeout: number | null = null;
 	let turnPrevTriggered = false;
@@ -48,7 +48,7 @@
 		if (randomPlayerTimeout) clearTimeout(randomPlayerTimeout);
 		randomPlayerTimeout = setTimeout(() => {
 			randomPlayerTriggered = true;
-			selectRandomPlayer();
+			spinToSelectRandomPlayer();
 		}, 700);
 	};
 
