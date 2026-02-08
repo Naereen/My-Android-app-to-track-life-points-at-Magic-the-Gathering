@@ -11,7 +11,8 @@
 	let displayResult = 0;
 	let rolling = false;
 	let abort = false;
-	let iconSize = '4.5rem';
+	let iconSize = '6rem';
+	let rollingMs = 0;
 
 	function getPrefix(type: string) {
 		const map = {
@@ -44,10 +45,14 @@
 		const final = $randomizerModalData.result;
 		const rounds = Math.floor(Math.random() * 5 + 5); // Number of times the face changes during the animation
 		const totalMs = 1000;
+		rollingMs = totalMs;
 		const step = Math.max(50, Math.floor(totalMs / rounds));
 
 		for (let i = 0; i < rounds; i++) {
-			if (abort) return;
+			if (abort) {
+				rollingMs = 0;
+				return;
+			}
 			displayResult = max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
 			vibrate(10);
 			await new Promise((r) => setTimeout(r, step));
@@ -55,6 +60,7 @@
 
 		if (!abort) displayResult = final;
 		rolling = false;
+		rollingMs = 0;
 	}
 
 	$: if ($randomizerModalData.isOpen && $randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent') {
@@ -116,7 +122,12 @@
 					{#if $randomizerModalData.type === 'custom'}
 						{$appSettings.customRandomNumber || 0} - { $_('sided_die') }
 					{:else}
-						<i class="{diceClass} text-white" style="font-size: {iconSize};"></i>
+						<i
+							class="{diceClass} text-white"
+							class:dice-rolling={rolling}
+							class:dice-final={!rolling && displayResult > 0 && $randomizerModalData.type !== 'custom'}
+							style="font-size: {iconSize}; --dice-rolling-duration: {rollingMs}ms;"
+						></i>
 					{/if}
 				</div>
 			{/if}

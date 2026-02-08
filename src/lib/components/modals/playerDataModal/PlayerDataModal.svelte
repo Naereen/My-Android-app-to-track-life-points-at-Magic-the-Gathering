@@ -301,6 +301,7 @@
 						class="py-2 px-3 rounded-lg outline outline-1 outline-black text-black font-semibold bg-[#f1f6fe]"
 						bind:value={$players[$playerModalData.playerId - 1].playerName}
 						on:keypress={handleOnKeyPress}
+						maxlength="20"
 					/>
 					<div class="absolute right-3 top-2 pointer-events-none"><Pen /></div>
 				</div>
@@ -441,6 +442,7 @@
 									<Ascend />
 									{String($_('ascend'))}</label
 								>
+								<!-- FIXME: enable again the day/night switch setting -->
 								<!-- <label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight title={$_('tooltip_status_day_night')} /> { $_('day_night') }</label> -->
 								<label class="flex items-center gap-2"
 									><input
