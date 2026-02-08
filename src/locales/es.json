@@ -103,5 +103,6 @@
     "random_opponent": "Oponente Aleatorio",
     "select_active_player": "Seleccionar Jugador Activo",
     "scryfall_search_chosen": "Seleccionado",
-    "long_click_random_player": "Consejo: mantén pulsado el dado (en el menú principal) para seleccionar un jugador al azar!"
+    "long_click_random_player": "Consejo: mantén pulsado el dado (en el menú principal) para seleccionar un jugador al azar!",
+    "me": "yo"
 }

@@ -105,5 +105,6 @@
     "random_opponent": "Avversario Casuale",
     "select_active_player": "Seleziona Giocatore Attivo",
     "scryfall_search_chosen": "Scelto",
-    "long_click_random_player": "Consiglio: tieni premuto il dado (nel menu principale) per selezionare un giocatore casuale!"
+    "long_click_random_player": "Consiglio: tieni premuto il dado (nel menu principale) per selezionare un giocatore casuale!",
+    "me": "io"
 }

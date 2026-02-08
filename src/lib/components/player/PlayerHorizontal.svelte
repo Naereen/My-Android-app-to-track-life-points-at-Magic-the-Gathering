@@ -30,6 +30,8 @@
 	} from '$lib/store/player';
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
+	import Minimap from './Minimap.svelte';
+	const doNotShowMinimap: boolean = false; // for testing purposes, to hide the minimap in the player component
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
 
@@ -400,9 +402,11 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 						>
 							<div class="flex items-center">
 								<div class="flex justify-center items-center mb-3 rotate-90">
-									<div class="flex justify-center items-center mr-1">
-										<CommanderDamage playerIndex={index} color="white" />
-									</div>
+									{#if doNotShowMinimap}
+										<div class="flex justify-center items-center mr-1">
+											<CommanderDamage playerIndex={index} color="white" />
+										</div>
+									{/if}
 								</div>
 								<span
 									class="beleren"
@@ -537,6 +541,11 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 						class:flex-row={orientation === 'left'}
 						class:flex-row-reverse={orientation === 'left'}
 					>
+						{#if numberOfPlayers >= 3}
+							<div class="mr-2">
+								<Minimap playerIndex={index} />
+							</div>
+						{/if}
 						{#if poisonCount > 0}
 							<div
 								title={$_('tooltip_status_poison')}
@@ -705,32 +714,35 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 								{/if}
 							</div>
 						{/if}
-						{#each commanderDamageArray as dmg, i}
-							{#if dmg > 0}
-								<div
-									title={$_('tooltip_commander_damage')}
-									class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
-								>
-									{#if isRightFacingPlayer}
-										<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
-										<div
-											class="status-rotate-wrapper"
-											style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										>
-											<CommanderDamage playerIndex={i} color="white" />
-										</div>
-									{:else}
-										<div
-											class="status-rotate-wrapper"
-											style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										>
-											<CommanderDamage playerIndex={i} color="white" />
-										</div>
-										<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
-									{/if}
-								</div>
-							{/if}
-						{/each}
+						{#if doNotShowMinimap}
+							<!-- If the minimap is disabled, show a placeholder icon to indicate CommanderDamage (like before) -->
+							{#each commanderDamageArray as dmg, i}
+								{#if dmg > 0}
+									<div
+										title={$_('tooltip_commander_damage')}
+										class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+									>
+										{#if isRightFacingPlayer}
+											<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
+											<div
+												class="status-rotate-wrapper"
+												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+											>
+												<CommanderDamage playerIndex={i} color="white" />
+											</div>
+										{:else}
+											<div
+												class="status-rotate-wrapper"
+												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+											>
+												<CommanderDamage playerIndex={i} color="white" />
+											</div>
+											<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
+										{/if}
+									</div>
+								{/if}
+							{/each}
+						{/if}
 					</div>
 				</div>
 			</div>

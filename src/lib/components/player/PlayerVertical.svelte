@@ -15,7 +15,7 @@
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
-    
+	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
@@ -30,7 +30,9 @@
 	} from '$lib/store/player';
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
-	import { haptic, vibrate } from '$lib/utils/haptics';
+	import Minimap from './Minimap.svelte';
+	const doNotShowMinimap: boolean = false; // for testing purposes, to hide the minimap in the player component
+	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
 
 	export let orientation: App.Player.Orientation = 'up';
@@ -313,7 +315,11 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							class="py-1 px-2 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 							><div class="flex">
-								<!-- CommanderDamage removed -->
+								{#if doNotShowMinimap}
+									<div class="flex justify-center items-center mr-1">
+										<CommanderDamage playerIndex={index} color="white" />
+									</div>
+								{/if}
 								<span
 									class="beleren"
 									style="font-size: x-large; color: white;"
@@ -414,6 +420,11 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 		<div
 			class="bg-black/40 text-white text-xs rounded-full px-1 py-0 flex gap-0.5 items-center pointer-events-auto"
 		>
+			{#if numberOfPlayers >= 3}
+				<div class="mr-2">
+					<Minimap playerIndex={index} />
+				</div>
+			{/if}
 			{#if poisonCount > 0}
 				<div
 					title={$_('tooltip_status_poison')}
@@ -470,14 +481,16 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} /> <span>{startYourEngineSpeedCount}</span>
 				</div>
 			{/if}
-			{#if numberOfPlayers !== 2}
+			{#if doNotShowMinimap}
+				<!-- If the minimap is disabled, show a placeholder icon to indicate CommanderDamage (like before) -->
 				{#each commanderDamageArray as dmg, i}
 					{#if dmg > 0}
 						<div
 							title={$_('tooltip_commander_damage')}
 							class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
 						>
-							<span class="px-1">{dmg}</span>
+							<CommanderDamage playerIndex={i} color="white" />
+							<span>{dmg}</span>
 						</div>
 					{/if}
 				{/each}
