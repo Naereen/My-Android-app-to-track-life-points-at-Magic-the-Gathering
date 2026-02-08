@@ -45,6 +45,10 @@
 	let isSearching = false;
 	let hasSearched = false;
 
+	// allow choosing two images
+	let doubleBackground = false;
+	let bgSelections: string[] = [];
+
 	// Translation for damage from player label
 	$: damageFromPlayerLabel = String($_('damage_from_player'));
 	$: enterLifeTotalPlaceholder = String($_('enter_life_total_placeholder'));
@@ -80,23 +84,49 @@
 		// Ensure the already chosen background (if any) is visible in the search results
 		// so it appears as "chosen" by default when opening the tab.
 		if (p && p.backgroundImage) {
-			const already = searchResults.find((r) => r.image === p.backgroundImage);
+			const already = searchResults.find((r) => {
+				if (Array.isArray(p.backgroundImage)) return p.backgroundImage.includes(r.image ?? null as unknown as string);
+				return r.image === p.backgroundImage;
+			});
 			if (!already) {
-				// prepend a synthetic result representing the current chosen background
+				// prepend a synthetic result representing the current chosen background (use first image if array)
+				const img = Array.isArray(p.backgroundImage) ? p.backgroundImage[0] : p.backgroundImage;
 				searchResults = [
 					{
 						id: 'current-bg',
 						name: `${p.playerName ?? 'Current'}'s background`,
 						set_name: p.backgroundSet ?? '',
 						artist: p.backgroundArtist ?? '',
-						cardImage: p.backgroundImage,
-						image: p.backgroundImage
+						cardImage: img,
+						image: img
 					},
 					...searchResults
 				];
 			}
 		}
+
+		// initialize bgSelections from player data (keep first two if array)
+		if (p) {
+			if (Array.isArray(p.backgroundImage)) bgSelections = p.backgroundImage.slice(0, 2).filter(Boolean) as string[];
+			else if (p.backgroundImage) bgSelections = [p.backgroundImage];
+			else bgSelections = [];
+		}
 	}
+
+	// helper to compare stored background (string or array) to a single image url
+	const isSameBackground = (stored: string | string[] | null | undefined, candidate: string | null | undefined) => {
+		if (!stored) return false;
+		if (Array.isArray(stored)) return candidate ? stored.includes(candidate) : false;
+		return stored === candidate;
+	};
+
+	const isSelected = (image: string | null | undefined) => {
+		if (!image) return false;
+		if (bgSelections && bgSelections.length > 0) return bgSelections.includes(image);
+		// fallback to store comparison
+		const p = $players[$playerModalData.playerId - 1];
+		return isSameBackground(p?.backgroundImage, image as string | null | undefined);
+	};
 
 	const toggleColorSelection = (playerId: number, c: string) => {
 		if (!gradientMode) {
@@ -202,7 +232,26 @@
 		set_name: string | null = null
 	) => {
 		vibrate(30);
-		setPlayerBackgroundImage(playerId, { imageUrl, artist, set_name });
+
+		if (doubleBackground) {
+			// toggle selection in bgSelections
+			if (!imageUrl) return;
+			const idx = bgSelections.indexOf(imageUrl);
+			if (idx === -1) {
+				// add up to 2
+				if (bgSelections.length < 2) bgSelections = [...bgSelections, imageUrl];
+				else bgSelections = [bgSelections[1], imageUrl];
+			} else {
+				bgSelections = bgSelections.filter((x) => x !== imageUrl);
+			}
+
+			// persist array or null
+			const payload = bgSelections.length > 0 ? bgSelections.slice(0, 2) : null;
+			setPlayerBackgroundImage(playerId, payload);
+		} else {
+			setPlayerBackgroundImage(playerId, { imageUrl, artist, set_name });
+		}
+
 		// clear color so background shows clearly
 		setPlayerColor(playerId, 'white');
 	};
@@ -388,6 +437,11 @@
 									>{$_('clear_background')}</button
 								>
 							</div>
+							<div class="mt-2">
+								<label class="flex items-center gap-2 text-sm">
+									<input type="checkbox" bind:checked={doubleBackground} /> {$_('double_background_mode') ?? 'Double background (choose up to 2)'}
+								</label>
+							</div>
 						</div>
 						<div class="w-full max-h-60 overflow-auto">
 							{#if searchResults.length === 0}
@@ -401,16 +455,15 @@
 										<div class="text-sm text-gray-600">Artist: {r.artist}</div>
 										<div class="text-sm text-gray-600">© Wizards of the Coast</div>
 										<div class="mt-2">
-											{#if $players[$playerModalData.playerId - 1].backgroundImage === r.image}
+											{#if isSelected(r.image)}
 												<span class="inline-block px-2 py-1 bg-yellow-300 text-black text-sm rounded mr-2">{$_('scryfall_search_chosen')}</span>
-												<button class="px-3 py-1 bg-gray-400 text-white text-sm rounded" disabled>{$_('scryfall_search_choose')}</button>
-											{:else}
-												<button
-													class="px-3 py-1 bg-green-600 text-white text-sm rounded"
-													on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image, r.artist ?? null, r.set_name ?? null)}
-													>{$_('scryfall_search_choose')}</button
-												>
-											{/if}
+												<button class="px-3 py-1 bg-gray-400 text-white text-sm rounded" on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image, r.artist ?? null, r.set_name ?? null)}>{$_('scryfall_search_remove') ?? 'Remove'}</button>
+												{:else}
+													<button
+														class="px-3 py-1 bg-green-600 text-white text-sm rounded"
+														on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image, r.artist ?? null, r.set_name ?? null)}
+														>{$_('scryfall_search_choose')}</button>
+												{/if}
 										</div>
 									</div>
 									<div class="w-32 flex-shrink-0">
@@ -425,6 +478,19 @@
 								</div>
 							{/each}
 						</div>
+						{#if doubleBackground && bgSelections.length > 0}
+							<div class="mt-3 flex gap-2 items-center">
+								<label class="font-semibold">{$_('selected_backgrounds') ?? 'Selected backgrounds:'}</label>
+								{#each bgSelections as s, i}
+									<div class="w-20 h-28 border rounded overflow-hidden relative">
+										{#if s}
+											<img src={s} alt={`bg-${i}`} class="w-full h-full object-cover" />
+										{/if}
+										<button class="absolute top-1 right-1 bg-black/50 text-white rounded px-1 text-xs" on:click={() => { bgSelections = bgSelections.filter((x) => x !== s); setPlayerBackgroundImage($playerModalData.playerId, bgSelections.length ? bgSelections : null); }}>{$_('remove_button') ?? 'Remove'}</button>
+									</div>
+								{/each}
+							</div>
+						{/if}
 					{/if}
 
 					<!-- If the background has been searched, don't display the gradient selection section -->

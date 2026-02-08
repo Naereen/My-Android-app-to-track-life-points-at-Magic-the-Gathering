@@ -55,7 +55,7 @@ declare global {
 				lifeTotal: number;
 				playerName: string;
 				color: string;
-				backgroundImage?: string | null;
+				backgroundImage?: string | string[] | null;
 				tempLifeDiff: number;
 				backgroundArtist?: string | null;
 				backgroundSet?: string | null;

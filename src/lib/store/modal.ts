@@ -9,7 +9,7 @@ type RandomizerModalState = {
 	type: string;
 	playerId: number | null;
 	playerName: string | null;
-	backgroundImage?: string | null;
+		backgroundImage?: string | string[] | null;
 };
 
 const initialRandomizerModalState: RandomizerModalState = { isOpen: false, result: 0, type: '', playerId: null, playerName: null, backgroundImage: null };

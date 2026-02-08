@@ -62,9 +62,29 @@
 	$: bgTop = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '40%');
 	$: bgLeft = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '50%');
 	$: bgSize = 'cover';
-	$: styleVars = $players[index].backgroundImage
-		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`
-		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+	// Combine all these background-related variables into a single style string for easier application to the player container
+	$: styleVars = (() => {
+		const bgValue = $players[index].backgroundImage;
+		// default single-image behavior
+		if (!bgValue) {
+			return `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+		}
+		if (Array.isArray(bgValue) && bgValue.length > 1) {
+			const two = bgValue.slice(0, 2);
+			const images = two.map((u: string) => `url('${u}')`).join(', ');
+			// position first image top, second image bottom; both centered horizontally
+			const posx = 'center, center';
+			const posy = 'top, bottom';
+			// use contain or percentage sizes so both images display side-by-side
+			const size = (isMobile) ? '50% 75%, 50% 75%' : 'contain, contain';
+			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy};`;
+			// --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${size}; // IGNORE
+		}
+
+		// single string image
+		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+	})();
+
 	$: status = $players[index].statusEffects ?? {};
 	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter(
 		(k) => status[k]

@@ -71,9 +71,29 @@
 		: (numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain')));
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
-	$: styleVars = $players[index].backgroundImage
-		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`
-		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+	$: styleVars = (() => {
+		const bgValue = $players[index].backgroundImage;
+		// default single-image behavior
+		if (!bgValue) {
+			return `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+		}
+		// support array of images (e.g. partners / double commanders)
+		if (Array.isArray(bgValue) && bgValue.length > 1) {
+			const two = bgValue.slice(0, 2);
+			const images = two.map((u: string) => `url('${u}')`).join(', ');
+			// position first image left, second image right; both centered vertically
+			const posx = 'left, right';
+			const posy = 'center, center';
+			// use contain or percentage sizes so both images display side-by-side
+			const size = (isMobile) ? '0% 100%, 50% 100%' : 'contain, contain';
+			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy};`;
+			// --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-size: ${size};  --bg-top: ${bgTop}; --bg-left: ${bgLeft}; // IGNORE
+		}
+
+		// single string image
+		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+	})();
+
 	$: status = $players[index].statusEffects ?? {};
 	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'dayNight', 'ko'].filter(
 		(k) => status[k]

@@ -309,18 +309,25 @@ export const setPlayerAllowNegative = (playerId: number, allow: boolean) => {
 
 export const setPlayerBackgroundImage = (
 	playerId: number,
-	imageUrlOrPayload: string | null | { imageUrl: string | null; artist?: string | null; set_name?: string | null }
+	imageUrlOrPayload:
+		| string
+		| string[]
+		| null
+		| { imageUrl: string | null; artist?: string | null; set_name?: string | null }
 ) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
-				let image: string | null = null;
+				let image: string | string[] | null = null;
 				let artist: string | null = null;
 				let set_name: string | null = null;
 
-				if (typeof imageUrlOrPayload === 'string' || imageUrlOrPayload === null) {
+				if (Array.isArray(imageUrlOrPayload)) {
+					image = imageUrlOrPayload;
+				} else if (typeof imageUrlOrPayload === 'string' || imageUrlOrPayload === null) {
 					image = imageUrlOrPayload;
 				} else {
+					// payload object
 					image = imageUrlOrPayload.imageUrl ?? null;
 					artist = imageUrlOrPayload.artist ?? null;
 					set_name = imageUrlOrPayload.set_name ?? null;
