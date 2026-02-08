@@ -107,6 +107,10 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] In this layout, the "K.O." player dark overlay is displayed with a stronger "z-index" that it should have? So when a player is K.O.'d, the "K.O." overlay is displayed above all the other panels, including the "edit player" panel, which makes it impossible to edit a K.O.'d player. This bug is not present in the default layout (the "2 x 2" layout), only in the "1 / 2 / 1" layout.
 
+### Random names when starting a fresh game
+
+- [ ] I want to : 1) select a random name (DONE), 2) select a random background image for a Scryfall request like "is:commander randomName", in order to start automatically with a very pretty setup for each player, with a random name and a random background image that matches this name (e.g. if the random name is "Jace", the background image will be a random Jace planeswalker). This is a fun feature that can make the start of the game more exciting and immersive, as each player will have a unique and random setup. It can also be useful for players who don't want to spend time customizing their player panel at the beginning of the game, and just want to start playing quickly with a nice setup.
+
 ---
 
 ## Player status and visualization improvements

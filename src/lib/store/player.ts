@@ -5,6 +5,7 @@ import { showConfirm, selectRandomPlayer } from '$lib/store/modal';
 import { setCurrentTurn, appState } from './appState';
 import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
+// import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
 
@@ -139,14 +140,12 @@ const generateRandomPlayerName = () => {
 			'Zariel',
 		],
 	};
-	const randomKey = Object.keys(popularPlaneswalkerNames)[
-		Math.floor(Math.random() * Object.keys(popularPlaneswalkerNames).length)
-	];
-	const namesForKey = popularPlaneswalkerNames[randomKey];
-	const randomName = namesForKey[Math.floor(Math.random() * namesForKey.length)];
-	return randomName;
-	// const randomNumber = Math.floor(Math.random() * 1000);
-	// return `${randomName} ${randomNumber}`;
+
+	const allNames = Object.values(popularPlaneswalkerNames).flat();
+	const randomName = allNames[Math.floor(Math.random() * allNames.length)];
+	const randomNumber = Math.ceil(Math.random() * 100);
+	return `${randomName}`;
+	// return `${randomName} #${randomNumber}`;
 }
 
 const defaultPlayers: App.Player.Data[] = [
