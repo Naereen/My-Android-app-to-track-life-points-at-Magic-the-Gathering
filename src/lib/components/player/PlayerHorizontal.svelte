@@ -19,6 +19,7 @@
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
+    import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
 		manageLifeTotal,
@@ -58,16 +59,16 @@
 	// FIXME: the bgWidth/bgHeight/bgSize logic is really hacky and doesn't work well in all cases, need to rethink how background images are handled in general
 	// It works fine for 2-player, but for 3+ players it gets really inconsistent and depends on the specific image used, some trial and error is needed to find the right settings for each image
 	$: bgWidth = (!isMobile) ? '200%' : ((layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? '200%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
-		: (numberOfPlayers >= 6 ? '200%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%')))));
+		(numberOfPlayers >= 6 ? '140%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
+		: (numberOfPlayers >= 6 ? '140%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%')))));
 	$: bgHeight = (!isMobile) ? '90%' : ((layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '90%' : '125%'))))
-		: (numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '90%' : '125%')))));
+		(numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '80%' : '125%'))))
+		: (numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '80%' : '125%')))));
 	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? ((numberOfPlayers != 5 && orientation === 'left' ? '45%' : '65%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '20%' : '35%') : '50%')));
 	$: bgLeft = (!isMobile) ? '50%' : ((numberOfPlayers === 3 || (numberOfPlayers === 6 && layout === 'two-by-two')) ? (numberOfPlayers != 5 && orientation === 'left' ? '70%' : '30%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '55%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) :'50%')));
 	$: bgSize = (!isMobile) ? 'cover' : ((layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? 'cover' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain'))
-		: (numberOfPlayers >= 6 ? 'cover' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain')));
+		(numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain'))
+		: (numberOfPlayers >= 6 ? 'contain' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain')));
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = $players[index].backgroundImage
@@ -216,6 +217,25 @@
 	const cancelEdit = () => {
 		editing = false;
 	};
+
+$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
+$: timerMinutes = Math.floor(($turnTimer.remaining || 0) / 60);
+$: timerSeconds = ($turnTimer.remaining || 0) % 60;
+
+// circumference for the timer circle (radius = 18 from the SVG)
+$: timerCircumference = 2 * Math.PI * 18;
+// dash offset based on fraction (0..1)
+$: dashOffset = timerCircumference * (1 - Math.max(0, Math.min(1, timerFraction)));
+
+$: if ($appSettings.turnTimerEnabled && index === $appState.currentTurn) {
+	// start or reset timer for this player only when currentTurn or setting changes
+	try { turnTimer.startForPlayer(index); } catch (e) {}
+}
+
+// stop the timer for this player when the store indicates it's running for them but they're no longer the current turn
+$: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && index !== $appState.currentTurn) {
+	try { turnTimer.stop(); } catch (e) {}
+}
 </script>
 
 <svelte:window bind:innerWidth />
@@ -246,6 +266,27 @@
 		{#if !$appState.isMenuOpen}
 			<div class="flex flex-col w-full relative">
 				<div class="h-full flex flex-col" class:flex-col-reverse={orientation === 'left'}>
+					{#if $appSettings.turnTimerEnabled && index === $appState.currentTurn}
+						<div class="absolute z-30 pointer-events-none status-rotate-wrapper"
+							class:bottom-2={orientation === 'left'}
+							class:left-2={orientation === 'left'}
+							class:right-2={orientation === 'right'}
+							class:top-2={orientation === 'right'}
+							style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+						>
+							<div class="w-10 h-10 flex items-center justify-center bg-black/40 rounded-full text-white text-sm">
+								<svg viewBox="0 0 40 40" class="w-10 h-10">
+									<circle cx="20" cy="20" r="18" stroke="#444" stroke-width="3" fill="none" />
+									<circle cx="20" cy="20" r="18" stroke="#ffd54a" stroke-width="3" fill="none"
+										transform="rotate(-90 20 20)"
+										stroke-dasharray={timerCircumference} stroke-dashoffset={dashOffset}
+										stroke-linecap="round"
+									/>
+								</svg>
+								<div class="absolute text-xs">{timerMinutes}:{String(timerSeconds).padStart(2, '0')}</div>
+							</div>
+						</div>
+					{/if}
 					<button
 						on:mousedown={() => handleMouseDown('subtract')}
 						on:mouseup={() => handleMouseUp('subtract')}
@@ -308,7 +349,7 @@
 									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}
 									>{$players[index].playerName}</span
 								>
-								<!-- FIXME: use the class:overline only if the glowing gold animation is disabled and if the next player button is enabled -->
+								<!-- Use the class:overline only if the glowing gold animation is disabled and if the next player button is enabled -->
 								{#if $players[index].isFirst}
 									<div class="flex justify-center items-center mt-2 rotate-90">
 										<FirstPlace />
@@ -437,7 +478,7 @@
 						{#if poisonCount > 0}
 							<div
 								title={$_('tooltip_status_poison')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{poisonCount}</span>
@@ -461,7 +502,7 @@
 						{#if energyCount > 0}
 							<div
 								title={$_('tooltip_status_energy')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{energyCount}</span>
@@ -485,7 +526,7 @@
 						{#if experienceCount > 0}
 							<div
 								title={$_('tooltip_status_experience')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{experienceCount}</span>
@@ -509,7 +550,7 @@
 						{#if radCount > 0}
 							<div
 								title={$_('tooltip_status_rad')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{radCount}</span>
@@ -533,7 +574,7 @@
 						{#if commandTaxCount > 0}
 							<div
 								title={$_('tooltip_status_command_tax')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{commandTaxCount}</span>
@@ -557,7 +598,7 @@
 						{#if ringBearerCount > 0}
 							<div
 								title={$_('tooltip_status_ring_bearer')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ringBearerCount}</span>
@@ -581,7 +622,7 @@
 						{#if startYourEngineSpeedCount > 0}
 							<div
 								title={$_('tooltip_status_start_your_engine_speed')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{startYourEngineSpeedCount}</span>
@@ -606,7 +647,7 @@
 							{#if dmg > 0}
 								<div
 									title={$_('tooltip_commander_damage')}
-									class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
+									class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
 								>
 									{#if isRightFacingPlayer}
 										<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>

@@ -8,6 +8,11 @@
 		setSixPlayerLayout,
 		setAppLocale
 	} from '$lib/store/appSettings';
+	import {
+	    setTurnTimerEnabled,
+	    setTurnTimerDuration,
+	    setTurnTimerSound
+	} from '$lib/store/appSettings';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import CircularButton from '../../../shared/circularButton/CircularButton.svelte';
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
@@ -134,6 +139,40 @@
 			// si on active le bouton next-player, réactiver le glow par défaut
 			setEnableCurrentPlayerGlow(true);
 		}
+	};
+
+	const handleTurnTimerEnabledChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setTurnTimerEnabled(!!target.checked);
+	};
+
+	const handleTurnTimerDurationChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		// input is minutes; enforce integer between 1 and 10
+		let minutes = Math.round(Number(target.value) || 1);
+		minutes = Math.max(1, Math.min(10, minutes));
+
+
+		if (typeof document !== 'undefined') {
+			const ae = document.activeElement as HTMLElement | null;
+			if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable)) {
+				ae.blur();
+			}
+			// try Virtual Keyboard API if available
+			const nav = navigator as any;
+			if (nav.virtualKeyboard && typeof nav.virtualKeyboard.hide === 'function') {
+				try {
+					nav.virtualKeyboard.hide();
+				} catch {}
+			}
+		}
+
+		setTurnTimerDuration(minutes * 60);
+	};
+
+	const handleTurnTimerSoundChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setTurnTimerSound(!!target.checked);
 	};
 
 	const languages = [
@@ -349,6 +388,7 @@
 				<span class="ml-2 text-lg font-semibold">{$_('haptic_feedback') || 'Enable haptic feedback'}</span>
 			</label>
 		</div>
+
 		<div class="w-full flex justify-center mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
@@ -378,6 +418,62 @@
 				<span class="ml-2 text-lg font-semibold">{$_('show_next_player_button') || 'Show next-player button'}</span>
 			</label>
 		</div>
+
+		<!-- Turn timer settings -->
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<div class="ml-2">
+					<div class="text-lg font-semibold">
+						<input
+							type="checkbox"
+							checked={$appSettings.turnTimerEnabled}
+							on:change={handleTurnTimerEnabledChange}
+							class="h-5 w-5"
+						/>
+						{$_('turn_timer_enabled') || 'Enable per-turn timer'}
+					</div>
+					<div class="text-sm text-gray-400">{$_('turn_timer_enabled_help') || 'When enabled, a per-turn countdown is shown for the active player.'}</div>
+				</div>
+			</label>
+		</div>
+
+		{#if $appSettings.turnTimerEnabled}
+			<div class="w-full flex justify-center mt-0 mb-0">
+				<label
+					class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+					style="min-width: 12rem;"
+				>
+					<span class="ml-2 text-lg font-semibold">{$_('turn_timer_duration') || 'Turn duration (minutes)'}</span>
+					<input
+						type="number"
+						min="1"
+						max="10"
+						step="1"
+						value={Math.round($appSettings.turnTimerDuration / 60)}
+						on:change={handleTurnTimerDurationChange}
+						class="bg-gray-600 w-20 h-8 rounded text-center text-xl ml-3"
+					/>
+				</label>
+			</div>
+
+			<div class="w-full flex justify-center mt-0 mb-0">
+				<label
+					class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+					style="min-width: 12rem;"
+				>
+					<input
+						type="checkbox"
+						checked={$appSettings.turnTimerSound}
+						on:change={handleTurnTimerSoundChange}
+						class="h-5 w-5"
+					/>
+					<span class="ml-2 text-lg font-semibold">{$_('turn_timer_sound') || 'Play sound on timeout'}</span>
+				</label>
+			</div>
+		{/if}
 
 		<!-- Language selection -->
 		<div class="w-full flex justify-center mt-6 mb-4">
@@ -409,10 +505,10 @@
 		<div class="w-full text-center text-gray-300 mt-4 mb-8 px-6">
 			<div class="text-white text-2xl mb-2 font-bold">{$_('about_title')}</div>
 			<div class="text-base mb-1">
-				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.3.1'}
+				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.3.2'}
 			</div>
-			<div class="text-base mb-1">{$_('about_author')}: Naereen</div>
-			<div class="text-base mb-2">{$_('about_license')}: MIT</div>
+			<div class="text-base mb-1">{$_('about_author')}: <a class="text-blue-400 underline text-base" href="https://github.com/Naereen" target="_blank" rel="noreferrer">Lilian Besson (Naereen)</a></div>
+			<div class="text-base mb-2">{$_('about_license')}: <a class="text-blue-400 underline text-base" href="https://naereen.mit-license.org" target="_blank" rel="noreferrer">MIT</a></div>
 			<div class="text-base mb-2">{$_('about_thanks')}</div>
 			<div class="flex justify-center gap-4 mt-2">
 				<a

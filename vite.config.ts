@@ -31,6 +31,7 @@ export default defineConfig({
 				theme_color: '#062911',
 				orientation: 'portrait',
 				display: 'fullscreen',
+				// display: 'standalone',
 				background_color: '#000000',
 				screenshots: [
 					{

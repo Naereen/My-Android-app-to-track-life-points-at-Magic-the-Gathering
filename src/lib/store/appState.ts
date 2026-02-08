@@ -3,6 +3,7 @@ import { get } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { vibrate } from '$lib/utils/haptics';
 import { players } from './player';
+import { turnTimer } from './turnTimer';
 
 export const appState = persist('appState', {
 	isMenuOpen: false,
@@ -54,6 +55,15 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean) => {
 
 		return newData;
 	});
+
+	// if turn timer enabled, reset/start timer for the new current turn
+	try {
+		if ((get(appSettings)?.turnTimerEnabled)) {
+			turnTimer.resetForCurrent();
+		}
+	} catch (e) {
+		// ignore
+	}
 };
 
 export const nextTurn = () => {

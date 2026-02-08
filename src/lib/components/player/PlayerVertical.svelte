@@ -19,6 +19,7 @@
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
+    import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
 		manageLifeTotal,
@@ -58,8 +59,8 @@
 	$: bgPositionY = (orientation === 'up') ? 'top' : ((orientation === 'down') ? 'center' : 'center');
 	$: bgWidth = (layout === 'two-by-two') ? '105%' : '100%';
 	$: bgHeight = (numberOfPlayers <= 4) ? (orientation === 'up' ? '100%' : '105%') : '105%';
-	$: bgTop = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : '45%';
-	$: bgLeft = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : '45%';
+	$: bgTop = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '40%');
+	$: bgLeft = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '50%');
 	$: bgSize = 'cover';
 	$: styleVars = $players[index].backgroundImage
 		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`
@@ -77,14 +78,6 @@
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: commanderDamageArray = status.commanderDamage ?? [];
 	$: maxCommanderDamage = Math.max(0, ...commanderDamageArray);
-	$: statusRotation =
-		orientation === 'down'
-			? '180deg'
-			: orientation === 'left'
-				? '-90deg'
-				: orientation === 'right'
-					? '90deg'
-					: '0deg';
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
@@ -195,6 +188,26 @@
 	const cancelEdit = () => {
 		editing = false;
 	};
+
+$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
+$: timerMinutes = Math.floor(($turnTimer.remaining || 0) / 60);
+$: timerSeconds = ($turnTimer.remaining || 0) % 60;
+
+// circumference for the timer circle (radius = 18 from the SVG)
+$: timerCircumference = 2 * Math.PI * 18;
+// dash offset based on fraction (0..1)
+$: dashOffset = timerCircumference * (1 - Math.max(0, Math.min(1, timerFraction)));
+
+$: if ($appSettings.turnTimerEnabled && index === $appState.currentTurn) {
+	try { turnTimer.startForPlayer(index); }
+	catch (e) { console.log(e); }
+}
+
+// stop timer for this player when the store indicates it's running for them but they're no longer the current turn
+$: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && index !== $appState.currentTurn) {
+	try { turnTimer.stop(); }
+	catch (e) { console.log(e); }
+}
 </script>
 
 <svelte:window bind:innerWidth />
@@ -225,6 +238,21 @@
 	>
 		{#if !$appState.isMenuOpen}
 			<div class="flex w-full relative">
+				{#if $appSettings.turnTimerEnabled && index === $appState.currentTurn}
+					<div class="absolute top-2 left-2 z-30 pointer-events-none">
+						<div class="w-10 h-10 flex items-center justify-center bg-black/40 rounded-full text-white text-sm">
+							<svg viewBox="0 0 40 40" class="w-10 h-10">
+								<circle cx="20" cy="20" r="18" stroke="#444" stroke-width="3" fill="none" />
+								<circle cx="20" cy="20" r="18" stroke="#ffd54a" stroke-width="3" fill="none"
+									transform="rotate(-90 20 20)"
+									stroke-dasharray={timerCircumference} stroke-dashoffset={dashOffset}
+									stroke-linecap="round"
+								/>
+							</svg>
+							<div class="absolute text-xs">{timerMinutes}:{String(timerSeconds).padStart(2, '0')}</div>
+						</div>
+					</div>
+				{/if}
 				<button
 					on:mousedown={() => handleMouseDown('subtract')}
 					on:mouseup={() => handleMouseUp('subtract')}
@@ -370,7 +398,7 @@
 			{#if poisonCount > 0}
 				<div
 					title={$_('tooltip_status_poison')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0 text-base"
 				>
 					<PoisonIcon /> <span>{poisonCount}</span>
 				</div>
@@ -378,7 +406,7 @@
 			{#if energyCount > 0}
 				<div
 					title={$_('tooltip_status_energy')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
 				>
 					<Energy /> <span>{energyCount}</span>
 				</div>
@@ -386,7 +414,7 @@
 			{#if experienceCount > 0}
 				<div
 					title={$_('tooltip_status_experience')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
 				>
 					<Experience /> <span>{experienceCount}</span>
 				</div>
@@ -394,7 +422,7 @@
 			{#if radCount > 0}
 				<div
 					title={$_('tooltip_status_rad')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
 				>
 					<Rad /> <span>{radCount}</span>
 				</div>
@@ -402,7 +430,7 @@
 			{#if commandTaxCount > 0}
 				<div
 					title={$_('tooltip_status_command_tax')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0 text-base"
 				>
 					<CommandTax /> <span>{commandTaxCount}</span>
 				</div>
@@ -410,7 +438,7 @@
 				{#if ringBearerCount > 0}
 				<div
 					title={$_('tooltip_status_ring_bearer')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
 				>
 						<TheRingerBearer isMax={ringBearerCount === 4} /> <span>{ringBearerCount}</span>
 				</div>
@@ -418,7 +446,7 @@
 			{#if startYourEngineSpeedCount > 0}
 				<div
 					title={$_('tooltip_status_start_your_engine_speed')}
-					class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
 				>
 						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} /> <span>{startYourEngineSpeedCount}</span>
 				</div>
@@ -427,7 +455,7 @@
 				{#if dmg > 0}
 					<div
 						title={$_('tooltip_commander_damage')}
-						class="px-1 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5 text-base"
+						class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
 					>
 						<CommanderDamage playerIndex={i} color="white" />
 						<span>{dmg}</span>

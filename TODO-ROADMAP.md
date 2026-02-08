@@ -200,12 +200,12 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] Implement a counter of the number of turns. It can be an integer betwen 0 and 99. It should be displayed next to the "▶" « next turn » button (in the gray-colored circle). In this section of the global horizontal menu, show the number of turns that have been played, starting from 1 at the beginning of the game, and incrementing by 1 each time the "next turn" button is clicked enough so that the initial starting player is the active player again. This can be useful for players to track the number of turns, especially for certain cards that have effects based on the number of turns (e.g. "[Serra Avenger](https://scryfall.com/card/tsp/40/serra-avenger)"), or for tournament games where there is a time limit of (60 minutes or) 12 turns, etc.
 
-- [ ] TODO: Implement a timer for each turn (like in Lifetap app). This feature should be optional, as it can be annoying for some people, especially if they are not used to play with a timer, but it can be useful for people who want to play with a timer, or for tournament games.
+- [x] Implement a timer for each turn (like in Lifetap app). This feature should be optional, as it can be annoying for some people, especially if they are not used to play with a timer, but it can be useful for people who want to play with a timer, or for tournament games.
 
-  - [ ] A way to set the timer duration (global setting). By default, it should be 4 minutes by turn.
-  - [ ] Show the remaining time for the current player's turn: show it in the top left corner of the player's panel, with a small circular progress bar around it, to show the remaining time visually.
-  - [ ] (Strong) haptic vibration feedbak, when the time is up
-  - [ ] ? and play a discrete tiny alarm sound, when the time is up?
+  - [x] A way to set the timer duration (global setting). By default, it should be 4 minutes by turn.
+  - [x] Show the remaining time for the current player's turn: show it in the top left corner of the player's panel, with a small circular progress bar around it, to show the remaining time visually.
+  - [x] (Strong) haptic vibration feedbak, when the time is up
+  - [x] ? and play a discrete tiny alarm sound, when the time is up?
 
 - [x] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel. DONE!
   - [x] Add a setting in the global setting menu, to enable/disable this glowing border for the current player, as it can be too much for some people, especially on mobile devices (it can be too much visual noise, especially with image backgrounds, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to know whose turn it is, but it should be possible to disable it from the settings.
@@ -247,7 +247,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 - [x] Improve the spacing of the mana/storm count : reduce the size of the mana symbols?
 
-- [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right). I expect this feature to be hard to implement...
+- [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right). I expect this feature to be hard to implement... I don't want to try right now.
 
 ---
 
@@ -267,7 +267,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
   - [x] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
   - [x] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two colors)
     - [x] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG) - I already added a "random background" button!
-  - [ ] Allow partners and backgrounds and all pairs of legendary commanders. XXX: Not yet, it's too complicated to manage a background with two illustrations side by side properly.
+  - [ ] TODO: Allow partners and backgrounds and all pairs of legendary commanders. TODO: Be careful, it is probably quite complicated to manage a background with two illustrations *side by side* properly.
 
 - [x] Improve the "search background" feature: after searching and choosing a background image, the "search background" dialog should keep in memory the chosen image, and display its status of "chosen image" in the result list.
   - [x] This information about the chosen background should always be display in the "search background" tab: if player number 1/2/3/4/5/6 has already chosen a background, when opening again the "search background" tab, the chosen background should be displayed (and indicated as "chosen") in the search result list by default, and also when searching for another card, if the chosen background is in the search result, it should be indicated as "chosen" in the search result list.
@@ -296,17 +296,18 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 ## New features to implement
 
-Random ideas:
+### Improve feedback while using the app: haptics/vibrations, and sounds?
 
-- [ ] Sound effects on button clicks (big life up/down, big commander damage up/down, K.O. of a player, victory of the last remaining at the table, etc.). Should be enable by default, but should be possible to disable them from the settings!
+- [ ] Sound effects on button clicks (big life up/down (more than +5/-5), big commander damage up/down (more than +5/-5), K.O. of a player, victory of the last remaining at the table, etc.). Should be enabled by default, but should be possible to disable them from the settings!
+
 - [x] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). TODO: Needs more testing on mobile devices, especially on Apple devices, as I don't have any for testing. It is enabled by default, and it is possible to disable it from the settings!
 
-Active turn indicator:
+### Active turn indicator and statistics of which player spent the most time during their turns
 
 - [ ] even if the timer of the current turn is not shown (it should be possible to enable/disable it in the settings), the app could count the time of each turn in the background, and display some statistics at the end: Akroma played for 19% of the time of the game, while Cho-Manno played for 32% of the total time.
 - [ ] implement a timer that can be shown and decreases / increases (which is best?). Add a discrete but long vibration when the timer reaches 0 seconds (if decreasing) or X minutes (if increasing).
 
-Nope:
+### Nope
 
 - [ ] ~~Customizable button sizes (small, medium, large)~~
 - [ ] ~~Customizable layout options (compact mode, expanded mode)~~
@@ -344,8 +345,13 @@ Nope:
 
 ## Dream/weird features, they'll never happen!
 
-- [ ] Game history and undo functionality
-- [ ] Enhanced statistics and analytics, à la Mythic.Tools
+### Game history and undo functionality
+
+- [ ] Store in a log/stack/queue all the changes to each player's lifeTotal, so that this history can be displayed in the menu, if one player is unsure about their recent lifeTotal changes.
+
+### Other
+
+- [ ] Enhanced statistis and analytics, à la Mythic.Tools
 - [ ] Cloud sync and backup, à la Mythic.Tools
 - [ ] Multiplayer online mode (connect with friends over the internet)
 - [ ] Customizable themes and UI options
