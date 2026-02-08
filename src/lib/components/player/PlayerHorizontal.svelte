@@ -84,6 +84,12 @@
 	$: statusTextRotation =
 		orientation === 'left' && (id === 4 || id === 5 || id === 6) ? '-180deg' : (orientation === 'right' && (id === 1 || id === 2 || id === 3) ? '0deg' : statusRotation);
 
+	// Determine players that are physically on the right side in each player-count layout
+	$: isRightFacingPlayer =
+		($appSettings.playerCount === 3 && id === 3) ||
+		($appSettings.playerCount === 4 && (id === 3 || id === 4)) ||
+		($appSettings.playerCount >= 5 && id >= 3);
+
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (!isMobile) {
 			isHolding = true;
@@ -411,14 +417,23 @@
 								title={$_('tooltip_status_poison')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
 							>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<PoisonIcon />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{poisonCount}</span
-								>
+								{#if isRightFacingPlayer}
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{poisonCount}</span>
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<PoisonIcon />
+									</div>
+								{:else}
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<PoisonIcon />
+									</div>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{poisonCount}</span>
+								{/if}
 							</div>
 						{/if}
 						{#if energyCount > 0}
@@ -426,14 +441,23 @@
 								title={$_('tooltip_status_energy')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<Energy />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{energyCount}</span
-								>
+								{#if isRightFacingPlayer}
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{energyCount}</span>
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<Energy />
+									</div>
+								{:else}
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<Energy />
+									</div>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{energyCount}</span>
+								{/if}
 							</div>
 						{/if}
 						{#if experienceCount > 0}
@@ -441,14 +465,23 @@
 								title={$_('tooltip_status_experience')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<Experience />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{experienceCount}</span
-								>
+								{#if isRightFacingPlayer}
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{experienceCount}</span>
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<Experience />
+									</div>
+								{:else}
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<Experience />
+									</div>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{experienceCount}</span>
+								{/if}
 							</div>
 						{/if}
 						{#if radCount > 0}
@@ -456,14 +489,23 @@
 								title={$_('tooltip_status_rad')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<Rad />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{radCount}</span
-								>
+								{#if isRightFacingPlayer}
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{radCount}</span>
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<Rad />
+									</div>
+								{:else}
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<Rad />
+									</div>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{radCount}</span>
+								{/if}
 							</div>
 						{/if}
 						{#if commandTaxCount > 0}
@@ -471,14 +513,23 @@
 								title={$_('tooltip_status_command_tax')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0"
 							>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<CommandTax />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{commandTaxCount}</span
-								>
+								{#if isRightFacingPlayer}
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{commandTaxCount}</span>
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<CommandTax />
+									</div>
+								{:else}
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<CommandTax />
+									</div>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{commandTaxCount}</span>
+								{/if}
 							</div>
 						{/if}
 						{#if ringBearerCount > 0}
@@ -486,14 +537,23 @@
 								title={$_('tooltip_status_ring_bearer')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<TheRingerBearer isMax={ringBearerCount === 4} />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{ringBearerCount}</span
-								>
+								{#if isRightFacingPlayer}
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{ringBearerCount}</span>
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<TheRingerBearer isMax={ringBearerCount === 4} />
+									</div>
+								{:else}
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<TheRingerBearer isMax={ringBearerCount === 4} />
+									</div>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{ringBearerCount}</span>
+								{/if}
 							</div>
 						{/if}
 						{#if startYourEngineSpeedCount > 0}
@@ -501,14 +561,23 @@
 								title={$_('tooltip_status_start_your_engine_speed')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 							>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{startYourEngineSpeedCount}</span
-								>
+								{#if isRightFacingPlayer}
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{startYourEngineSpeedCount}</span>
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
+									</div>
+								{:else}
+									<div
+										class="status-rotate-wrapper"
+										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+									>
+										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
+									</div>
+									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{startYourEngineSpeedCount}</span>
+								{/if}
 							</div>
 						{/if}
 						{#each commanderDamageArray as dmg, i}
@@ -517,17 +586,27 @@
 									title={$_('tooltip_commander_damage')}
 									class="px-0.5 py-0.5 rounded-full bg-gray-800 text-white flex items-center gap-0.5"
 								>
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<div style="transform: rotate(-45deg);">
-											<CommanderDamage playerIndex={i} />
+									{#if isRightFacingPlayer}
+										<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{dmg}</span>
+										<div
+											class="status-rotate-wrapper"
+											style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										>
+											<div style="transform: rotate(-45deg);">
+												<CommanderDamage playerIndex={i} />
+											</div>
 										</div>
-									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;">
-										{dmg}</span
-									>
+									{:else}
+										<div
+											class="status-rotate-wrapper"
+											style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										>
+											<div style="transform: rotate(-45deg);">
+												<CommanderDamage playerIndex={i} />
+											</div>
+										</div>
+										<span style="transform: rotate({statusTextRotation}); display: inline-flex;">{dmg}</span>
+									{/if}
 								</div>
 							{/if}
 						{/each}

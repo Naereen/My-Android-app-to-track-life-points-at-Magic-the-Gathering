@@ -155,7 +155,9 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] In the "status effect" edition panel in the PlayerDataModal.svelte, update the following line in order to keep a good-looking display of the **- VALUE +** buttons, even if the VALUE is more than ONE digit long.
 
-- [ ] In the "status effect" panel, for the PlayerHorizontal.svelte and the right-facing players (player 3 in 3-player mode, player 3 and 4 in 4-player mode, player 3/4/5/6 in 5/6-player mode), everything is nice except the detail that the icons appear **after** the text, and not before the text, which is a bit weird. This is because of the "rotate the content of the status effect section" feature, which rotates everything (text and icons) to make it readable, but it also rotates the order of the icons and the text. To fix this, we could add a special case for these right-facing players, to display the icons before the text, even after rotating the content of the status effect section.
+- [x] In the "status effect" panel, for the PlayerHorizontal.svelte and the right-facing players (player 3 in 3-player mode, player 3 and 4 in 4-player mode, player 3/4/5/6 in 5/6-player mode), everything is nice except the detail that the icons appear **after** the text, and not before the text, which is a bit weird. This is because of the "rotate the content of the status effect section" feature, which rotates everything (text and icons) to make it readable, but it also rotates the order of the icons and the text. To fix this, we could add a special case for these right-facing players, to display the icons before the text, even after rotating the content of the status effect section.
+
+- [x] A long-click on the dice randomizer button in the main UI should launch the "select a random player" feature. Also document this, in the randomizer menu, with a small text "Long click on the dice to select a random player!" (translated in fr/es/it/de/pt/etc).
 
 - [x] Implement a way to know whose turn it is: store it in the app state, and add one button to proceed to the next player's turn
 
@@ -243,6 +245,8 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
   - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is supported by the Lifetap app, but not yet implemented here.
+
+- [ ] Allow to « drag-and-drop » the players to change their position around the table, and thus change the layout of the app. This is a very cool feature, but it can be hard to implement, especially on mobile devices, so it is a "nice to have" feature for later.
 
 ## Variants already existing in Lifetap but not yet implemented here
 

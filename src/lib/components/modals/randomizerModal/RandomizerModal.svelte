@@ -24,21 +24,28 @@
 		class="bg-[#2d2f30] opacity-100 rounded-[2rem] flex justify-center items-center"
 		class:w-40={$randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent'}
 		class:h-40={$randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent'}
-		class:w-64={$randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
-		class:h-48={$randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
+		class:w-80={$randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
+		class:h-60={$randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
 		role="button"
 		on:keydown={() => null}
 		tabindex="0"
+		style="background-image: url({$randomizerModalData.backgroundImage}); background-size: cover; background-position: center;"
 	>
-		<div class="flex flex-col justify-center items-center">
+		<div
+			class="flex flex-col justify-center items-center"
+		>
 			{#if $randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
-				<div class="flex flex-col items-center p-4">
-					{#if $randomizerModalData.playerId !== null}
-						<div class="mb-4 scale-150">
-							<CommanderDamage playerIndex={$randomizerModalData.playerId - 1} />
-						</div>
-					{/if}
-					<p class="text-white text-3xl font-bold text-center">{$randomizerModalData.playerName}</p>
+				<div
+					class="flex flex-col items-center p-4"
+					>
+					<span class="text-white text-5xl font-bold text-center mt-16">
+						<!-- {#if $randomizerModalData.playerId !== null}
+							<div class="scale-[3]">
+								<CommanderDamage playerIndex={$randomizerModalData.playerId - 1} />
+							</div>
+						{/if} -->
+						{$randomizerModalData.playerName}
+					</span>
 				</div>
 			{:else}
 				<div class="h-[49px] mb-8">

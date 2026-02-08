@@ -10,11 +10,15 @@
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
 	import { vibrate } from '$lib/utils/haptics';
+	import { selectRandomPlayer } from '$lib/store/modal';
 
 	let turnPrevTimeout: number | null = null;
 	let turnPrevTriggered = false;
 
-	const handleTurnDown = (e) => {
+	let randomPlayerTimeout: number | null = null;
+	let randomPlayerTriggered = false;
+
+	const handleTurnDown = () => {
 		vibrate(20);
 		// start long-press to go to previous player (on Next button)
 		if (turnPrevTimeout) clearTimeout(turnPrevTimeout);
@@ -24,7 +28,7 @@
 		}, 700);
 	};
 
-	const handleTurnUp = (e) => {
+	const handleTurnUp = () => {
 		vibrate(20);
 		if (turnPrevTimeout) {
 			clearTimeout(turnPrevTimeout);
@@ -38,12 +42,36 @@
 		}
 	};
 
-	const handleManaClick = (e) => {
+	const handleRandomPlayerDown = () => {
+		vibrate(20);
+		// start long-press to go to previous player (on Next button)
+		if (randomPlayerTimeout) clearTimeout(randomPlayerTimeout);
+		randomPlayerTimeout = setTimeout(() => {
+			randomPlayerTriggered = true;
+			selectRandomPlayer();
+		}, 700);
+	};
+
+	const handleRandomPlayerUp = () => {
+		vibrate(20);
+		if (randomPlayerTimeout) {
+			clearTimeout(randomPlayerTimeout);
+			randomPlayerTimeout = null;
+		}
+		// reset trigger after a small delay so that click handler can check it
+		if (randomPlayerTriggered) {
+			setTimeout(() => {
+				randomPlayerTriggered = false;
+			}, 50);
+		}
+	};
+
+	const handleManaClick = () => {
 		vibrate(20);
 		toggleIsMenuOpen('resources');
 	};
 
-	const handleNextClick = (e) => {
+	const handleNextClick = () => {
 		vibrate(20);
 		if (turnPrevTriggered) {
 			// consumed by long-press
@@ -93,9 +121,16 @@
 				▶
 			</button>
 		</div>
-		<div class="flex justify-center items-center flex-grow">
+		<div class="flex justify-center items-center flex-grow"
+		>
 			<button
 				on:click={() => toggleIsMenuOpen('randomizer')}
+				on:mousedown={handleRandomPlayerDown}
+				on:mouseup={handleRandomPlayerUp}
+				on:mouseleave={handleRandomPlayerUp}
+				on:touchstart={handleRandomPlayerDown}
+				on:touchend={handleRandomPlayerUp}
+				on:touchcancel={handleRandomPlayerUp}
 				on:contextmenu|preventDefault
 				draggable="false"
 			>

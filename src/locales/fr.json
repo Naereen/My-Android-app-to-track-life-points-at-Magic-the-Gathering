@@ -90,6 +90,7 @@
     "set_life_total_cancel": "Annuler",
     "random_player": "Joueur aléatoire",
     "random_opponent": "Adversaire aléatoire",
-    "select_active_player": "Sélectionner le Joueur Actif",
-    "scryfall_search_chosen": "Choisi"
+    "select_active_player": "Sélectionner le joueur actif",
+    "scryfall_search_chosen": "Choisi",
+    "long_click_random_player": "Astuce : appuyez longuement sur le dé (dans le menu principal) pour sélectionner un joueur au hasard !"
 }

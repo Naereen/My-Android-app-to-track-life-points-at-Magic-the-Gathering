@@ -89,5 +89,6 @@
     "random_player": "Zufälliger Spieler",
     "random_opponent": "Zufälliger Gegner",
     "select_active_player": "Aktiven Spieler Auswählen",
-    "scryfall_search_chosen": "Ausgewählt"
+    "scryfall_search_chosen": "Ausgewählt",
+    "long_click_random_player": "Tipp: Lange auf den Würfel drücken (im Hauptmenü), um einen zufälligen Spieler auszuwählen!"
 }

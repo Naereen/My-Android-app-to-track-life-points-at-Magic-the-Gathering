@@ -14,6 +14,7 @@
 	import { players } from '$lib/store/player';
 	import DiceCard from './subcomponents/diceCard/RandomizerButton.svelte';
 	import { _ } from 'svelte-i18n';
+	import { vibrate } from '$lib/utils/haptics';
 
 	$: innerHeight = 0;
 	let selectedActivePlayer: number | null = null;
@@ -36,10 +37,12 @@
 	};
 
 	const handleRandomOpponent = () => {
+		vibrate(20);
 		showOpponentSelector = true;
 	};
 
 	const selectPlayerAsActive = (playerId: number) => {
+		vibrate(20);
 		selectedActivePlayer = playerId;
 		selectRandomOpponent(playerId);
 		showOpponentSelector = false;
@@ -65,6 +68,7 @@
 				<Arrow />
 			</button>
 			<span class="text-white text-center text-3xl">{$_('dice_misc')}</span>
+			<span class="text-gray-400 text-center text-base mt-2 w-80">{$_('long_click_random_player')}</span>
 		</div>
 
 		<div class="w-full flex justify-center">
@@ -171,7 +175,7 @@
 		</div>
 
 		{#if showOpponentSelector}
-		<div class="fixed inset-0 bg-black/70 flex justify-center items-center z-50" on:click={() => showOpponentSelector = false} role="button" on:keydown={() => null} tabindex="0">
+		<div class="fixed inset-0 bg-black/70 flex justify-center items-center z-50" on:click={() => { vibrate(20); showOpponentSelector = false; }} role="button" on:keydown={() => null} tabindex="0">
 			<div class="bg-[#2d2f30] rounded-[2rem] p-6 max-w-md" on:click|stopPropagation role="button" on:keydown={() => null} tabindex="0">
 				<h2 class="text-white text-2xl mb-4 text-center">{ $_('select_active_player') }</h2>
 				<div class="grid grid-cols-2 gap-4">
@@ -186,7 +190,7 @@
 				</div>
 				<button
 					class="mt-4 w-full bg-red-600 text-white p-2 rounded-xl"
-					on:click={() => showOpponentSelector = false}
+					on:click={() => { vibrate(20); showOpponentSelector = false; }}
 				>
 					{ $_('set_life_total_cancel') }
 				</button>
