@@ -80,7 +80,7 @@
     "tooltip_status_ring_bearer": "Ringträger-Zähler (0 - 4)",
     "tooltip_commander_damage": "Gesamter Kommandantenschaden von allen Spielern erhalten",
     "commander_damage_help": "Verfolgen Sie den Schaden, der vom Kommandanten jedes Spielers erhalten wurde. Ein Spieler verliert, wenn er 21+ Kampfschaden von einem einzelnen Kommandanten erhält.",
-    "damage_from_player": "Schaden von Spieler",
+    "damage_from_player": "Schaden von Spieler:",
     "haptic_feedback": "Haptisches Feedback",
     "enable_current_player_glow": "Leuchten des aktuellen Spielers aktivieren",
     "show_next_player_button": "Button für nächsten Spieler anzeigen",

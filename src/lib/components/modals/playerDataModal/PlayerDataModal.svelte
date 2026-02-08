@@ -31,7 +31,7 @@
 
 	let gradientMode = false;
 	let selectedColors: string[] = [];
-	let mode: 'colors' | 'backgrounds' | 'status_effects' = 'status_effects';
+	let mode: 'background' | 'commander' | 'status_effects' = 'status_effects';
 	let searchQuery = '';
 	let searchResults: Array<{
 		id: string;
@@ -66,8 +66,8 @@
 		}
 	}
 
-	// When entering the 'backgrounds' tab, prefill the search input with the player's name
-	$: if (mode === 'backgrounds' && $playerModalData && $players) {
+	// When entering the 'background' tab, prefill the search input with the player's name
+	$: if (mode === 'background' && $playerModalData && $players) {
 		const p = $players[$playerModalData.playerId - 1];
 		if (p && (!searchQuery || searchQuery.trim().length === 0)) {
 			searchQuery = p.playerName ?? '';
@@ -298,35 +298,36 @@
 				<div class="relative">
 					<input
 						type="text"
-						class="py-2 px-3 rounded-lg outline outline-1 outline-black text-black font-semibold bg-[#f1f6fe]"
+						class="beleren py-2 px-3 rounded-lg outline outline-1 outline-black text-black font-semibold bg-[#f1f6fe]"
 						bind:value={$players[$playerModalData.playerId - 1].playerName}
 						on:keypress={handleOnKeyPress}
-						maxlength="20"
+						maxlength="25"
 					/>
 					<div class="absolute right-3 top-2 pointer-events-none"><Pen /></div>
 				</div>
 				<div class="mt-4 flex flex-col justify-center items-center w-full px-6 sm:px-10">
-					<div class="w-full flex justify-center gap-4 mb-3">
-						<button
-							class="px-3 py-1 rounded-full border"
-							on:click={() => (mode = 'backgrounds')}
-							class:underline={mode === 'backgrounds'}
-							class:font-bold={mode === 'backgrounds'}>{$_('open_customize_backgrounds')}</button
-						>
-						<button
-							class="px-3 py-1 rounded-full border"
-							on:click={() => (mode = 'status_effects')}
-							class:underline={mode === 'status_effects'}
-							class:font-bold={mode === 'status_effects'}>{$_('status_effects')}</button
-						>
-						<button
-							class="px-3 py-1 rounded-full border"
-							on:click={() => (mode = 'colors')}
-							class:underline={mode === 'colors'}
-							class:font-bold={mode === 'colors'}>{$_('player_background_color')}</button
-						>
-					</div>
-					{#if mode === 'backgrounds'}
+						<div class="w-full flex justify-center gap-4 mb-3">
+							<button
+								class="px-3 py-1 rounded-full border"
+								on:click={() => (mode = 'background')}
+								class:underline={mode === 'background'}
+								class:font-bold={mode === 'background'}>{$_('open_customize_backgrounds')}</button
+							>
+							<button
+								class="px-3 py-1 rounded-full border"
+								on:click={() => (mode = 'status_effects')}
+								class:underline={mode === 'status_effects'}
+								class:font-bold={mode === 'status_effects'}>{$_('status_effects')}</button
+							>
+							<button
+								class="px-3 py-1 rounded-full border"
+								on:click={() => (mode = 'commander')}
+								class:underline={mode === 'commander'}
+								class:font-bold={mode === 'commander'}>{$_('commander_damage_short')}</button
+							>
+						</div>
+
+					{#if mode === 'background'}
 						<div class="w-8/10 mb-3">
 							<div class="gap-4">
 								<input
@@ -392,10 +393,89 @@
 						</div>
 					{/if}
 
+					{#if mode === 'background'}
+						<label class="block mb-2 font-semibold">{ $_('player_background_color') }</label>
+						<div class="flex items-center gap-3 mb-2">
+							<label class="flex items-center gap-2 text-sm"
+								><input type="checkbox" bind:checked={gradientMode} /> {$_('gradient_mode')}</label
+							>
+							<button
+								on:click={() => clearSelection($playerModalData.playerId)}
+								class="ml-2 text-sm underline">{$_('clear_gradient')}</button
+							>
+						</div>
+						<div class="flex flex-wrap justify-center items-center gap-3 m-auto">
+							{#each ['white', 'blue', 'black', 'red', 'green', 'mud'] as c}
+								<button
+									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
+									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
+									style="background: {colorToBg(c)}"
+									aria-label={c}
+								>
+									{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
+										<span
+											class="block w-full h-full rounded-square rounded-lg"
+											style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"
+										></span>
+									{/if}
+									{#if selectedColors.indexOf(c) !== -1}
+										<span
+											class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center"
+											>{selectedColors.indexOf(c) + 1}</span
+										>
+									{/if}
+								</button>
+							{/each}
+							<div class="-h-1" />
+							<hr class="w-full" />
+							{#each ['metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
+								<button
+									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
+									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
+									style="background: {colorToBg(c)}"
+									aria-label={c}
+								>
+									{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
+										<span
+											class="block w-full h-full rounded-square rounded-lg"
+											style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"
+										></span>
+									{/if}
+									{#if selectedColors.indexOf(c) !== -1}
+										<span
+											class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center"
+											>{selectedColors.indexOf(c) + 1}</span
+										>
+									{/if}
+								</button>
+							{/each}
+						</div>
+						<!-- Allow negative life toggle placed after color options -->
+						<div class="mt-4 w-full flex flex-col items-center text-center">
+							<label class="flex items-center gap-2 justify-center"
+								><input
+									type="checkbox"
+									checked={$players[$playerModalData.playerId - 1].allowNegativeLife}
+									on:change={() =>
+										setPlayerAllowNegative(
+											$playerModalData.playerId,
+											!$players[$playerModalData.playerId - 1].allowNegativeLife
+										)}
+								/>
+								<span class="ml-2 block mb-2 font-bold text-lg text-center"
+									>{$_('allow_negative_life')}</span
+								></label
+							>
+							<div class="mt-2 text-sm text-gray-600 text-center">
+								{$_('allow_negative_life_help')}
+							</div>
+						</div>
+					{/if}
+
 					{#if mode === 'status_effects'}
 						<!-- Status effects controls -->
 						<div class="mt-1 w-full flex flex-col items-center text-center">
-							<div class="flex flex-wrap gap-1 m-1">
+							<div class="grid grid-cols-2 gap-1 m-1 justify-left w-[105%]">
 								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
@@ -411,7 +491,7 @@
 									<Crown />
 									{String($_('monarch'))}</label
 								>
-								<label class="flex items-center gap-2"
+								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
 										checked={$players[$playerModalData.playerId - 1].statusEffects?.initiative ??
@@ -428,7 +508,7 @@
 									<Initiative />
 									{String($_('initiative'))}</label
 								>
-								<label class="flex items-center gap-2"
+								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
 										checked={$players[$playerModalData.playerId - 1].statusEffects?.ascend ?? false}
@@ -444,7 +524,7 @@
 								>
 								<!-- FIXME: enable again the day/night switch setting -->
 								<!-- <label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight title={$_('tooltip_status_day_night')} /> { $_('day_night') }</label> -->
-								<label class="flex items-center gap-2"
+								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
 										checked={$players[$playerModalData.playerId - 1].statusEffects?.ko ?? false}
@@ -701,138 +781,60 @@
 											)}>+</button>
 								</div>
 							</div>
-
-							<!-- Commander Damage Section -->
-							<div class="mt-2 w-full flex flex-col items-center text-center border-t pt-4">
-								<h3 class="text-xl font-bold mb-3 flex items-center gap-2">
-									<CommanderDamage />
-									<span class="underline">{String($_('commander_damage'))}</span>
-								</h3>
-								<div class="text-sm text-gray-600 mb-3">{String($_('commander_damage_help'))}</div>
-								<div class="grid grid-cols-1 gap-2 w-full">
-									{#each Array($appSettings.playerCount) as _, i}
-										{@const fromPlayerId = i + 1}
-										{@const dmg =
-											($players[$playerModalData.playerId - 1].statusEffects?.commanderDamage ??
-												[])[i] ?? 0}
-										{@const fromPlayerName = $players[i]?.playerName ?? `Player ${fromPlayerId}`}
-										<div class="flex items-center gap-2">
-											<span class="w-full text-left ml-4">{damageFromPlayerLabel} {fromPlayerName} :</span>
-											<button
-												class="px-2 py-1 bg-gray-200 rounded"
-												on:click={() =>
-													setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg - 1)}
-												>-</button
-											>
-											{#if editingCommanderFrom === fromPlayerId}
-												<div class="pointer-events-auto flex items-center gap-2">
-													<input
-														id={`commander-input-${fromPlayerId}`}
-														type="number"
-														bind:value={editingCommanderValue}
-														on:keydown={(e) => {
-															if (e.key === 'Enter') saveEditCommander();
-															if (e.key === 'Escape') cancelEditCommander();
-														}}
-														class="w-20 text-center rounded-md px-1 py-0.5"
-														placeholder={enterLifeTotalPlaceholder}
-													/>
-													<div class="flex gap-2">
-														<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-														<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
-													</div>
-												</div>
-											{:else}
-												<span class="px-3 py-1 bg-gray-100 rounded min-w-[3rem] text-center" on:dblclick={() => startEditCommander($playerModalData.playerId, fromPlayerId, dmg)} title={setCommanderDamageString} >{dmg}</span>
-											{/if}
-											<button
-												class="px-2 py-1 bg-gray-200 rounded mr-10"
-												on:click={() =>
-													setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg + 1)}
-												>+</button
-											>
-										</div>
-									{/each}
-								</div>
-							</div>
 						</div>
 					{/if}
 
-					{#if mode === 'colors'}
-						<!-- <label class="block mb-2 font-semibold">{ $_('player_background_color') }</label> -->
-						<div class="flex items-center gap-3 mb-2">
-							<label class="flex items-center gap-2 text-sm"
-								><input type="checkbox" bind:checked={gradientMode} /> {$_('gradient_mode')}</label
-							>
-							<button
-								on:click={() => clearSelection($playerModalData.playerId)}
-								class="ml-2 text-sm underline">{$_('clear_gradient')}</button
-							>
-						</div>
-						<div class="flex flex-wrap justify-center items-center gap-3 m-auto">
-							{#each ['white', 'blue', 'black', 'red', 'green', 'mud'] as c}
-								<button
-									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
-									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
-									style="background: {colorToBg(c)}"
-									aria-label={c}
-								>
-									{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
-										<span
-											class="block w-full h-full rounded-square rounded-lg"
-											style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"
-										></span>
-									{/if}
-									{#if selectedColors.indexOf(c) !== -1}
-										<span
-											class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center"
-											>{selectedColors.indexOf(c) + 1}</span
+					{#if mode === 'commander'}
+						<!-- Commander Damage Section (now its own tab) -->
+						<div class="mt-2 w-full flex flex-col items-center text-center border-t pt-4">
+							<div class="text-sm text-gray-600 mb-3">{String($_('commander_damage_help'))}</div>
+							<div class="w-full text-left ml-4">{damageFromPlayerLabel}</div>
+							<div class="grid grid-cols-1 gap-2 w-full">
+								{#each Array($appSettings.playerCount) as _, i}
+									{@const fromPlayerId = i + 1}
+									{@const dmg =
+										($players[$playerModalData.playerId - 1].statusEffects?.commanderDamage ??
+											[])[i] ?? 0}
+									{@const fromPlayerName = $players[i]?.playerName ?? `Player ${fromPlayerId}`}
+									<div class="flex items-center gap-2">
+										<span class="beleren w-full text-left ml-4">
+											<CommanderDamage playerIndex={fromPlayerId} />
+											{fromPlayerName}
+										</span>
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg - 1)}>-</button
 										>
-									{/if}
-								</button>
-							{/each}
-							<div class="-h-1" />
-							<hr class="w-full" />
-							{#each ['metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
-								<button
-									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
-									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
-									style="background: {colorToBg(c)}"
-									aria-label={c}
-								>
-									{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
-										<span
-											class="block w-full h-full rounded-square rounded-lg"
-											style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"
-										></span>
-									{/if}
-									{#if selectedColors.indexOf(c) !== -1}
-										<span
-											class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center"
-											>{selectedColors.indexOf(c) + 1}</span
+										{#if editingCommanderFrom === fromPlayerId}
+											<div class="pointer-events-auto flex items-center gap-2">
+												<input
+													id={`commander-input-${fromPlayerId}`}
+													type="number"
+													bind:value={editingCommanderValue}
+													on:keydown={(e) => {
+														if (e.key === 'Enter') saveEditCommander();
+														if (e.key === 'Escape') cancelEditCommander();
+													}}
+													class="w-20 text-center rounded-md px-1 py-0.5"
+													placeholder={enterLifeTotalPlaceholder}
+												/>
+												<div class="flex gap-2">
+													<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+													<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+												</div>
+											</div>
+										{:else}
+											<span class="px-3 py-1 bg-gray-100 rounded min-w-[3rem] text-center" on:dblclick={() => startEditCommander($playerModalData.playerId, fromPlayerId, dmg)} title={setCommanderDamageString} >{dmg}</span>
+										{/if}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded mr-10"
+											on:click={() =>
+												setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg + 1)}
+											>+</button
 										>
-									{/if}
-								</button>
-							{/each}
-						</div>
-						<!-- Allow negative life toggle placed after color options -->
-						<div class="mt-4 w-full flex flex-col items-center text-center">
-							<label class="flex items-center gap-2 justify-center"
-								><input
-									type="checkbox"
-									checked={$players[$playerModalData.playerId - 1].allowNegativeLife}
-									on:change={() =>
-										setPlayerAllowNegative(
-											$playerModalData.playerId,
-											!$players[$playerModalData.playerId - 1].allowNegativeLife
-										)}
-								/>
-								<span class="ml-2 block mb-2 font-bold text-lg text-center"
-									>{$_('allow_negative_life')}</span
-								></label
-							>
-							<div class="mt-2 text-sm text-gray-600 text-center">
-								{$_('allow_negative_life_help')}
+									</div>
+								{/each}
 							</div>
 						</div>
 					{/if}

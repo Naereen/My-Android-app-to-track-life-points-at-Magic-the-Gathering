@@ -83,7 +83,7 @@
     "tooltip_status_ring_bearer": "Contatori del Portatore dell'Anello (0 - 4)",
     "tooltip_commander_damage": "Danno totale del comandante ricevuto da tutti i giocatori",
     "commander_damage_help": "Tieni traccia del danno ricevuto dal comandante di ogni giocatore. Un giocatore perde quando riceve 21+ danni da combattimento da un singolo comandante.",
-    "damage_from_player": "Danno dal giocatore",
+    "damage_from_player": "Danno dal giocatore:",
     "haptic_feedback": "Feedback aptico",
     "enable_current_player_glow": "Attiva bagliore del giocatore corrente",
     "show_next_player_button": "Mostra il pulsante del giocatore successivo",

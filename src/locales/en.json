@@ -82,7 +82,7 @@
     "tooltip_status_start_your_engine_speed": "Start your Engine / Your Speed counters (0 - 4)",
     "tooltip_commander_damage": "Total commander damage received from all players",
     "commander_damage_help": "Track damage received from each player's commander. A player loses when taking 21+ combat damage from a single commander.",
-    "damage_from_player": "Damage from Player",
+    "damage_from_player": "Damage from Player:",
     "haptic_feedback": "Haptic feedback",
     "enable_current_player_glow": "Enable current player glow",
     "show_next_player_button": "Show next-player button",

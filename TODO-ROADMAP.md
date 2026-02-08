@@ -255,7 +255,9 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
   - [x] In the "Commander damage" panel in the PlayerDataModal.svelte, allow to double-click on a commander damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click multiple times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games!
 
-  - [ ] Move the "Commander damage" section to its own tab in the PlayerDataModal.svelte, instead of being in the bottom/end "Status effects" tab, as it is a very important information for Commander games, and it deserves to be more visible and easier to access. The "background colors" and "background images" sections can be merged into a single "Background" tab, as they are both related to the background of the player panel.
+  - [x] Move the "Commander damage" section to its own tab in the PlayerDataModal.svelte, instead of being in the bottom/end "Status effects" tab, as it is a very important information for Commander games, and it deserves to be more visible and easier to access. The "background colors" and "background images" sections can be merged into a single "Background" tab, as they are both related to the background of the player panel.
+
+- [ ] For each of the status effect, do NOT display the "-" (MINUS) button if the value is currently 0, and do not display the "+" (PLUS) button if the value is currently at its maximum (e.g. 10 for poison counter, 4 for the Ring Bearer and Speed status effects, etc.). This is a nice visual feedback to show that the value cannot be decreased/increased anymore, and it can prevent some mistakes of clicking on the +1/-1 buttons when the value is already at its minimum/maximum.
 
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
   - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is supported by the Lifetap app, but not yet implemented here.
