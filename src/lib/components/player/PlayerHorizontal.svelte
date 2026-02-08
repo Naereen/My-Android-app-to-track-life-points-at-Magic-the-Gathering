@@ -41,6 +41,7 @@
 	let holdingType: App.Player.LifeMoveType | null = null;
 	$: innerWidth = 0;
 	$: isMobile = isMobileDevice(innerWidth);
+	$: numberOfPlayers = $appSettings.playerCount;
 	$: index = id - 1;
 	$: isDead =
 		($players[index].lifeTotal <= 0 &&
@@ -55,11 +56,11 @@
 	$: bgPositionX =
 		orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
 	$: bgPositionY = orientation === 'left' ? 'top' : orientation === 'right' ? 'top' : 'center';
-	$: bgWidth = '150%';
-	$: bgHeight = '85%';
+	$: bgWidth = numberOfPlayers >= 6 ? '150%' : '200%';
+	$: bgHeight = numberOfPlayers >= 6 ? '85%' : '95%';
 	$: bgTop = '50%';
 	$: bgLeft = '50%';
-	$: bgSize = 'cover';
+	$: bgSize = numberOfPlayers >= 6 ? 'contain' : 'cover';
 	$: styleVars = $players[index].backgroundImage
 		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`
 		: `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;

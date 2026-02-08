@@ -10,6 +10,12 @@
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
 	import { vibrate } from '$lib/utils/haptics';
+    import { onMount, onDestroy } from 'svelte';
+
+	// Animation state for turn counter badge
+	let prevTurnCount = 0;
+	let animateTurn: boolean = false;
+	let animateTimeout: number | null = null;
 
 	let turnPrevTimeout: number | null = null;
 	let turnPrevTriggered = false;
@@ -79,6 +85,27 @@
 		}
 		nextTurn();
 	};
+
+	onMount(() => {
+		prevTurnCount = $appState.turnCount || 0;
+	});
+
+	onDestroy(() => {
+		if (animateTimeout) clearTimeout(animateTimeout);
+	});
+
+// Watch for changes to the turn count and trigger animation when it changes
+$: if ($appState.turnCount !== prevTurnCount) {
+	if (prevTurnCount !== 0) {
+		animateTurn = true;
+		if (animateTimeout) clearTimeout(animateTimeout);
+		animateTimeout = setTimeout(() => {
+			animateTurn = false;
+			animateTimeout = null;
+		}, 2000);
+	}
+	prevTurnCount = $appState.turnCount || 0;
+}
 </script>
 
 {#if !$appState.isMenuOpen}
@@ -118,12 +145,12 @@
 					class="px-2 py-1 rounded-3xl bg-gray-700 text-white"
 					title="Next player"
 				>
-						<span class="inline-flex items-center">
-							<span>▶</span>
-							{#if $appState.turnCount > 0}
-								<span class="ml-1 w-6 h-6 rounded-full text-xl flex items-center justify-center">#{$appState.turnCount}</span>
-							{/if}
-						</span>
+					<span class="inline-flex items-center">
+						<span>↪</span>
+						{#if $appState.turnCount > 0}
+							<span class="ml-1 w-6 h-6 rounded-full text-xl flex items-center justify-center turn-badge" class:animate={animateTurn}>#{$appState.turnCount}</span>
+						{/if}
+					</span>
 				</button>
 			</div>
 		{/if}

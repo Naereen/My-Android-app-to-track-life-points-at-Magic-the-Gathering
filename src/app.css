@@ -60,7 +60,7 @@
 		box-shadow: 0 0 0 4px rgba(212,175,55,0.18), 0 0 30px rgba(212,175,55,0.6);
 		animation: playerGlow 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
-		border-radius: 0.5rem;
+		border-radius: 1rem;
 	}
 
 	@keyframes playerGlow {
@@ -68,7 +68,7 @@
 			box-shadow: 0 0 0 0 rgba(212,175,55,0.0), 0 0 10px rgba(212,175,55,0.2);
 		}
 		50% {
-			box-shadow: 0 0 0 6px rgba(212,175,55,0.25), 0 0 40px rgba(212,175,55,0.7);
+			box-shadow: 0 0 0 6px rgba(212,175,55,0.25), 0 0 40px rgba(212,175,55,1.0);
 		}
 		100% {
 			box-shadow: 0 0 0 0 rgba(212,175,55,0.0), 0 0 10px rgba(212,175,55,0.2);
@@ -205,6 +205,34 @@
 		text-shadow: 0 0 10px rgba(255,215,0,0.9) !important;
 		animation: final-pop 260ms ease forwards;
 		transition: color 200ms ease, text-shadow 200ms ease;
+	}
+
+	/* The animation for the turn counter badge */
+	.turn-badge.animate {
+		animation: turnPulse 3s ease;
+		font-weight: bold;
+	}
+
+	@keyframes turnPulse {
+		0% {
+			transform: rotate(0deg) scale(1);
+			filter: brightness(1);
+		}
+		10% {
+			transform: rotate(30deg) scale(1.12);
+			color: gold;
+			filter: brightness(1.5);
+		}
+		60% {
+			transform: rotate(-30deg) scale(1.05);
+			color: gold;
+			font-weight: bolder;
+			filter: brightness(1.1);
+		}
+		100% {
+			transform: rotate(0deg) scale(1);
+			filter: brightness(1);
+		}
 	}
 }
 

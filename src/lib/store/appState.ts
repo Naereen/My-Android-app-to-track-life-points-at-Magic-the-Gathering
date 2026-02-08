@@ -37,9 +37,17 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean) => {
 		}
 
 		// If we moved back to the starting player, increment the turn counter
-		if (index === data.startingPlayerIndex) {
+		if (index === data.startingPlayerIndex && updateIsPositive) {
 			vibrate(50);
-			const nextCount = Math.max(0, Math.min(99, (data.turnCount || 0) + (updateIsPositive ? 1 : -1)));
+			const nextCount = Math.max(0, Math.min(99, (data.turnCount || 0) + 1));
+			newData.turnCount = nextCount;
+			return newData;
+		}
+
+		// If we moved back to the player before the starting player, by going negatively, decrement the turn counter
+		if (index === ((data.startingPlayerIndex - 1 + (get(appSettings).playerCount || 4)) % (get(appSettings).playerCount || 4)) && !updateIsPositive) {
+			vibrate(50);
+			const nextCount = Math.max(0, Math.min(99, (data.turnCount || 0) - 1));
 			newData.turnCount = nextCount;
 			return newData;
 		}
@@ -66,11 +74,12 @@ export const nextTurn = () => {
 				candidate.statusEffects?.ko === true ||
 				candidate.isDead === true
 			: true;
-		// If there's no candidate (defensive), treat as dead and continue
+		// If the candidate is alive, set as current turn.
 		if (candidate && !isDead) {
 			setCurrentTurn(nextIndex, true);
 			return;
 		}
+		// If there's no candidate (defensive), treat as dead and continue
 		nextIndex = (nextIndex + 1) % totalPlayers;
 		attempts++;
 	}
@@ -96,11 +105,12 @@ export const prevTurn = () => {
 				candidate.statusEffects?.ko === true ||
 				candidate.isDead === true
 			: true;
-		// If there's no candidate (defensive), treat as dead and continue
+		// If the candidate is alive, set as current turn.
 		if (candidate && !isDead) {
 			setCurrentTurn(nextIndex, false);
 			return;
 		}
+		// If there's no candidate (defensive), treat as dead and continue
 		nextIndex = (nextIndex - 1 + totalPlayers) % totalPlayers;
 		attempts++;
 	}

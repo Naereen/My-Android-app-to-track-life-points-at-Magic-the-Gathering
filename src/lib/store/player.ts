@@ -2,7 +2,7 @@ import { get, writable, type Writable } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { _ } from 'svelte-i18n'; // i18n language toggle
 import { showConfirm, selectRandomPlayer } from '$lib/store/modal';
-import { setCurrentTurn } from './appState';
+import { setCurrentTurn, appState } from './appState';
 import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
 
@@ -347,6 +347,11 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	const startingLifeTotal = get(appSettings).startingLifeTotal;
 	removeFirstPlace();
 
+	// reset current turn and turn count
+	setCurrentTurn(0, false);
+	appState.update((data) => ({ ...data, currentTurn: -1, turnCount: 0, startingPlayerIndex: null }));
+	vibrate(30);
+
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			// Clear any existing timer for this player
@@ -585,7 +590,7 @@ export const spinToSelectFirstPlayer = () => {
 					});
 				});
 				// set the current turn to the selected starting player
-				setCurrentTurn((currentIndex - 1 + totalPlayers) % totalPlayers);
+				setCurrentTurn((currentIndex - 1 + totalPlayers) % totalPlayers, true);
 			}, finalPauseTime);
 		}
 	};

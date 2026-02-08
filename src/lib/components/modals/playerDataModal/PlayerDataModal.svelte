@@ -135,10 +135,10 @@
 			resetPlayerModalData();
 		}
 
-		if ($players[$playerModalData.playerId - 1].playerName.length >= 20) {
+		if ($players[$playerModalData.playerId - 1].playerName.length >= 24) {
 			$players[$playerModalData.playerId - 1].playerName = $players[
 				$playerModalData.playerId - 1
-			].playerName.slice(0, 19);
+			].playerName.slice(0, 23);
 		}
 	};
 
@@ -309,7 +309,18 @@
 						on:keypress={handleOnKeyPress}
 						maxlength="25"
 					/>
-					<div class="absolute right-3 top-2 pointer-events-none"><Pen /></div>
+					<div class="absolute right-3 top-2 flex items-center gap-2">
+						<div class="pointer-events-none"><Pen /></div>
+						<button
+							type="button"
+							on:click={() => players.update(ps => { ps[$playerModalData.playerId - 1].playerName = ''; return ps; })}
+							class="ml-2 px-2 py-1 bg-gray-200 text-black rounded text-sm"
+							title="Effacer le nom"
+							aria-label="Effacer le nom"
+						>
+							✕
+						</button>
+					</div>
 				</div>
 				<div class="mt-4 flex flex-col justify-center items-center w-full px-6 sm:px-10">
 						<div class="w-full flex justify-center gap-4 mb-3">
@@ -336,14 +347,27 @@
 					{#if mode === 'background'}
 						<div class="w-8/10 mb-3">
 							<div class="gap-4">
-								<input
-									type="text"
-									class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black"
-									bind:value={searchQuery}
-									on:input={() => (searchEdited = true)}
-									on:keypress={searchQuery.trim().length > 0 ? (e) => e.key === 'Enter' && doSearch() : null}
-									placeholder={$_('scryfall_search') + ' (Scryfall)...'}
-								/>
+								<div class="relative w-full">
+									<input
+										type="text"
+										class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black w-full"
+										bind:value={searchQuery}
+										on:input={() => (searchEdited = true)}
+										on:keypress={searchQuery.trim().length > 0 ? (e) => e.key === 'Enter' && doSearch() : null}
+										placeholder={$_('scryfall_search') + ' (Scryfall)...'}
+									/>
+									<div class="absolute right-3 top-2 flex items-center">
+										<button
+											type="button"
+											on:click={() => { searchQuery = ''; searchEdited = true; }}
+											class="ml-2 px-2 py-1 bg-gray-200 text-black rounded text-sm"
+											title="Effacer la recherche"
+											aria-label="Effacer la recherche"
+										>
+											✕
+										</button>
+									</div>
+								</div>
 								<button
 									class="px-3 py-2 mt-2 bg-blue-500 text-white text-sm rounded-lg"
 									on:click={doSearch}
@@ -824,7 +848,7 @@
 									{@const fromPlayerName = $players[i]?.playerName ?? `Player ${fromPlayerId}`}
 									<div class="flex items-center gap-2">
 										<span class="beleren w-full text-left ml-4">
-											<CommanderDamage playerIndex={fromPlayerId} />
+											<CommanderDamage playerIndex={fromPlayerId - 1} />
 											{fromPlayerName}
 										</span>
 										<button

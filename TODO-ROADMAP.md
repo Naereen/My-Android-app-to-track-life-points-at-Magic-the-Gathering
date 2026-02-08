@@ -99,6 +99,8 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
 
+- [x] This bug is almost fixed, but not for all the different modes (3-player, etc).
+
 ### The 4-player secondary layout bug
 
 - [x] In 4-player, when switching to the secondary layout (the "1 / 2 / 1" layout, the secondary layout mode (the one which is not 2 players on each side of the table)), some overlay panels are not displayed correctly.
