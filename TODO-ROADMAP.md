@@ -176,16 +176,18 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
   - [x] Show the current player's turn somewhere on the screen (prefix this player's name with "▶" or something like that)
   - [x] If a player is dead, skip their turn when going to the next player's turn
 
+- [x] If the settings "show_next_player_button" is disabled, force a disable of the other setting "enable_current_player_glow", as it doesn't make sense to show the player glow in gold, if it's impossible to go to the next player turn!
+
 - [ ] TODO: Implement a timer for each turn (like in Lifetap app). This feature should be optional, as it can be annoying for some people, especially if they are not used to play with a timer, but it can be useful for people who want to play with a timer, or for tournament games.
 
   - [ ] A way to set the timer duration (global setting). By default, it should be 4 minutes by turn.
-  - [ ] Show the remaining time for the current player's turn
+  - [ ] Show the remaining time for the current player's turn: show it in the top left corner of the player's panel, with a small circular progress bar around it, to show the remaining time visually.
   - [ ] (Strong) haptic vibration feedbak, when the time is up
   - [ ] ? and play a discrete tiny alarm sound, when the time is up?
 
 - [x] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel. DONE!
-  - [ ] Add a setting in the global setting menu, to enable/disable this glowing border for the current player, as it can be too much for some people, especially on mobile devices (it can be too much visual noise, especially with image backgrounds, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to know whose turn it is, but it should be possible to disable it from the settings.
-  - [ ] Also add a setting to enable/disable the "next player" button from the main menu, as it can be too much for some people, especially on mobile devices (it can consume more screen space, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to have a button to advance to the next player's turn, but it should be possible to disable it from the settings.
+  - [x] Add a setting in the global setting menu, to enable/disable this glowing border for the current player, as it can be too much for some people, especially on mobile devices (it can be too much visual noise, especially with image backgrounds, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to know whose turn it is, but it should be possible to disable it from the settings.
+  - [x] Also add a setting to enable/disable the "next player" button from the main menu, as it can be too much for some people, especially on mobile devices (it can consume more screen space, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to have a button to advance to the next player's turn, but it should be possible to disable it from the settings.
 
 - [x] Implement two layouts for the four-players mode:
 
@@ -253,7 +255,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
   - [x] In the "Commander damage" panel in the PlayerDataModal.svelte, allow to double-click on a commander damage entry to directly set the commander damage from this opponent to a specific value, instead of having to click multiple times on the +1/-1 buttons. This is a new feature, and it can be useful for Commander games!
 
-  - [ ] Move the "Commander damage" section to its onwn tab in the PlayerDataModal.svelte, instead of being in the bottom/end "Status effects" tab, as it is a very important information for Commander games, and it deserves to be more visible and easier to access.
+  - [ ] Move the "Commander damage" section to its own tab in the PlayerDataModal.svelte, instead of being in the bottom/end "Status effects" tab, as it is a very important information for Commander games, and it deserves to be more visible and easier to access. The "background colors" and "background images" sections can be merged into a single "Background" tab, as they are both related to the background of the player panel.
 
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
   - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is supported by the Lifetap app, but not yet implemented here.

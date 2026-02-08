@@ -114,12 +114,25 @@
 
 	const handleEnableGlowChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
+		// Ne pas permettre d'activer le glow si le bouton "next player" est désactivé
+		if (!$appSettings.showNextPlayerButton) {
+			setEnableCurrentPlayerGlow(false);
+			return;
+		}
 		setEnableCurrentPlayerGlow(!!target.checked);
 	};
 
 	const handleShowNextButtonChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
-		setShowNextPlayerButton(!!target.checked);
+		const checked = !!target.checked;
+		setShowNextPlayerButton(checked);
+		if (!checked) {
+			// si on désactive le bouton next-player, forcer aussi la désactivation du glow
+			setEnableCurrentPlayerGlow(false);
+		} else {
+			// si on active le bouton next-player, réactiver le glow par défaut
+			setEnableCurrentPlayerGlow(true);
+		}
 	};
 
 	const languages = [
@@ -307,6 +320,7 @@
 					checked={$appSettings.enableCurrentPlayerGlow}
 					on:change={handleEnableGlowChange}
 					class="h-5 w-5"
+					disabled={!$appSettings.showNextPlayerButton}
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('enable_current_player_glow') || 'Enable current player glow'}</span>
 			</label>
