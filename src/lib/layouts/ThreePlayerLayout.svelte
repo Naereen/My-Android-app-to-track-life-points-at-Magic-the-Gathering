@@ -8,7 +8,7 @@
 <div class="flex flex-col h-full justify-between">
 	<div
 		class="w-full flex justify-between gap-2 bg-black sticky top-0"
-		class:h-[60%]={!$appState.isMenuOpen}
+		class:h-[57%]={!$appState.isMenuOpen}
 	>
 		<div class="w-1/2">
 			<PlayerHorizontal orientation="right" id={2} />
@@ -22,7 +22,7 @@
 	</div>
 	<div
 		class="flex items-end bg-black sticky bottom-0 pb-2"
-		class:h-[40%]={!$appState.isMenuOpen}
+		class:h-[43%]={!$appState.isMenuOpen}
 		class:pt-2={$appState.isMenuOpen}
 	>
 		<PlayerVertical orientation={'up'} id={1} />

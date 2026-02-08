@@ -384,7 +384,7 @@
 								>
 								<button
 									class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg"
-									on:click={() => setPlayerBackgroundImage($playerModalData.playerId, null)}
+									on:click={() => { hasSearched = false; setPlayerBackgroundImage($playerModalData.playerId, null); }}
 									>{$_('clear_background')}</button
 								>
 							</div>
@@ -427,7 +427,7 @@
 						</div>
 					{/if}
 
-					<!-- FIXME: if the background has been searched, don't display the gradient selection section -->
+					<!-- If the background has been searched, don't display the gradient selection section -->
 					{#if (mode === 'background' && !hasSearched)}
 						<label class="block mb-2 font-semibold">{ $_('player_background_color') }</label>
 						<div class="flex items-center gap-3 mb-2">

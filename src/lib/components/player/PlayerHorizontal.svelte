@@ -53,23 +53,21 @@
 		maxCommanderDamage >= 21;
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
-	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
-	$: bgPositionX =
-		orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
+	$: bgPositionX = orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
 	$: bgPositionY = orientation === 'left' ? 'left' : orientation === 'right' ? 'right' : 'center';
 	// FIXME: the bgWidth/bgHeight/bgSize logic is really hacky and doesn't work well in all cases, need to rethink how background images are handled in general
 	// It works fine for 2-player, but for 3+ players it gets really inconsistent and depends on the specific image used, some trial and error is needed to find the right settings for each image
-	$: bgWidth  = (layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? '200%' : (numberOfPlayers === 3 ? '220%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
-		: (numberOfPlayers >= 6 ? '200%' : (numberOfPlayers === 3 ? '220%' : (numberOfPlayers === 5 ? '210%' : '150%')));
-	$: bgHeight = (layout === 'two-by-two') ?
+	$: bgWidth = (!isMobile) ? '200%' : ((layout === 'two-by-two') ?
+		(numberOfPlayers >= 6 ? '200%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
+		: (numberOfPlayers >= 6 ? '200%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%')))));
+	$: bgHeight = (!isMobile) ? '200%' : ((layout === 'two-by-two') ?
 		(numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '90%' : '125%'))))
-		: (numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '90%' : '125%'))));
-	$: bgTop = numberOfPlayers === 5 ? '50%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? '40%' : (numberOfPlayers === 6 ? ((orientation === 'left' ? '45%' : '65%')) : '50%'));
-	$: bgLeft = (numberOfPlayers === 3 || (numberOfPlayers === 6 && layout === 'two-by-two')) ? (orientation === 'left' ? '75%' : '25%') : (numberOfPlayers === 5 ? '45%' : '50%');
-	$: bgSize = (layout === 'two-by-two') ?
-		(numberOfPlayers >= 6 ? 'cover' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'cover'))
-		: (numberOfPlayers >= 6 ? 'cover' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'cover'));
+		: (numberOfPlayers >= 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '90%' : '125%')))));
+	$: bgTop = (!isMobile) ? '50%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? ((numberOfPlayers != 5 && orientation === 'left' ? '45%' : '65%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '20%' : '35%') : '50%')));
+	$: bgLeft = (!isMobile) ? '50%' : ((numberOfPlayers === 3 || (numberOfPlayers === 6 && layout === 'two-by-two')) ? (numberOfPlayers != 5 && orientation === 'left' ? '70%' : '30%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '55%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) :'50%')));
+	$: bgSize = (!isMobile) ? 'cover' : ((layout === 'two-by-two') ?
+		(numberOfPlayers >= 6 ? 'cover' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain'))
+		: (numberOfPlayers >= 6 ? 'cover' : (numberOfPlayers === 3 ? 'contain' : numberOfPlayers === 4 ? 'contain' : 'contain')));
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = $players[index].backgroundImage
@@ -222,13 +220,15 @@
 
 <svelte:window bind:innerWidth />
 
-
 <div
-	class="rounded-3xl relative h-full w-full"
+	class="flex w-full rounded-3xl flex-grow h-6"
 	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning}
 	class:bg-rotated={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
+	class:h-full={!$appState.isMenuOpen}
+	class:opacity-35={$players[index].highlighted}
+	class:bg-player-dark={isDead}
 >
 	<!-- Overlay au-dessus du background (non-interactif) -->
 	<div

@@ -43,6 +43,7 @@
 
 	$: innerWidth = 0;
 	$: isMobile = isMobileDevice(innerWidth);
+	$: numberOfPlayers = $appSettings.playerCount;
 	$: index = id - 1;
 	$: isDead =
 		($players[index].lifeTotal <= 0 &&
@@ -53,13 +54,12 @@
 		maxCommanderDamage >= 21;
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgRotation = '0deg';
-	// FIXME: these bgPositionX/Y don't work as intended, I havent't thought this through enough
-	$: bgPositionX = orientation === 'up' ? 'center' : orientation === 'right' ? 'center' : 'center';
-	$: bgPositionY = orientation === 'up' ? 'center' : orientation === 'down' ? 'center' : 'center';
-	$: bgWidth = layout === 'two-by-two' ? '105%' : '100%';
-	$: bgHeight = '100%';
-	$: bgTop = '50%';
-	$: bgLeft = '50%';
+	$: bgPositionX = (orientation === 'up') ? 'center' : ((orientation === 'down') ? 'center' : 'center');
+	$: bgPositionY = (orientation === 'up') ? 'top' : ((orientation === 'down') ? 'center' : 'center');
+	$: bgWidth = (layout === 'two-by-two') ? '105%' : '100%';
+	$: bgHeight = (numberOfPlayers <= 4) ? (orientation === 'up' ? '100%' : '105%') : '105%';
+	$: bgTop = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : '45%';
+	$: bgLeft = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : '45%';
 	$: bgSize = 'cover';
 	$: styleVars = $players[index].backgroundImage
 		? `--bg-image: url('${$players[index].backgroundImage}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`
@@ -216,144 +216,152 @@
 		class:highlight={$players[index].highlighted}
 		class:dead={isDead}
 	></div>
-	{#if !$appState.isMenuOpen}
-		<div class="flex w-full relative">
-			<button
-				on:mousedown={() => handleMouseDown('subtract')}
-				on:mouseup={() => handleMouseUp('subtract')}
-				on:touchstart={() => handleTouchStart('subtract')}
-				on:touchend={() => handleTouchEnd('subtract')}
-				on:contextmenu|preventDefault
-				draggable="false"
-				class="minus w-1/2 flex justify-start items-center active:bg-player-light rounded-l-2xl select-none"
-				class:holding={holdingType === 'subtract'}
-				on:mouseleave={handleCancelHold}
-				on:touchcancel={handleCancelHold}
-			>
-				<Minus />
-			</button>
-			<button
-				on:mousedown={() => handleMouseDown('add')}
-				on:mouseup={() => handleMouseUp('add')}
-				on:touchstart={() => handleTouchStart('add')}
-				on:touchend={() => handleTouchEnd('add')}
-				on:contextmenu|preventDefault
-				draggable="false"
-				class="plus w-1/2 flex justify-end items-center active:bg-player-light rounded-r-3xl select-none"
-				class:holding={holdingType === 'add'}
-				on:mouseleave={handleCancelHold}
-				on:touchcancel={handleCancelHold}
-			>
-				<Plus />
-			</button>
-			<div
-				class="absolute w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-none flex flex-col justify-between"
-			>
-				<div class="grow h-1/3 text-center">
-					<button
-						on:click={() => openPlayerModal(id)}
-						on:contextmenu|preventDefault
-						draggable="false"
-						class="py-1 px-2 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
-						style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
-						><div class="flex">
-							<div class="flex justify-center items-center mr-1">
-								<CommanderDamage playerIndex={index} color="white" />
+	<div
+		class="flex w-full rounded-2xl flex-grow h-6"
+		class:h-full={!$appState.isMenuOpen}
+		class:opacity-35={$players[index].highlighted}
+		class:bg-player-dark={isDead}
+		style="background: ${bg};"
+	>
+		{#if !$appState.isMenuOpen}
+			<div class="flex w-full relative">
+				<button
+					on:mousedown={() => handleMouseDown('subtract')}
+					on:mouseup={() => handleMouseUp('subtract')}
+					on:touchstart={() => handleTouchStart('subtract')}
+					on:touchend={() => handleTouchEnd('subtract')}
+					on:contextmenu|preventDefault
+					draggable="false"
+					class="minus w-1/2 flex justify-start items-center active:bg-player-light rounded-l-2xl select-none"
+					class:holding={holdingType === 'subtract'}
+					on:mouseleave={handleCancelHold}
+					on:touchcancel={handleCancelHold}
+				>
+					<Minus />
+				</button>
+				<button
+					on:mousedown={() => handleMouseDown('add')}
+					on:mouseup={() => handleMouseUp('add')}
+					on:touchstart={() => handleTouchStart('add')}
+					on:touchend={() => handleTouchEnd('add')}
+					on:contextmenu|preventDefault
+					draggable="false"
+					class="plus w-1/2 flex justify-end items-center active:bg-player-light rounded-r-3xl select-none"
+					class:holding={holdingType === 'add'}
+					on:mouseleave={handleCancelHold}
+					on:touchcancel={handleCancelHold}
+				>
+					<Plus />
+				</button>
+				<div
+					class="absolute w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-none flex flex-col justify-between"
+				>
+					<div class="grow h-1/3 text-center">
+						<button
+							on:click={() => openPlayerModal(id)}
+							on:contextmenu|preventDefault
+							draggable="false"
+							class="py-1 px-2 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
+							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
+							><div class="flex">
+								<div class="flex justify-center items-center mr-1">
+									<CommanderDamage playerIndex={index} color="white" />
+								</div>
+								<span
+									class="beleren"
+									style="font-size: x-large; color: white;"
+									style:text-decoration={isDead ? 'line-through' : ''}
+									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}>{$players[index].playerName}</span
+								>
+								{#if $players[index].isFirst}
+									<div class="flex justify-center items-center ml-2">
+										<FirstPlace />
+									</div>
+								{/if}
+								{#each booleanStatuses as s}
+									{#if s === 'monarch'}
+										<Crown />
+									{:else if s === 'initiative'}
+										<Initiative />
+									{:else if s === 'ascend'}
+										<Ascend />
+									{:else if s === 'dayNight'}
+										<DayNight />
+									{:else if s === 'ko'}
+										<StatusSkull />
+									{/if}
+								{/each}
 							</div>
-							<span
-								class="beleren"
-								style="font-size: x-large; color: white;"
-								style:text-decoration={isDead ? 'line-through' : ''}
-								class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}>{$players[index].playerName}</span
-							>
-							{#if $players[index].isFirst}
-								<div class="flex justify-center items-center ml-2">
-									<FirstPlace />
+						</button>
+					</div>
+					<div class="h-1/3 flex justify-center items-center flex-row">
+						<span
+							class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
+							style="text-shadow: 0 0 20px black;"
+							>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span
+						>
+						<div class="relative flex items-center justify-center">
+							{#if isDead}
+								<div
+									class="z-10 text-black"
+									style="width: {$appSettings.playerCount >= 5
+										? '2.75rem'
+										: '3.5rem'}; height: {$appSettings.playerCount >= 5
+										? '2.75rem'
+										: '3.5rem'}; opacity: 1;"
+								>
+									<Skull />
 								</div>
 							{/if}
-							{#each booleanStatuses as s}
-								{#if s === 'monarch'}
-									<Crown />
-								{:else if s === 'initiative'}
-									<Initiative />
-								{:else if s === 'ascend'}
-									<Ascend />
-								{:else if s === 'dayNight'}
-									<DayNight />
-								{:else if s === 'ko'}
-									<StatusSkull />
-								{/if}
-							{/each}
-						</div>
-					</button>
-				</div>
-				<div class="h-1/3 flex justify-center items-center flex-row">
-					<span
-						class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
-						style="text-shadow: 0 0 20px black;"
-						>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span
-					>
-					<div class="relative flex items-center justify-center">
-						{#if isDead}
-							<div
-								class="absolute z-10 text-black"
-								style="width: {$appSettings.playerCount >= 5
-									? '2.75rem'
-									: '3.5rem'}; height: {$appSettings.playerCount >= 5
-									? '2.75rem'
-									: '3.5rem'}; opacity: 1;"
-							>
-								<Skull />
-							</div>
-						{/if}
-						{#if !editing}
-							<button
-								on:dblclick={startEdit}
-								on:contextmenu|preventDefault={openPromptSetLife}
-								class="pointer-events-auto bg-transparent border-none p-0 m-0"
-							>
-								<span
-									class="flex items-center text-center text-shadow-xl/120 text-white font-bold"
-									class:opacity-25={isDead}
-									class:text-7xl={$appSettings.playerCount <= 4}
-									class:text-5xl={$appSettings.playerCount >= 5}
-									style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
+							{#if !editing}
+								<button
+									on:dblclick={startEdit}
+									on:contextmenu|preventDefault={openPromptSetLife}
+									class="pointer-events-auto bg-transparent border-none p-0 m-0"
 								>
-							</button>
-						{:else}
-							<div class="pointer-events-auto flex flex-col items-center">
-								<input
-									id={`life-input-${id}`}
-									type="number"
-									bind:value={editValue}
-									on:keydown={(e) => {
-										if (e.key === 'Enter') saveEdit();
-										if (e.key === 'Escape') cancelEdit();
-									}}
-									class="w-20 h-20 text-center rounded-md px-2 py-1 text-3xl"
-									placeholder={$_('enter_life_total_placeholder')}
-								/>
-								<div class="flex gap-2 mt-1">
-									<button on:click={saveEdit} class="px-2 py-1 bg-green-600 text-white rounded"
-										>{$_('set_life_total_save')}</button
+									<span
+										class="flex items-center text-center text-shadow-xl/120 text-white font-bold"
+										class:opacity-25={isDead}
+										class:text-7xl={$appSettings.playerCount <= 4}
+										class:text-5xl={$appSettings.playerCount >= 5}
+										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
 									>
-									<button on:click={cancelEdit} class="px-2 py-1 bg-gray-600 text-white rounded"
-										>{$_('set_life_total_cancel')}</button
-									>
+								</button>
+							{:else}
+								<div class="pointer-events-auto flex flex-col items-center">
+									<input
+										id={`life-input-${id}`}
+										type="number"
+										bind:value={editValue}
+										on:keydown={(e) => {
+											if (e.key === 'Enter') saveEdit();
+											if (e.key === 'Escape') cancelEdit();
+										}}
+										class="w-20 h-20 text-center rounded-md px-2 py-1 text-3xl"
+										placeholder={$_('enter_life_total_placeholder')}
+									/>
+									<div class="flex gap-2 mt-1">
+										<button on:click={saveEdit} class="px-2 py-1 bg-green-600 text-white rounded"
+											>{$_('set_life_total_save')}</button
+										>
+										<button on:click={cancelEdit} class="px-2 py-1 bg-gray-600 text-white rounded"
+											>{$_('set_life_total_cancel')}</button
+										>
+									</div>
 								</div>
-							</div>
-						{/if}
+							{/if}
+						</div>
+						<span
+							class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
+							style="text-shadow: 0 0 20px black;"
+							>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
+						>
 					</div>
-					<span
-						class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
-						style="text-shadow: 0 0 20px black;"
-						>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
-					>
+					<div class="grow h-1/3"></div>
 				</div>
-				<div class="grow h-1/3"></div>
 			</div>
-		</div>
-	{/if}
+		{/if}
+	</div>
 	<!-- Status effects bar -->
 	<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
 		<div

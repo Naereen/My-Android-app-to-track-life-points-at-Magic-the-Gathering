@@ -469,6 +469,64 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 				checkboxDefaultValue: false
 			}
 		);
+// Try to fetch a random card image from Scryfall matching a given name.
+// Returns a payload compatible with `setPlayerBackgroundImage` helper or null on failure.
+const fetchScryfallImageForName = async (name: string) => {
+	if (typeof window === 'undefined' || !name) return null;
+
+	try {
+		// Use the random card endpoint with a query scoped to commanders and the provided name
+		const q = encodeURIComponent(`is:commander ${name}`);
+		const url = `https://api.scryfall.com/cards/random?q=${q}`;
+		const res = await fetch(url);
+		if (!res.ok) return null;
+		const data = await res.json();
+
+		// try common image locations
+		let imageUrl: string | null = null;
+		if (data.image_uris && data.image_uris.large) {
+			imageUrl = data.image_uris.large;
+		} else if (data.image_uris && data.image_uris.normal) {
+			imageUrl = data.image_uris.normal;
+		} else if (data.card_faces && data.card_faces[0] && data.card_faces[0].image_uris) {
+			imageUrl = data.card_faces[0].image_uris.large || data.card_faces[0].image_uris.normal || null;
+		}
+
+		const artist = data.artist ?? (data.card_faces && data.card_faces[0] && data.card_faces[0].artist_name) ?? null;
+		const set_name = data.set_name ?? null;
+
+		if (!imageUrl) return null;
+
+		return { imageUrl, artist, set_name };
+	} catch (e) {
+		// network or parsing failure, ignore and continue
+		return null;
+	}
+};
+
+// If no saved players existed and we're in the browser, attempt to populate
+// a thematic background image for each randomly-generated player name.
+if (typeof window !== 'undefined') {
+	try {
+		const raw = localStorage.getItem('players');
+		if (!raw) {
+			// run async initialisation without blocking module load
+			(async () => {
+				const current = get(players);
+				for (const p of current) {
+					if (!p.backgroundImage && p.playerName) {
+						const payload = await fetchScryfallImageForName(p.playerName);
+						if (payload && payload.imageUrl) {
+							setPlayerBackgroundImage(p.id, payload);
+						}
+					}
+				}
+			})();
+		}
+	} catch (e) {
+		// ignore
+	}
+}
 
 		if (typeof result === 'boolean') {
 			// Backwards compatibility: if result is just a boolean, use it as confirmation
