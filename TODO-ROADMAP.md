@@ -103,6 +103,11 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
 
 - [x] This bug is almost fixed, but not for all the different modes (3-player, etc).
 
+### All layouts display now weirdly the backgrounds, on screensizes different from the one of my smartphone
+
+I was making all my tests on my own smartphone, and apparently the different manually-chosen parameters for the sizes (height/width) and zooms are WRONG for other screensizes.
+Fixing this is going to be hard, but crucial! I need to find a way to make the display of the background images and the panels more responsive, so that it works well on all screensizes, from small mobile devices to large desktop screens.
+
 ### The 4-player secondary layout bug
 
 - [x] In 4-player, when switching to the secondary layout (the "1 / 2 / 1" layout, the secondary layout mode (the one which is not 2 players on each side of the table)), some overlay panels are not displayed correctly.
@@ -227,7 +232,7 @@ ServiceWorker registration failed: TypeError: ServiceWorker script at http://loc
   - [x] Default mode for 6-player right now: the ":::" layout (3 lines of 2 columns), if players are seated on opposite sides of a rectangular table (classic mode for Emperor mode, it is already implemented). It is implemented in `SixPlayerLayoutOne.svelte`, but it is not yet available in the settings menu.
   - [x] Copy what is done for the settings menu, for the case of 4-players mode, and adapt it to the choice of Layouts (One or Two) for the 6-players mode.
 
-## Successfully build a working apk file
+## TODO: Successfully build a working apk file
 
 > Let's use [CapacitorJS.com](https://capacitorjs.com/) for that!
 
@@ -296,6 +301,7 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 - [x] (improve the UX) TODO: allow to « drag-and-drop » each of the entire player panel, to change their position around the table, and thus change the layout of the app. This is a very cool feature, but it can be hard to implement, especially on mobile devices, so it is a "nice to have" feature for later.
   - [x] This has been implemented, so far only for the 3-player mode.
+  - [ ] TODO: this fails on some cases: if the origin index of the player is = 1, the swap is very hard to do. If the destination index of the player is = 1, the swap is also very hard to do, but it is bugged! If the swap is between players 2 and 3 (indeces - 1) it works fine.
   - [ ] TODO: add for the 2-player, the two 4-player, the 5-player and the two 6-player modes
 
 ## Variants already existing in Lifetap but not yet implemented here
