@@ -38,5 +38,10 @@
 		"vite-plugin-pwa": "^1.2.0",
 		"vitest": "^2.0.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@capacitor/android": "^8.0.2",
+		"@capacitor/cli": "^8.0.2",
+		"@capacitor/core": "^8.0.2"
+	}
 }

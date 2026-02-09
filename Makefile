@@ -3,10 +3,11 @@ SHELL=/usr/bin/env /bin/bash
 
 all:	build-web send
 
-build:	build-web build-apk
+build:	build-web sync-apk
 
 build-web:
 	npm run build
+	rm -rvf build/icons/icon-1024x1024.png
 
 sync-apk:
 	npx cap sync
@@ -17,8 +18,8 @@ run-android:
 	npx cap run android
 
 install-apk:
-	@echo "TODO: find a technology to build an .apk"
-	# adb install src-tauri/gen/android/app/build/outputs/apk/debug/app-debug.apk
+	@echo "TODO: find a technology to build an .apk and install it on my phone."
+	adb install android/app/debug/app-debug.apk
 
 dev:
 	npm run dev
