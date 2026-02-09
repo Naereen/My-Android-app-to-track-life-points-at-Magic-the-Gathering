@@ -12,14 +12,24 @@ build-web:
 sync-apk:
 	npx cap sync
 build-apk:	sync-apk
-	npx cap build android
+#	-npx cap build --keystorepath ~/naereen.jks --keystorepass naereenapk --keystorealias key0 --keystorealiaspass naereenapk  --signing-type jarsigner --androidreleasetype APK android
+	-npx cap build --keystorepath ~/naereen.jks --keystorepass naereenapk --keystorealias key0 --keystorealiaspass naereenapk  --signing-type apksigner --androidreleasetype APK android
+	cp -v --update=older android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/app-release-signed.apk
 
 run-android:
 	npx cap run android
 
-install-apk:
-	@echo "TODO: find a technology to build an .apk and install it on my phone."
+install-android-studio-debug-apk:
+	@echo "TODO: finish to work on the chosen technology to build an .apk and install it on my phone."
 	adb install android/app/debug/app-debug.apk
+
+install-android-studio-apk:
+	@echo "TODO: finish to work on the chosen technology to build an .apk and install it on my phone."
+	adb install android/app/release/app-release.apk
+
+install-capacitor-apk:
+	@echo "TODO: finish to work on the chosen technology to build an .apk and install it on my phone."
+	adb install android/app/build/outputs/apk/release/app-release-signed.apk
 
 dev:
 	npm run dev

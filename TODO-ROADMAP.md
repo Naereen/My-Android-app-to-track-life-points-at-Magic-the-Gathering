@@ -238,9 +238,9 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
 > Let's use [CapacitorJS.com](https://capacitorjs.com/) for that!
 
-- [ ] Configure the build process to generate a working apk file
-- [ ] Set up deployment to GitHub Releases so that the latest apk file is always available for download
+- [x] Configure the build process to generate a working apk file
 - [ ] Test it on my devices
+- [ ] Set up deployment to GitHub Releases so that the latest apk file is always available for download
 - [ ] Publish it as a beta on the Google Play Store
 
 BUUUUT so far I'm testing on the PWA installed from Chrome on Android, which works pretty well already!
