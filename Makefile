@@ -8,8 +8,13 @@ build:	build-web build-apk
 build-web:
 	npm run build
 
-build-apk:
-	@echo "TODO: find a technology to build an .apk"
+sync-apk:
+	npx cap sync
+build-apk:	sync-apk
+	npx cap build android
+
+run-android:
+	npx cap run android
 
 install-apk:
 	@echo "TODO: find a technology to build an .apk"

@@ -56,7 +56,7 @@
 
 	/* Style for the active player: a golden glow around the card */
 	.player--active {
-		z-index: 7; /* above the background and overlay but below the content (content uses z-index:10) */
+		z-index: 50; /* above the background and overlay but below the content (content uses z-index:10) */
 		box-shadow: 0 0 0 4px rgba(212,175,55,0.18), 0 0 30px rgba(212,175,55,0.6);
 		animation: player-glow 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
@@ -77,7 +77,7 @@
 
 	/* Style for the active player and the timer is over: a red glow around the card */
 	.player--active-timer-over {
-		z-index: 7; /* above the background and overlay but below the content (content uses z-index:10) */
+		z-index: 50; /* above the background and overlay but below the content (content uses z-index:10) */
 		box-shadow: 0 0 0 4px rgba(255,0,0,0.2), 0 0 30px rgba(255,0,0,0.4);
 		animation: player-glow-timer-over 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
