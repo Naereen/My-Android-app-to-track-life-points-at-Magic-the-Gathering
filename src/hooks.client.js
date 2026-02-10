@@ -3,7 +3,10 @@ import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 // On lie les fichiers JSON de traduction
 register('en', () => import('./locales/en.json'));
 register('fr', () => import('./locales/fr.json'));
-register('en', () => import('./locales/es.json'));
+register('es', () => import('./locales/es.json'));
+register('pt', () => import('./locales/pt.json'));
+register('de', () => import('./locales/de.json'));
+register('it', () => import('./locales/it.json'));
 
 init({
 	fallbackLocale: 'fr', // Langue par défaut si la détection échoue

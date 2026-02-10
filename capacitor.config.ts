@@ -18,6 +18,11 @@ const config: CapacitorConfig = {
       splashFullScreen: true,
       splashImmersive: true,
     },
+    StatusBar: {
+      overlaysWebView: false,
+      style: "DEFAULT", // "DARK" ou "LIGHT" selon votre thème
+      backgroundColor: "#062911ff"
+    }
   }
 };
 

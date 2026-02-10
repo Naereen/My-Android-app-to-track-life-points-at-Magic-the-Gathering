@@ -9,6 +9,12 @@
 		margin: 0;
 	}
 
+	:root {
+		/* On définit des variables par défaut au cas où env() ne soit pas supporté */
+		--safe-area-inset-top: 0px;
+		--safe-area-inset-bottom: 0px;
+	}
+
 	/* Ensure the app spans the full viewport and remove default body margins */
 	html,
 	body,
@@ -18,6 +24,14 @@
 		margin: 0;
 		/* Set default font size for the app */
 		font-size: large;
+	}
+
+	body {
+		/* On utilise les constantes fournies par le moteur de rendu de l'appareil */
+		padding-top: env(safe-area-inset-top, var(--safe-area-inset-top));
+		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom));
+		/* Assurez-vous que votre application ne dépasse pas */
+		box-sizing: border-box;
 	}
 
 	@media (max-width: 640px) {
