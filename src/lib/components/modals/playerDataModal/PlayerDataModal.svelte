@@ -74,6 +74,11 @@
 		}
 	}
 
+	// When the modal opens, use any requested mode from the store (for example 'commander')
+	$: if ($playerModalData && $playerModalData.isOpen) {
+		mode = $playerModalData.mode ?? 'status_effects';
+	}
+
 	// When entering the 'background' tab, prefill the search input with the player's name
 	$: if (mode === 'background' && $playerModalData && $players) {
 		const p = $players[$playerModalData.playerId - 1];

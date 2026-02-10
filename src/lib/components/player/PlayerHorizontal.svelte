@@ -67,14 +67,14 @@
 	// $: bgWidth = '105%';
 
 	$: bgHeight = (!isMobile) ? '90%' : (layout === 'two-by-two') ?
-		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '82%' : '125%'))))
-		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '125%' : (numberOfPlayers === 5 ? '82%' : '125%'))));
+		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : '125%')))
+		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '125%' : (numberOfPlayers === 5 ? '115%' : '125%'))));
 	// $: bgHeight = '105%';
 
-	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4) ? (layout === 'one-two-one' ? (orientation === 'left' ? '50%' : '50%') : (orientation === 'left' ? '50%' : '50%')) : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '45%') : '50%'));
+	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4) ? (layout === 'one-two-one' ? (orientation === 'left' ? '50%' : '50%') : (orientation === 'left' ? '50%' : '50%')) : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : '50%'));
 	// $: bgTop = '50%';
 
-	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '50%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) : '50%'));
+	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '50%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) : '50%'));
 	// $: bgLeft = '50%';
 
 	// $: bgSize = 'contain';
@@ -399,8 +399,10 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 					</button>
 				</div>
 				<div
-					class="absolute h-full w-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-none flex items-center"
+					class="absolute h-full w-full top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-none flex items-center"
 					class:flex-row={orientation === 'left'}
+					class:left-[42%]={orientation === 'left'}
+					class:left-[58%]={orientation === 'right'}
 					class:flex-row-reverse={orientation === 'right'}
 				>
 					<div class="grow w-1/3 text-center flex justify-center items-center">

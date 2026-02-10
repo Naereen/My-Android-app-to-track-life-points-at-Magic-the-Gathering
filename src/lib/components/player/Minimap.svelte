@@ -2,6 +2,7 @@
     import { players } from '$lib/store/player';
     import { appSettings } from '$lib/store/appSettings';
     import { _ } from 'svelte-i18n';
+    import { openPlayerModal } from '$lib/store/modal';
     import { colorToBg } from '$lib/components/colorToBg';
 
     export let playerIndex: number;
@@ -26,25 +27,33 @@
 </script>
 
 <!-- FIXME: update the layout of the minimap of each players, to show like in the main app -->
-<div class="flex items-center gap-1 pointer-events-auto">
+<div
+    class="items-center gap-0 pointer-events-auto flex"
+    class:grid={(numberOfPlayers > 4 && layout !== 'two-by-two' && (orientation === 'left' || orientation === 'right'))}
+    class:grid-cols-3={(numberOfPlayers > 4 && layout !== 'two-by-two' && (orientation === 'left' || orientation === 'right'))}
+>
     {#each Array(numberOfPlayers) as _, j}
         <div
         class:w-12={orientation === 'up' || orientation === 'down'}
-        class:h-10={orientation === 'up' || orientation === 'down'}
+        class:h-9={(orientation === 'up' || orientation === 'down') || (numberOfPlayers >= 5)}
         class:w-10={orientation === 'left' || orientation === 'right'}
-        class:h-12={orientation === 'left' || orientation === 'right'}
+        class:h-10={(orientation === 'left' || orientation === 'right') && numberOfPlayers <= 4}
         class="max-w-14 max-h-12 rounded-md overflow-hidden relative border border-black/60"
         style={getBgStyle(j)}
         style:transform={`rotate(${bgRotation})`}
         title={$players[j]?.playerName}
+        on:click={() => $players[j] && openPlayerModal($players[j].id, 'commander')}
+        role="button"
         >
             {#if j === playerIndex && ($players[j]?.statusEffects?.commanderDamage?.[j] ?? -1) <= 0}
                 <div class="bottom-0 text-white text-base text-center"
-                    class:rotation-180={orientation === 'left'}
+                    class:rotation-270={orientation === 'left' || orientation === 'right'}
+                    class:-rotation-90={orientation === 'up'}
                 >{meString}</div>
             {:else}
                 <div class="bottom-0 text-white text-base text-center"
-                    class:rotation-180={orientation === 'left'}
+                    class:rotation-270={orientation === 'left' || orientation === 'right'}
+                    class:-rotation-90={orientation === 'up'}
                 >{$players[playerIndex]?.statusEffects?.commanderDamage?.[j] ?? 0}</div>
             {/if}
         </div>

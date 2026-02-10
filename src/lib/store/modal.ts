@@ -90,12 +90,12 @@ export const resetRandomizer = () => {
 	randomizerModalData.set(initialRandomizerModalState);
 };
 
-const initialPlayerModalData = { isOpen: false, playerId: 0 };
+const initialPlayerModalData = { isOpen: false, playerId: 0, mode: 'status_effects' as 'background' | 'commander' | 'status_effects' };
 
 export const playerModalData = writable(initialPlayerModalData);
 
-export const openPlayerModal = (playerId: number) => {
-	playerModalData.set({ isOpen: true, playerId });
+export const openPlayerModal = (playerId: number, mode: 'background' | 'commander' | 'status_effects' = 'status_effects') => {
+	playerModalData.set({ isOpen: true, playerId, mode });
 };
 
 export const resetPlayerModalData = () => {
