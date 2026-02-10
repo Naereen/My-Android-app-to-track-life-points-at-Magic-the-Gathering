@@ -42,7 +42,7 @@
         style={getBgStyle(j)}
         style:transform={`rotate(${bgRotation})`}
         title={$players[j]?.playerName}
-        on:click={() => $players[j] && openPlayerModal($players[j].id, 'commander')}
+        on:click={() => $players[j] && openPlayerModal($players[j].id - 1, 'commander')}
         role="button"
         >
             {#if j === playerIndex && ($players[j]?.statusEffects?.commanderDamage?.[j] ?? -1) <= 0}
