@@ -56,24 +56,29 @@
 		maxCommanderDamage >= 21;
 	$: bg = colorToBg($players[index].color ?? 'white');
 	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
-	$: bgPositionX = orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
-	$: bgPositionY = orientation === 'left' ? 'left' : orientation === 'right' ? 'right' : 'center';
+	$: bgPositionX = orientation === 'left' ? 'left' : orientation === 'right' ? 'right' : 'center';
+	$: bgPositionY = orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
 	// FIXME: the bgWidth/bgHeight/bgSize logic is really hacky and doesn't work well in all cases, need to rethink how background images are handled in general
 	// It works fine for 2-player, but for 3+ players it gets really inconsistent and depends on the specific image used, some trial and error is needed to find the right settings for each image
 
 	$: bgWidth = (!isMobile) ? '200%' : (layout === 'two-by-two') ?
 		(numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
 		: (numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))));
+	// $: bgWidth = '105%';
 
 	$: bgHeight = (!isMobile) ? '90%' : (layout === 'two-by-two') ?
 		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '82%' : '125%'))))
-		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : (numberOfPlayers === 5 ? '82%' : '125%'))));
+		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '125%' : (numberOfPlayers === 5 ? '82%' : '125%'))));
+	// $: bgHeight = '105%';
 
-	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4 && layout === 'one-two-one' ? (orientation === 'left' ? '20%' : '30%') : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '45%') : '50%')));
+	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4) ? (layout === 'one-two-one' ? (orientation === 'left' ? '50%' : '50%') : (orientation === 'left' ? '50%' : '50%')) : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '45%') : '50%'));
+	// $: bgTop = '50%';
 
-	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '50%') : (layout === 'two-by-two' ? '35%' : '50%')) :'50%'));
+	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '45%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '50%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) : '50%'));
+	// $: bgLeft = '50%';
 
-	$: bgSize = 'contain';
+	// $: bgSize = 'contain';
+	$: bgSize = 'cover';
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {

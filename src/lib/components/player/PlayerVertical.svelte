@@ -56,14 +56,19 @@
 		$players[index].isDead === true ||
 		maxCommanderDamage >= 21;
 	$: bg = colorToBg($players[index].color ?? 'white');
+
 	$: bgRotation = '0deg';
 	$: bgPositionX = (orientation === 'up') ? 'center' : ((orientation === 'down') ? 'center' : 'center');
-	$: bgPositionY = (orientation === 'up') ? 'top' : ((orientation === 'down') ? 'center' : 'center');
+	$: bgPositionY = (orientation === 'up') ? 'top' : ((orientation === 'down') ? 'top' : 'center');
+
 	$: bgWidth = (layout === 'two-by-two') ? '105%' : '100%';
-	$: bgHeight = (numberOfPlayers <= 4) ? (orientation === 'up' ? '100%' : '105%') : '105%';
-	$: bgTop = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '40%');
+	$: bgHeight = (numberOfPlayers <= 4) ? (orientation === 'up' ? '100%' : '100%') : '105%';
+
+	$: bgTop = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '50%');
 	$: bgLeft = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '50%');
+
 	$: bgSize = 'cover';
+
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
 		const bgValue = $players[index].backgroundImage;

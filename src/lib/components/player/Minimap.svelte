@@ -11,7 +11,7 @@
     $: numberOfPlayers = $appSettings.playerCount;
     $: meString = String($_( 'me' ));  // the "me" string is used in the minimap to indicate the current player, so we need to reactively update it when the locale changes
 
-    const getBgStyle = (j: number) => {
+    $: getBgStyle = (j: number) => {
         const p = $players[j];
         if (!p) return '';
         const bg = p.backgroundImage;
