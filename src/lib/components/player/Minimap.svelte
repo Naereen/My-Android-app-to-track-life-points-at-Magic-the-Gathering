@@ -42,20 +42,19 @@
         style={getBgStyle(j)}
         style:transform={`rotate(${bgRotation})`}
         title={$players[j]?.playerName}
-        on:click={() => $players[j] && openPlayerModal($players[j].id - 1, 'commander')}
+        on:click={() => openPlayerModal(playerIndex + 1, 'commander')}
         role="button"
         >
-            {#if j === playerIndex && ($players[j]?.statusEffects?.commanderDamage?.[j] ?? -1) <= 0}
-                <div class="bottom-0 text-white text-base text-center"
-                    class:rotation-270={orientation === 'left' || orientation === 'right'}
-                    class:-rotation-90={orientation === 'up'}
-                >{meString}</div>
-            {:else}
-                <div class="bottom-0 text-white text-base text-center"
-                    class:rotation-270={orientation === 'left' || orientation === 'right'}
-                    class:-rotation-90={orientation === 'up'}
-                >{$players[playerIndex]?.statusEffects?.commanderDamage?.[j] ?? 0}</div>
-            {/if}
+            <div class="text-white text-base text-center"
+                class:rotation-270={orientation === 'left' || orientation === 'right'}
+                class:-rotation-90={orientation === 'up'}
+            >
+                {#if j === playerIndex && ($players[j]?.statusEffects?.commanderDamage?.[j] ?? -1) <= 0}
+                    {meString}
+                {:else}
+                    {$players[playerIndex]?.statusEffects?.commanderDamage?.[j] ?? 0}
+                {/if}
+            </div>
         </div>
     {/each}
 </div>

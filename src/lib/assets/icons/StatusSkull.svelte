@@ -1,5 +1,3 @@
-<script lang="ts"></script>
-
 <!-- Skull SVG sized to fill its container; size the wrapper element instead -->
 <svg
 	xmlns="http://www.w3.org/2000/svg"
