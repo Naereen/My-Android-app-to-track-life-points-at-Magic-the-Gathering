@@ -2,6 +2,9 @@
 	import '../app.css';
 	import '../lib/utils/i18n.js'; // Importation pour initialiser i18n
 
+	import { Capacitor } from '@capacitor/core';
+	import { Device } from '@capacitor/device';
+
 	$: innerHeight = 0;
 
 	import { onMount } from 'svelte';
@@ -9,6 +12,27 @@
 		const mod = await import('../setupStatusBar');
 		mod.setupStatusBar?.().catch(console.error);
 	});
+
+	const applyNativeContext = async () => {
+		const body = document.body;
+
+		// 1. Détection simple via le Core de Capacitor
+		if (Capacitor.isNativePlatform()) {
+			body.classList.add('is-native');
+
+			// 2. Détection spécifique à la plateforme pour des ajustements fins
+			const info = await Device.getInfo();
+			if (info.platform === 'android') {
+				body.classList.add('is-android');
+			} else if (info.platform === 'ios') {
+				body.classList.add('is-ios');
+			}
+		} else {
+			body.classList.add('is-web');
+		}
+	};
+
+	applyNativeContext();
 </script>
 
 <svelte:head>

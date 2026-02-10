@@ -22,7 +22,13 @@ const config: CapacitorConfig = {
       overlaysWebView: false,
       style: "DEFAULT", // "DARK" ou "LIGHT" selon votre thème
       backgroundColor: "#062911ff"
-    }
+    },
+    SystemBars: {
+      insetsHandling: "css",
+      style: "DEFAULT",
+      hidden: false,
+      animation: "NONE"
+    },
   }
 };
 

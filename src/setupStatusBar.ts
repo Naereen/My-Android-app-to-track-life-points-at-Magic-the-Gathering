@@ -1,4 +1,5 @@
 import { StatusBar, Style } from '@capacitor/status-bar';
+// import { NavigationBar } from '@capacitor/navigation-bar';
 
 export const setupStatusBar = async () => {
     // Empêche la WebView de s'afficher "sous" la barre d'état
@@ -10,6 +11,10 @@ export const setupStatusBar = async () => {
 
     // Affiche la barre d'état (au cas où elle serait cachée)
     await StatusBar.show();
+
+    // Si vous voulez aussi gérer la barre de navigation (sur Android), vous pouvez faire quelque chose comme ça :
+    // await NavigationBar.setBackgroundColor({ color: '#062911' });
+    // await NavigationBar.setInsetBackground({ inset: true });
 };
 
 // setupStatusBar();

@@ -28,10 +28,27 @@
 
 	body {
 		/* On utilise les constantes fournies par le moteur de rendu de l'appareil */
-		padding-top: env(safe-area-inset-top, var(--safe-area-inset-top));
-		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom));
+		padding-top: env(safe-area-inset-top, var(--safe-area-inset-top, 0px));
+		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 0px));
 		/* Assurez-vous que votre application ne dépasse pas */
 		box-sizing: border-box;
+	}
+
+	/* Si rien ne marche, on ajoute une marge de sécurité standard pour Android uniquement quand on détecte que l'app est lancée via Capacitor */
+	/* Correctif spécifique quand l'app tourne en natif sur Android */
+	body.is-native.is-android {
+		/* On ajoute une marge de sécurité arbitraire si env() ne répond pas */
+		/* 48px est la hauteur standard de la barre de navigation Android */
+		padding-bottom: 48px;
+
+		/* On s'assure que le fond de l'app couvre cette nouvelle zone */
+		background-color: #121212;
+	}
+
+	/* Si vous voulez être très précis et utiliser les variables d'environnement
+	tout en ayant un "fallback" manuel : */
+	body.is-native {
+		padding-bottom: max(48px, env(safe-area-inset-bottom));
 	}
 
 	@media (max-width: 640px) {
@@ -50,7 +67,8 @@
 
 	body {
 		@apply bg-black;
-		min-height: 100vh;
+		/* min-height: 100%; */
+		max-height: 100%;
 	}
 
 	@font-face {
