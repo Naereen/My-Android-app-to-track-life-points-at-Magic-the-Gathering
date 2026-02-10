@@ -437,6 +437,13 @@ export const setPlayerPoison = (playerId: number, amount: number) => {
 };
 
 export const setCommanderDamage = (playerId: number, fromPlayerId: number, amount: number) => {
+	// Read old value to compute delta so we can adjust life total accordingly
+	const currentPlayers = get(players);
+	const target = currentPlayers.find((p) => p.id === playerId);
+	const oldCommanderDamage = (target?.statusEffects?.commanderDamage ?? [])[fromPlayerId - 1] ?? 0;
+	const newAmount = Math.max(0, Math.min(999, amount));
+	const delta = newAmount - oldCommanderDamage;
+
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
@@ -446,7 +453,7 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 					commanderDamage.push(0);
 				}
 				// Update the damage from the specific player
-				commanderDamage[fromPlayerId - 1] = Math.max(0, Math.min(999, amount));
+				commanderDamage[fromPlayerId - 1] = newAmount;
 
 				return {
 					...player,
@@ -459,6 +466,13 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 			return player;
 		});
 	});
+
+	// Apply the life total change: when commander damage increases, subtract life; when it decreases, add life back
+	if (delta !== 0) {
+		// setPlayerLifeTotal expects an amount to add to the life total (positive adds, negative subtracts)
+		// We want lifeTotal -= delta, so pass -delta
+		setPlayerLifeTotal(playerId, -delta);
+	}
 };
 
 // Try to fetch a random card image from Scryfall matching a given name.

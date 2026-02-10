@@ -11,6 +11,8 @@
     $: numberOfPlayers = $appSettings.playerCount;
     $: meString = String($_( 'me' ));  // the "me" string is used in the minimap to indicate the current player, so we need to reactively update it when the locale changes
 
+    $: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
+
     $: getBgStyle = (j: number) => {
         const p = $players[j];
         if (!p) return '';
@@ -27,8 +29,13 @@
 <div class="flex items-center gap-1 pointer-events-auto">
     {#each Array(numberOfPlayers) as _, j}
         <div
-        class="max-w-14 w-12 max-h-12 h-10 rounded-md overflow-hidden relative border border-black/60"
+        class:w-12={orientation === 'up' || orientation === 'down'}
+        class:h-10={orientation === 'up' || orientation === 'down'}
+        class:w-10={orientation === 'left' || orientation === 'right'}
+        class:h-12={orientation === 'left' || orientation === 'right'}
+        class="max-w-14 max-h-12 rounded-md overflow-hidden relative border border-black/60"
         style={getBgStyle(j)}
+        style:transform={`rotate(${bgRotation})`}
         title={$players[j]?.playerName}
         >
             {#if j === playerIndex && ($players[j]?.statusEffects?.commanderDamage?.[j] ?? -1) <= 0}
