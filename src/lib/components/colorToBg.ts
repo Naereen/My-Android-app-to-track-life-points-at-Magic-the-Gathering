@@ -34,8 +34,8 @@ const colorToBg = (c: string) => {
 	// support gradients encoded as comma-separated color names
 	if (c.includes(',')) {
 		const parts = c.split(',').map((p) => nameToHex(p));
-		// produce a smooth linear gradient top->bottom
-		return `linear-gradient(0deg, ${parts.join(', ')})`;
+		// produce a smooth linear gradient, from left bottom to right top
+		return `linear-gradient(to right top, ${parts.join(', ')})`;
 	}
 
 	// single color name

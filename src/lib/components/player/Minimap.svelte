@@ -16,7 +16,8 @@
         if (!p) return '';
         const bg = p.backgroundImage;
         if (!bg && p.color) return `background: ${colorToBg(p.color)};`;
-        if (Array.isArray(bg) && bg[0]) return `background-image: url('${bg[0]}'); background-size: cover; background-position: center;`;
+        if (Array.isArray(bg) && bg.length === 1) return `background-image: url('${bg[0]}'); background-size: cover; background-position: center;`;
+        if (Array.isArray(bg) && bg.length === 2) return `background-image: url('${bg[0]}'), url('${bg[1]}'); background-size: cover; background-position: center;`;
         if (bg && typeof bg === 'string') return `background-image: url('${bg}'); background-size: cover; background-position: center;`;
         return '';
     };
@@ -26,15 +27,19 @@
 <div class="flex items-center gap-1 pointer-events-auto">
     {#each Array(numberOfPlayers) as _, j}
         <div
-        class="w-12 h-10 rounded-md overflow-hidden relative border border-black/60"
+        class="max-w-14 w-12 max-h-12 h-10 rounded-md overflow-hidden relative border border-black/60"
         style={getBgStyle(j)}
         title={$players[j]?.playerName}
         >
-        {#if j === playerIndex && ($players[j]?.statusEffects?.commanderDamage?.[j] ?? -1) <= 0}
-            <div class="absolute inset-x-0 bottom-0 bg-black/40 text-white text-xs text-center leading-4">{meString}</div>
-        {:else}
-            <div class="absolute inset-x-0 bottom-0 bg-black/40 text-white text-xs text-center leading-4">{$players[playerIndex]?.statusEffects?.commanderDamage?.[j] ?? 0}</div>
-        {/if}
+            {#if j === playerIndex && ($players[j]?.statusEffects?.commanderDamage?.[j] ?? -1) <= 0}
+                <div class="bottom-0 text-white text-base text-center"
+                    class:rotation-180={orientation === 'left'}
+                >{meString}</div>
+            {:else}
+                <div class="bottom-0 text-white text-base text-center"
+                    class:rotation-180={orientation === 'left'}
+                >{$players[playerIndex]?.statusEffects?.commanderDamage?.[j] ?? 0}</div>
+            {/if}
         </div>
     {/each}
 </div>

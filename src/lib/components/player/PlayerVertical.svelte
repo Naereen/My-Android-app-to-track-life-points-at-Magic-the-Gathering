@@ -31,7 +31,7 @@
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import Minimap from './Minimap.svelte';
-	const doNotShowMinimap: boolean = false; // for testing purposes, to hide the minimap in the player component
+	const doNotShowMinimap: boolean = false; // FIXME: for testing purposes, to hide the minimap in the player component
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
 
@@ -431,7 +431,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 		>
 			{#if numberOfPlayers >= 3}
 				<div class="mr-2">
-					<Minimap playerIndex={index} />
+					<Minimap playerIndex={index} orientation={orientation} layout={layout} />
 				</div>
 			{/if}
 			{#if poisonCount > 0}

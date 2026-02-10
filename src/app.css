@@ -72,6 +72,18 @@
 		max-height: 100%;
 	}
 
+	div .rotation-180 {
+		transform: rotate(180deg);
+	}
+
+	div .rotation-90 {
+		transform: rotate(90deg);
+	}
+
+	div .rotation-270 {
+		transform: rotate(270deg);
+	}
+
 	@font-face {
 		/* https://freefontsvault.com/beleren-font/ */
 		font-family: 'Beleren2016';
