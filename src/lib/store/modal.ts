@@ -106,9 +106,9 @@ export const resetPlayerModalData = () => {
 type ConfirmModalState = {
 	isOpen: boolean;
 	message: string;
-	resolve: ((value: boolean | { confirmed: boolean; checkboxValue?: boolean }) => void) | null;
-	checkboxLabel?: string;
-	checkboxDefaultValue?: boolean;
+	resolve: ((value: boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[] }) => void) | null;
+	checkboxLabel?: string | string[];
+	checkboxDefaultValue?: boolean | boolean[];
 };
 
 const initialConfirmModalState: ConfirmModalState = { isOpen: false, message: '', resolve: null };
@@ -117,9 +117,12 @@ export const confirmModalData = writable<ConfirmModalState>(initialConfirmModalS
 
 export const showConfirm = (
 	message: string,
-	options?: { checkboxLabel?: string; checkboxDefaultValue?: boolean }
+	options?: {
+		checkboxLabel?: string | string[];
+		checkboxDefaultValue?: boolean | boolean[]
+	}
 ) => {
-	return new Promise<boolean | { confirmed: boolean; checkboxValue?: boolean }>((resolve) => {
+	return new Promise<boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[] }>((resolve) => {
 		confirmModalData.set({
 			isOpen: true,
 			message,
@@ -130,7 +133,7 @@ export const showConfirm = (
 	});
 };
 
-export const respondConfirm = (value: boolean, checkboxValue?: boolean) => {
+export const respondConfirm = (value: boolean, checkboxValue?: boolean | boolean[]) => {
 	const current = get(confirmModalData);
 	if (current && current.resolve) {
 		try {

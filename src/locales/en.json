@@ -23,6 +23,8 @@
     "window_confirm_change_player_count": "Are you sure you want to continue with this number of players?",
     "window_confirm_reset_game": "Are you sure you want to reset the game?",
     "reset_player_profiles_checkbox": "Also reset player profiles (colors)",
+    "reset_player_profiles_checkbox_plus_randomize_seats": "Also randomize player seats?",
+    "reset_player_profiles_checkbox_plus_clear_profile": "Also clear player profiles (name and background)?",
     "player_background_color": "Customize Colors",
     "clear_gradient": "Clear",
     "clear_background": "Clear background",

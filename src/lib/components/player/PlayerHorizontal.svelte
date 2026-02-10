@@ -509,14 +509,19 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 											if (e.key === 'Enter') saveEdit();
 											if (e.key === 'Escape') cancelEdit();
 										}}
-										class="w-20 h-20 center text-center rounded-md px-2 py-1 text-3xl"
+										class="max-w-16 max-h-14 center text-center rounded-md px-2 py-1 text-3xl text-black"
+										class:-rotate-180={orientation === 'left'}
 										placeholder={$_('enter_life_total_placeholder')}
 									/>
 									<div class="flex gap-2 mt-1 justify-center">
-										<button on:click={saveEdit} class="px-2 py-1 bg-green-600 text-white rounded"
+										<button on:click={saveEdit}
+											class="px-2 py-1 bg-green-600 text-white rounded"
+											class:-rotate-180={orientation === 'left'}
 											>{$_('set_life_total_save')}</button
 										>
-										<button on:click={cancelEdit} class="px-2 py-1 bg-gray-600 text-white rounded"
+										<button on:click={cancelEdit}
+											class="px-2 py-1 bg-gray-600 text-white rounded"
+											class:-rotate-180={orientation === 'left'}
 											>{$_('set_life_total_cancel')}</button
 										>
 									</div>

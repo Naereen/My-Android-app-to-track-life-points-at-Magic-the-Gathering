@@ -42,13 +42,13 @@
 		padding-bottom: 48px;
 
 		/* On s'assure que le fond de l'app couvre cette nouvelle zone */
-		background-color: #121212;
+		background-color: #062911;
 	}
 
 	/* Si vous voulez être très précis et utiliser les variables d'environnement
 	tout en ayant un "fallback" manuel : */
 	body.is-native {
-		padding-bottom: max(48px, env(safe-area-inset-bottom));
+		padding-bottom: max(48px, env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 0px)));
 	}
 
 	@media (max-width: 640px) {
@@ -67,6 +67,7 @@
 
 	body {
 		@apply bg-black;
+		/* FIXME find the correct value to make the Capacitor native app work fine! */
 		/* min-height: 100%; */
 		max-height: 100%;
 	}

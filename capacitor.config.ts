@@ -26,7 +26,7 @@ const config: CapacitorConfig = {
     SystemBars: {
       insetsHandling: "css",
       style: "DEFAULT",
-      hidden: false,
+      hidden: true, // On cache les barres pour une expérience plus immersive
       animation: "NONE"
     },
   }

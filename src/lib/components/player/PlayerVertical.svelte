@@ -399,7 +399,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 											if (e.key === 'Enter') saveEdit();
 											if (e.key === 'Escape') cancelEdit();
 										}}
-										class="w-20 h-20 text-center rounded-md px-2 py-1 text-3xl"
+										class="max-w-16 max-h-14 text-center rounded-md px-2 py-1 text-3xl text-black"
 										placeholder={$_('enter_life_total_placeholder')}
 									/>
 									<div class="flex gap-2 mt-1">

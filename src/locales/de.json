@@ -23,6 +23,8 @@
     "window_confirm_change_player_count": "Möchten Sie mit dieser Spieleranzahl fortfahren?",
     "window_confirm_reset_game": "Möchten Sie das Spiel wirklich zurücksetzen?",
     "reset_player_profiles_checkbox": "Spielerprofile auch zurücksetzen (Farben)",
+    "reset_player_profiles_checkbox_plus_randomize_seats": "Und auch die Sitzplätze der Spieler zufällig anordnen?",
+    "reset_player_profiles_checkbox_plus_clear_profile": "Und auch ihre Profile (Name und Hintergrund) löschen?",
     "player_background_color": "Farbauswahl",
     "clear_gradient": "Löschen",
     "clear_background": "Hintergrund löschen",

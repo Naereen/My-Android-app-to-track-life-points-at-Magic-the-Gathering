@@ -143,8 +143,8 @@ const generateRandomPlayerName = () => {
 
 	const allNames = Object.values(popularPlaneswalkerNames).flat();
 	const randomName = allNames[Math.floor(Math.random() * allNames.length)];
-	const randomNumber = Math.ceil(Math.random() * 100);
 	return `${randomName}`;
+	// const randomNumber = Math.ceil(Math.random() * 100);
 	// return `${randomName} #${randomNumber}`;
 }
 
@@ -152,7 +152,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 1,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: generateRandomPlayerName() || 'Player 1',
+		playerName: 'Player 1',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -168,7 +168,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 2,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: generateRandomPlayerName() || 'Player 2',
+		playerName: 'Player 2',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -184,7 +184,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 3,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: generateRandomPlayerName() || 'Player 3',
+		playerName: 'Player 3',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -200,7 +200,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 4,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: generateRandomPlayerName() || 'Player 4',
+		playerName: 'Player 4',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -216,7 +216,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 5,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: generateRandomPlayerName() || 'Player 5',
+		playerName: 'Player 5',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -232,7 +232,7 @@ const defaultPlayers: App.Player.Data[] = [
 	{
 		id: 6,
 		lifeTotal: get(appSettings).startingLifeTotal,
-		playerName: generateRandomPlayerName() || 'Player 6',
+		playerName: 'Player 6',
 		color: 'white',
 		backgroundImage: null,
 		backgroundArtist: null,
@@ -259,6 +259,7 @@ const getInitialPlayers = (): App.Player.Data[] => {
 				const second_choices = [ 'mud', 'metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen' ];
 				return defaultPlayers.map((p) => ({
 					...p,
+					playerName: generateRandomPlayerName(),
 					color: `${first_choices[Math.floor(Math.random() * first_choices.length)]},${second_choices[Math.floor(Math.random() * second_choices.length)]}`
 				}));
 			}
@@ -527,14 +528,23 @@ const resetTimers: { [key: number]: number } = {};
 
 export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	let resetProfiles = false;
+	let randomizeSeats = false;
+	let clearProfiles = false;
 
 	if (!alreadyConfirmed) {
 		const result = await showConfirm(
 			get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?',
 			{
-				checkboxLabel:
+				checkboxLabel: [
 					get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
-				checkboxDefaultValue: false
+					get(_)('reset_player_profiles_checkbox_plus_randomize_seats') || 'Also reset player profiles (colors) + Randomize seats',
+					get(_)('reset_player_profiles_checkbox_plus_clear_profile') || 'Also reset player profiles (colors) + Clear profile',
+				],
+				checkboxDefaultValue: [
+					false,
+					false,
+					false,
+				]
 			}
 		);
 
@@ -548,7 +558,19 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 			if (!result.confirmed) {
 				return;
 			}
-			resetProfiles = result.checkboxValue ?? false;
+			if (Array.isArray(result.checkboxValue) && result.checkboxValue.length >= 1) {
+				resetProfiles = result.checkboxValue[0] || false;
+			}
+			if (Array.isArray(result.checkboxValue) && result.checkboxValue.length >= 2) {
+				randomizeSeats = result.checkboxValue[1] || false;
+			}
+			if (Array.isArray(result.checkboxValue) && result.checkboxValue.length >= 3) {
+				clearProfiles = result.checkboxValue[2] || false;
+			}
+			if (typeof result.checkboxValue === 'boolean') {
+				// Backwards compatibility: if checkboxValue is just a boolean, use it to decide whether to reset profiles
+				resetProfiles = result.checkboxValue ?? false;
+			}
 		}
 	}
 
@@ -560,6 +582,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	appState.update((data) => ({ ...data, currentTurn: -1, turnCount: 0, startingPlayerIndex: null }));
 	vibrate(30);
 
+	// Reset life totals and optionally profiles for all players
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			// Clear any existing timer for this player
@@ -580,16 +603,57 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 
 			// If resetProfiles is enabled, reset color and backgroundImage to defaults
 			if (resetProfiles) {
+				// The .color is randomly chosen among two lists of options as when generating default players
+				const first_choices = ['white', 'blue', 'black', 'red', 'green'];
+				const second_choices = [ 'mud', 'metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen' ];
+				const color = `${first_choices[Math.floor(Math.random() * first_choices.length)]},${second_choices[Math.floor(Math.random() * second_choices.length)]}`;
+
+				updatedPlayer.color = color;
+				updatedPlayer.backgroundImage = null;
+			}
+
+			// If clearProfiles is enabled, reset color to white and backgroundImage to null, regardless of resetProfiles value
+			if (clearProfiles) {
 				updatedPlayer.color = 'white';
 				updatedPlayer.backgroundImage = null;
+				updatedPlayer.playerName = get(_)('player') ? `${get(_)('player')} ${1 + player.id}` : `Player ${1 + player.id}`;
 			}
 
 			return updatedPlayer;
 		});
 	});
 
+	// Shuffle the array of players, if randomizeSeats is enabled
+	// FIXME: this does not work YET
+	if (randomizeSeats) {
+		players.update((currentPlayers) => {
+			return shuffle([...currentPlayers]);
+		});
+		// Reset the player.id for each player?
+		players.update((currentPlayers) => {
+			return currentPlayers.map((player, index) => {
+				player.id = index;
+				return player;
+			});
+		});
+	}
+
 	spinToSelectFirstPlayer();
 };
+
+/**
+ * Mélange un tableau de manière efficace et impartiale.
+ * @param {Array} array - Le tableau à mélanger (modifié en place).
+ */
+function shuffle(array: any[]) {
+	for (let i = array.length - 1; i > 0; i--) {
+		// Choisir un index aléatoire entre 0 et i (inclus)
+		const j = Math.floor(Math.random() * (i + 1));
+		// Échange des éléments via la déstructuration ES6
+		[array[i], array[j]] = [array[j], array[i]];
+	}
+	return array;
+}
 
 export const setPlayerLifeTotal = (playerId: number, amount: number) => {
 	players.update((currentPlayers) => {
