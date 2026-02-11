@@ -77,13 +77,13 @@
 	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '50%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) : '50%'));
 	// $: bgLeft = '50%';
 
-	// $: bgSize = 'contain';
-	$: bgSize = 'cover';
+	$: bgSize = 'contain';
+	// $: bgSize = 'cover';
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
 		const bgValue = $players[index].backgroundImage;
-		// default single-image behavior
+		// default no-image behavior
 		if (!bgValue) {
 			return `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
 		}
@@ -93,55 +93,58 @@
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
+			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 78.5%; --bg-bottom: 100%; --bg-left: 50%; --bg-right: 50%; --pos-top: 65%; --pos-bottom: 15%; --bg-width: 100%; --bg-height: 100%; --bg-size: auto 65%;`;
+
 			if (numberOfPlayers === 5) {
 				// use contain or percentage sizes so both images display side-by-side
 				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
 				// position first image left, second image right; both centered vertically
 				const posx = '13%, 87%';
 				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 85%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 85%; --bg-top: 50%; --bg-left: 50%;`;
 			} else if (layout === 'two-by-two' && numberOfPlayers === 6) {
 				// use contain or percentage sizes so both images display side-by-side
 				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
 				// position first image left, second image right; both centered vertically
 				const posx = '13%, 87%';
 				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 100%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 100%; --bg-top: 50%; --bg-left: 50%;`;
 			} else if (layout === 'one-two-one' && numberOfPlayers === 6) {
 				// use contain or percentage sizes so both images display side-by-side
 				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
 				// position first image left, second image right; both centered vertically
 				const posx = '13%, 87%';
 				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 110%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 110%; --bg-top: 50%; --bg-left: 50%;`;
 			} else if (numberOfPlayers === 4) {
 				// use contain or percentage sizes so both images display side-by-side
-				// const size = (!isMobile) ? '50% 100%, 50% 100%' : layout === 'two-by-two' ? '57.1% 100%, 57.1% 100%' : '44% 100%, 75% 100%';
-				const size = '50% 100%, 50% 100%';
+				const size = (!isMobile) ? '50% 100%, 50% 100%' : layout === 'two-by-two' ? '57.1% 100%, 57.1% 100%' : '44% 100%, 75% 100%';
+				// const size = '50% 100%, 50% 100%';
 				// position first image left, second image right; both centered vertically
 				const posx = 'left, right';
 				const posy = 'center, center';
 				// const bgHeight = layout === 'two-by-two' ? '57.5%' : '85%';
-				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 200%; --bg-height: 100%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+				const bgHeight = '100%';
+				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 100%; --bg-height: ${bgHeight}; --bg-top: 50%; --bg-left: 0%; --bg-right: 25%;`;
 			} else if (numberOfPlayers === 3) {
 				// use contain or percentage sizes so both images display side-by-side
 				const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 75%, 57.1% 75%';
 				// position first image left, second image right; both centered vertically
 				const posx = '-15%, right';
 				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 210%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 210%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%;`;
 			} else {
 				// use contain or percentage sizes so both images display side-by-side
 				const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 100%, 57.1% 100%';
 				// position first image left, second image right; both centered vertically
 				const posx = '-18%, right';
 				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%; --bg-repeat: no-repeat, no-repeat;`;
+				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%;`;
 			}
 		}
 
 		// single string image
-		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize}; --bg-repeat: space;`;
+		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
 	})();
 
 	$: status = $players[index].statusEffects ?? {};
@@ -314,7 +317,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 	class="flex w-full rounded-3xl flex-grow h-6"
 	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
 	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
-	class:bg-rotated={!!$players[index].backgroundImage}
+	class:bg-rotated-horizontal={!!$players[index].backgroundImage}
 	class:overflow-hidden={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}

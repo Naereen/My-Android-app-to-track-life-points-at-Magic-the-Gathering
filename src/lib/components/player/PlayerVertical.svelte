@@ -61,18 +61,20 @@
 	$: bgPositionX = (orientation === 'up') ? 'center' : ((orientation === 'down') ? 'center' : 'center');
 	$: bgPositionY = (orientation === 'up') ? 'top' : ((orientation === 'down') ? 'top' : 'center');
 
-	$: bgWidth = (layout === 'two-by-two') ? '105%' : '100%';
-	$: bgHeight = (numberOfPlayers <= 4) ? (orientation === 'up' ? '100%' : '100%') : '105%';
+	$: bgWidth = (layout === 'two-by-two') ? '100%' : '100%';
+	// $: bgWidth = '50%';
+	$: bgHeight = (numberOfPlayers <= 4) ? (orientation === 'up' ? '100%' : '100%') : '100%';
 
 	$: bgTop = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '50%');
 	$: bgLeft = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '50%');
 
+	// $: bgSize = 'contain';
 	$: bgSize = 'cover';
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
 		const bgValue = $players[index].backgroundImage;
-		// default single-image behavior
+		// default no-image behavior
 		if (!bgValue) {
 			return `--bg-image: none; --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
 		}
@@ -81,17 +83,17 @@
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
-			// position first image left, second image right; both centered vertically
-			const posx = '0%, 100%';
-			const posy = 'center, center';
-			// use contain or percentage sizes so both images display side-by-side
-			const size = '50% 100%, 50% 100%';
+			// // position first image left, second image right; both centered vertically
+			// const posx = '0%, 100%';
+			// const posy = 'center, center';
+			// // use contain or percentage sizes so both images display side-by-side
+			// const size = '50% 100%, 50% 100%';
 			// const size = 'contain';
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 50%; --bg-left: 100%; --bg-right: 25%; --bg-width: 100%; --bg-height: 100%;`;
+			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 50%; --bg-left: 100%; --bg-right: 25%; --pos-left: 50%; --pos-right: 50%; --bg-width: 100%; --bg-height: 100%; --bg-size: auto 105%;`;
 		}
 
 		// single string image
-		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize}; --bg-repeat: space;`;
+		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
 	})();
 
 	$: status = $players[index].statusEffects ?? {};
