@@ -145,31 +145,55 @@
 		position: relative;
 		overflow: hidden;
 		border-radius: inherit;
+		display: flex;
+		z-index: 5;
 	}
 
 	/* Pseudo-élément plus grand pour couvrir correctement après rotation */
-	.bg-rotated::before {
+	.bg-rotated::before, .bg-rotated::after {
 		content: '';
 		position: absolute;
-		overflow: hidden;
-		top: var(--bg-top);
-		left: var(--bg-left);
-		/* 200% permet de couvrir les cas de rotation sans couper l'image */
-		width: var(--bg-width);
-		height: var(--bg-height);
+		top: var(--bg-top, 50%);
+		left: var(--bg-left, 50%);
+		width: var(--bg-width, 100%);
+		height: var(--bg-height, 100%);
 		/* translateX to center horizontally, rotate around the top center so top stays aligned */
 		transform: translateX(-50%) translateY(-50%) rotate(var(--bg-rotation, 0deg));
 		transform-origin: center center;
+
 		background-image: var(--bg-image);
+
 		/* keep the full illustration card visible (no cropping) while fitting inside the enlarged pseudo-element */
 		background-size: var(--bg-size, cover);
-		background-position-x: var(--bg-positionx);
-		background-position-y: var(--bg-positiony);
+		/* background-position-x: var(--bg-positionx, center); */
+		/* background-position-y: var(--bg-positiony, center); */
 		background-repeat: var(--bg-repeat, no-repeat);
 		background-clip: var(--bg-clip, content-box);
 		background-origin: var(--bg-origin, border-box);
-		z-index: 5;
+		z-index: 4;
 		pointer-events: none;
+	}
+
+	.bg-rotated::before {
+		/* top: var(--bg-top, 50%); */
+		/* left: var(--bg-left, 0); */
+		left: 0;
+		/* right: var(--bg-right, 0%); */
+		background-image: var(--bg-image-left, var(--bg-image));
+		/* On utilise la variable de position avec un fallback à 50% */
+		background-position: var(--pos-left, 50%) center;
+		/* border-right: 1px solid rgba(255, 255, 255, 0.5); */
+	}
+
+	.bg-rotated::after {
+		/* top: var(--bg-top, 50%); */
+		/* left: var(--bg-left, 0%); */
+		/* right: var(--bg-right, 0%); */
+		right: 0;
+		background: green; /* fallback color if the image fails to load */
+		background-image: var(--bg-image-right, var(--bg-image));
+		/* On utilise la variable de position avec un fallback à 50% */
+		background-position: var(--pos-right, 50%) center;
 	}
 
 	/* Overlay qui apparaît au-dessus du background (non interactif) */

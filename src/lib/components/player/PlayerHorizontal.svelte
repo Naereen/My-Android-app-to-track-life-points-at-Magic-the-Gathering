@@ -91,6 +91,8 @@
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
+			const image_left = `url('${two[0]}')`;
+			const image_right = `url('${two[1]}')`;
 			if (numberOfPlayers === 5) {
 				// use contain or percentage sizes so both images display side-by-side
 				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
