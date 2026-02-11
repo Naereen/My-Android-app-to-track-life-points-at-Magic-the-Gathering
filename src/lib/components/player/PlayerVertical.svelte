@@ -79,12 +79,13 @@
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
-			// position first image top, second image bottom; both centered horizontally
-			const posx = '20%, right';
+			// position first image left, second image right; both centered vertically
+			const posx = '0%, 100%';
 			const posy = 'center, center';
 			// use contain or percentage sizes so both images display side-by-side
-			const size = (!isMobile) ? '50% 100%, 50% 100%' : '37.5% 100%, 63% 100%';
-			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-top: 50%; --bg-left: 50%; --bg-width: 150%; --bg-height: 100%; --bg-repeat: no-repeat, no-repeat;`;
+			const size = '50% 100%, 50% 100%';
+			// const size = 'contain';
+			return `--bg-image: ${images}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-top: 50%; --bg-left: 50%; --bg-width: 150%; --bg-height: 100%; --bg-repeat: no-repeat, no-repeat; --bg-origin: border-box;`;
 		}
 
 		// single string image

@@ -151,6 +151,7 @@
 	.bg-rotated::before {
 		content: '';
 		position: absolute;
+		overflow: hidden;
 		top: var(--bg-top);
 		left: var(--bg-left);
 		/* 200% permet de couvrir les cas de rotation sans couper l'image */
@@ -165,7 +166,8 @@
 		background-position-x: var(--bg-positionx);
 		background-position-y: var(--bg-positiony);
 		background-repeat: var(--bg-repeat, no-repeat);
-		background-clip: var(--bg-clip, border-box);
+		background-clip: var(--bg-clip, content-box);
+		background-origin: var(--bg-origin, border-box);
 		z-index: 5;
 		pointer-events: none;
 	}
