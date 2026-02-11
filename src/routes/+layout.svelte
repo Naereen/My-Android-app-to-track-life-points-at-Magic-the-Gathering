@@ -10,7 +10,7 @@
 	import { onMount } from 'svelte';
 	onMount(async () => {
 		const mod = await import('../setupStatusBar');
-		mod.setupStatusBar?.().catch(console.error);
+		mod.setupStatusBar?.().catch(console.warn);
 	});
 
 	const applyNativeContext = async () => {

@@ -61,20 +61,20 @@
 	// FIXME: the bgWidth/bgHeight/bgSize logic is really hacky and doesn't work well in all cases, need to rethink how background images are handled in general
 	// It works fine for 2-player, but for 3+ players it gets really inconsistent and depends on the specific image used, some trial and error is needed to find the right settings for each image
 
-	$: bgWidth = (!isMobile) ? '200%' : (layout === 'two-by-two') ?
+	$: bgWidth = (layout === 'two-by-two') ?
 		(numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
 		: (numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))));
 	// $: bgWidth = '105%';
 
-	$: bgHeight = (!isMobile) ? '90%' : (layout === 'two-by-two') ?
+	$: bgHeight = (layout === 'two-by-two') ?
 		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '100%' : (numberOfPlayers === 4 ? '85%' : '125%')))
 		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '100%' : (numberOfPlayers === 4 ? '125%' : (numberOfPlayers === 5 ? '115%' : '125%'))));
 	// $: bgHeight = '105%';
 
-	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4) ? (layout === 'one-two-one' ? (orientation === 'left' ? '50%' : '50%') : (orientation === 'left' ? '50%' : '50%')) : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : '50%'));
+	$: bgTop = (numberOfPlayers === 4) ? (layout === 'one-two-one' ? (orientation === 'left' ? '50%' : '50%') : (orientation === 'left' ? '50%' : '50%')) : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : '50%'));
 	// $: bgTop = '50%';
 
-	$: bgLeft = (!isMobile) ? '50%' : (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '50%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) : '50%'));
+	$: bgLeft = (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '50%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) : '50%'));
 	// $: bgLeft = '50%';
 
 	$: bgSize = 'contain';
@@ -389,20 +389,19 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						>
 							<div class="flex items-center">
-								<div class="flex justify-center items-center mb-3 rotate-90">
-									{#if doNotShowMinimap}
+								{#if doNotShowMinimap}
+									<div class="flex justify-center items-center mb-3 rotate-90">
 										<div class="flex justify-center items-center mr-1">
 											<CommanderDamage playerIndex={index} color="white" />
 										</div>
-									{/if}
-								</div>
+									</div>
+								{/if}
 								<span
 									class="beleren"
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
 									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}
-									>{$players[index].playerName}</span
-								>
+									>{$players[index].playerName}</span>
 								<!-- Use the class:overline only if the glowing gold animation is disabled and if the next player button is enabled -->
 								{#if $players[index].isFirst}
 									<div class="flex justify-center items-center mt-2 rotate-90">

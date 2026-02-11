@@ -31,7 +31,7 @@
     "clear_background": "Effacer l'arrière-plan",
     "gradient_mode": "Mode dégradé",
     "reset_local_storage": "Réinitialiser le stockage local ?",
-    "window_confirm_reset_local_storage": "Cela effacera les paramètres et l'état de la partie enregistrés dans le stockage local. Continuer ?",
+    "window_confirm_reset_local_storage": "Cela effacera les paramètres et l'état de la partie enregistrés dans le stockage local.",
     "confirm_modal": "Confirmer ?",
     "cancel_modal": "Annuler",
     "main_checkboxes_settings": "Options",
