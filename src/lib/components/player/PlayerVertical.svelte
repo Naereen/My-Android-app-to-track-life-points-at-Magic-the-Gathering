@@ -84,7 +84,15 @@
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
 			const bgSize = (numberOfPlayers === 2) ? 'auto 100%' : 'auto 105%';
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 50%; --bg-left: 100%; --bg-right: 25%; --pos-left: 100%; --pos-right: 0%; --bg-width: 100%; --bg-height: 100%; --bg-size: ${bgSize}`;
+			const bgLeft = (numberOfPlayers <= 3) ? '100%' : '100%';
+			const bgRight = (numberOfPlayers <= 3) ? '25%' : '25%';
+			const posLeft = (numberOfPlayers === 3) ? '-200%' :
+							(numberOfPlayers === 2) ? '-100%' :
+							'100%';
+			const posRight = (numberOfPlayers === 3) ? '200%' :
+							(numberOfPlayers === 2) ? '100%' :
+							'0%';
+			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 50%; --bg-left: ${bgLeft}; --bg-right: ${bgRight}; --pos-left: ${posLeft}; --pos-right: ${posRight}; --bg-width: 100%; --bg-height: 100%; --bg-size: ${bgSize}`;
 		}
 
 		// single string image

@@ -77,7 +77,7 @@
 	$: bgLeft = (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '50%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) : '50%'));
 	// $: bgLeft = '50%';
 
-	$: bgSize = 'contain';
+	$: bgSize = (!isMobile) ? 'contain' : 'contain';
 	// $: bgSize = 'cover';
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
@@ -94,15 +94,13 @@
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
 			 // TODO: find a way to compute these values in a safe and robust manner
-			const bgTop = (numberOfPlayers === 4) ? '78.5%'
+			const bgTop = (numberOfPlayers === 4) ? (layout === 'two-by-two' ? '89%' : '95%')
 						: (numberOfPlayers === 3) ? '76%'
-						: (numberOfPlayers === 5) ? '91%'
-						: (numberOfPlayers === 6) ? (
-							(layout === 'one-two-one') ? '105%' : '93%'
-						)
+						: (numberOfPlayers === 5) ? '93%'
+						: (numberOfPlayers === 6) ? (layout === 'one-two-one') ? '105%' : '93%'
 						: '80%';
 			const bgBottom = '100%';
-			const bgSize = (numberOfPlayers === 4) ? 'auto 65%'
+			const bgSize = (numberOfPlayers === 4) ? (layout === 'two-by-two' ? 'auto 65%' : 'auto 70%')
 						: (numberOfPlayers === 3) ? 'auto 55%'
 						: (numberOfPlayers === 5) ? 'auto 70%'
 						: (numberOfPlayers === 6) ? 'auto 105%'

@@ -31,10 +31,7 @@
 		padding-top: env(safe-area-inset-top, var(--safe-area-inset-top, 0px));
 		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 0px));
 		/* Assurez-vous que votre application ne dépasse pas */
-		box-sizing: border-box;
-
-		/* base layer for the body background */
-		/* z-index: 1; */
+		box-sizing: content-box;
 	}
 
 	/* Si rien ne marche, on ajoute une marge de sécurité standard pour Android uniquement quand on détecte que l'app est lancée via Capacitor */
@@ -320,11 +317,11 @@
 
 	/* The animation for the turn counter badge */
 	.turn-badge.animate {
-		animation: turnPulse 2s ease;
+		animation: turn-pulse 2s ease;
 		font-weight: bold;
 	}
 
-	@keyframes turnPulse {
+	@keyframes turn-pulse {
 		0% {
 			transform: rotate(0deg) scale(1);
 			filter: brightness(1);
