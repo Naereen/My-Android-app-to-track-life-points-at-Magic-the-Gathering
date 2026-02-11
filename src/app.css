@@ -200,7 +200,7 @@
 	} */
 	.bg-rotated-horizontal::before {
 		left: var(--pos-left, 50%);
-		top: 25%;
+		top: var(--bg-left-top, 25%);
 		background-image: var(--bg-image-left, var(--bg-image));
 		background-position: var(--pos-top, 50%) center;
 		/* border-right: 1px solid rgba(255, 255, 255, 0.5); */

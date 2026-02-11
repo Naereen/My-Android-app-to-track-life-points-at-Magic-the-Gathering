@@ -67,8 +67,8 @@
 	// $: bgWidth = '105%';
 
 	$: bgHeight = (!isMobile) ? '90%' : (layout === 'two-by-two') ?
-		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '85%' : '125%')))
-		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '90%' : (numberOfPlayers === 4 ? '125%' : (numberOfPlayers === 5 ? '115%' : '125%'))));
+		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '100%' : (numberOfPlayers === 4 ? '85%' : '125%')))
+		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '100%' : (numberOfPlayers === 4 ? '125%' : (numberOfPlayers === 5 ? '115%' : '125%'))));
 	// $: bgHeight = '105%';
 
 	$: bgTop = (!isMobile) ? '30%' : (numberOfPlayers === 4) ? (layout === 'one-two-one' ? (orientation === 'left' ? '50%' : '50%') : (orientation === 'left' ? '50%' : '50%')) : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : '50%'));
@@ -93,54 +93,22 @@
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 78.5%; --bg-bottom: 100%; --bg-left: 50%; --bg-right: 50%; --pos-top: 65%; --pos-bottom: 15%; --bg-width: 100%; --bg-height: 100%; --bg-size: auto 65%;`;
+			 // TODO: find a way to compute these values in a safe and robust manner
+			const bgTop = (numberOfPlayers === 4) ? '78.5%'
+						: (numberOfPlayers === 3) ? '76%'
+						: (numberOfPlayers === 5) ? '91%'
+						: (numberOfPlayers === 6) ? (
+							(layout === 'one-two-one') ? '105%' : '93%'
+						)
+						: '80%';
+			const bgBottom = '100%';
+			const bgSize = (numberOfPlayers === 4) ? 'auto 65%'
+						: (numberOfPlayers === 3) ? 'auto 55%'
+						: (numberOfPlayers === 5) ? 'auto 70%'
+						: (numberOfPlayers === 6) ? 'auto 105%'
+						: 'auto 100%';
 
-			if (numberOfPlayers === 5) {
-				// use contain or percentage sizes so both images display side-by-side
-				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
-				// position first image left, second image right; both centered vertically
-				const posx = '13%, 87%';
-				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 85%; --bg-top: 50%; --bg-left: 50%;`;
-			} else if (layout === 'two-by-two' && numberOfPlayers === 6) {
-				// use contain or percentage sizes so both images display side-by-side
-				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
-				// position first image left, second image right; both centered vertically
-				const posx = '13%, 87%';
-				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 100%; --bg-top: 50%; --bg-left: 50%;`;
-			} else if (layout === 'one-two-one' && numberOfPlayers === 6) {
-				// use contain or percentage sizes so both images display side-by-side
-				const size = (!isMobile) ? '50% 100%, 50% 100%' : '42.5% 100%, 57.5% 100%';
-				// position first image left, second image right; both centered vertically
-				const posx = '13%, 87%';
-				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 110%; --bg-top: 50%; --bg-left: 50%;`;
-			} else if (numberOfPlayers === 4) {
-				// use contain or percentage sizes so both images display side-by-side
-				const size = (!isMobile) ? '50% 100%, 50% 100%' : layout === 'two-by-two' ? '57.1% 100%, 57.1% 100%' : '44% 100%, 75% 100%';
-				// const size = '50% 100%, 50% 100%';
-				// position first image left, second image right; both centered vertically
-				const posx = 'left, right';
-				const posy = 'center, center';
-				// const bgHeight = layout === 'two-by-two' ? '57.5%' : '85%';
-				const bgHeight = '100%';
-				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 100%; --bg-height: ${bgHeight}; --bg-top: 50%; --bg-left: 0%; --bg-right: 25%;`;
-			} else if (numberOfPlayers === 3) {
-				// use contain or percentage sizes so both images display side-by-side
-				const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 75%, 57.1% 75%';
-				// position first image left, second image right; both centered vertically
-				const posx = '-15%, right';
-				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 210%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%;`;
-			} else {
-				// use contain or percentage sizes so both images display side-by-side
-				const size = (!isMobile) ? '50% 100%, 50% 100%' : '57.1% 100%, 57.1% 100%';
-				// position first image left, second image right; both centered vertically
-				const posx = '-18%, right';
-				const posy = 'center, center';
-				return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-positionx: ${posx}; --bg-positiony: ${posy}; --bg-size: ${size}; --bg-width: 175%; --bg-height: 70%; --bg-top: 50%; --bg-left: 50%;`;
-			}
+			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: ${bgTop}; --bg-bottom: ${bgBottom}; --bg-left: 50%; --bg-right: 50%; --bg-left-top: 26%; --pos-bottom: 35%; --bg-width: 105%; --bg-height: ${bgHeight}; --bg-size: ${bgSize};`;
 		}
 
 		// single string image
