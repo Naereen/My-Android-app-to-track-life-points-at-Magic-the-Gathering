@@ -94,7 +94,7 @@
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
 			 // TODO: find a way to compute these values in a safe and robust manner
-			const bgTop = (numberOfPlayers === 4) ? (layout === 'two-by-two' ? '89%' : '95%')
+			const bgTop = (numberOfPlayers === 4) ? (layout === 'two-by-two' ? '80%' : '95%')
 						: (numberOfPlayers === 3) ? '76%'
 						: (numberOfPlayers === 5) ? '93%'
 						: (numberOfPlayers === 6) ? (layout === 'one-two-one') ? '105%' : '93%'

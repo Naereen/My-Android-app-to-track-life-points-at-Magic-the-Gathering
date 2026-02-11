@@ -39,7 +39,7 @@
 	body.is-native.is-android {
 		/* On ajoute une marge de sécurité arbitraire si env() ne répond pas */
 		/* 48px est la hauteur standard de la barre de navigation Android */
-		padding-bottom: 48px;
+		padding-bottom: 48px !important;
 
 		/* On s'assure que le fond de l'app couvre cette nouvelle zone */
 		background-color: #062911;
@@ -48,7 +48,7 @@
 	/* Si vous voulez être très précis et utiliser les variables d'environnement
 	tout en ayant un "fallback" manuel : */
 	body.is-native {
-		padding-bottom: max(48px, env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 0px)));
+		padding-bottom: max(48px, env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 0px))) !important;
 	}
 
 	@media (max-width: 640px) {
