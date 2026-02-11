@@ -32,6 +32,9 @@
 		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 0px));
 		/* Assurez-vous que votre application ne dépasse pas */
 		box-sizing: border-box;
+
+		/* base layer for the body background */
+		/* z-index: 1; */
 	}
 
 	/* Si rien ne marche, on ajoute une marge de sécurité standard pour Android uniquement quand on détecte que l'app est lancée via Capacitor */
@@ -101,7 +104,8 @@
 
 	/* Style for the active player: a golden glow around the card */
 	.player--active {
-		z-index: 50; /* above the background and overlay but below the content (content uses z-index:10) */
+		/* above the background and overlay but below the content (content uses z-index:10) */
+		z-index: 20;
 		box-shadow: 0 0 0 4px rgba(212,175,55,0.18), 0 0 30px rgba(212,175,55,0.6);
 		animation: player-glow 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
@@ -122,7 +126,8 @@
 
 	/* Style for the active player and the timer is over: a red glow around the card */
 	.player--active-timer-over {
-		z-index: 50; /* above the background and overlay but below the content (content uses z-index:10) */
+		/* above the background and overlay but below the content (content uses z-index:10) */
+		z-index: 20;
 		box-shadow: 0 0 0 4px rgba(255,0,0,0.2), 0 0 30px rgba(255,0,0,0.4);
 		animation: player-glow-timer-over 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
@@ -148,7 +153,7 @@
 		display: flex;
 		width: 100%;
 		height: 100%;
-		z-index: -10; /* behind the content but above the body background */
+		z-index: 4; /* behind the content but above the body background */
 	}
 
 	/* Pseudo-élément plus grand pour couvrir correctement après rotation */
@@ -173,7 +178,7 @@
 		background-repeat: var(--bg-repeat, no-repeat);
 		background-clip: var(--bg-clip, content-box);
 		background-origin: var(--bg-origin, border-box);
-		z-index: -4;
+		z-index: 5;
 		pointer-events: none;
 	}
 
@@ -208,7 +213,7 @@
 		position: absolute;
 		inset: 0;
 		/* below the content (which uses z-index:10) but above the background pseudo-element (z-index:0) */
-		z-index: -3;
+		z-index: 10;
 		pointer-events: none;
 		opacity: 0.06;
 		transition:
