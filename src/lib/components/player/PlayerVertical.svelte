@@ -83,13 +83,8 @@
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
-			// // position first image left, second image right; both centered vertically
-			// const posx = '0%, 100%';
-			// const posy = 'center, center';
-			// // use contain or percentage sizes so both images display side-by-side
-			// const size = '50% 100%, 50% 100%';
-			// const size = 'contain';
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 50%; --bg-left: 100%; --bg-right: 25%; --pos-left: 100%; --pos-right: 0%; --bg-width: 100%; --bg-height: 100%; --bg-size: auto 105%;`;
+			const bgSize = (numberOfPlayers === 2) ? 'auto 100%' : 'auto 105%';
+			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 50%; --bg-left: 100%; --bg-right: 25%; --pos-left: 100%; --pos-right: 0%; --bg-width: 100%; --bg-height: 100%; --bg-size: ${bgSize}`;
 		}
 
 		// single string image

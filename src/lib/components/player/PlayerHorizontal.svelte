@@ -295,7 +295,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 >
 	<!-- Overlay au-dessus du background (non-interactif) -->
 	<div
-		class="bg-rotated-overlay"
+		class="bg-rotated-horizontal-overlay"
 		class:highlight={$players[index].highlighted}
 		class:dead={isDead}
 	></div>
