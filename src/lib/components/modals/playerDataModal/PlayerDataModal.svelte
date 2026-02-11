@@ -60,10 +60,17 @@
 	import { setPlayerBackgroundImage } from '$lib/store/player';
 	import { tick } from 'svelte';
 
+	// Track previous player ID to detect actual player changes
+	let _prevModalPlayerId: number | null = null;
+
 	// initialize selectedColors when modal/player changes
 	$: if ($playerModalData && $players) {
-		// reset edit flag when the modal or selected player changes
-		searchEdited = false;
+		// Only reset search edit flag when the selected player actually changes,
+		// NOT on every $players update (which would clear it on every keystroke/life change).
+		if (_prevModalPlayerId !== $playerModalData.playerId) {
+			_prevModalPlayerId = $playerModalData.playerId;
+			searchEdited = false;
+		}
 		const p = $players[$playerModalData.playerId - 1];
 		if (p && typeof p.color === 'string' && p.color.includes(',')) {
 			selectedColors = p.color.split(',').map((s) => s.trim());
@@ -79,16 +86,38 @@
 		mode = $playerModalData.mode ?? 'status_effects';
 	}
 
-	// When entering the 'background' tab, prefill the search input with the player's name
-	$: if (mode === 'background' && $playerModalData && $players) {
+	// Track if background tab has been initialized for the current player
+	let _bgInitPlayerId: number | null = null;
+
+	// Reset background tab init tracking when leaving background mode
+	$: if (mode !== 'background') {
+		_bgInitPlayerId = null;
+	}
+
+	// When entering the 'background' tab, run one-time initialization per player.
+	// The init logic is inside a regular function so that searchQuery, searchResults,
+	// and bgSelections are NOT reactive dependencies of this $: block.
+	// This prevents the block from re-running on every keystroke in the search input.
+	$: if (mode === 'background' && $playerModalData && _bgInitPlayerId !== $playerModalData.playerId) {
+		_bgInitPlayerId = $playerModalData.playerId;
+		_initBackgroundTab();
+	}
+
+	function _initBackgroundTab() {
 		const p = $players[$playerModalData.playerId - 1];
-		if (p && (!searchQuery || searchQuery.trim().length === 0) && !searchEdited) {
+		if (!p) return;
+
+		// Prefill the search input with the player's name
+		if (p.playerName != '' && (!searchQuery || searchQuery.trim().length === 0) && !searchEdited) {
 			searchQuery = p.playerName ?? '';
 		}
+	}
 
-		// Ensure the already chosen background (if any) is visible in the search results
-		// so it appears as "chosen" by default when opening the tab.
-		if (p && p.backgroundImage) {
+	// Ensure the already chosen background (if any) is visible in the search results
+	// so it appears as "chosen" by default when opening the tab.
+	$: if (mode === 'background' && $playerModalData) {
+		const p = $players[$playerModalData.playerId - 1];
+		if (p.backgroundImage) {
 			const already = searchResults.find((r) => {
 				if (Array.isArray(p.backgroundImage)) return p.backgroundImage.includes(r.image ?? null as unknown as string);
 				return r.image === p.backgroundImage;
@@ -111,11 +140,9 @@
 		}
 
 		// initialize bgSelections from player data (keep first two if array)
-		if (p) {
-			if (Array.isArray(p.backgroundImage)) bgSelections = p.backgroundImage.slice(0, 2).filter(Boolean) as string[];
-			else if (p.backgroundImage) bgSelections = [p.backgroundImage];
-			else bgSelections = [];
-		}
+		if (Array.isArray(p.backgroundImage)) bgSelections = p.backgroundImage.slice(0, 2).filter(Boolean) as string[];
+		else if (p.backgroundImage) bgSelections = [p.backgroundImage];
+		else bgSelections = [];
 	}
 
 	// helper to compare stored background (string or array) to a single image url
@@ -167,14 +194,24 @@
 	};
 
 	const handleOnKeyPress = (event: KeyboardEvent) => {
+		// ignore IME composition events (mobile/virtual keyboards)
+		if ((event as any).isComposing) return;
 		if (event.key === 'Enter') {
 			resetPlayerModalData();
 		}
 
-		if ($players[$playerModalData.playerId - 1].playerName.length >= 24) {
+		if ($players[$playerModalData.playerId - 1].playerName.length >= 26) {
 			$players[$playerModalData.playerId - 1].playerName = $players[
 				$playerModalData.playerId - 1
-			].playerName.slice(0, 23);
+			].playerName.slice(0, 25);
+		}
+	};
+
+	const handleOnKeyPressScryfallSearch = (event: KeyboardEvent) => {
+		// ignore IME composition events which may falsely emit Enter on some mobile keyboards
+		if ((event as any).isComposing) return;
+		if (event.key === 'Enter') {
+			doSearch();
 		}
 	};
 
@@ -368,7 +405,7 @@
 						on:keypress={handleOnKeyPress}
 						maxlength="25"
 					/>
-					<div class="absolute right-3 top-2 flex items-center gap-2">
+					<div class="absolute right-3 top-3 flex items-center gap-2">
 						<div class="pointer-events-none"><Pen /></div>
 						<button
 							type="button"
@@ -414,10 +451,10 @@
 										class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black w-full"
 										bind:value={searchQuery}
 										on:input={() => (searchEdited = true)}
-										on:keypress={searchQuery.trim().length > 0 ? (e) => e.key === 'Enter' && doSearch() : null}
+										on:keypress={handleOnKeyPressScryfallSearch}
 										placeholder={$_('scryfall_search') + ' (Scryfall)...'}
 									/>
-									<div class="absolute right-3 top-2 flex items-center">
+									<div class="absolute right-3 top-3 flex items-center">
 										<button
 											type="button"
 											on:click={() => { searchQuery = ''; searchEdited = true; }}
@@ -902,7 +939,7 @@
 											!$players[$playerModalData.playerId - 1].allowNegativeLife
 										)}
 								/>
-									<span class="ml-2 block font-bold text-lg text-center">
+									<span class="ml-1 block text-lg text-center">
 										{$_('allow_negative_life')}
 									</span>
 								</label>
@@ -930,11 +967,13 @@
 											<CommanderDamage playerIndex={fromPlayerId - 1} />
 											{fromPlayerName}
 										</span>
-										<button
-											class="px-2 py-1 bg-gray-200 rounded"
-											on:click={() =>
-												setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg - 1)}>-</button
-										>
+										{#if dmg > 0}
+											<button
+												class="px-2 py-1 bg-gray-200 rounded"
+												on:click={() =>
+													setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg - 1)}>-</button
+											>
+										{/if}
 										{#if editingCommanderFrom === fromPlayerId}
 											<div class="pointer-events-auto flex items-center gap-2">
 												<input
