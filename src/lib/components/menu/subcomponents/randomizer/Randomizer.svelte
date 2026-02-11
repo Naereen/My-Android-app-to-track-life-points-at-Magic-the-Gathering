@@ -163,14 +163,16 @@
 						text="{ $_('random_player') }"><RandomPlayer size="4rem" /></DiceCard
 					>
 				</div>
-				<div class="col-span-2">
-					<DiceCard
-						on:click={() => {
-							handleRandomOpponent();
-						}}
-						text="{ $_('random_opponent') }"><RandomPlayer size="4rem" /></DiceCard
-					>
-				</div>
+				{#if $appSettings.playerCount > 2}
+					<div class="col-span-2">
+						<DiceCard
+							on:click={() => {
+								handleRandomOpponent();
+							}}
+							text="{ $_('random_opponent') }"><RandomPlayer size="4rem" /></DiceCard
+						>
+					</div>
+				{/if}
 			</div>
 		</div>
 
