@@ -343,7 +343,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									</div>
 								{/if}
 								<span
-									class="beleren"
+									class="beleren mt-1"
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
 									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}>{$players[index].playerName}</span>

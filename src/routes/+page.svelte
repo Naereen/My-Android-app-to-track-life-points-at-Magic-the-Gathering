@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { appSettings } from '$lib/store/appSettings';
 	import TwoPlayerLayout from '$lib/layouts/TwoPlayerLayout.svelte';
 	import ThreePlayerLayout from '$lib/layouts/ThreePlayerLayout.svelte';
-	import { appSettings } from '$lib/store/appSettings';
 	import FourPlayerLayoutOne from '$lib/layouts/FourPlayerLayoutOne.svelte';
 	import FourPlayerLayoutTwo from '$lib/layouts/FourPlayerLayoutTwo.svelte';
 	import FivePlayerLayout from '$lib/layouts/FivePlayerLayout.svelte';
