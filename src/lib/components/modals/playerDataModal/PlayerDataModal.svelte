@@ -20,6 +20,8 @@
 	import Energy from '$lib/assets/icons/Energy.svelte';
 	import Experience from '$lib/assets/icons/Experience.svelte';
 	import Rad from '$lib/assets/icons/Rad.svelte';
+ 	import Acorn from '$lib/assets/icons/Acorn.svelte';
+ 	import Ticket from '$lib/assets/icons/Ticket.svelte';
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
@@ -829,6 +831,98 @@
 												$playerModalData.playerId,
 												'rad',
 												($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1
+											)}>+</button>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<span class="w-60 text-left"><Acorn /> {String($_('acorn'))}</span>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'acorn',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) - 1
+													)
+												)}>-</button>
+									{/if}
+									{#if editingStat === 'acorn'}
+										<div class="pointer-events-auto flex items-center gap-2">
+											<input
+												id="stat-input-acorn"
+												type="number"
+												bind:value={editingStatValue}
+												on:keydown={(e) => {
+													if (e.key === 'Enter') saveEditStat();
+													if (e.key === 'Escape') cancelEditStat();
+												}}
+												class="w-20 text-center rounded-md px-1 py-0.5"
+												placeholder={enterLifeTotalPlaceholder}
+											/>
+											<div class="flex gap-2">
+												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+											</div>
+										</div>
+									{:else}
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('acorn', $players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0}</span>
+									{/if}
+									<button
+										class="px-2 py-1 bg-gray-200 rounded"
+										on:click={() =>
+											setPlayerStatusNumeric(
+												$playerModalData.playerId,
+												'acorn',
+												($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) + 1
+											)}>+</button>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<span class="w-60 text-left"><Ticket /> {String($_('ticket'))}</span>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'ticket',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) - 1
+													)
+												)}>-</button>
+									{/if}
+									{#if editingStat === 'ticket'}
+										<div class="pointer-events-auto flex items-center gap-2">
+											<input
+												id="stat-input-ticket"
+												type="number"
+												bind:value={editingStatValue}
+												on:keydown={(e) => {
+													if (e.key === 'Enter') saveEditStat();
+													if (e.key === 'Escape') cancelEditStat();
+												}}
+												class="w-20 text-center rounded-md px-1 py-0.5"
+												placeholder={enterLifeTotalPlaceholder}
+											/>
+											<div class="flex gap-2">
+												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+											</div>
+										</div>
+									{:else}
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('ticket', $players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0}</span>
+									{/if}
+									<button
+										class="px-2 py-1 bg-gray-200 rounded"
+										on:click={() =>
+											setPlayerStatusNumeric(
+												$playerModalData.playerId,
+												'ticket',
+												($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) + 1
 											)}>+</button>
 								</div>
 

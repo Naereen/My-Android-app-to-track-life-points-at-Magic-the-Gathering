@@ -69,6 +69,8 @@ declare global {
 					energy?: number;
 					experience?: number;
 					rad?: number;
+					acorn?: number;
+					ticket?: number;
 					commandTax?: number;
 					commanderDamage?: number[];
 					ringBearer?: number;

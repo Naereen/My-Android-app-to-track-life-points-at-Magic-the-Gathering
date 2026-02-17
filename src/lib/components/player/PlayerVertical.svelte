@@ -110,6 +110,8 @@
 	$: energyCount = status.energy ?? 0;
 	$: experienceCount = status.experience ?? 0;
 	$: radCount = status.rad ?? 0;
+	$: acornCount = status.acorn ?? 0;
+	$: ticketCount = status.ticket ?? 0;
 	$: commandTaxCount = status.commandTax ?? 0;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
@@ -483,6 +485,24 @@
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<Rad /> <span>{radCount}</span>
+				</div>
+			{/if}
+			{#if acornCount > 0}
+				<div
+					title={$_('tooltip_status_acorn')}
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+				>
+					<Acorn /> <span>{acornCount}</span>
+				</div>
+			{/if}
+			{#if ticketCount > 0}
+				<div
+					title={$_('tooltip_status_tickets')}
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+				>
+					<Ticket /> <span>{ticketCount}</span>
 				</div>
 			{/if}
 			{#if commandTaxCount > 0}

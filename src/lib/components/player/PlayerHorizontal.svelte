@@ -124,6 +124,8 @@
 	$: energyCount = status.energy ?? 0;
 	$: experienceCount = status.experience ?? 0;
 	$: radCount = status.rad ?? 0;
+	$: acornCount = status.acorn ?? 0;
+	$: ticketCount = status.ticket ?? 0;
 	$: commandTaxCount = status.commandTax ?? 0;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
@@ -639,6 +641,56 @@
 								{/if}
 							</div>
 						{/if}
+					{#if acornCount > 0}
+						<div
+							title={$_('tooltip_status_acorn')}
+							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+							on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+						>
+							{#if isRightFacingPlayer}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{acornCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Acorn />
+								</div>
+							{:else}
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Acorn />
+								</div>
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{acornCount}</span>
+							{/if}
+						</div>
+					{/if}
+					{#if ticketCount > 0}
+						<div
+							title={$_('tooltip_status_tickets')}
+							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+							on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+						>
+							{#if isRightFacingPlayer}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ticketCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Ticket />
+								</div>
+							{:else}
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Ticket />
+								</div>
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ticketCount}</span>
+							{/if}
+						</div>
+					{/if}
 						{#if commandTaxCount > 0}
 							<div
 								title={$_('tooltip_status_command_tax')}
