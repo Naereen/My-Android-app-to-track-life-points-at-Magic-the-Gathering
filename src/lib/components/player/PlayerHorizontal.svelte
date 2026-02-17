@@ -129,19 +129,19 @@
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: commanderDamageArray = status.commanderDamage ?? [];
 	$: maxCommanderDamage = Math.max(0, ...commanderDamageArray);
+
 	$: statusRotation =
-		orientation === 'down'
-			? '180deg'
-			: orientation === 'left'
-				? '-90deg'
-				: orientation === 'right'
-					? '90deg'
-					: '0deg';
+		orientation === 'down' ? '180deg'
+		: orientation === 'left' ? '-90deg'
+		: orientation === 'right' ? '90deg'
+		: '0deg';
 
 	// Text rotation should be different for players on the right side (facing left)
 	// Players 4, 5, 6 with orientation="left" should have text rotated to face right (90deg)
 	$: statusTextRotation =
-		orientation === 'left' && (id === 4 || id === 5 || id === 6) ? '-180deg' : (orientation === 'right' && (id === 1 || id === 2 || id === 3) ? '0deg' : statusRotation);
+		orientation === 'left' ? '-180deg'
+		: orientation === 'right' ? '0deg'
+		: statusRotation;
 
 	// Determine players that are physically on the right side in each player-count layout
 	$: isRightFacingPlayer =
@@ -260,24 +260,24 @@
 		editing = false;
 	};
 
-$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
-$: timerMinutes = Math.floor(($turnTimer.remaining || 0) / 60);
-$: timerSeconds = ($turnTimer.remaining || 0) % 60;
+	$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
+	$: timerMinutes = Math.floor(($turnTimer.remaining || 0) / 60);
+	$: timerSeconds = ($turnTimer.remaining || 0) % 60;
 
-// circumference for the timer circle (radius = 18 from the SVG)
-$: timerCircumference = 2 * Math.PI * 18;
-// dash offset based on fraction (0..1)
-$: dashOffset = timerCircumference * (1 - Math.max(0, Math.min(1, timerFraction)));
+	// circumference for the timer circle (radius = 18 from the SVG)
+	$: timerCircumference = 2 * Math.PI * 18;
+	// dash offset based on fraction (0..1)
+	$: dashOffset = timerCircumference * (1 - Math.max(0, Math.min(1, timerFraction)));
 
-$: if ($appSettings.turnTimerEnabled && index === $appState.currentTurn) {
-	// start or reset timer for this player only when currentTurn or setting changes
-	try { turnTimer.startForPlayer(index); } catch (e) {}
-}
+	$: if ($appSettings.turnTimerEnabled && index === $appState.currentTurn) {
+		// start or reset timer for this player only when currentTurn or setting changes
+		try { turnTimer.startForPlayer(index); } catch (e) {}
+	}
 
-// stop the timer for this player when the store indicates it's running for them but they're no longer the current turn
-$: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && index !== $appState.currentTurn) {
-	try { turnTimer.stop(); } catch (e) {}
-}
+	// stop the timer for this player when the store indicates it's running for them but they're no longer the current turn
+	$: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && index !== $appState.currentTurn) {
+		try { turnTimer.stop(); } catch (e) {}
+	}
 </script>
 
 <svelte:window bind:innerWidth />
@@ -543,13 +543,13 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							<div
 								title={$_('tooltip_status_poison')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0"
+								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{poisonCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<PoisonIcon />
 									</div>
@@ -557,7 +557,6 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<PoisonIcon />
 									</div>
@@ -569,13 +568,13 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							<div
 								title={$_('tooltip_status_energy')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{energyCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Energy />
 									</div>
@@ -583,7 +582,6 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Energy />
 									</div>
@@ -595,13 +593,13 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							<div
 								title={$_('tooltip_status_experience')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{experienceCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Experience />
 									</div>
@@ -609,7 +607,6 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Experience />
 									</div>
@@ -621,13 +618,13 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							<div
 								title={$_('tooltip_status_rad')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{radCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Rad />
 									</div>
@@ -635,7 +632,6 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Rad />
 									</div>
@@ -647,13 +643,13 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							<div
 								title={$_('tooltip_status_command_tax')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0"
+								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{commandTaxCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<CommandTax />
 									</div>
@@ -661,7 +657,6 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<CommandTax />
 									</div>
@@ -673,13 +668,13 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							<div
 								title={$_('tooltip_status_ring_bearer')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ringBearerCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<TheRingerBearer isMax={ringBearerCount === 4} />
 									</div>
@@ -687,7 +682,6 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<TheRingerBearer isMax={ringBearerCount === 4} />
 									</div>
@@ -699,13 +693,13 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 							<div
 								title={$_('tooltip_status_start_your_engine_speed')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
 								{#if isRightFacingPlayer}
 									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{startYourEngineSpeedCount}</span>
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
 									</div>
@@ -713,7 +707,6 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
 									</div>
@@ -728,13 +721,13 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										title={$_('tooltip_commander_damage')}
 										class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+										on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
 									>
 										{#if isRightFacingPlayer}
 											<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
 											<div
 												class="status-rotate-wrapper"
 												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-												on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
 											>
 												<CommanderDamage playerIndex={i} color="white" />
 											</div>
@@ -742,7 +735,6 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 											<div
 												class="status-rotate-wrapper"
 												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-												on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
 											>
 												<CommanderDamage playerIndex={i} color="white" />
 											</div>

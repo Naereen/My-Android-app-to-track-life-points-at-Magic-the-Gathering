@@ -226,25 +226,25 @@
 		editing = false;
 	};
 
-$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
-$: timerMinutes = Math.floor(($turnTimer.remaining || 0) / 60);
-$: timerSeconds = ($turnTimer.remaining || 0) % 60;
+	$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
+	$: timerMinutes = Math.floor(($turnTimer.remaining || 0) / 60);
+	$: timerSeconds = ($turnTimer.remaining || 0) % 60;
 
-// circumference for the timer circle (radius = 18 from the SVG)
-$: timerCircumference = 2 * Math.PI * 18;
-// dash offset based on fraction (0..1)
-$: dashOffset = timerCircumference * (1 - Math.max(0, Math.min(1, timerFraction)));
+	// circumference for the timer circle (radius = 18 from the SVG)
+	$: timerCircumference = 2 * Math.PI * 18;
+	// dash offset based on fraction (0..1)
+	$: dashOffset = timerCircumference * (1 - Math.max(0, Math.min(1, timerFraction)));
 
-$: if ($appSettings.turnTimerEnabled && index === $appState.currentTurn) {
-	try { turnTimer.startForPlayer(index); }
-	catch (e) { console.log(e); }
-}
+	$: if ($appSettings.turnTimerEnabled && index === $appState.currentTurn) {
+		try { turnTimer.startForPlayer(index); }
+		catch (e) { console.log(e); }
+	}
 
-// stop timer for this player when the store indicates it's running for them but they're no longer the current turn
-$: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && index !== $appState.currentTurn) {
-	try { turnTimer.stop(); }
-	catch (e) { console.log(e); }
-}
+	// stop timer for this player when the store indicates it's running for them but they're no longer the current turn
+	$: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && index !== $appState.currentTurn) {
+		try { turnTimer.stop(); }
+		catch (e) { console.log(e); }
+	}
 </script>
 
 <svelte:window bind:innerWidth />
