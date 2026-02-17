@@ -450,6 +450,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 				<div
 					title={$_('tooltip_status_poison')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<PoisonIcon /> <span>{poisonCount}</span>
 				</div>
@@ -458,6 +459,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 				<div
 					title={$_('tooltip_status_energy')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<Energy /> <span>{energyCount}</span>
 				</div>
@@ -466,6 +468,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 				<div
 					title={$_('tooltip_status_experience')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<Experience /> <span>{experienceCount}</span>
 				</div>
@@ -474,6 +477,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 				<div
 					title={$_('tooltip_status_rad')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<Rad /> <span>{radCount}</span>
 				</div>
@@ -482,6 +486,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 				<div
 					title={$_('tooltip_status_command_tax')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<CommandTax /> <span>{commandTaxCount}</span>
 				</div>
@@ -490,6 +495,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 				<div
 					title={$_('tooltip_status_ring_bearer')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 						<TheRingerBearer isMax={ringBearerCount === 4} /> <span>{ringBearerCount}</span>
 				</div>
@@ -498,6 +504,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 				<div
 					title={$_('tooltip_status_start_your_engine_speed')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} /> <span>{startYourEngineSpeedCount}</span>
 				</div>
@@ -509,6 +516,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 						<div
 							title={$_('tooltip_commander_damage')}
 							class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+							on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
 						>
 							<CommanderDamage playerIndex={i} color="white" />
 							<span>{dmg}</span>

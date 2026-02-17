@@ -546,6 +546,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<PoisonIcon />
 									</div>
@@ -553,6 +554,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<PoisonIcon />
 									</div>
@@ -570,6 +572,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Energy />
 									</div>
@@ -577,6 +580,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Energy />
 									</div>
@@ -594,6 +598,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Experience />
 									</div>
@@ -601,6 +606,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Experience />
 									</div>
@@ -618,6 +624,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Rad />
 									</div>
@@ -625,6 +632,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<Rad />
 									</div>
@@ -642,6 +650,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<CommandTax />
 									</div>
@@ -649,6 +658,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<CommandTax />
 									</div>
@@ -666,6 +676,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<TheRingerBearer isMax={ringBearerCount === 4} />
 									</div>
@@ -673,6 +684,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<TheRingerBearer isMax={ringBearerCount === 4} />
 									</div>
@@ -690,6 +702,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
 									</div>
@@ -697,6 +710,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 									<div
 										class="status-rotate-wrapper"
 										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+										on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 									>
 										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
 									</div>
@@ -717,6 +731,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 											<div
 												class="status-rotate-wrapper"
 												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+												on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
 											>
 												<CommanderDamage playerIndex={i} color="white" />
 											</div>
@@ -724,6 +739,7 @@ $: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && ind
 											<div
 												class="status-rotate-wrapper"
 												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+												on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
 											>
 												<CommanderDamage playerIndex={i} color="white" />
 											</div>
