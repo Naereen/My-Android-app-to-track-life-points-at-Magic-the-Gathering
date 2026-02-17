@@ -8,6 +8,9 @@
 	import Initiative from '$lib/assets/icons/Initiative.svelte';
 	import Ascend from '$lib/assets/icons/Ascend.svelte';
 	import DayNight from '$lib/assets/icons/DayNight.svelte';
+	import Acorn from '$lib/assets/icons/Acorn.svelte';
+	import Ticket from '$lib/assets/icons/Ticket.svelte';
+	import Paws from '$lib/assets/icons/Paws.svelte';
 	import PoisonIcon from '$lib/assets/icons/Poison.svelte';
 	import Energy from '$lib/assets/icons/Energy.svelte';
 	import Experience from '$lib/assets/icons/Experience.svelte';
