@@ -17,9 +17,9 @@ It is updated after every commit I make on the codebase, so you can see the late
 
 ## 📹 Video demonstrations
 
-![Demo of the app (video) 1/2](screenshots/screenshot-video-1.mp4)
+![Demo of the app (video) 1/2](screenshots/screenshot-video-1.gif)
 
-![Demo of the app (video) 2/2](screenshots/screenshot-video-2.mp4)
+![Demo of the app (video) 2/2](screenshots/screenshot-video-2.gif)
 
 ## 📸 Screenshots
 
