@@ -59,7 +59,8 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew --stacktrace --scan assembleRelease
+          ./gradlew --stacktrace --scan assemble
+          # ./gradlew assembleRelease
         env:
           ANDROID_VERSION_NAME: ${{ steps.vars.outputs.tag }}
           ANDROID_VERSION_CODE: ${{ steps.vars.outputs.count }}
