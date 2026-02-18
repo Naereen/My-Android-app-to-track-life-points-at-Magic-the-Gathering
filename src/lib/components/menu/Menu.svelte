@@ -8,6 +8,7 @@
 	import CircularButton from '../shared/circularButton/CircularButton.svelte';
 	import Randomizer from './subcomponents/randomizer/Randomizer.svelte';
 	import EmblemMenu from './subcomponents/emblem/EmblemMenu.svelte';
+	import HistoryMenu from './subcomponents/history/HistoryMenu.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
@@ -141,6 +142,19 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				</button>
 			</div>
 		{/if}
+		{#if $appSettings.showGameHistoryMenu}
+			<div class="flex justify-center items-center flex-grow">
+				<button
+					on:click={() => toggleIsMenuOpen('history')}
+					on:contextmenu|preventDefault
+					draggable="false"
+					title={$_('game_history')}
+					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+				>
+					<span class="text-large">🕘</span>
+				</button>
+			</div>
+		{/if}
 		<div class="flex justify-center items-center flex-grow">
 			<button on:click={handleManaClick} on:contextmenu|preventDefault draggable="false">
 				<ManaPentagon />
@@ -197,4 +211,6 @@ $: if ($appState.turnCount !== prevTurnCount) {
 	<Randomizer />
 {:else if $appState.activeMenu === 'emblem'}
 	<EmblemMenu />
+{:else if $appState.activeMenu === 'history'}
+	<HistoryMenu />
 {/if}

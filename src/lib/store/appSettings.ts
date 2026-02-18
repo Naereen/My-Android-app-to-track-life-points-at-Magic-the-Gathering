@@ -30,6 +30,8 @@ interface AppSettings {
 	showNextPlayerButton: boolean;
 	// show emblem menu button in the main menu
 	showEmblemMenu: boolean;
+	// show game history menu button in the main menu
+	showGameHistoryMenu: boolean;
 	// turn timer: enable per-turn timer (optional)
 	turnTimerEnabled: boolean;
 	// default per-turn duration in seconds (2 minutes)
@@ -66,6 +68,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	showNextPlayerButton: true,
 	// show emblem menu button in the main menu
 	showEmblemMenu: false,
+	// show game history menu button in the main menu
+	showGameHistoryMenu: false,
 	// turn timer: enable per-turn timer (optional)
 	turnTimerEnabled: false,
 	// default per-turn duration in seconds (2 minutes)
@@ -116,6 +120,10 @@ export const setShowNextPlayerButton = (show: boolean) => {
 
 export const setShowEmblemMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showEmblemMenu: show }));
+};
+
+export const setShowGameHistoryMenu = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showGameHistoryMenu: show }));
 };
 
 export const setTurnTimerEnabled = (enabled: boolean) => {

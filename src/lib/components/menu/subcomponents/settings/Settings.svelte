@@ -7,6 +7,7 @@
 		setFourPlayerLayout,
 		setSixPlayerLayout,
 		setShowEmblemMenu,
+		setShowGameHistoryMenu,
 		setAppLocale
 	} from '$lib/store/appSettings';
 	import {
@@ -32,7 +33,7 @@
 		const confirmReset = await showConfirm($_('window_confirm_reset_local_storage'));
 		if (!confirmReset) return;
 		try {
-			['appSettings', 'resourceCounter', 'appState', 'players', 'emblemState'].forEach((k) =>
+			['appSettings', 'resourceCounter', 'appState', 'players', 'emblemState', 'gameHistory'].forEach((k) =>
 				localStorage.removeItem(k)
 			);
 		} catch (e) {
@@ -151,6 +152,11 @@
 	const handleShowEmblemMenuChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowEmblemMenu(!!target.checked);
+	};
+
+	const handleShowGameHistoryMenuChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setShowGameHistoryMenu(!!target.checked);
 	};
 
 	const handleTurnTimerEnabledChange = (e: Event) => {
@@ -457,6 +463,21 @@
 					class="h-5 w-5"
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('show_emblem_menu_button') || 'Show emblem menu button'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.showGameHistoryMenu}
+					on:change={handleShowGameHistoryMenuChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('show_game_history_menu_button') || 'Show game history menu button'}</span>
 			</label>
 		</div>
 

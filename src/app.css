@@ -12,7 +12,7 @@
 	:root {
 		/* On définit des variables par défaut au cas où env() ne soit pas supporté */
 		--safe-area-inset-top: 0px;
-		--safe-area-inset-bottom: 64px;
+		--safe-area-inset-bottom: 0px;
 	}
 
 	/* Ensure the app spans the full viewport and remove default body margins */
@@ -24,6 +24,8 @@
 		margin: 0;
 		/* Set default font size for the app */
 		font-size: large;
+		/* Prevent scrolling to ensure the app fits within the viewport */
+		overflow: hidden;
 	}
 
 	body {

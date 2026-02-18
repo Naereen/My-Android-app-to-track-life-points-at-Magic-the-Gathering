@@ -6,6 +6,7 @@ import { setCurrentTurn, appState } from './appState';
 import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
 import { playGameplaySound } from '$lib/utils/gameplaySound';
+import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
 // import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -323,6 +324,15 @@ const updatePlayersAndPlayEliminationSounds = (
 	playEliminationSoundsIfNeeded(beforePlayers, afterPlayers);
 };
 
+const getPlayerSnapshot = (playerId: number) => {
+	const target = get(players).find((player) => player.id === playerId);
+	if (!target) return null;
+	return {
+		id: target.id,
+		playerName: target.playerName
+	};
+};
+
 export const setPlayerColor = (playerId: number, color: string) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -390,6 +400,11 @@ export const setPlayerBackgroundImage = (
 };
 
 export const setPlayerStatusBoolean = (playerId: number, key: string, value: boolean) => {
+	const beforePlayers = get(players);
+	const targetBefore = beforePlayers.find((player) => player.id === playerId);
+	const previous = !!targetBefore?.statusEffects?.[key];
+	const snapshot = getPlayerSnapshot(playerId);
+
 	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
 		// If setting a unique status (monarch/initiative) to true,
 		// remove it from all other players so only one has it.
@@ -432,9 +447,27 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 			return player;
 		});
 	});
+
+	if (snapshot && previous !== value) {
+		addGameHistoryEntry({
+			playerId: snapshot.id,
+			playerName: snapshot.playerName,
+			kind: 'statusBoolean',
+			payload: {
+				key,
+				from: previous,
+				to: value
+			}
+		});
+	}
 };
 
 export const setPlayerStatusNumeric = (playerId: number, key: string, value: number) => {
+	const beforePlayers = get(players);
+	const targetBefore = beforePlayers.find((player) => player.id === playerId);
+	const previous = Number(targetBefore?.statusEffects?.[key] ?? 0);
+	const snapshot = getPlayerSnapshot(playerId);
+
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
@@ -449,6 +482,19 @@ export const setPlayerStatusNumeric = (playerId: number, key: string, value: num
 			return player;
 		});
 	});
+
+	if (snapshot && previous !== value) {
+		addGameHistoryEntry({
+			playerId: snapshot.id,
+			playerName: snapshot.playerName,
+			kind: 'statusNumeric',
+			payload: {
+				key,
+				from: previous,
+				to: value
+			}
+		});
+	}
 };
 
 export const setPlayerHighlighted = (playerId: number, highlighted: boolean) => {
@@ -466,6 +512,11 @@ export const setPlayerHighlighted = (playerId: number, highlighted: boolean) => 
 };
 
 export const setPlayerPoison = (playerId: number, amount: number) => {
+	const beforePlayers = get(players);
+	const targetBefore = beforePlayers.find((player) => player.id === playerId);
+	const previous = Number(targetBefore?.poison ?? 0);
+	const snapshot = getPlayerSnapshot(playerId);
+
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
@@ -477,48 +528,82 @@ export const setPlayerPoison = (playerId: number, amount: number) => {
 			return player;
 		});
 	});
+
+	if (snapshot && previous !== amount) {
+		addGameHistoryEntry({
+			playerId: snapshot.id,
+			playerName: snapshot.playerName,
+			kind: 'poison',
+			payload: {
+				from: previous,
+				to: amount
+			}
+		});
+	}
 };
 
 export const setCommanderDamage = (playerId: number, fromPlayerId: number, amount: number) => {
 	// Read old value to compute delta so we can adjust life total accordingly
 	const currentPlayers = get(players);
 	const target = currentPlayers.find((p) => p.id === playerId);
+	if (!target) return;
+
+	const snapshot = {
+		id: target.id,
+		playerName: target.playerName
+	};
 	const oldCommanderDamage = (target?.statusEffects?.commanderDamage ?? [])[fromPlayerId - 1] ?? 0;
 	const newAmount = Math.max(0, Math.min(999, amount));
 	const delta = newAmount - oldCommanderDamage;
+	if (delta === 0) return;
+	const oldLifeTotal = target.lifeTotal;
 
-	players.update((currentPlayers) => {
-		return currentPlayers.map((player) => {
-			if (player.id === playerId) {
-				const commanderDamage = player.statusEffects?.commanderDamage || [];
-				// Ensure the array has enough entries (indexed by fromPlayerId - 1)
-				while (commanderDamage.length < fromPlayerId) {
-					commanderDamage.push(0);
-				}
-				// Update the damage from the specific player
-				commanderDamage[fromPlayerId - 1] = newAmount;
+	updatePlayersAndPlayEliminationSounds((existingPlayers) => {
+		return existingPlayers.map((player) => {
+			if (player.id !== playerId) return player;
 
-				return {
-					...player,
-					statusEffects: {
-						...player.statusEffects,
-						commanderDamage: [...commanderDamage]
-					}
-				};
+			const commanderDamage = [...(player.statusEffects?.commanderDamage ?? [])];
+			while (commanderDamage.length < fromPlayerId) {
+				commanderDamage.push(0);
 			}
-			return player;
+			commanderDamage[fromPlayerId - 1] = newAmount;
+
+			return {
+				...player,
+				lifeTotal: player.lifeTotal - delta,
+				statusEffects: {
+					...player.statusEffects,
+					commanderDamage
+				}
+			};
 		});
 	});
 
-	// Apply the life total change: when commander damage increases, subtract life; when it decreases, add life back
-	if (delta !== 0) {
-		if (Math.abs(delta) > 0) {
-			playGameplaySound(delta > 0 ? 'bigCommanderDown' : 'bigCommanderUp');
-		}
-		// setPlayerLifeTotal expects an amount to add to the life total (positive adds, negative subtracts)
-		// We want lifeTotal -= delta, so pass -delta
-		setPlayerLifeTotal(playerId, -delta);
+	if (Math.abs(delta) > 0) {
+		playGameplaySound(delta > 0 ? 'bigCommanderDown' : 'bigCommanderUp');
 	}
+
+	addGameHistoryEntry({
+		playerId: snapshot.id,
+		playerName: snapshot.playerName,
+		kind: 'commanderDamage',
+		payload: {
+			fromPlayerId,
+			from: oldCommanderDamage,
+			to: newAmount,
+			lifeDelta: -delta
+		}
+	});
+
+	addGameHistoryEntry({
+		playerId: snapshot.id,
+		playerName: snapshot.playerName,
+		kind: delta > 0 ? 'positiveLife' : 'negativeLife',
+		payload: {
+			from: oldLifeTotal,
+			to: oldLifeTotal - delta
+		}
+	});
 };
 
 // Try to fetch a random card image from Scryfall matching a given name.
@@ -636,6 +721,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 
 	const startingLifeTotal = get(appSettings).startingLifeTotal;
 	removeFirstPlace();
+	clearGameHistory();
 
 	// reset current turn and turn count
 	setCurrentTurn(0, false);
@@ -716,6 +802,15 @@ function shuffle(array: any[]) {
 }
 
 export const setPlayerLifeTotal = (playerId: number, amount: number) => {
+	const beforePlayers = get(players);
+	const targetBefore = beforePlayers.find((player) => player.id === playerId);
+	if (!targetBefore) return;
+	const oldLifeTotal = targetBefore.lifeTotal;
+	const snapshot = {
+		id: targetBefore.id,
+		playerName: targetBefore.playerName
+	};
+
 	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
@@ -727,6 +822,18 @@ export const setPlayerLifeTotal = (playerId: number, amount: number) => {
 			return player;
 		});
 	});
+
+	if (amount !== 0) {
+		addGameHistoryEntry({
+			playerId: snapshot.id,
+			playerName: snapshot.playerName,
+			kind: amount > 0 ? 'positiveLife' : 'negativeLife',
+			payload: {
+				from: oldLifeTotal,
+				to: oldLifeTotal + amount
+			}
+		});
+	}
 };
 
 // Set the player's life total to an absolute value (clamped according to settings)
@@ -741,6 +848,10 @@ export const setPlayerLifeAbsolute = (playerId: number, value: number) => {
 
 	const newLifeTotal = Math.max(minAllowed, Math.min(999, Math.trunc(value)));
 	const diff = newLifeTotal - player.lifeTotal;
+	const snapshot = {
+		id: player.id,
+		playerName: player.playerName
+	};
 
 	// Update the life total
 	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
@@ -757,6 +868,16 @@ export const setPlayerLifeAbsolute = (playerId: number, value: number) => {
 
 	// Show a temporary diff indicator similar to incremental changes
 	if (diff !== 0) {
+		addGameHistoryEntry({
+			playerId: snapshot.id,
+			playerName: snapshot.playerName,
+			kind: diff > 0 ? 'positiveLife' : 'negativeLife',
+			payload: {
+				from: player.lifeTotal,
+				to: newLifeTotal
+			}
+		});
+
 		if (diff > 0) {
 			setTempLifeDiff(playerId, 'add', Math.abs(diff));
 		} else {
@@ -770,6 +891,10 @@ export const manageLifeTotal = (
 	playerId: number,
 	amount: number = 1
 ) => {
+	const beforePlayers = get(players);
+	const targetBefore = beforePlayers.find((player) => player.id === playerId);
+	if (!targetBefore) return;
+
 	// removeFirstPlace();
 	let withinBounds = false; // Flag to determine if setTempLifeDiff should be called
 	if (amount <= 1) {
@@ -815,6 +940,19 @@ export const manageLifeTotal = (
 	// recompute withinBounds according to allowed min when needed
 	if (withinBounds) {
 		setTempLifeDiff(playerId, type, amount);
+	}
+
+	const targetAfter = get(players).find((player) => player.id === playerId);
+	if (targetAfter && targetAfter.lifeTotal !== targetBefore.lifeTotal) {
+		addGameHistoryEntry({
+			playerId: targetAfter.id,
+			playerName: targetAfter.playerName,
+			kind: type === 'add' ? 'positiveLife' : 'negativeLife',
+			payload: {
+				from: targetBefore.lifeTotal,
+				to: targetAfter.lifeTotal
+			}
+		});
 	}
 };
 

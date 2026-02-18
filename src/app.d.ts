@@ -3,7 +3,7 @@
 declare global {
 	namespace App {
 		namespace AppState {
-			type Menu = 'settings' | 'resources' | 'randomizer' | 'emblem' | '';
+			type Menu = 'settings' | 'resources' | 'randomizer' | 'emblem' | 'history' | '';
 		}
 
 		namespace Settings {
