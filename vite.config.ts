@@ -2,6 +2,15 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// To read the version from package.json, we need to use the file system and URL modules, since we can't use import.meta in this config file
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+
+// Lire le package.json pour extraire la version
+const file = fileURLToPath(new URL('package.json', import.meta.url));
+const json = readFileSync(file, 'utf8');
+const pkg = JSON.parse(json);
+
 export default defineConfig({
 	plugins: [
 		sveltekit(),
@@ -88,5 +97,9 @@ export default defineConfig({
 	],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
+	},
+	define: {
+		// On définit une variable globale disponible dans le code Svelte
+		'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkg.version),
 	}
 });

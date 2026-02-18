@@ -537,7 +537,7 @@
 
 		<!-- Reset local storage placed at the bottom so user can scroll to it -->
 		<div class="w-full flex justify-center mt-2 mb-2">
-			<button class="bg-red-900 text-white px-4 py-2 rounded-full" on:click={resetLocalStorage}>
+			<button class="bg-red-900 text-white px-4 py-1 rounded-full" on:click={resetLocalStorage}>
 				{$_('reset_local_storage')}
 			</button>
 		</div>

@@ -45,7 +45,7 @@
     "about_version": "Version",
     "about_author": "Auteur",
     "about_license": "Licence",
-    "about_thanks": "Remarque : j'aimerais remercier grandement Mike Bourkas pour l'application Lifetap originale. Cette petite web-app n'est rien d'autre qu'un clone personnel, réalisé en quelques semaines, dans l'objectif unique de simplement pratiquer, apprendre et expérimenter avec Svelte, TypeScript, etc. J'ai utilisé intensément GitHub Copilot et Google Gemini, des « assistants de codage » basés sur l'IA, pour développer cette application.",
+    "about_thanks": "Remarque : je remercie grandement Mike Bourkas pour l'application Lifetap. Cette petite web-app est un clone personnel, réalisé en quelques semaines, dans l'objectif de pratiquer, apprendre et expérimenter avec Svelte, TypeScript, etc. J'ai utilisé intensément GitHub Copilot et Google Gemini, pour développer cette application. J'ai aussi utilisé mon cerveau et mes mains, et un peu de café.",
     "about_github": "Dépôt GitHub",
     "about_playstore": "L'application sur le Google Play Store",
     "about_feedback": "Retour / Signalement de bug",

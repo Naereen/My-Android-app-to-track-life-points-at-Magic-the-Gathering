@@ -1,10 +1,12 @@
-# MTG Life Tracker Clone (alpha version)
+# MTG Life Tracker Clone (beta version)
 
-A web-based life point tracker for Magic: The Gathering, inspired by the [Lifetap](https://play.google.com/store/apps/details?id=com.lifetap) Android application. Built with SvelteKit, TypeScript, and Tailwind CSS.
+A web-based life point tracker for Magic: The Gathering, inspired by the [Lifetap](https://play.google.com/store/apps/details?id=com.lifetap) Android application.
+
+It is built with awesome and recent web tech: [SvelteKit](https://svelte.dev/docs/kit/introduction), [TypeScript](https://www.typescriptlang.org/), and [Tailwind CSS](https://tailwindcss.com/).
 
 <img src="Naereens-MTG-Life-Tracker-logo.png" alt="The App logo, Naereen's MTG Life Tracker, written in gold on a green background" width="300"/>
 
-**The application can be used on Android or Apple devices, via a simple web browser**, or by downloading the apk file for Android (coming soon!).
+**The application can be used on Android or Apple devices, via a simple web browser**, or [by downloading the apk file for Android](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.2/naereen-mtg-life-tracker.apk) (coming soon to the Google Play Store!).
 
 ![Demo of the webpage (5/4)](screenshots/screenshot-demo-5.png)
 
@@ -12,6 +14,12 @@ You can find it live here: <https://naereen.github.io/My-Android-app-to-track-li
 It is updated after every commit I make on the codebase, so you can see the latest changes and improvements there.
 
 > (Backup URL: <https://perso.crans.org/besson/publis/My-Android-app-to-track-life-points-at-Magic-the-Gathering/> but could be not up-to-date)
+
+## 📹 Video demonstrations
+
+![Demo of the app (video) 1/2](https://github.com/user-attachments/assets/b6bc7f99-e342-496b-88bf-e19f43744878)
+
+![Demo of the app (video) 2/2](https://github.com/user-attachments/assets/4e4749d9-893b-4769-b479-b4a0b5cc6a89)
 
 ## 📸 Screenshots
 
@@ -27,11 +35,17 @@ Older screenshots:
 
 ![Demo of the webpage (4/4)](screenshots/screenshot-demo-4.png)
 
+TODO: reshot all the screenshots.
+
 ---
 
-## Download the Android application (apk)
+## Download the Android application (apk file)
 
-TODO: finish building and deploying the apk file!
+The latest stable release is here: <https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/latest>
+
+The apk file is named [`naereen-mtg-life-tracker.apk`](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.2/naereen-mtg-life-tracker.apk). You can download it and install it on your Android device. Note that you may need to allow installation from unknown sources in your device settings:
+
+<https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.2/naereen-mtg-life-tracker.apk>
 
 ---
 
