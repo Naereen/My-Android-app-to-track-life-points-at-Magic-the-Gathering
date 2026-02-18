@@ -7,10 +7,63 @@ export type ScryfallCard = {
 	cardImage?: string | null;
 };
 
+export type ScryfallEmblemFace = {
+	name: string;
+	image: string | null;
+	oracleText?: string;
+	typeLine?: string;
+};
+
+export type ScryfallEmblemCard = {
+	id: string;
+	name: string;
+	set_name?: string;
+	scryfall_uri?: string;
+	faces: ScryfallEmblemFace[];
+};
+
 async function fetchJson(url: string) {
 	const res = await fetch(url);
 	if (!res.ok) throw new Error(`Scryfall error ${res.status}`);
 	return res.json();
+}
+
+function normalizeEmblemCard(c: any): ScryfallEmblemCard | null {
+	if (!c || !c.id || !c.name) return null;
+
+	const faces: ScryfallEmblemFace[] = [];
+
+	if (Array.isArray(c.card_faces) && c.card_faces.length > 0) {
+		for (const face of c.card_faces) {
+			const image =
+				face?.image_uris?.large || face?.image_uris?.normal || face?.image_uris?.small || null;
+			faces.push({
+				name: face?.name || c.name,
+				image,
+				oracleText: face?.oracle_text || '',
+				typeLine: face?.type_line || ''
+			});
+		}
+	} else {
+		const image = c.image_uris?.large || c.image_uris?.normal || c.image_uris?.small || null;
+		faces.push({
+			name: c.name,
+			image,
+			oracleText: c.oracle_text || '',
+			typeLine: c.type_line || ''
+		});
+	}
+
+	const cardsWithImage = faces.filter((face) => !!face.image);
+	if (cardsWithImage.length === 0) return null;
+
+	return {
+		id: c.id,
+		name: c.name,
+		set_name: c.set_name,
+		scryfall_uri: c.scryfall_uri,
+		faces
+	};
 }
 
 export async function searchCards(query: string, limit = 256): Promise<ScryfallCard[]> {
@@ -96,4 +149,58 @@ export async function randomCards(query: string, limit = 256): Promise<ScryfallC
 	}
 }
 
-export default { searchCards, randomCards };
+export async function searchEmblemCards(
+	query: string,
+	limit = 60,
+	filter: 'emblem' | 'dungeon' | 'none' = 'emblem'
+): Promise<ScryfallEmblemCard[]> {
+	const clean = query?.trim() ?? '';
+
+	let composed = clean;
+	if (filter === 'emblem') {
+		composed = clean.length > 0 ? `(${clean}) (t:emblem or t:dungeon)` : '(t:emblem or t:dungeon)';
+	} else if (filter === 'dungeon') {
+		composed = clean.length > 0 ? `(${clean}) t:dungeon` : 't:dungeon';
+	}
+
+	if (!composed || composed.trim().length === 0) return [];
+
+	const q = encodeURIComponent(composed);
+	const url = `https://api.scryfall.com/cards/search?q=${q}&order=released&unique=prints`;
+
+	try {
+		const data = await fetchJson(url);
+		if (!data || !Array.isArray(data.data)) return [];
+
+		const mapped = data.data
+			.slice(0, limit)
+			.map((c: any) => normalizeEmblemCard(c))
+			.filter((card: ScryfallEmblemCard | null): card is ScryfallEmblemCard => card !== null);
+
+		return mapped;
+	} catch (err) {
+		console.warn('Scryfall emblem search failed', err);
+		return [];
+	}
+}
+
+export async function fetchCardBySetCollector(
+	setCode: string,
+	collectorNumber: string
+): Promise<ScryfallEmblemCard | null> {
+	if (!setCode || !collectorNumber) return null;
+
+	const set = encodeURIComponent(setCode.trim().toLowerCase());
+	const cn = encodeURIComponent(collectorNumber.trim());
+	const url = `https://api.scryfall.com/cards/${set}/${cn}`;
+
+	try {
+		const data = await fetchJson(url);
+		return normalizeEmblemCard(data);
+	} catch (err) {
+		console.warn('Scryfall preset fetch failed', err);
+		return null;
+	}
+}
+
+export default { searchCards, randomCards, searchEmblemCards, fetchCardBySetCollector };

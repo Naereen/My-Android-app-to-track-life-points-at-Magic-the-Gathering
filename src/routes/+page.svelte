@@ -8,9 +8,11 @@
 	import SixPlayerLayoutOne from '$lib/layouts/SixPlayerLayoutOne.svelte';
 	import SixPlayerLayoutTwo from '$lib/layouts/SixPlayerLayoutTwo.svelte';
 	import { playerModalData, randomizerModalData, confirmModalData } from '$lib/store/modal';
+	import { emblemModalOpen, emblemState } from '$lib/store/emblem';
 	import RandomizerModal from '$lib/components/modals/randomizerModal/RandomizerModal.svelte';
 	import PlayerDataModal from '$lib/components/modals/playerDataModal/PlayerDataModal.svelte';
 	import ConfirmModal from '$lib/components/modals/confirmModal/ConfirmModal.svelte';
+	import EmblemModal from '$lib/components/modals/emblemModal/EmblemModal.svelte';
 
 	$: innerWidth = 0;
 	import { onMount, onDestroy } from 'svelte';
@@ -66,5 +68,8 @@
 	{/if}
 	{#if $confirmModalData.isOpen}
 		<ConfirmModal />
+	{/if}
+	{#if $emblemModalOpen && $emblemState.selected}
+		<EmblemModal />
 	{/if}
 </div>

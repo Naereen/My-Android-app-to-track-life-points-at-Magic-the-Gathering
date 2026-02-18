@@ -326,6 +326,28 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 - [x] Like in LifeLinked app, also allow to chose a GIF (from Tenor GIF?) as a background image for players, in addition to the current options of solid colors, color gradients and card images. This can be a fun and visually appealing feature, as it allows to have animated backgrounds for the player panels, which can make the app more lively and enjoyable to use. It can also be useful for players who want to have a more personalized and unique background for their player panel, by choosing a GIF that matches their personality or their favorite cards/characters.
 - [x] Use the KLIPY GIF API, with the key stored in `klipy_api.key` (where? it shouldn't be here... maybe in the home folder of this repository, or `~/.klipy_api.key` ign the home folder of my user).
 
+### Add a menu (somewhere, in the dice Randomizer menu?) to display an "emblem card" if needed
+
+For instance, this menu could help to display the "Ring Bearer" emblem, the "Start Your Engines" emblem, the "Undercity // The Initiative" emblem, or any other emblem from Scryfall (especially the ones from Dungeons & Dragons adventures, which are pretty cool and have a lot of features that could later be tracked inside my app, like the "dungeons" emblem, etc).
+
+By default, it should offer to display:
+- [x] ["The Ring // The Ring Tempts You" emblem](https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you) ;
+- [x] ["Start Your Engines! // Max Speed" emblem](https://scryfall.com/card/tdft/14/start-your-engines!-max-speed) ;
+- [x] ["Undercity // The Initiative" emblem](https://scryfall.com/card/tclb/20/undercity-the-initiative) ;
+
+A search button for any emblem, using Scryfall and what is already available for the Scryfall search.
+- [x] A search button for any dungeon or emblem ;
+- [ ] TODO: this sea should embed the `"type=emblem"` filter, to only show emblems in the search results.
+
+When clicking on an emblem, it should be kept in memory, a shortcut menu should be added to the main central horizontal menu, and an almost full-screen display of that particular emblem should be shown.
+Clicking on this (almost full-screen) display of that emblem should close the modal display, or go to its back ("front/recto" first, "back/verso" second).
+
+- [x] Be sure to implement correctly the two faces for emblems like "The Ring", "Start Your Engines" and "Undercity", that each have two faces with rich text and features.
+
+- [ ] Additional visualizations: be able to see, on a click and a searh in the menu, any dungeon or Planeswalker's emblem, by a search from Scryfall
+- [ ] Additional visualizations: be able to see, on a click in the menu, dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>
+- [ ] Additional visualizations: the dungeon made by some friend over at Colmar
+
 ### Improve feedback while using the app: haptics/vibrations, and sounds?
 
 - [ ] Sound effects on button clicks (big life up/down (more than +5/-5), big commander damage up/down (more than +5/-5), K.O. of a player, victory of the last remaining at the table, etc.). Should be enabled by default, but should be possible to disable them from the settings!
@@ -339,24 +361,16 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 ### Nope
 
-- [ ] ~~Customizable button sizes (small, medium, large)~~
-- [ ] ~~Customizable layout options (compact mode, expanded mode)~~
+- [x] ~~Customizable button sizes (small, medium, large)~~
+- [x] ~~Customizable layout options (compact mode, expanded mode)~~
 - [x] ~~Night mode / dark theme~~
-- [ ] ~~Customizable fonts (font family, font size)~~
+- [x] ~~Customizable fonts (font family, font size)~~ I don't want to do that, Mythic.Tools offer such feature, but I don't want to.
 
 ## Additional visualizations: dungeons (initiative, etc), The Ring emblem, your speed
 
 - [x] Add the "Ring Bearer" emblem (from Lord of the Rings) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `TheRingerBearer.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is _not_ a unique status, every player has his own "the Ring Bearer" count, from 0 to 4.
 
 - [x] Add the "Start your Engine / Your Speed" emblem (from Aetherdrift) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `StartYourEngineSpeed.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is _not_ a unique status, every player has his own "Start your Engine / Your Speed" count, from 0 to 4.
-
-- [ ] Additional visualizations: be able to see, on a click in the menu, The Ring bearer emblem (Lord of the Rings) : <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?front> and <https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you?back>
-- [ ] Additional visualizations: be able to see, on a click in the menu, Your speed (Aetherdrift) : 0/1/2/3/4(max) <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?front> and <https://scryfall.com/card/tdft/14/start-your-engines!-max-speed?back>
-
-- [ ] Additional visualizations: be able to see, on a click and a searh in the menu, any dungeon or Planeswalker's emblem, by a search from Scryfall
-
-- [ ] Additional visualizations: be able to see, on a click in the menu, dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>
-- [ ] Additional visualizations: the dungeon made by some friend over at Colmar
 
 ## Variants to implement here, not existing in Lifetap
 

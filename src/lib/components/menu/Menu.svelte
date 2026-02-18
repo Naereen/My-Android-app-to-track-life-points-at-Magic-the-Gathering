@@ -7,20 +7,23 @@
 	import { appState, toggleIsMenuOpen, nextTurn, prevTurn } from '$lib/store/appState';
 	import CircularButton from '../shared/circularButton/CircularButton.svelte';
 	import Randomizer from './subcomponents/randomizer/Randomizer.svelte';
+	import EmblemMenu from './subcomponents/emblem/EmblemMenu.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
+	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import { vibrate } from '$lib/utils/haptics';
+	import { _ } from 'svelte-i18n';
     import { onMount, onDestroy } from 'svelte';
 
 	// Animation state for turn counter badge
 	let prevTurnCount = 0;
 	let animateTurn: boolean = false;
-	let animateTimeout: number | null = null;
+	let animateTimeout: ReturnType<typeof setTimeout> | null = null;
 
-	let turnPrevTimeout: number | null = null;
+	let turnPrevTimeout: ReturnType<typeof setTimeout> | null = null;
 	let turnPrevTriggered = false;
 
-	let randomPlayerTimeout: number | null = null;
+	let randomPlayerTimeout: ReturnType<typeof setTimeout> | null = null;
 	let randomPlayerTriggered = false;
 
 	const handleTurnDown = () => {
@@ -130,6 +133,19 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				<ManaPentagon />
 			</button>
 		</div>
+		{#if $appSettings.showEmblemMenu}
+			<div class="flex justify-center items-center flex-grow">
+				<button
+					on:click={() => toggleIsMenuOpen('emblem')}
+					on:contextmenu|preventDefault
+					draggable="false"
+					title={$_('emblems_and_dungeons')}
+					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+				>
+					<TheRingerBearer />
+				</button>
+			</div>
+		{/if}
 		{#if $appSettings.showNextPlayerButton}
 			<div class="flex justify-center items-center flex-grow">
 				<button
@@ -178,4 +194,6 @@ $: if ($appState.turnCount !== prevTurnCount) {
 	<Resources />
 {:else if $appState.activeMenu === 'randomizer'}
 	<Randomizer />
+{:else if $appState.activeMenu === 'emblem'}
+	<EmblemMenu />
 {/if}

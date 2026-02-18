@@ -26,6 +26,8 @@ interface AppSettings {
 	enableCurrentPlayerGlow: boolean;
 	// show the next-player button in the main menu
 	showNextPlayerButton: boolean;
+	// show emblem menu button in the main menu
+	showEmblemMenu: boolean;
 	// turn timer: enable per-turn timer (optional)
 	turnTimerEnabled: boolean;
 	// default per-turn duration in seconds (2 minutes)
@@ -58,6 +60,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	enableCurrentPlayerGlow: true,
 	// show the next-player button in the main menu
 	showNextPlayerButton: true,
+	// show emblem menu button in the main menu
+	showEmblemMenu: false,
 	// turn timer: enable per-turn timer (optional)
 	turnTimerEnabled: false,
 	// default per-turn duration in seconds (2 minutes)
@@ -100,6 +104,10 @@ export const setEnableCurrentPlayerGlow = (enable: boolean) => {
 
 export const setShowNextPlayerButton = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showNextPlayerButton: show }));
+};
+
+export const setShowEmblemMenu = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showEmblemMenu: show }));
 };
 
 export const setTurnTimerEnabled = (enabled: boolean) => {
