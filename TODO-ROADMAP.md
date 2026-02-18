@@ -395,7 +395,8 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
   - [x] Optionally: maybe receive 3 Vanguard cards at first, and keep only one? It's what I do, when I play this mode in paper myself. I like this variant.
 
 
-- [ ] Shogun / Treachery support (hidden role to check once when the game starts, and hidden after that)
+- [x] TODO: Treachery support (hidden role to check once when the game starts, and hidden after that)
+- [x] TODO: Shogun support (hidden role to check once when the game starts, and hidden after that). Shogun is very close to the Treachery mode, except there is no role card, just the role status effect, that is "Shogun" (Leader), Assassin, Treator, or Guardian. So it can be implemented in a similar way as the Treachery mode, but without the need to search for a specific card in the Scryfall database, as the "Shogun" role is not represented by a card, but just by a status effect. Actually, don't implement yet another variant, simply add a parameter in the main settings, "Enable Shogun variant (simpler)", that can be enabled to have the same hidden role mechanics as the Treachery mode, but with the Shogun roles instead of the Treachery roles. This way, we can have both variants (Treachery and Shogun) without having to implement two separate modes, and it can be a fun and interesting variant for players who want to try something different from the classic multiplayer mode. TL;DR: Shogun = Treachery without any image and data about the role (name, slug, rules' text, etc.).
 
 ## Customize the probabilities of whose player starts the game
 
@@ -415,6 +416,8 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
   - [x] See [issue #15](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/15)
 
 ### Other
+
+Nope, I don't plan on doing that!
 
 - [ ] Enhanced statistis and analytics, à la Mythic.Tools
 - [ ] Cloud sync and backup, à la Mythic.Tools

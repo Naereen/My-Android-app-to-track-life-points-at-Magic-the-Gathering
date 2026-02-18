@@ -3,7 +3,15 @@
 declare global {
 	namespace App {
 		namespace AppState {
-			type Menu = 'settings' | 'resources' | 'randomizer' | 'emblem' | 'vanguard' | 'history' | '';
+			type Menu =
+				| 'settings'
+				| 'resources'
+				| 'randomizer'
+				| 'emblem'
+				| 'vanguard'
+				| 'treachery'
+				| 'history'
+				| '';
 		}
 
 		namespace Settings {
@@ -57,6 +65,9 @@ declare global {
 				color: string;
 				vanguard?: import('$lib/utils/scryfall').ScryfallEmblemCard | null;
 				vanguardChoices?: import('$lib/utils/scryfall').ScryfallEmblemCard[];
+				treacheryRole?: import('$lib/utils/treachery').TreacheryRole | null;
+				treacheryCard?: import('$lib/utils/treachery').TreacheryCard | null;
+				treacherySeen?: boolean;
 				backgroundImage?: string | string[] | null;
 				tempLifeDiff: number;
 				backgroundArtist?: string | null;

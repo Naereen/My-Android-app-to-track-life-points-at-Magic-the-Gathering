@@ -9,6 +9,7 @@
 	import Randomizer from './subcomponents/randomizer/Randomizer.svelte';
 	import EmblemMenu from './subcomponents/emblem/EmblemMenu.svelte';
 	import VanguardMenu from './subcomponents/vanguard/VanguardMenu.svelte';
+	import TreacheryMenu from './subcomponents/treachery/TreacheryMenu.svelte';
 	import HistoryMenu from './subcomponents/history/HistoryMenu.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
@@ -156,6 +157,19 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				</button>
 			</div>
 		{/if}
+		{#if $appSettings.showTreacheryMenu}
+			<div class="flex justify-center items-center flex-grow">
+				<button
+					on:click={() => toggleIsMenuOpen('treachery')}
+					on:contextmenu|preventDefault
+					draggable="false"
+					title={$_('treachery_menu')}
+					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+				>
+					<span class="text-large">🕵️</span>
+				</button>
+			</div>
+		{/if}
 		{#if $appSettings.showGameHistoryMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
@@ -227,6 +241,8 @@ $: if ($appState.turnCount !== prevTurnCount) {
 	<EmblemMenu />
 {:else if $appState.activeMenu === 'vanguard'}
 	<VanguardMenu />
+{:else if $appState.activeMenu === 'treachery'}
+	<TreacheryMenu />
 {:else if $appState.activeMenu === 'history'}
 	<HistoryMenu />
 {/if}

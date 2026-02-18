@@ -8,7 +8,10 @@
 		setSixPlayerLayout,
 		setShowEmblemMenu,
 		setShowVanguardMenu,
+		setShowTreacheryMenu,
 		setVanguardModeEnabled,
+		setTreacheryModeEnabled,
+		setShogunVariantEnabled,
 		setVanguardDraftThree,
 		setShowGameHistoryMenu,
 		setAppLocale
@@ -162,9 +165,24 @@
 		setShowVanguardMenu(!!target.checked);
 	};
 
+	const handleShowTreacheryMenuChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setShowTreacheryMenu(!!target.checked);
+	};
+
 	const handleVanguardModeEnabledChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setVanguardModeEnabled(!!target.checked);
+	};
+
+	const handleTreacheryModeEnabledChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setTreacheryModeEnabled(!!target.checked);
+	};
+
+	const handleShogunVariantEnabledChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setShogunVariantEnabled(!!target.checked);
 	};
 
 	const handleVanguardDraftThreeChange = (e: Event) => {
@@ -506,6 +524,21 @@
 			>
 				<input
 					type="checkbox"
+					checked={$appSettings.showTreacheryMenu}
+					on:change={handleShowTreacheryMenuChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('show_treachery_menu_button') || 'Show Treachery menu button'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
 					checked={$appSettings.vanguardModeEnabled}
 					on:change={handleVanguardModeEnabledChange}
 					class="h-5 w-5"
@@ -527,6 +560,37 @@
 					disabled={!$appSettings.vanguardModeEnabled}
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('vanguard_draft_three') || 'Variant: 3 Vanguard cards then keep one'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.treacheryModeEnabled}
+					on:change={handleTreacheryModeEnabledChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('treachery_mode_enabled') || 'Enable Treachery mode on new game'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.shogunVariantEnabled}
+					on:change={handleShogunVariantEnabledChange}
+					class="h-5 w-5"
+					disabled={!$appSettings.treacheryModeEnabled}
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('shogun_variant_enabled') || 'Enable Shogun variant (simpler)'}</span>
 			</label>
 		</div>
 

@@ -8,6 +8,14 @@ import { vibrate } from '$lib/utils/haptics';
 import { playGameplaySound } from '$lib/utils/gameplaySound';
 import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
 import { searchVanguardCards, type ScryfallEmblemCard } from '$lib/utils/scryfall';
+import {
+	fetchTreacheryCardBySlug,
+	getRequiredTreacheryRoleCounts,
+	loadTreacheryCatalog,
+	type TreacheryCard,
+	type TreacheryCatalogEntry,
+	type TreacheryRole
+} from '$lib/utils/treachery';
 // import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -165,6 +173,9 @@ const defaultPlayers: App.Player.Data[] = [
 		statusEffects: {},
 		vanguard: null,
 		vanguardChoices: [],
+		treacheryRole: null,
+		treacheryCard: null,
+		treacherySeen: false,
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -183,6 +194,9 @@ const defaultPlayers: App.Player.Data[] = [
 		statusEffects: {},
 		vanguard: null,
 		vanguardChoices: [],
+		treacheryRole: null,
+		treacheryCard: null,
+		treacherySeen: false,
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -201,6 +215,9 @@ const defaultPlayers: App.Player.Data[] = [
 		statusEffects: {},
 		vanguard: null,
 		vanguardChoices: [],
+		treacheryRole: null,
+		treacheryCard: null,
+		treacherySeen: false,
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -219,6 +236,9 @@ const defaultPlayers: App.Player.Data[] = [
 		statusEffects: {},
 		vanguard: null,
 		vanguardChoices: [],
+		treacheryRole: null,
+		treacheryCard: null,
+		treacherySeen: false,
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -237,6 +257,9 @@ const defaultPlayers: App.Player.Data[] = [
 		statusEffects: {},
 		vanguard: null,
 		vanguardChoices: [],
+		treacheryRole: null,
+		treacheryCard: null,
+		treacherySeen: false,
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -255,6 +278,9 @@ const defaultPlayers: App.Player.Data[] = [
 		statusEffects: {},
 		vanguard: null,
 		vanguardChoices: [],
+		treacheryRole: null,
+		treacheryCard: null,
+		treacherySeen: false,
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -402,7 +428,36 @@ export const setPlayerVanguardChoices = (playerId: number, choices: ScryfallEmbl
 	});
 };
 
-const shuffleCards = (array: ScryfallEmblemCard[]) => {
+export const setPlayerTreacheryCard = (playerId: number, role: TreacheryRole | null, card: TreacheryCard | null) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					treacheryRole: role,
+					treacheryCard: card
+				};
+			}
+			return player;
+		});
+	});
+};
+
+export const setPlayerTreacherySeen = (playerId: number, seen: boolean) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					treacherySeen: seen
+				};
+			}
+			return player;
+		});
+	});
+};
+
+const shuffleCards = <T>(array: T[]) => {
 	const copy = [...array];
 	for (let i = copy.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
@@ -460,6 +515,121 @@ export const assignRandomVanguardsForGame = async () => {
 				...player,
 				vanguard: assignment.selected,
 				vanguardChoices: assignment.choices
+			};
+		});
+	});
+};
+
+export const assignRandomTreacheryForGame = async () => {
+	const settings = get(appSettings);
+	const totalPlayers = settings.playerCount || 4;
+	const roleCounts = getRequiredTreacheryRoleCounts(totalPlayers);
+	const isShogunVariant = !!settings.shogunVariantEnabled;
+
+	if (!settings.treacheryModeEnabled || totalPlayers <= 0 || !roleCounts) {
+		players.update((currentPlayers) =>
+			currentPlayers.map((player) => ({
+				...player,
+				treacheryRole: null,
+				treacheryCard: null,
+				treacherySeen: false
+			}))
+		);
+		return;
+	}
+
+	const rolePool: TreacheryRole[] = [
+		...Array(roleCounts.leader).fill('leader'),
+		...Array(roleCounts.guardian).fill('guardian'),
+		...Array(roleCounts.assassin).fill('assassin'),
+		...Array(roleCounts.traitor).fill('traitor')
+	] as TreacheryRole[];
+
+	const shuffledRoles = shuffleCards(rolePool);
+
+	if (isShogunVariant) {
+		players.update((currentPlayers) => {
+			return currentPlayers.map((player) => {
+				if (player.id > totalPlayers) {
+					return {
+						...player,
+						treacheryRole: null,
+						treacheryCard: null,
+						treacherySeen: false
+					};
+				}
+
+				const role = shuffledRoles[player.id - 1] ?? null;
+				return {
+					...player,
+					treacheryRole: role,
+					treacheryCard: null,
+					treacherySeen: false
+				};
+			});
+		});
+		return;
+	}
+
+	const catalog = await loadTreacheryCatalog();
+	if (!catalog.length) return;
+
+	const byRole: Record<TreacheryRole, TreacheryCatalogEntry[]> = {
+		leader: shuffleCards(catalog.filter((entry) => entry.role === 'leader')),
+		guardian: shuffleCards(catalog.filter((entry) => entry.role === 'guardian')),
+		assassin: shuffleCards(catalog.filter((entry) => entry.role === 'assassin')),
+		traitor: shuffleCards(catalog.filter((entry) => entry.role === 'traitor'))
+	};
+	const assignments: { playerId: number; role: TreacheryRole; entry: TreacheryCatalogEntry }[] = [];
+
+	for (let playerIndex = 0; playerIndex < totalPlayers; playerIndex++) {
+		const playerId = playerIndex + 1;
+		const role = shuffledRoles[playerIndex];
+		if (!role) continue;
+		const nextCard = byRole[role].pop();
+		if (!nextCard) continue;
+		assignments.push({ playerId, role, entry: nextCard });
+	}
+
+	const detailList = await Promise.all(
+		assignments.map(async (assignment) => {
+			const card = await fetchTreacheryCardBySlug(assignment.entry);
+			return {
+				playerId: assignment.playerId,
+				role: assignment.role,
+				card
+			};
+		})
+	);
+
+	const byPlayerId = new Map(detailList.map((entry) => [entry.playerId, entry]));
+
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id > totalPlayers) {
+				return {
+					...player,
+					treacheryRole: null,
+					treacheryCard: null,
+					treacherySeen: false
+				};
+			}
+
+			const assignment = byPlayerId.get(player.id);
+			if (!assignment) {
+				return {
+					...player,
+					treacheryRole: null,
+					treacheryCard: null,
+					treacherySeen: false
+				};
+			}
+
+			return {
+				...player,
+				treacheryRole: assignment.role,
+				treacheryCard: assignment.card,
+				treacherySeen: false
 			};
 		});
 	});
@@ -848,6 +1018,9 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 				poison: 0,
 				vanguard: null,
 				vanguardChoices: [],
+				treacheryRole: null,
+				treacheryCard: null,
+				treacherySeen: false,
 				statusEffects: {
 					commanderDamage: [] // Reset commander damage
 				}
@@ -891,6 +1064,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	}
 
 	await assignRandomVanguardsForGame();
+	await assignRandomTreacheryForGame();
 
 	spinToSelectFirstPlayer();
 };

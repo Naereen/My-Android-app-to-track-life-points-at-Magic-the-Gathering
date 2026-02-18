@@ -32,8 +32,14 @@ interface AppSettings {
 	showEmblemMenu: boolean;
 	// show vanguard menu button in the main menu
 	showVanguardMenu: boolean;
+	// show treachery menu button in the main menu
+	showTreacheryMenu: boolean;
 	// enable vanguard mode when starting/resetting a game
 	vanguardModeEnabled: boolean;
+	// enable treachery mode when starting/resetting a game
+	treacheryModeEnabled: boolean;
+	// simpler Treachery variant with hidden roles only (no cards/images)
+	shogunVariantEnabled: boolean;
 	// optional paper variant: each player gets 3 random vanguards and keeps one
 	vanguardDraftThree: boolean;
 	// show game history menu button in the main menu
@@ -76,8 +82,14 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	showEmblemMenu: false,
 	// show vanguard menu button in the main menu
 	showVanguardMenu: false,
+	// show treachery menu button in the main menu
+	showTreacheryMenu: false,
 	// enable vanguard mode when starting/resetting a game
 	vanguardModeEnabled: false,
+	// enable treachery mode when starting/resetting a game
+	treacheryModeEnabled: false,
+	// simpler Treachery variant with hidden roles only (no cards/images)
+	shogunVariantEnabled: false,
 	// optional paper variant: each player gets 3 random vanguards and keeps one
 	vanguardDraftThree: false,
 	// show game history menu button in the main menu
@@ -138,8 +150,20 @@ export const setShowVanguardMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showVanguardMenu: show }));
 };
 
+export const setShowTreacheryMenu = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showTreacheryMenu: show }));
+};
+
 export const setVanguardModeEnabled = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, vanguardModeEnabled: enabled }));
+};
+
+export const setTreacheryModeEnabled = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, treacheryModeEnabled: enabled }));
+};
+
+export const setShogunVariantEnabled = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, shogunVariantEnabled: enabled }));
 };
 
 export const setVanguardDraftThree = (enabled: boolean) => {
