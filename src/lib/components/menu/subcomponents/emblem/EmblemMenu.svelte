@@ -4,7 +4,7 @@
 	import Initiative from '$lib/assets/icons/Initiative.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
-	import { openSelectedEmblem } from '$lib/store/emblem';
+	import { emblemState, openSelectedEmblem } from '$lib/store/emblem';
 	import {
 		fetchCardBySetCollector,
 		searchEmblemCards,
@@ -59,11 +59,10 @@
 
 <div
 	class="w-full overflow-scroll scrollbar-hidden h-full"
-	style="max-height: {innerHeight - 100}px;"
 >
 	<div class="flex flex-col">
 		<div
-			class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black"
+			class="w-full text-center flex px-4 flex-col justify-between items-center my-2 py-2 sticky top-[-1px] bg-black"
 		>
 			<button
 				on:click={() => toggleIsMenuOpen('')}
@@ -77,8 +76,27 @@
 			<span class="text-gray-400 text-center text-base mt-2 w-90">{$_('explanation_emblems_and_dungeons')}</span>
 		</div>
 
-		<div class="w-full px-4 mt-1 mb-6">
+		<div class="w-full px-4 mt-1 mb-1">
 			<div class="max-w-4xl mx-auto">
+				<div class="bg-[#2d2f30] rounded-2xl p-3 mb-4">
+					<div class="text-white text-sm font-semibold mb-2">{$_('emblem_recent_title')}</div>
+					{#if ($emblemState.recent?.length ?? 0) > 0}
+						<div class="flex flex-wrap gap-2">
+							{#each $emblemState.recent as recentEmblem}
+								<button
+									class="bg-black/40 text-white text-xs px-3 py-1.5 rounded-full max-w-full truncate"
+									title={recentEmblem.name}
+									on:click={() => openEmblem(recentEmblem)}
+								>
+									{recentEmblem.name}
+								</button>
+							{/each}
+						</div>
+					{:else}
+						<div class="text-gray-400 text-xs">{$_('emblem_recent_empty')}</div>
+					{/if}
+				</div>
+
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
 					<button
 						class="bg-[#2d2f30] rounded-2xl px-4 py-3 text-white flex flex-col items-center"
@@ -113,7 +131,7 @@
 				</div>
 
 				<div class="bg-[#2d2f30] rounded-2xl p-4">
-					<div class="flex flex-col md:flex-row gap-2 mb-3">
+					<div class="flex flex-col md:flex-row gap-2 mb-1">
 						<input
 							bind:value={emblemQuery}
 							type="text"

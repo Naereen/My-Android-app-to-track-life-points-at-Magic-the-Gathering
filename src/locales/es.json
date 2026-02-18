@@ -128,5 +128,7 @@
     "emblem_tap_next_face": "Toca para ver el reverso.",
     "emblem_tap_close": "Toca para cerrar.",
     "emblem_no_image": "No hay imagen disponible para este emblema.",
+    "emblem_recent_title": "Mostrados recientemente",
+    "emblem_recent_empty": "Aún no se ha mostrado ningún emblema.",
     "me": "yo"
 }

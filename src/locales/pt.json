@@ -128,5 +128,7 @@
     "emblem_tap_next_face": "Toque para mostrar o verso.",
     "emblem_tap_close": "Toque para fechar.",
     "emblem_no_image": "Nenhuma imagem disponível para este emblema.",
+    "emblem_recent_title": "Exibidos recentemente",
+    "emblem_recent_empty": "Nenhum emblema exibido ainda.",
     "me": "eu"
 }

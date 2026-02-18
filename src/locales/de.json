@@ -128,5 +128,7 @@
     "emblem_tap_next_face": "Tippen, um die Rückseite anzuzeigen.",
     "emblem_tap_close": "Tippen zum Schließen.",
     "emblem_no_image": "Kein Bild für dieses Emblem verfügbar.",
+    "emblem_recent_title": "Zuletzt angezeigt",
+    "emblem_recent_empty": "Noch kein Emblem angezeigt.",
     "me": "ich"
 }

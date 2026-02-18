@@ -130,5 +130,7 @@
     "emblem_tap_next_face": "Tap to show back face.",
     "emblem_tap_close": "Tap to close.",
     "emblem_no_image": "No image available for this emblem.",
+    "emblem_recent_title": "Recently displayed",
+    "emblem_recent_empty": "No emblem displayed yet.",
     "me": "me"
 }

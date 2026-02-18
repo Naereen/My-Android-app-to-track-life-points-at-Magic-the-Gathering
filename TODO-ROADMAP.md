@@ -337,12 +337,14 @@ By default, it should offer to display:
 
 A search button for any emblem, using Scryfall and what is already available for the Scryfall search.
 - [x] A search button for any dungeon or emblem ;
-- [ ] TODO: this sea should embed the `"type=emblem"` filter, to only show emblems in the search results.
+- [x] This search should embed the `"type=emblem"` filter, to only show emblems in the search results.
 
 When clicking on an emblem, it should be kept in memory, a shortcut menu should be added to the main central horizontal menu, and an almost full-screen display of that particular emblem should be shown.
 Clicking on this (almost full-screen) display of that emblem should close the modal display, or go to its back ("front/recto" first, "back/verso" second).
 
 - [x] Be sure to implement correctly the two faces for emblems like "The Ring", "Start Your Engines" and "Undercity", that each have two faces with rich text and features.
+
+- [ ] Additional visualizations: be able to see quickly the three emblems that were last displayed (with just their name, and on a click, their image), in a small section of the `EmblemMenu` menu, to be able to quickly click on them again if needed, without having to search for them again in the Scryfall search menu!
 
 - [ ] Additional visualizations: be able to see, on a click and a searh in the menu, any dungeon or Planeswalker's emblem, by a search from Scryfall
 - [ ] Additional visualizations: be able to see, on a click in the menu, dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>

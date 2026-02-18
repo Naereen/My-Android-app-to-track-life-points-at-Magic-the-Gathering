@@ -106,7 +106,7 @@
     "turn_timer_sound": "Jouer un son à la fin",
     "enable_current_player_glow": "Faire briller le joueur actif",
     "show_next_player_button": "Afficher le bouton « Joueur suivant »",
-    "show_emblem_menu_button": "Afficher le bouton du menu emblèmes",
+    "show_emblem_menu_button": "Afficher le bouton du menu « Emblèmes & Donjons »",
     "set_life_total": "Définir les points de vie",
     "set_commander_damage": "Définir les dégâts de commandant",
     "enter_life_total_placeholder": "Entrez les points de vie",
@@ -131,5 +131,7 @@
     "emblem_tap_next_face": "Touchez pour afficher le verso.",
     "emblem_tap_close": "Touchez pour fermer.",
     "emblem_no_image": "Aucune image disponible pour cet emblème.",
+    "emblem_recent_title": "Récemment affichés",
+    "emblem_recent_empty": "Aucun emblème affiché pour le moment.",
     "me": "moi"
 }

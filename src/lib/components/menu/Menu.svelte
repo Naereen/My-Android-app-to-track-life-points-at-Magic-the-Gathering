@@ -128,11 +128,6 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				highlight
 			/>
 		</div>
-		<div class="flex justify-center items-center flex-grow">
-			<button on:click={handleManaClick} on:contextmenu|preventDefault draggable="false">
-				<ManaPentagon />
-			</button>
-		</div>
 		{#if $appSettings.showEmblemMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
@@ -142,10 +137,15 @@ $: if ($appState.turnCount !== prevTurnCount) {
 					title={$_('emblems_and_dungeons')}
 					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
 				>
-					<TheRingerBearer />
+					<span class="text-large">🗺️</span>
 				</button>
 			</div>
 		{/if}
+		<div class="flex justify-center items-center flex-grow">
+			<button on:click={handleManaClick} on:contextmenu|preventDefault draggable="false">
+				<ManaPentagon />
+			</button>
+		</div>
 		{#if $appSettings.showNextPlayerButton}
 			<div class="flex justify-center items-center flex-grow">
 				<button

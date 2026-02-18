@@ -130,5 +130,7 @@
     "emblem_tap_next_face": "Tocca per mostrare il retro.",
     "emblem_tap_close": "Tocca per chiudere.",
     "emblem_no_image": "Nessuna immagine disponibile per questo emblema.",
+    "emblem_recent_title": "Mostrati di recente",
+    "emblem_recent_empty": "Nessun emblema mostrato finora.",
     "me": "io"
 }
