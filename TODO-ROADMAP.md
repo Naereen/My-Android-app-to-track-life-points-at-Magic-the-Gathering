@@ -401,7 +401,9 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 ### Game history and undo functionality
 
-- [ ] Store in a log/stack/queue all the changes to each player's lifeTotal, so that this history can be displayed in the menu, if one player is unsure about their recent lifeTotal changes.
+- [ ] Store in a log/stack/queue all the changes to each player's lifeTotal, the Commander damages, the poison and all the status effects modifications... So that this history can be displayed in the menu (in a new menu), if one player is unsure about the recent changes that concern their lifeTotal (or any other thing that is tracked through the app).
+  - [ ] The menu that displays this detailed log (or game history) should also be hidden by default, and enabled after a tweak on the settings.
+  - [ ] NOT YET, IN THE FUTURE: The menu that displays this detailed log (or game history) should also allow to "undo" the last change, or to go back to a specific point in the history, by clicking on the corresponding entry in the log. This can be a very useful feature, especially for players who are new to the game and may make mistakes when tracking their life total or other status effects, as it allows them to easily correct their mistakes without having to manually adjust the values again.
   - [ ] See [issue #15](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/15)
 
 ### Other
