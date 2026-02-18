@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*' # Se déclenche lors du push de tags type v1.0.0
+  workflow_dispatch: # Permet le déclenchement manuel
+    inputs:
+      reason:
+        description: 'Raison du lancement manuel'
+        required: false
+        default: 'Test de la CI'
 
 jobs:
   build:

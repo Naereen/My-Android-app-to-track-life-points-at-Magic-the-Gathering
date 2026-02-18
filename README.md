@@ -8,6 +8,9 @@ It is built with awesome and recent web tech: [SvelteKit](https://svelte.dev/doc
 
 **The application can be used on Android or Apple devices, via a simple web browser**, or [by downloading the apk file for Android](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.2/naereen-mtg-life-tracker.apk) (coming soon to the Google Play Store!).
 
+[![Android Build](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/actions/workflows/android_build.yml/badge.svg)](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/actions/workflows/android_build.yml)
+[![Deploy to GitHub Pages](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/actions/workflows/deploy.yml/badge.svg)](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/actions/workflows/deploy.yml)
+
 ![Demo of the webpage (5/4)](screenshots/screenshot-demo-5.png)
 
 You can find it live here: <https://naereen.github.io/My-Android-app-to-track-life-points-at-Magic-the-Gathering/>.
