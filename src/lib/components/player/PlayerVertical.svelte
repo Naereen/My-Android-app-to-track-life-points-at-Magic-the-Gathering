@@ -46,11 +46,11 @@
 	let timeout: number;
 	let isHolding = false;
 	let holdingType: App.Player.LifeMoveType | null = null;
-	const MOUSE_AFTER_TOUCH_GUARD_MS = 700;
+	const MOUSE_AFTER_TOUCH_GUARD_MS = 1000;
 	let lastTouchAt = 0;
 
 	const isLikelySyntheticMouseEvent = () =>
-		Date.now() - lastTouchAt < MOUSE_AFTER_TOUCH_GUARD_MS;
+		(Date.now() - lastTouchAt) < MOUSE_AFTER_TOUCH_GUARD_MS;
 
 	$: innerWidth = 0;
 	$: isMobile = isMobileDevice(innerWidth);
