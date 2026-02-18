@@ -11,7 +11,7 @@ It is built with awesome and recent web tech: [SvelteKit](https://svelte.dev/doc
 [![Android Build](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/actions/workflows/android_build.yml/badge.svg)](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/actions/workflows/android_build.yml)
 [![Deploy to GitHub Pages](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/actions/workflows/deploy.yml/badge.svg)](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/actions/workflows/deploy.yml)
 
-![Demo of the webpage (5/4)](screenshots/screenshot-demo-5.png)
+<img src="screenshots/screenshot-demo-5.png" alt="Demo of the webpage (5/4)" width="300"/>
 
 You can find it live here: <https://naereen.github.io/My-Android-app-to-track-life-points-at-Magic-the-Gathering/>.
 It is updated after every commit I make on the codebase, so you can see the latest changes and improvements there.
@@ -26,29 +26,31 @@ It is updated after every commit I make on the codebase, so you can see the late
 
 ## 📸 Screenshots
 
-![Demo of the webpage (6/4)](screenshots/screenshot-demo-6.png)
+<img src="screenshots/screenshot-demo-6.png" alt="Demo of the webpage (6/4)" width="300"/>
 
-![Demo of the webpage (7/4)](screenshots/screenshot-demo-7.png)
+<img src="screenshots/screenshot-demo-7.png" alt="Demo of the webpage (7/4)" width="300"/>
 
 Older screenshots:
 
-![Demo of the webpage (2/4)](screenshots/screenshot-demo-2.png)
+<img src="screenshots/screenshot-demo-2.png" alt="Demo of the webpage (2/4)" width="300"/>
 
-![Demo of the webpage (3/4)](screenshots/screenshot-demo-3.png)
+<img src="screenshots/screenshot-demo-3.png" alt="Demo of the webpage (3/4)" width="300"/>
 
-![Demo of the webpage (4/4)](screenshots/screenshot-demo-4.png)
+<img src="screenshots/screenshot-demo-4.png" alt="Demo of the webpage (4/4)" width="300"/>
 
-TODO: reshot all the screenshots.
+> TODO: reshot all the screenshots, as they are already a bit old and don't reflect the latest design of the app.
 
 ---
 
-## Download the Android application (apk file)
+## 🤖 Download the Android application (apk file)
 
 The latest stable release is here: <https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/latest>
 
-The apk file is named [`naereen-mtg-life-tracker.apk`](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.2/naereen-mtg-life-tracker.apk). You can download it and install it on your Android device. Note that you may need to allow installation from unknown sources in your device settings:
+The apk file is named [`naereen-mtg-life-tracker.apk`](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/main.13/app-release-unsigned-signed.apk). You can download it and install it on your Android device.
 
-<https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.2/naereen-mtg-life-tracker.apk>
+<https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/main.13/app-release-unsigned-signed.apk>
+
+> Note: that you may need to allow installation from unknown sources in your device settings:
 
 ---
 

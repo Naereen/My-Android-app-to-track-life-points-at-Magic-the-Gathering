@@ -325,6 +325,10 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
 
 ## New features to implement
 
+### Choose <=> Chosen bug for the backgrounds
+
+When choosing a simple background (a single one), the "Choose <=> Chosen" action (on the verb (on the button)) seems to not be working as expected. For instance, if I click on a card image, to select it as background, the button text should change to "Chosen", but if I click again on the same color to deselect it, the button text doesn't change back to "Choose", even though the background is correctly deselected. This is a minor bug, but it can be confusing for users, as the button text doesn't reflect the current state of the background selection.
+
 ### GIF as backgrounds
 
 > See [issue #13](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/13).
@@ -357,6 +361,10 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
   - [ ] TODO: implement a feature to be able (for each player!) to quickly move from one room to a next one, by clicking on the image of the current room, and showing the image of the next room (with a small transition animation), and keeping in memory the current room of each player, so that when opening again the dungeon menu, it shows the current room of each player. This can be a fun and visually appealing feature, as it allows to track the progress of each player in the dungeon, and to have a nice visual representation of it. It can also be useful for players who want to play with the Dungeons & Dragons adventures, which are pretty cool!
 
 - [ ] Additional visualizations: the fan-made Dungeon (made by some friend over at Colmar)...
+
+### Implement a very good feature to track successive Head/Tail coin flips, like in the "LifeLinked" MTG app
+
+- [ ] Implement a feature to track successive Head/Tail coin flips, like in the "LifeLinked" MTG app, with a nice visual representation of the sequence of flips, and some statistics about the number of heads/tails, the longest sequence of heads/tails, etc. This can be a fun and visually appealing feature, as it allows to track the luck of the players during the game, and to have a nice visual representation of it. It can also be useful for players who want to play with cards that involve coin flips, such as "Krark's Thumb", "Chance Encounter", etc.
 
 ### Improve feedback while using the app: haptics/vibrations, and sounds?
 

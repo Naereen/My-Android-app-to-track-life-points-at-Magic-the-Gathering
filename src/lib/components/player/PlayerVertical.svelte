@@ -42,8 +42,8 @@
 	export let id: number;
 	export let layout: 'two-by-two' | 'one-two-one' | '' = '';
 
-	let interval: number;
-	let timeout: number;
+	let interval: ReturnType<typeof setInterval> | undefined;
+	let timeout: ReturnType<typeof setTimeout> | undefined;
 	let isHolding = false;
 	let holdingType: App.Player.LifeMoveType | null = null;
 	const MOUSE_AFTER_TOUCH_GUARD_MS = 1000;
@@ -151,12 +151,12 @@
 		if (!isMobile) {
 			if (interval) {
 				clearInterval(interval);
-				interval = 0;
+				interval = undefined;
 			} else {
 				manageLifeTotal(type, id);
 			}
 			clearTimeout(timeout);
-			timeout = 0;
+			timeout = undefined;
 			isHolding = false;
 			holdingType = null;
 			setPlayerHighlighted(id, false);
@@ -184,12 +184,12 @@
 		lastTouchAt = Date.now();
 		if (interval) {
 			clearInterval(interval);
-			interval = 0;
+			interval = undefined;
 		} else {
 			manageLifeTotal(type, id);
 		}
 		clearTimeout(timeout);
-		timeout = 0;
+		timeout = undefined;
 		isHolding = false;
 		holdingType = null;
 		setPlayerHighlighted(id, false);
@@ -199,10 +199,10 @@
 		lastTouchAt = Date.now();
 		if (interval) {
 			clearInterval(interval);
-			interval = 0;
+			interval = undefined;
 		}
 		clearTimeout(timeout);
-		timeout = 0;
+		timeout = undefined;
 		isHolding = false;
 		holdingType = null;
 		setPlayerHighlighted(id, false);
