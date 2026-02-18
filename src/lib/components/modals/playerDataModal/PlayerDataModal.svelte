@@ -49,6 +49,8 @@
 
 	// search mode: false = cards (Scryfall), true = GIFs (Klipy)
 	let gifMode = false;
+	// By default hide the gradient controls (title visible but not bold)
+	let searchOptionActive = true;
 	let klipyKeyPresent = false;
 
 	const checkKlipyKey = async () => {
@@ -506,7 +508,7 @@
 										on:keypress={handleOnKeyPressScryfallSearch}
 										placeholder={$_('scryfall_search') + ' (Scryfall)...'}
 									/>
-									<div class="absolute right-3 top-3 flex items-center">
+									<div class="absolute right-3 top-2 flex items-center">
 										<button
 											type="button"
 											on:click={() => { searchQuery = ''; searchEdited = true; }}
@@ -522,16 +524,16 @@
 									class="px-3 py-2 mt-2 bg-blue-500 text-white text-sm rounded-lg"
 									on:click={doSearch}
 									disabled={isSearching || (gifMode && !klipyKeyPresent)}
-									>{isSearching ? $_('scryfall_searching') : gifMode ? 'Search GIFs' : $_('scryfall_search')}</button
+									>{isSearching ? $_('scryfall_searching') : gifMode ? $_('klipy_search') : $_('scryfall_search')}</button
 								>
 								<button
 									class="px-3 py-2 bg-purple-600 text-white text-sm rounded-lg"
 									on:click={() => chooseRandom($playerModalData.playerId)}
-									disabled={isSearching || (gifMode && !klipyKeyPresent)}>{gifMode ? 'Random GIF' : $_('scryfall_search_choose_random')}</button
+									disabled={isSearching || (gifMode && !klipyKeyPresent)}>{gifMode ? $_('klipy_search_choose_random') : $_('scryfall_search_choose_random')}</button
 								>
 								<button
 									class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg"
-									on:click={() => { hasSearched = false; setPlayerBackgroundImage($playerModalData.playerId, null); }}
+									on:click={() => { hasSearched = false; searchOptionActive = false; setPlayerBackgroundImage($playerModalData.playerId, null); }}
 									>{$_('clear_background')}</button
 								>
 							</div>
@@ -545,6 +547,7 @@
 							{#if gifMode && !klipyKeyPresent}
 								<div class="text-sm text-red-600">
 									No Klipy API key found. Create `static/klipy_api.key` with your key, or set `VITE_KLIPY_API_KEY` in your environment.
+									<!-- FIXME: translate this message! -->
 								</div>
 							{:else}
 								{#if searchResults.length === 0}
@@ -597,64 +600,109 @@
 						{/if}
 					{/if}
 
-					<!-- If the background has been searched, don't display the gradient selection section -->
-					{#if (mode === 'background' && !hasSearched)}
-						<label class="block mb-2 font-semibold">{ $_('player_background_color') }</label>
-						<div class="flex items-center gap-3 mb-2">
-							<label class="flex items-center gap-2 text-sm"
-								><input type="checkbox" bind:checked={gradientMode} /> {$_('gradient_mode')}</label
-							>
+					<!-- Always show the Gradient title; only hide the controls when a search option is active or search has happened -->
+					{#if mode === 'background'}
+
+					<!-- {#if searchOptionActive} -->
+						<div class="mt-2 flex gap-2 items-center">
 							<button
-								on:click={() => clearSelection($playerModalData.playerId)}
-								class="ml-2 text-sm underline">{$_('clear_gradient')}</button
+								class="px-3 py-1 rounded-full border"
+								on:click={() => { gifMode = false; searchOptionActive = true; }}
+								class:font-bold={(searchOptionActive || hasSearched) && !gifMode}
 							>
+								{$_('scryfall_search')}
+							</button>
+							<button
+								class="px-3 py-1 rounded-full border"
+								on:click={() => { gifMode = true; searchOptionActive = true; }}
+								class:font-bold={(searchOptionActive || hasSearched) && gifMode}
+							>
+								GIFs
+							</button>
 						</div>
-						<div class="flex flex-wrap justify-center items-center gap-3 m-auto">
-							{#each ['white', 'blue', 'black', 'red', 'green', 'mud'] as c}
-								<button
-									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
-									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
-									style="background: {colorToBg(c)}"
-									aria-label={c}
+					<!-- {/if} -->
+
+						<label
+							class="block mb-2"
+							class:font-semibold={!searchOptionActive && !hasSearched}
+							role="button"
+							tabindex="0"
+							on:click={() => {
+								// show gradient controls, hide search/GIF options and clear previous search
+								searchOptionActive = false;
+								hasSearched = false;
+								gifMode = false;
+								searchQuery = '';
+								searchResults = [];
+							}}
+							on:keydown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									searchOptionActive = false;
+									hasSearched = false;
+									gifMode = false;
+									searchQuery = '';
+									searchResults = [];
+								}
+							}}
+						>{ $_('player_background_color') }</label>
+
+						{#if !hasSearched && !searchOptionActive}
+							<div class="flex items-center gap-3 mb-2">
+								<label class="flex items-center gap-2 text-sm"
+									><input type="checkbox" bind:checked={gradientMode} /> {$_('gradient_mode')}</label
 								>
-									{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
-										<span
-											class="block w-full h-full rounded-square rounded-lg"
-											style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"
-										></span>
-									{/if}
-									{#if selectedColors.indexOf(c) !== -1}
-										<span
-											class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center"
-											>{selectedColors.indexOf(c) + 1}</span
-										>
-									{/if}
-								</button>
-							{/each}
-							<div class="-h-1" />
-							<hr class="w-full" />
-							{#each ['metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
 								<button
-									on:click={() => toggleColorSelection($playerModalData.playerId, c)}
-									class="w-8 h-8 rounded-square rounded-lg border-2 relative"
-									style="background: {colorToBg(c)}"
-									aria-label={c}
+									on:click={() => clearSelection($playerModalData.playerId)}
+									class="ml-2 text-sm underline">{$_('clear_gradient')}</button
 								>
-									{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
-										<span
-											class="block w-full h-full rounded-square rounded-lg"
-											style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"
-										></span>
-									{/if}
-									{#if selectedColors.indexOf(c) !== -1}
-										<span
-											class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center"
-											>{selectedColors.indexOf(c) + 1}</span
-										>
-									{/if}
-								</button>
-							{/each}
-						</div>
+							</div>
+							<div class="flex flex-wrap justify-center items-center gap-3 m-auto">
+								{#each ['white', 'blue', 'black', 'red', 'green', 'mud'] as c}
+									<button
+										on:click={() => toggleColorSelection($playerModalData.playerId, c)}
+										class="w-8 h-8 rounded-square rounded-lg border-2 relative"
+										style="background: {colorToBg(c)}"
+										aria-label={c}
+									>
+										{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
+											<span
+												class="block w-full h-full rounded-square rounded-lg"
+												style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"
+											></span>
+										{/if}
+										{#if selectedColors.indexOf(c) !== -1}
+											<span
+												class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center"
+												>{selectedColors.indexOf(c) + 1}</span
+											>
+										{/if}
+									</button>
+								{/each}
+								<div class="-h-1" />
+								<hr class="w-full" />
+								{#each ['metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen'] as c}
+									<button
+										on:click={() => toggleColorSelection($playerModalData.playerId, c)}
+										class="w-8 h-8 rounded-square rounded-lg border-2 relative"
+										style="background: {colorToBg(c)}"
+										aria-label={c}
+									>
+										{#if !$players[$playerModalData.playerId - 1].color.includes(',') && $players[$playerModalData.playerId - 1].color === c}
+											<span
+												class="block w-full h-full rounded-square rounded-lg"
+												style="box-shadow: 0 0 0 2px rgba(0,0,0,0.2) inset"
+											></span>
+										{/if}
+										{#if selectedColors.indexOf(c) !== -1}
+											<span
+												class="absolute -top-2 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center"
+												>{selectedColors.indexOf(c) + 1}</span
+											>
+										{/if}
+									</button>
+								{/each}
+							</div>
+						{/if}
 					{/if}
 
 					{#if mode === 'status_effects'}
@@ -1156,22 +1204,6 @@
 							</div>
 						</div>
 					{/if}
-				</div>
-				<div class="mt-2 flex gap-2 items-center">
-					<button
-						class="px-3 py-1 rounded-full border"
-						on:click={() => (gifMode = false)}
-						class:font-bold={!gifMode}
-					>
-						{$_('scryfall_search')}
-					</button>
-					<button
-						class="px-3 py-1 rounded-full border"
-						on:click={() => (gifMode = true)}
-						class:font-bold={gifMode}
-					>
-						GIFs
-					</button>
 				</div>
 			</div>
 		</div>
