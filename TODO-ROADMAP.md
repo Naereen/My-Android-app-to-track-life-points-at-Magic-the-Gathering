@@ -346,9 +346,11 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 - [ ] Additional visualizations: be able to see quickly the three emblems that were last displayed (with just their name, and on a click, their image), in a small section of the `EmblemMenu` menu, to be able to quickly click on them again if needed, without having to search for them again in the Scryfall search menu!
 
-- [ ] Additional visualizations: be able to see, on a click and a searh in the menu, any dungeon or Planeswalker's emblem, by a search from Scryfall
-- [ ] Additional visualizations: be able to see, on a click in the menu, dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>
-- [ ] Additional visualizations: the dungeon made by some friend over at Colmar
+- [x] Additional visualizations: be able to see, on a click and a search in the menu, any dungeon or Planeswalker's emblem, by a search from Scryfall
+- [x] Additional visualizations: be able to see, on a click in the menu, dungeons (initiative, etc) <https://scryfall.com/search?q=t%3Adungeon>
+  - [ ] TODO: implement a feature to be able (for each player!) to quickly move from one room to a next one, by clicking on the image of the current room, and showing the image of the next room (with a small transition animation), and keeping in memory the current room of each player, so that when opening again the dungeon menu, it shows the current room of each player. This can be a fun and visually appealing feature, as it allows to track the progress of each player in the dungeon, and to have a nice visual representation of it. It can also be useful for players who want to play with the Dungeons & Dragons adventures, which are pretty cool!
+
+- [ ] Additional visualizations: the fan-made Dungeon (made by some friend over at Colmar)...
 
 ### Improve feedback while using the app: haptics/vibrations, and sounds?
 

@@ -199,7 +199,7 @@
 
 <div
 	class="w-full overflow-y-auto h-full"
-	style="max-height: {innerHeight - 100}px; -webkit-overflow-scrolling: touch;"
+	style="max-height: {innerHeight - 50}px; -webkit-overflow-scrolling: touch;"
 	tabindex="-1"
 	role="region"
 	aria-label={$_('settings')}

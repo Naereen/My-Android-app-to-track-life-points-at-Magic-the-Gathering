@@ -42,13 +42,13 @@
 >
 	<div
 		on:click|stopPropagation={handleAdvanceOrClose}
-		class="bg-[#2d2f30] rounded-[1.75rem] w-[92vw] max-w-[860px] max-h-[90vh] p-3 flex flex-col items-center"
+		class="bg-[#2d2f30] rounded-[1.75rem] w-[92vw] max-h-[90vh] p-3 flex flex-col items-center"
 		role="button"
 		on:keydown={() => null}
 		tabindex="0"
 	>
 		{#if selected && currentFace}
-			<div class="w-full px-2 pt-1 pb-2 text-center text-white">
+			<div class="w-full px-1 pt-1 pb-1 text-center text-white">
 				<div class="text-xl md:text-2xl font-bold truncate">{selected.name}</div>
 				{#if selected.set_name}
 					<div class="text-xs text-gray-300">{selected.set_name}</div>

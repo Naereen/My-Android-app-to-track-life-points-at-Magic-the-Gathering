@@ -58,7 +58,8 @@
 <svelte:window bind:innerHeight />
 
 <div
-	class="w-full overflow-scroll scrollbar-hidden h-full"
+	class="w-full overflow-y-auto h-full"
+	style="max-height: {innerHeight - 50}px; -webkit-overflow-scrolling: touch;"
 >
 	<div class="flex flex-col">
 		<div
