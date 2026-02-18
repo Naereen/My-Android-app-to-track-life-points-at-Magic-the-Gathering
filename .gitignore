@@ -26,3 +26,4 @@ vite.config.ts.timestamp-*
 
 # Android Studio project
 android/
+naereen-mtg-life-counter.apk
