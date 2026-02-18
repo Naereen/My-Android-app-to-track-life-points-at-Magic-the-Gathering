@@ -19,7 +19,7 @@ const readKey = async (): Promise<string | null> => {
 
     try {
         // Try to fetch a key placed in the app root (e.g. static/klipy_api.key)
-        const resp = await fetch('/klipy_api.key');
+        const resp = await fetch('klipy_api.key');
         if (resp.ok) {
             const txt = (await resp.text()).trim();
             if (txt) return txt;

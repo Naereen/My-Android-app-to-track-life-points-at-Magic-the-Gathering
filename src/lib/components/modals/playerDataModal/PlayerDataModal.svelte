@@ -62,7 +62,7 @@
 		} catch {}
 
 		try {
-			const resp = await fetch('/klipy_api.key', { method: 'GET' });
+			const resp = await fetch('klipy_api.key', { method: 'GET' });
 			if (resp.ok) {
 				const txt = (await resp.text()).trim();
 				klipyKeyPresent = txt.length > 0;
