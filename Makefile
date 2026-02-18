@@ -37,3 +37,4 @@ dev:
 send:	send_zamok
 send_zamok:
 	CP --exclude=.git ./build/ ${Szam}publis/My-Android-app-to-track-life-points-at-Magic-the-Gathering/
+	CP --exclude=.git ./android/app/build/outputs/apk/release/app-release-signed.apk ${Szam}publis/My-Android-app-to-track-life-points-at-Magic-the-Gathering/app.apk

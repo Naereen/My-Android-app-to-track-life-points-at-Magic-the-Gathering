@@ -1,6 +1,6 @@
 {
 	"name": "naereen-mtg-life-tracker",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -47,6 +47,7 @@
 		"@capacitor/core": "^8.0.2",
 		"@capacitor/device": "^8.0.0",
 		"@capacitor/splash-screen": "^8.0.0",
-		"@capacitor/status-bar": "^8.0.0"
+		"@capacitor/status-bar": "^8.0.0",
+		"@capawesome/capacitor-android-edge-to-edge-support": "^8.0.5"
 	}
 }

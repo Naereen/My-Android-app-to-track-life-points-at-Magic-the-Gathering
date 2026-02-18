@@ -163,9 +163,10 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				>
 					<span class="inline-flex items-center">
 						<!-- <span>↪</span> -->
-						<span>↩</span>
+						<!-- <span>↩</span> -->
+						<span>🔂</span>
 						{#if $appState.turnCount > 0}
-							<span class="ml-1 w-6 h-6 rounded-full text-xl flex items-center justify-center turn-badge" class:animate={animateTurn}>#{$appState.turnCount}</span>
+							<span class="ml-1 w-6 h-6 rounded-full text-xl flex items-center justify-center turn-badge" class:animate={animateTurn}>T{$appState.turnCount}</span>
 						{/if}
 					</span>
 				</button>
