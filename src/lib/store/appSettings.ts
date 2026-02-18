@@ -20,6 +20,8 @@ interface AppSettings {
 	sixPlayerLayout: 'one' | 'two';
 	// whether to enable haptic feedback (vibration) for certain actions like incrementing/decrementing life totals (default is true)
 	hapticsEnabled: boolean;
+	// whether to enable gameplay sound effects for major game events (default is true)
+	soundEffectsEnabled: boolean;
 	// app locale (default is 'fr' for French, but it will be overridden by the device locale if it's supported by the app)
 	locale: string;
 	// show a glowing border around the current player's panel
@@ -54,6 +56,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	sixPlayerLayout: 'one',
 	// whether to enable haptic feedback (vibration) for certain actions like incrementing/decrementing life totals (default is true)
 	hapticsEnabled: true,
+	// whether to enable gameplay sound effects for major game events (default is true)
+	soundEffectsEnabled: true,
 	// app locale (default is 'fr' for French, but it will be overridden by the device locale if it's supported by the app)
 	locale: 'fr',
 	// show a glowing border around the current player's panel
@@ -96,6 +100,10 @@ export const setPreventScreenSleep = (preventScreenSleep: boolean) => {
 
 export const setHapticsEnabled = (hapticsEnabled: boolean) => {
 	appSettings.update((data) => ({ ...data, hapticsEnabled }));
+};
+
+export const setSoundEffectsEnabled = (soundEffectsEnabled: boolean) => {
+	appSettings.update((data) => ({ ...data, soundEffectsEnabled }));
 };
 
 export const setEnableCurrentPlayerGlow = (enable: boolean) => {

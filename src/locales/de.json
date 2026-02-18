@@ -95,6 +95,7 @@
     "commander_damage_help": "Verfolgen Sie den Schaden, der vom Kommandanten jedes Spielers erhalten wurde. Ein Spieler verliert, wenn er 21+ Kampfschaden von einem einzelnen Kommandanten erhält.",
     "damage_from_player": "Schaden von Spieler:",
     "haptic_feedback": "Haptisches Feedback",
+    "sound_effects": "Soundeffekte",
     "turn_timer": "Runden-Timer",
     "turn_timer_enable": "Runden-Timer aktivieren",
     "turn_timer_enabled": "Runden-Timer aktiviert",

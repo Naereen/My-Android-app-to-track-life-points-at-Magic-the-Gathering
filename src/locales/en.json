@@ -97,6 +97,7 @@
     "commander_damage_help": "Track damage received from each player's commander. A player loses when taking 21+ combat damage from a single commander.",
     "damage_from_player": "Damage from Player:",
     "haptic_feedback": "Haptic feedback",
+    "sound_effects": "Sound effects",
     "turn_timer": "Turn timer",
     "turn_timer_enable": "Enable per-turn timer",
     "turn_timer_enabled": "Per-turn timer enabled",

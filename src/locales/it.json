@@ -97,6 +97,7 @@
     "commander_damage_help": "Tieni traccia del danno ricevuto dal comandante di ogni giocatore. Un giocatore perde quando riceve 21+ danni da combattimento da un singolo comandante.",
     "damage_from_player": "Danno dal giocatore:",
     "haptic_feedback": "Feedback aptico",
+    "sound_effects": "Effetti sonori",
     "turn_timer": "Timer per turno",
     "turn_timer_enable": "Abilita timer per turno",
     "turn_timer_enabled": "Timer per turno abilitato",

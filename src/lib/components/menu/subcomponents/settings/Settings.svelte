@@ -22,7 +22,8 @@
 	import {
 		setAllowNegativeLife,
 		setPreventScreenSleep,
-		setHapticsEnabled
+		setHapticsEnabled,
+		setSoundEffectsEnabled
 	} from '$lib/store/appSettings';
 	import { setEnableCurrentPlayerGlow, setShowNextPlayerButton } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
@@ -117,6 +118,11 @@
 	const handleHapticsChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setHapticsEnabled(!!target.checked);
+	};
+
+	const handleSoundEffectsChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setSoundEffectsEnabled(!!target.checked);
 	};
 
 	const handleEnableGlowChange = (e: Event) => {
@@ -392,6 +398,20 @@
 					class="h-5 w-5"
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('haptic_feedback') || 'Enable haptic feedback'}</span>
+			</label>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.soundEffectsEnabled}
+					on:change={handleSoundEffectsChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('sound_effects') || 'Sound effects'}</span>
 			</label>
 		</div>
 

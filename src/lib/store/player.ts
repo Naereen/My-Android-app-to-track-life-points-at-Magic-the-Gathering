@@ -5,6 +5,7 @@ import { showConfirm, selectRandomPlayer } from '$lib/store/modal';
 import { setCurrentTurn, appState } from './appState';
 import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
+import { playGameplaySound } from '$lib/utils/gameplaySound';
 // import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -280,6 +281,48 @@ const getInitialPlayers = (): App.Player.Data[] => {
 
 export const players: Writable<App.Player.Data[]> = persist('players', getInitialPlayers());
 
+const isEliminated = (player: App.Player.Data) => {
+	const globalAllowNegative = get(appSettings).allowNegativeLife || false;
+	const allowNegative = globalAllowNegative || !!player.allowNegativeLife;
+	const maxCommanderDamage = Math.max(0, ...(player.statusEffects?.commanderDamage ?? []));
+	return (!allowNegative && player.lifeTotal <= 0) || player.statusEffects?.ko === true || maxCommanderDamage >= 21;
+};
+
+const alivePlayersCount = (list: App.Player.Data[]) => {
+	const count = get(appSettings).playerCount;
+	return list.slice(0, count).filter((player) => !isEliminated(player)).length;
+};
+
+const playEliminationSoundsIfNeeded = (beforePlayers: App.Player.Data[], afterPlayers: App.Player.Data[]) => {
+	const beforeById = new Map(beforePlayers.map((player) => [player.id, player]));
+	const trackedAfterPlayers = afterPlayers.slice(0, get(appSettings).playerCount);
+
+	const koOccurred = trackedAfterPlayers.some((player) => {
+		const beforePlayer = beforeById.get(player.id);
+		if (!beforePlayer) return false;
+		return !isEliminated(beforePlayer) && isEliminated(player);
+	});
+
+	if (koOccurred) {
+		playGameplaySound('ko');
+	}
+
+	const beforeAlive = alivePlayersCount(beforePlayers);
+	const afterAlive = alivePlayersCount(afterPlayers);
+	if (beforeAlive > 1 && afterAlive === 1) {
+		playGameplaySound('victory');
+	}
+};
+
+const updatePlayersAndPlayEliminationSounds = (
+	updater: (currentPlayers: App.Player.Data[]) => App.Player.Data[]
+) => {
+	const beforePlayers = get(players);
+	const afterPlayers = updater(beforePlayers);
+	players.set(afterPlayers);
+	playEliminationSoundsIfNeeded(beforePlayers, afterPlayers);
+};
+
 export const setPlayerColor = (playerId: number, color: string) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -347,7 +390,7 @@ export const setPlayerBackgroundImage = (
 };
 
 export const setPlayerStatusBoolean = (playerId: number, key: string, value: boolean) => {
-	players.update((currentPlayers) => {
+	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
 		// If setting a unique status (monarch/initiative) to true,
 		// remove it from all other players so only one has it.
 		const uniqueKeys = ['monarch', 'initiative'];
@@ -469,6 +512,9 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 
 	// Apply the life total change: when commander damage increases, subtract life; when it decreases, add life back
 	if (delta !== 0) {
+		if (Math.abs(delta) > 0) {
+			playGameplaySound(delta > 0 ? 'bigCommanderDown' : 'bigCommanderUp');
+		}
 		// setPlayerLifeTotal expects an amount to add to the life total (positive adds, negative subtracts)
 		// We want lifeTotal -= delta, so pass -delta
 		setPlayerLifeTotal(playerId, -delta);
@@ -670,7 +716,7 @@ function shuffle(array: any[]) {
 }
 
 export const setPlayerLifeTotal = (playerId: number, amount: number) => {
-	players.update((currentPlayers) => {
+	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
 				return {
@@ -697,7 +743,7 @@ export const setPlayerLifeAbsolute = (playerId: number, value: number) => {
 	const diff = newLifeTotal - player.lifeTotal;
 
 	// Update the life total
-	players.update((currentPlayers) => {
+	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
 		return currentPlayers.map((p) => {
 			if (p.id === playerId) {
 				return {
@@ -732,7 +778,7 @@ export const manageLifeTotal = (
 		vibrate(40);
 	}
 
-	players.update((currentPlayers) => {
+	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
 				let newLifeTotal = player.lifeTotal;
@@ -760,6 +806,10 @@ export const manageLifeTotal = (
 			return player;
 		});
 	});
+
+	if (amount > 5) {
+		playGameplaySound(type === 'add' ? 'bigLifeUp' : 'bigLifeDown');
+	}
 
 	// Only run this if life total is within bounds
 	// recompute withinBounds according to allowed min when needed

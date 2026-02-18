@@ -354,7 +354,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 ### Improve feedback while using the app: haptics/vibrations, and sounds?
 
-- [ ] Sound effects on button clicks (big life up/down (more than +5/-5), big commander damage up/down (more than +5/-5), K.O. of a player, victory of the last remaining at the table, etc.). Should be enabled by default, but should be possible to disable them from the settings!
+- [x] Sound effects on button clicks (big life up/down (more than +5/-5), big commander damage up/down (more than +5/-5), K.O. of a player, victory of the last remaining at the table, etc.). Should be enabled by default, but should be possible to disable them from the settings!
 
 - [x] Haptic feedback on button clicks (life up/down, commander damage up/down, etc.). TODO: Needs more testing on mobile devices, especially on Apple devices, as I don't have any for testing. It is enabled by default, and it is possible to disable it from the settings!
 
@@ -376,11 +376,16 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 - [x] Add the "Start your Engine / Your Speed" emblem (from Aetherdrift) as a status effect that can be tracked for each player, with a small icon. It is a special status that can be given to one player at a time, and it has some special rules. The icon for this status effect should be the `StartYourEngineSpeed.svelte` object. The number associated with this status is between 0 and 4, and starts at 0. It cannot go down in the rules of the MTG game, but it should be possible to decrease it in the app (in case of a mistake). It is _not_ a unique status, every player has his own "Start your Engine / Your Speed" count, from 0 to 4.
 
-## Variants to implement here, not existing in Lifetap
+## Variants to implement here, not existing in Lifetap or other apps
 
 - [ ] The "scry0 / scry1 scry1 / scry2" special rule for turn 1 in 4-player mode, or ".. scry 3" for 5-player mode
+  - [ ] Implement a special button in the main menu, to track the scry number for each player, and show it on the player panel (e.g. "scry 0", "scry 1", "scry 2", "scry 3"), with a small icon for each scry number (e.g. a small eye icon with the number inside). This is a very specific rule for multiplayer games, and it can be useful to track it in the app, especially for players who are new to multiplayer games and may forget about this rule.
+
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
+  - [ ] TODO: Ask @Julien about his files, to see if he would agree to let me use them and embem them in the app!
+
 - [ ] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities)
+
 - [ ] Shogun / Treachery support (hidden role to check once when the game starts, and hidden after that)
 
 ## Customize the probabilities of whose player starts the game
