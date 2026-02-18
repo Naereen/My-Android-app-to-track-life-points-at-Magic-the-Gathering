@@ -47,9 +47,9 @@
         class:w-9={orientation === 'left' || orientation === 'right'}
         class:h-9={(orientation === 'left' || orientation === 'right') && numberOfPlayers <= 4}
         class="max-w-13 max-h-11 rounded-md overflow-hidden relative border border-black/60 flex items-center justify-center"
-        style={getBgStyle(j)}
+        style={orientation === 'left' ? getBgStyle(numberOfPlayers - 1 - j) : getBgStyle(j)}
         style:transform={`rotate(${bgRotation})`}
-        title={$players[j]?.playerName}
+        title={orientation === 'left' ? $players[numberOfPlayers - 1 - j]?.playerName : $players[j]?.playerName}
         on:click={() => openPlayerModal(playerIndex + 1, 'commander')}
         role="button"
         >
@@ -57,10 +57,10 @@
                 class:rotation-270={orientation === 'left' || orientation === 'right'}
                 class:-rotation-90={orientation === 'up'}
             >
-                {#if j === playerIndex && ($players[j]?.statusEffects?.commanderDamage?.[j] ?? -1) <= 0}
+                {#if (orientation === 'left' ? numberOfPlayers - 1 - j : j) === playerIndex && ($players[orientation === 'left' ? numberOfPlayers - 1 - j : j]?.statusEffects?.commanderDamage?.[orientation === 'left' ? numberOfPlayers - 1 - j : j] ?? -1) <= 0}
                     {meString}
                 {:else}
-                    {$players[playerIndex]?.statusEffects?.commanderDamage?.[j] ?? 0}
+                    {$players[playerIndex]?.statusEffects?.commanderDamage?.[orientation === 'left' ? numberOfPlayers - 1 - j : j] ?? 0}
                 {/if}
             </div>
         </div>
