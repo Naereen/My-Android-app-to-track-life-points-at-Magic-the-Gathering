@@ -21,12 +21,12 @@ const config: CapacitorConfig = {
     },
     StatusBar: {
       overlaysWebView: false,
-      style: "DEFAULT", // "DARK" ou "LIGHT" selon votre thème
+      style: "DARK", // "DARK" ou "LIGHT" selon votre thème
       backgroundColor: "#062911ff"
     },
     SystemBars: {
       insetsHandling: "disable", // Laisser les barres système gérer les insets pour éviter les problèmes de mise en page
-      style: "DEFAULT", // "DARK" ou "LIGHT" selon votre thème
+      style: "DARK", // "DARK" ou "LIGHT" selon votre thème
       hidden: false, // On ne cache pas les barres pour permettre l'accès aux gestes de navigation, mais on les stylise pour qu'elles se fondent dans le thème de l'app
       // hidden: true, // On cache les barres (pour une expérience plus immersive)
       animation: "NONE"

@@ -37,8 +37,6 @@
 <!-- FIXME: update the layout of the minimap of each players, to show like in the main app -->
 <div
     class="items-center gap-0 pointer-events-auto flex items-center justify-center"
-    class:grid={(numberOfPlayers > 4 && layout !== 'two-by-two' && (orientation === 'left' || orientation === 'right'))}
-    class:grid-cols-3={(numberOfPlayers > 4 && layout !== 'two-by-two' && (orientation === 'left' || orientation === 'right'))}
 >
     {#each Array(numberOfPlayers) as _, j}
         <div
