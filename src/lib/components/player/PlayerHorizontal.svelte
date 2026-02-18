@@ -46,6 +46,11 @@
 	let timeout: number;
 	let isHolding = false;
 	let holdingType: App.Player.LifeMoveType | null = null;
+	const MOUSE_AFTER_TOUCH_GUARD_MS = 700;
+	let lastTouchAt = 0;
+
+	const isLikelySyntheticMouseEvent = () =>
+		Date.now() - lastTouchAt < MOUSE_AFTER_TOUCH_GUARD_MS;
 	$: innerWidth = 0;
 	$: isMobile = isMobileDevice(innerWidth);
 	$: numberOfPlayers = $appSettings.playerCount;
@@ -154,6 +159,9 @@
 		($appSettings.playerCount >= 5 && id >= 3);
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
+		if (isLikelySyntheticMouseEvent()) {
+			return;
+		}
 		if (!isMobile) {
 			isHolding = true;
 			holdingType = type;
@@ -172,6 +180,9 @@
 	};
 
 	const handleMouseUp = (type: App.Player.LifeMoveType) => {
+		if (isLikelySyntheticMouseEvent()) {
+			return;
+		}
 		if (!isMobile) {
 			if (interval) {
 				clearInterval(interval);
@@ -188,6 +199,7 @@
 	};
 
 	const handleTouchStart = (type: App.Player.LifeMoveType) => {
+		lastTouchAt = Date.now();
 		isHolding = true;
 		holdingType = type;
 		setPlayerHighlighted(id, true);
@@ -204,6 +216,7 @@
 	};
 
 	const handleTouchEnd = (type: App.Player.LifeMoveType) => {
+		lastTouchAt = Date.now();
 		if (interval) {
 			clearInterval(interval);
 			interval = 0;
@@ -218,6 +231,7 @@
 	};
 
 	const handleCancelHold = () => {
+		lastTouchAt = Date.now();
 		// Called on mouseleave / touchcancel — stop repeating and remove highlight without applying a final single change
 		if (interval) {
 			clearInterval(interval);
