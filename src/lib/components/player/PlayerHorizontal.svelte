@@ -293,7 +293,6 @@
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}
 	class:h-full={!$appState.isMenuOpen}
-	class:opacity-35={$players[index].highlighted}
 	class:bg-player-dark={isDead}
 >
 	<!-- Overlay au-dessus du background (non-interactif) -->
@@ -305,7 +304,6 @@
 	<div
 		class="flex w-full rounded-2xl flex-grow h-6"
 		class:h-full={!$appState.isMenuOpen}
-		class:opacity-35={$players[index].highlighted}
 		class:bg-player-dark={isDead}
 		style="background: ${bg};"
 	>
