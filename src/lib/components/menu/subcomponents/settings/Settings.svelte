@@ -7,6 +7,9 @@
 		setFourPlayerLayout,
 		setSixPlayerLayout,
 		setShowEmblemMenu,
+		setShowVanguardMenu,
+		setVanguardModeEnabled,
+		setVanguardDraftThree,
 		setShowGameHistoryMenu,
 		setAppLocale
 	} from '$lib/store/appSettings';
@@ -33,7 +36,7 @@
 		const confirmReset = await showConfirm($_('window_confirm_reset_local_storage'));
 		if (!confirmReset) return;
 		try {
-			['appSettings', 'resourceCounter', 'appState', 'players', 'emblemState', 'gameHistory'].forEach((k) =>
+			['appSettings', 'resourceCounter', 'appState', 'players', 'emblemState', 'vanguardState', 'gameHistory'].forEach((k) =>
 				localStorage.removeItem(k)
 			);
 		} catch (e) {
@@ -152,6 +155,21 @@
 	const handleShowEmblemMenuChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowEmblemMenu(!!target.checked);
+	};
+
+	const handleShowVanguardMenuChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setShowVanguardMenu(!!target.checked);
+	};
+
+	const handleVanguardModeEnabledChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setVanguardModeEnabled(!!target.checked);
+	};
+
+	const handleVanguardDraftThreeChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setVanguardDraftThree(!!target.checked);
 	};
 
 	const handleShowGameHistoryMenuChange = (e: Event) => {
@@ -463,6 +481,52 @@
 					class="h-5 w-5"
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('show_emblem_menu_button') || 'Show emblem menu button'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.showVanguardMenu}
+					on:change={handleShowVanguardMenuChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('show_vanguard_menu_button') || 'Show Vanguard menu button'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.vanguardModeEnabled}
+					on:change={handleVanguardModeEnabledChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('vanguard_mode_enabled') || 'Enable Vanguard mode on new game'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.vanguardDraftThree}
+					on:change={handleVanguardDraftThreeChange}
+					class="h-5 w-5"
+					disabled={!$appSettings.vanguardModeEnabled}
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('vanguard_draft_three') || 'Variant: 3 Vanguard cards then keep one'}</span>
 			</label>
 		</div>
 

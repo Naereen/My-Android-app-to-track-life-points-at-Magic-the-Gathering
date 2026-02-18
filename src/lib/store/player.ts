@@ -7,6 +7,7 @@ import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
 import { playGameplaySound } from '$lib/utils/gameplaySound';
 import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
+import { searchVanguardCards, type ScryfallEmblemCard } from '$lib/utils/scryfall';
 // import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -162,6 +163,8 @@ const defaultPlayers: App.Player.Data[] = [
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
+		vanguard: null,
+		vanguardChoices: [],
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -178,6 +181,8 @@ const defaultPlayers: App.Player.Data[] = [
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
+		vanguard: null,
+		vanguardChoices: [],
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -194,6 +199,8 @@ const defaultPlayers: App.Player.Data[] = [
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
+		vanguard: null,
+		vanguardChoices: [],
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -210,6 +217,8 @@ const defaultPlayers: App.Player.Data[] = [
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
+		vanguard: null,
+		vanguardChoices: [],
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -226,6 +235,8 @@ const defaultPlayers: App.Player.Data[] = [
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
+		vanguard: null,
+		vanguardChoices: [],
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -242,6 +253,8 @@ const defaultPlayers: App.Player.Data[] = [
 		tempLifeDiff: 0,
 		poison: 0,
 		statusEffects: {},
+		vanguard: null,
+		vanguardChoices: [],
 		allowNegativeLife: false,
 		isFirst: false,
 		highlighted: false,
@@ -357,6 +370,97 @@ export const setPlayerAllowNegative = (playerId: number, allow: boolean) => {
 				};
 			}
 			return player;
+		});
+	});
+};
+
+export const setPlayerVanguard = (playerId: number, vanguard: ScryfallEmblemCard | null) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					vanguard
+				};
+			}
+			return player;
+		});
+	});
+};
+
+export const setPlayerVanguardChoices = (playerId: number, choices: ScryfallEmblemCard[]) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id === playerId) {
+				return {
+					...player,
+					vanguardChoices: choices
+				};
+			}
+			return player;
+		});
+	});
+};
+
+const shuffleCards = (array: ScryfallEmblemCard[]) => {
+	const copy = [...array];
+	for (let i = copy.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[copy[i], copy[j]] = [copy[j], copy[i]];
+	}
+	return copy;
+};
+
+export const assignRandomVanguardsForGame = async () => {
+	const settings = get(appSettings);
+	const totalPlayers = settings.playerCount || 4;
+	if (!settings.vanguardModeEnabled || totalPlayers <= 0) {
+		players.update((currentPlayers) =>
+			currentPlayers.map((player) => ({
+				...player,
+				vanguard: null,
+				vanguardChoices: []
+			}))
+		);
+		return;
+	}
+
+	const choicesPerPlayer = settings.vanguardDraftThree ? 3 : 1;
+	const needed = totalPlayers * choicesPerPlayer;
+	const pool = await searchVanguardCards('', Math.max(needed + 20, 80));
+	if (!pool.length) return;
+
+	const shuffled = shuffleCards(pool);
+	if (shuffled.length < needed) return;
+
+	const selectedByPlayer: Record<number, { selected: ScryfallEmblemCard | null; choices: ScryfallEmblemCard[] }> = {};
+
+	for (let playerIndex = 0; playerIndex < totalPlayers; playerIndex++) {
+		const start = playerIndex * choicesPerPlayer;
+		const choices = shuffled.slice(start, start + choicesPerPlayer);
+		const selected =
+			choices.length > 0 ? choices[Math.floor(Math.random() * choices.length)] : null;
+		selectedByPlayer[playerIndex + 1] = { selected, choices };
+	}
+
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id > totalPlayers) {
+				return {
+					...player,
+					vanguard: null,
+					vanguardChoices: []
+				};
+			}
+
+			const assignment = selectedByPlayer[player.id];
+			if (!assignment) return player;
+
+			return {
+				...player,
+				vanguard: assignment.selected,
+				vanguardChoices: assignment.choices
+			};
 		});
 	});
 };
@@ -742,6 +846,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 				lifeTotal: startingLifeTotal,
 				tempLifeDiff: 0, // Reset tempLifeDiff to 0
 				poison: 0,
+				vanguard: null,
+				vanguardChoices: [],
 				statusEffects: {
 					commanderDamage: [] // Reset commander damage
 				}
@@ -783,6 +889,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 			});
 		});
 	}
+
+	await assignRandomVanguardsForGame();
 
 	spinToSelectFirstPlayer();
 };

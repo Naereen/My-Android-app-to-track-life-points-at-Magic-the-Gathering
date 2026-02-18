@@ -30,6 +30,12 @@ interface AppSettings {
 	showNextPlayerButton: boolean;
 	// show emblem menu button in the main menu
 	showEmblemMenu: boolean;
+	// show vanguard menu button in the main menu
+	showVanguardMenu: boolean;
+	// enable vanguard mode when starting/resetting a game
+	vanguardModeEnabled: boolean;
+	// optional paper variant: each player gets 3 random vanguards and keeps one
+	vanguardDraftThree: boolean;
 	// show game history menu button in the main menu
 	showGameHistoryMenu: boolean;
 	// turn timer: enable per-turn timer (optional)
@@ -68,6 +74,12 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	showNextPlayerButton: true,
 	// show emblem menu button in the main menu
 	showEmblemMenu: false,
+	// show vanguard menu button in the main menu
+	showVanguardMenu: false,
+	// enable vanguard mode when starting/resetting a game
+	vanguardModeEnabled: false,
+	// optional paper variant: each player gets 3 random vanguards and keeps one
+	vanguardDraftThree: false,
 	// show game history menu button in the main menu
 	showGameHistoryMenu: false,
 	// turn timer: enable per-turn timer (optional)
@@ -120,6 +132,18 @@ export const setShowNextPlayerButton = (show: boolean) => {
 
 export const setShowEmblemMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showEmblemMenu: show }));
+};
+
+export const setShowVanguardMenu = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showVanguardMenu: show }));
+};
+
+export const setVanguardModeEnabled = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, vanguardModeEnabled: enabled }));
+};
+
+export const setVanguardDraftThree = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, vanguardDraftThree: enabled }));
 };
 
 export const setShowGameHistoryMenu = (show: boolean) => {

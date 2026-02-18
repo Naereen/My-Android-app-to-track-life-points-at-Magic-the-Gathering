@@ -184,6 +184,35 @@ export async function searchEmblemCards(
 	}
 }
 
+export async function searchVanguardCards(
+	query: string,
+	limit = 120
+): Promise<ScryfallEmblemCard[]> {
+	const clean = query?.trim() ?? '';
+	const composed =
+		clean.length > 0 ? `(${clean}) t:vanguard game:paper` : 't:vanguard game:paper';
+
+	if (!composed || composed.trim().length === 0) return [];
+
+	const q = encodeURIComponent(composed);
+	const url = `https://api.scryfall.com/cards/search?q=${q}&order=name&unique=cards`;
+
+	try {
+		const data = await fetchJson(url);
+		if (!data || !Array.isArray(data.data)) return [];
+
+		const mapped = data.data
+			.slice(0, limit)
+			.map((c: any) => normalizeEmblemCard(c))
+			.filter((card: ScryfallEmblemCard | null): card is ScryfallEmblemCard => card !== null);
+
+		return mapped;
+	} catch (err) {
+		console.warn('Scryfall vanguard search failed', err);
+		return [];
+	}
+}
+
 export async function fetchCardBySetCollector(
 	setCode: string,
 	collectorNumber: string
@@ -203,4 +232,10 @@ export async function fetchCardBySetCollector(
 	}
 }
 
-export default { searchCards, randomCards, searchEmblemCards, fetchCardBySetCollector };
+export default {
+	searchCards,
+	randomCards,
+	searchEmblemCards,
+	searchVanguardCards,
+	fetchCardBySetCollector
+};

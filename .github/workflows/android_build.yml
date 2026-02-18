@@ -47,6 +47,9 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
+      - name: Generate Capacitor Assets
+        run: npx @capacitor/assets generate --android
+
       - name: Extract Version from Tag
         id: vars
         run: |

@@ -385,14 +385,14 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
   - [ ] TODO: Ask @Julien about his files, to see if he would agree to let me use them and embem them in the app!
 
-- [ ] TODO: Vanguard support (special cards that modify starting life total and starting hand, and give static abilities). See [issue #21](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/21)
+- [x] TODO: Vanguard support (special cards that modify starting life total and starting hand, and give static abilities). See [issue #21](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/21)
   Pretty much like what I did for the "Emblems & Dungeons" menu, add an optional Vanguard menu and mode.
   If enabled, at the beginning, each player receives a randomly chosen Vanguard (random choice, uniform without replacement).
   Then, in this Vanguard menu, each player can see the name of the role he/she had received, and also open in large view (like `EmblemModal`) his/her current Vanguard role.
 
-  - [ ] Include a link to <https://mtg.wiki/page/Vanguard> ?
-  - [ ] Also include a way to search for a specific Vanguard card? Exactly like in the Emblems/Dungeons panel menu.
-  - [ ] Optionally: maybe receive 3 Vanguard cards at first, and keep only one? It's what I do, when I play this mode in paper myself. I like this variant.
+  - [x] Include a link to <https://mtg.wiki/page/Vanguard> ?
+  - [x] Also include a way to search for a specific Vanguard card? Exactly like in the Emblems/Dungeons panel menu.
+  - [x] Optionally: maybe receive 3 Vanguard cards at first, and keep only one? It's what I do, when I play this mode in paper myself. I like this variant.
 
 
 - [ ] Shogun / Treachery support (hidden role to check once when the game starts, and hidden after that)
