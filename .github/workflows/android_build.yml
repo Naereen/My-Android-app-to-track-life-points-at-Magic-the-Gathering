@@ -1,0 +1,73 @@
+name: Android Build
+
+on:
+  push:
+    tags:
+      - 'v*' # Se déclenche lors du push de tags type v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build SvelteKit Project
+        run: npm run build # Génère le dossier ./build
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Extract Version from Tag
+        id: vars
+        run: |
+          # Récupère le nom du tag (ex: v1.2.3 -> 1.2.3)
+          echo "tag=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          # Récupère le nombre total de commits pour le versionCode
+          echo "count=$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build Android APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease
+        env:
+          ANDROID_VERSION_NAME: ${{ steps.vars.outputs.tag }}
+          ANDROID_VERSION_CODE: ${{ steps.vars.outputs.count }}
+
+      - name: Sign APK
+        id: sign_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_CONTENT }}
+          alias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Create Release and Upload APK
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.sign_app.outputs.signedReleaseFile }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
