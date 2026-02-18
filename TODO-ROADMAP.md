@@ -385,7 +385,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
   - [ ] TODO: Ask @Julien about his files, to see if he would agree to let me use them and embem them in the app!
 
-- [x] TODO: Vanguard support (special cards that modify starting life total and starting hand, and give static abilities). See [issue #21](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/21)
+- [x] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities). See [issue #21](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/21)
   Pretty much like what I did for the "Emblems & Dungeons" menu, add an optional Vanguard menu and mode.
   If enabled, at the beginning, each player receives a randomly chosen Vanguard (random choice, uniform without replacement).
   Then, in this Vanguard menu, each player can see the name of the role he/she had received, and also open in large view (like `EmblemModal`) his/her current Vanguard role.
