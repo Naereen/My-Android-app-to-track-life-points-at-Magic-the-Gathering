@@ -1049,10 +1049,13 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	});
 
 	// Shuffle the array of players, if randomizeSeats is enabled
-	// FIXME: this does not work YET
 	if (randomizeSeats) {
 		players.update((currentPlayers) => {
-			return shuffle([...currentPlayers]);
+			// only shuffle the active players, keep the useless slots at the end of the list
+			const activeCount = get(appSettings).playerCount || 4;
+			const activePlayers = currentPlayers.slice(0, activeCount);
+			const inactivePlayers = currentPlayers.slice(activeCount);
+			return [...shuffle(activePlayers), ...inactivePlayers];
 		});
 		// Reset the player.id for each player?
 		players.update((currentPlayers) => {

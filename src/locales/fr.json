@@ -24,7 +24,7 @@
     "window_confirm_change_player_count": "Voulez-vous recommencer avec ce nombre de joueurs ?",
     "window_confirm_reset_game": "Êtes-vous sûr de vouloir recommencer la partie ?",
     "reset_player_profiles_checkbox": "Réinitialiser également les profils des joueurs (couleurs)",
-    "reset_player_profiles_checkbox_plus_randomize_seats": "Et mélanger aussi les positions des joueurs ? (FIXME: work in progress!)",
+    "reset_player_profiles_checkbox_plus_randomize_seats": "Et mélanger aussi les positions des joueurs ?",
     "reset_player_profiles_checkbox_plus_clear_profile": "Et effacer leur profil (nom et arrière-plan) ?",
     "player_background_color": "Gradients de couleurs",
     "clear_gradient": "Effacer",
