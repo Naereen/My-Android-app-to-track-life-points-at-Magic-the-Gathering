@@ -124,14 +124,14 @@
 			{#if $gameHistory.length === 0}
 				<div class="text-center text-gray-300">{$_('game_history_empty') || 'No changes recorded yet.'}</div>
 			{:else}
-				<ul class="space-y-1.5 flex flex-col-reverse">
+				<ul class="space-y-1.5 space-y-reverse flex flex-col-reverse">
 					{#each $gameHistory as entry (entry.id)}
 						<li class="bg-gray-900/95 border border-gray-800 rounded-lg px-2.5 py-2 text-sm">
 							<div class="flex gap-2">
-								<div class={`mt-[1px] w-4 text-center text-xl select-none ${iconClassName(entry)}`}>{iconGlyph(entry)}</div>
+								<div class={`mt-auto mb-auto w-8 text-center text-3xl select-none ${iconClassName(entry)}`}>{iconGlyph(entry)}</div>
 								<div class="min-w-0 flex-1">
-									<div class="text-gray-400 text-[11px]">{formatTime(entry.timestamp)}</div>
-									<div class="break-words">{formatEntry(entry)}</div>
+									<div class="text-gray-400 text-1.25rem">{formatTime(entry.timestamp)}</div>
+									<div class="break-words text-1.75rem">{formatEntry(entry)}</div>
 								</div>
 							</div>
 						</li>

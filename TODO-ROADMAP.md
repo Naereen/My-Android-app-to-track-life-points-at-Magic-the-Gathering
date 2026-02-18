@@ -385,7 +385,15 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
   - [ ] TODO: Ask @Julien about his files, to see if he would agree to let me use them and embem them in the app!
 
-- [ ] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities). See [issue #21](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/21)
+- [ ] TODO: Vanguard support (special cards that modify starting life total and starting hand, and give static abilities). See [issue #21](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/21)
+  Pretty much like what I did for the "Emblems & Dungeons" menu, add an optional Vanguard menu and mode.
+  If enabled, at the beginning, each player receives a randomly chosen Vanguard (random choice, uniform without replacement).
+  Then, in this Vanguard menu, each player can see the name of the role he/she had received, and also open in large view (like `EmblemModal`) his/her current Vanguard role.
+
+  - [ ] Include a link to <https://mtg.wiki/page/Vanguard> ?
+  - [ ] Also include a way to search for a specific Vanguard card? Exactly like in the Emblems/Dungeons panel menu.
+  - [ ] Optionally: maybe receive 3 Vanguard cards at first, and keep only one? It's what I do, when I play this mode in paper myself. I like this variant.
+
 
 - [ ] Shogun / Treachery support (hidden role to check once when the game starts, and hidden after that)
 
@@ -401,10 +409,10 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 ### Game history and undo functionality
 
-- [ ] Store in a log/stack/queue all the changes to each player's lifeTotal, the Commander damages, the poison and all the status effects modifications... So that this history can be displayed in the menu (in a new menu), if one player is unsure about the recent changes that concern their lifeTotal (or any other thing that is tracked through the app).
-  - [ ] The menu that displays this detailed log (or game history) should also be hidden by default, and enabled after a tweak on the settings.
-  - [ ] NOT YET, IN THE FUTURE: The menu that displays this detailed log (or game history) should also allow to "undo" the last change, or to go back to a specific point in the history, by clicking on the corresponding entry in the log. This can be a very useful feature, especially for players who are new to the game and may make mistakes when tracking their life total or other status effects, as it allows them to easily correct their mistakes without having to manually adjust the values again.
-  - [ ] See [issue #15](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/15)
+- [x] Store in a log/stack/queue all the changes to each player's lifeTotal, the Commander damages, the poison and all the status effects modifications... So that this history can be displayed in the menu (in a new menu), if one player is unsure about the recent changes that concern their lifeTotal (or any other thing that is tracked through the app).
+  - [x] The menu that displays this detailed log (or game history) should also be hidden by default, and enabled after a tweak on the settings.
+  - [ ] TODO: NOT YET, IN THE FUTURE: The menu that displays this detailed log (or game history) should also allow to "undo" the last change, or to go back to a specific point in the history, by clicking on the corresponding entry in the log. This can be a very useful feature, especially for players who are new to the game and may make mistakes when tracking their life total or other status effects, as it allows them to easily correct their mistakes without having to manually adjust the values again.
+  - [x] See [issue #15](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/15)
 
 ### Other
 
