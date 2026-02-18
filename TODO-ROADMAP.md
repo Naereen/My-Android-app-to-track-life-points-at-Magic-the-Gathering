@@ -319,6 +319,13 @@ I've also tried using the PWA Builder website, but the generated apk file couldn
 
 ## New features to implement
 
+### GIF as backgrounds
+
+> See [issue #13](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/13).
+
+- [ ] Like in LifeLinked app, also allow to chose a GIF (from Tenor GIF?) as a background image for players, in addition to the current options of solid colors, color gradients and card images. This can be a fun and visually appealing feature, as it allows to have animated backgrounds for the player panels, which can make the app more lively and enjoyable to use. It can also be useful for players who want to have a more personalized and unique background for their player panel, by choosing a GIF that matches their personality or their favorite cards/characters.
+- [ ] Use the KLIPY GIF API, with the key stored in `klipy_api.key` (where? in the home folder of this repository, or `~/.klipy_api.key` in the home folder of my user).
+
 ### Improve feedback while using the app: haptics/vibrations, and sounds?
 
 - [ ] Sound effects on button clicks (big life up/down (more than +5/-5), big commander damage up/down (more than +5/-5), K.O. of a player, victory of the last remaining at the table, etc.). Should be enabled by default, but should be possible to disable them from the settings!

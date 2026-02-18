@@ -47,6 +47,36 @@
 	let isSearching = false;
 	let hasSearched = false;
 
+	// search mode: false = cards (Scryfall), true = GIFs (Klipy)
+	let gifMode = false;
+	let klipyKeyPresent = false;
+
+	const checkKlipyKey = async () => {
+		// fast check for Vite env
+		try {
+			// @ts-ignore
+			if (import.meta.env && import.meta.env.VITE_KLIPY_API_KEY) {
+				klipyKeyPresent = true;
+				return;
+			}
+		} catch {}
+
+		try {
+			const resp = await fetch('/klipy_api.key', { method: 'GET' });
+			if (resp.ok) {
+				const txt = (await resp.text()).trim();
+				klipyKeyPresent = txt.length > 0;
+				return;
+			}
+		} catch (e) {}
+
+		klipyKeyPresent = false;
+	};
+
+	$: if (gifMode) {
+		checkKlipyKey();
+	}
+
 	// allow choosing two images
 	let doubleBackground = false;
 	let bgSelections: string[] = [];
@@ -59,6 +89,7 @@
 	$: setCommanderDamageString = String($_('set_commander_damage'));
 
 	import { searchCards, randomCards } from '$lib/utils/scryfall';
+	import { searchGifs } from '$lib/utils/klipy';
 	import { setPlayerBackgroundImage } from '$lib/store/player';
 	import { tick } from 'svelte';
 
@@ -238,7 +269,18 @@
 			return;
 		}
 		isSearching = true;
-		searchResults = await searchCards(searchQuery);
+		if (gifMode) {
+			const gifs = await searchGifs(searchQuery);
+			searchResults = gifs.map(g => ({
+				id: g.id,
+				name: g.title,
+				cardImage: g.preview ?? null,
+				image: g.url ?? null,
+				artist: g.provider ?? 'GIF'
+			}));
+		} else {
+			searchResults = await searchCards(searchQuery);
+		}
 		isSearching = false;
 		hasSearched = true;
 	};
@@ -253,17 +295,25 @@
 			return;
 		}
 
-		// Otherwise, fetch a truly random card from Scryfall
+		// Otherwise, fetch a random item depending on mode
 		try {
 			isSearching = true;
-			// use a broad query so the util can return a random art card
-			const cards = await randomCards('game:paper');
+			if (gifMode) {
+				const gifs = await searchGifs(searchQuery || 'random');
+				if (gifs && gifs.length > 0) {
+					const g = gifs[Math.floor(Math.random() * gifs.length)];
+					chooseBackground(playerId, g.url ?? null, g.provider ?? null, null);
+				}
+			} else {
+				// use a broad query so the util can return a random art card
+				const cards = await randomCards('game:paper');
 				if (cards && cards.length > 0) {
 					const c = cards[0];
 					chooseBackground(playerId, c.image ?? null, c.artist ?? null, c.set_name ?? null);
 				}
+			}
 		} catch (err) {
-			console.warn('Failed to fetch random card', err);
+			console.warn('Failed to fetch random resource', err);
 		} finally {
 			isSearching = false;
 		}
@@ -471,13 +521,13 @@
 								<button
 									class="px-3 py-2 mt-2 bg-blue-500 text-white text-sm rounded-lg"
 									on:click={doSearch}
-									disabled={isSearching}
-									>{isSearching ? $_('scryfall_searching') : $_('scryfall_search')}</button
+									disabled={isSearching || (gifMode && !klipyKeyPresent)}
+									>{isSearching ? $_('scryfall_searching') : gifMode ? 'Search GIFs' : $_('scryfall_search')}</button
 								>
 								<button
 									class="px-3 py-2 bg-purple-600 text-white text-sm rounded-lg"
 									on:click={() => chooseRandom($playerModalData.playerId)}
-									disabled={isSearching}>{$_('scryfall_search_choose_random')}</button
+									disabled={isSearching || (gifMode && !klipyKeyPresent)}>{gifMode ? 'Random GIF' : $_('scryfall_search_choose_random')}</button
 								>
 								<button
 									class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg"
@@ -492,8 +542,14 @@
 							</div>
 						</div>
 						<div class="w-full max-h-60 overflow-auto">
-							{#if searchResults.length === 0}
-								<div class="text-sm text-gray-500">{$_('scryfall_search_noresult')}</div>
+							{#if gifMode && !klipyKeyPresent}
+								<div class="text-sm text-red-600">
+									No Klipy API key found. Create `static/klipy_api.key` with your key, or set `VITE_KLIPY_API_KEY` in your environment.
+								</div>
+							{:else}
+								{#if searchResults.length === 0}
+									<div class="text-sm text-gray-500">{$_('scryfall_search_noresult')}</div>
+								{/if}
 							{/if}
 							{#each searchResults as r}
 								<div class="flex gap-2 mb-3 p-2 border rounded-lg bg-white">
@@ -515,8 +571,8 @@
 										</div>
 									</div>
 									<div class="w-32 flex-shrink-0">
-										{#if r.cardImage}
-											<img src={r.cardImage} alt={r.name} class="w-full h-auto object-cover" />
+										{#if r.cardImage || r.image}
+											<img src={r.cardImage ?? r.image} alt={r.name} class="w-full h-auto object-cover" />
 										{:else}
 											<div class="w-full h-40 bg-gray-200 flex items-center justify-center text-sm">
 												No image
@@ -1100,6 +1156,22 @@
 							</div>
 						</div>
 					{/if}
+				</div>
+				<div class="mt-2 flex gap-2 items-center">
+					<button
+						class="px-3 py-1 rounded-full border"
+						on:click={() => (gifMode = false)}
+						class:font-bold={!gifMode}
+					>
+						{$_('scryfall_search')}
+					</button>
+					<button
+						class="px-3 py-1 rounded-full border"
+						on:click={() => (gifMode = true)}
+						class:font-bold={gifMode}
+					>
+						GIFs
+					</button>
 				</div>
 			</div>
 		</div>
