@@ -64,12 +64,14 @@
 	// FIXME: the bgWidth/bgHeight/bgSize logic is really hacky and doesn't work well in all cases, need to rethink how background images are handled in general
 	// It works fine for 2-player, but for 3+ players it gets really inconsistent and depends on the specific image used, some trial and error is needed to find the right settings for each image
 
-	$: bgWidth = (layout === 'two-by-two') ?
+	$: bgWidth = (!isMobile) ? '200%'
+		: (layout === 'two-by-two') ?
 		(numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
 		: (numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))));
 	// $: bgWidth = '105%';
 
-	$: bgHeight = (layout === 'two-by-two') ?
+	$: bgHeight = (!isMobile) ? '400%'
+		: (layout === 'two-by-two') ?
 		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '100%' : (numberOfPlayers === 4 ? '85%' : '125%')))
 		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '100%' : (numberOfPlayers === 4 ? '125%' : (numberOfPlayers === 5 ? '115%' : '125%'))));
 	// $: bgHeight = '105%';

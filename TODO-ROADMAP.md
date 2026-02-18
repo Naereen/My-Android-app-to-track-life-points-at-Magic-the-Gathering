@@ -241,12 +241,13 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
   - [x] then on my Android tablet
 
 - [ ] Set up deployment to GitHub Releases so that the latest apk file is always available for download: this seems to be hard! I need to find a way to automate the build process, and to upload the generated apk file to GitHub Releases, with a proper versioning system (e.g. using the app version from the `manifest.json` file). This is a crucial step, as it will allow me to easily share the latest version of the app with my friends, and to get feedback from them.
+  - [x] See <https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.2/app-release-signed.apk> for an example of a generated apk file, that is available for download on GitHub Releases.
 
 - [ ] Publish it as a beta on the Google Play Store
 
-BUUUUT so far I'm testing on the PWA installed from Chrome on Android, which works pretty well already!
+BUUUUT so far I'm mainly testing on the PWA installed from Chrome on Android, which works pretty well already!
 
-I've also tried using the PWA Builder website, but the generated apk file couldn't be installed on my phone.
+I've also tried using the [PWA Builder website](https://www.pwabuilder.com/reportcard?site=https://naereen.github.io/My-Android-app-to-track-life-points-at-Magic-the-Gathering/), but the generated apk file couldn't be installed on my phone. No big deal!
 
 ## Better menus and dialogs
 
@@ -384,7 +385,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
   - [ ] TODO: Ask @Julien about his files, to see if he would agree to let me use them and embem them in the app!
 
-- [ ] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities)
+- [ ] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities). See [issue #21](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/21)
 
 - [ ] Shogun / Treachery support (hidden role to check once when the game starts, and hidden after that)
 
@@ -401,6 +402,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 ### Game history and undo functionality
 
 - [ ] Store in a log/stack/queue all the changes to each player's lifeTotal, so that this history can be displayed in the menu, if one player is unsure about their recent lifeTotal changes.
+  - [ ] See [issue #15](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/15)
 
 ### Other
 
