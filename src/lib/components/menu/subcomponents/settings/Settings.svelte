@@ -695,7 +695,7 @@
 		<div class="w-full text-center text-gray-300 mt-4 mb-8 px-6">
 			<div class="text-white text-2xl mb-2 font-bold">{$_('about_title')}</div>
 			<div class="text-base mb-1">
-				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.4.5'}
+				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.4.9'}
 			</div>
 			<div class="text-base mb-1">{$_('about_author')}: <a class="text-blue-400 underline text-base" href="https://github.com/Naereen" target="_blank" rel="noreferrer">Lilian Besson (Naereen)</a></div>
 			<div class="text-base mb-2">{$_('about_license')}: <a class="text-blue-400 underline text-base" href="https://naereen.mit-license.org" target="_blank" rel="noreferrer">MIT</a></div>

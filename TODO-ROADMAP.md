@@ -327,7 +327,7 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
 
 ### Choose <=> Chosen bug for the backgrounds
 
-When choosing a simple background (a single one), the "Choose <=> Chosen" action (on the verb (on the button)) seems to not be working as expected. For instance, if I click on a card image, to select it as background, the button text should change to "Chosen", but if I click again on the same color to deselect it, the button text doesn't change back to "Choose", even though the background is correctly deselected. This is a minor bug, but it can be confusing for users, as the button text doesn't reflect the current state of the background selection.
+- [ ] When choosing a simple background (a single one), the "Choose <=> Chosen" action (on the verb (on the button)) seems to not be working as expected. For instance, if I click on a card image, to select it as background, the button text should change to "Chosen", but if I click again on the same color to deselect it, the button text doesn't change back to "Choose", even though the background is correctly deselected. This is a minor bug, but it can be confusing for users, as the button text doesn't reflect the current state of the background selection.
 
 ### GIF as backgrounds
 

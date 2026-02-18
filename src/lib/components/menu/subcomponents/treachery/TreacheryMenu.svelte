@@ -128,8 +128,14 @@
 			>
 				<Arrow />
 			</button>
-			<span class="text-white text-center text-3xl">{$_('treachery_menu')}</span>
-			<span class="text-gray-400 text-center text-base mt-2 w-90">{modeExplanation}</span>
+			<span class="text-white text-center text-3xl">
+				{#if !isShogunVariant}
+					{$_('treachery_menu')}
+				{:else}
+					{$_('shogun_menu')}
+				{/if}
+			</span>
+			<span class="text-gray-400 text-center text-sm mt-2 w-90">{modeExplanation}</span>
 			{#if !isShogunVariant}
 				<a
 					class="text-blue-400 underline text-sm mt-2"

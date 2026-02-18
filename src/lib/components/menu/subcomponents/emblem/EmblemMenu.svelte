@@ -74,7 +74,7 @@
 				<Arrow />
 			</button>
 			<span class="text-white text-center text-3xl">{$_('emblems_and_dungeons')}</span>
-			<span class="text-gray-400 text-center text-base mt-2 w-90">{$_('explanation_emblems_and_dungeons')}</span>
+			<span class="text-gray-400 text-center text-sm mt-2 w-90">{$_('explanation_emblems_and_dungeons')}</span>
 		</div>
 
 		<div class="w-full px-4 mt-1 mb-1">

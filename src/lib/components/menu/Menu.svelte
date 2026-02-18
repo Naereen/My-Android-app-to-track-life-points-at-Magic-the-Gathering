@@ -214,7 +214,7 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				</button>
 			</div>
 		{/if}
-		<div class="flex justify-center items-center flex-grow"
+		<div class="flex justify-center items-center flex-grow text-sm"
 		>
 			<button
 				on:click={() => toggleIsMenuOpen('randomizer')}
