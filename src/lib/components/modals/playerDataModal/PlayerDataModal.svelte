@@ -83,6 +83,13 @@
 	let doubleBackground = false;
 	let bgSelections: string[] = [];
 
+	const getModalPlayer = () => {
+		return (
+			$players.find((player) => player.id === $playerModalData.playerId) ??
+			$players[$playerModalData.playerId - 1]
+		);
+	};
+
 	// Translation for damage from player label
 	$: damageFromPlayerLabel = String($_('damage_from_player'));
 	$: enterLifeTotalPlaceholder = String($_('enter_life_total_placeholder'));
@@ -139,7 +146,7 @@
 	}
 
 	function _initBackgroundTab() {
-		const p = $players[$playerModalData.playerId - 1];
+		const p = getModalPlayer();
 		if (!p) return;
 
 		// Prefill the search input with the player's name
@@ -151,15 +158,17 @@
 	// Ensure the already chosen background (if any) is visible in the search results
 	// so it appears as "chosen" by default when opening the tab.
 	$: if (mode === 'background' && $playerModalData) {
-		const p = $players[$playerModalData.playerId - 1];
-		if (p.backgroundImage) {
+		const p = getModalPlayer();
+		if (!p) {
+			bgSelections = [];
+		} else if (p.backgroundImage) {
+			const backgroundImage = p.backgroundImage;
 			const already = searchResults.find((r) => {
-				if (Array.isArray(p.backgroundImage)) return p.backgroundImage.includes(r.image ?? null as unknown as string);
-				return r.image === p.backgroundImage;
+				return isStoredBackgroundInCandidates(backgroundImage, [r.image, r.cardImage]);
 			});
 			if (!already) {
 				// prepend a synthetic result representing the current chosen background (use first image if array)
-				const img = Array.isArray(p.backgroundImage) ? p.backgroundImage[0] : p.backgroundImage;
+				const img = Array.isArray(backgroundImage) ? backgroundImage[0] : backgroundImage;
 				searchResults = [
 					{
 						id: 'current-bg',
@@ -175,7 +184,8 @@
 		}
 
 		// initialize bgSelections from player data (keep first two if array)
-		if (Array.isArray(p.backgroundImage)) bgSelections = p.backgroundImage.slice(0, 2).filter(Boolean) as string[];
+		if (!p) bgSelections = [];
+		else if (Array.isArray(p.backgroundImage)) bgSelections = p.backgroundImage.slice(0, 2).filter(Boolean) as string[];
 		else if (p.backgroundImage) bgSelections = [p.backgroundImage];
 		else bgSelections = [];
 	}
@@ -187,12 +197,49 @@
 		return stored === candidate;
 	};
 
-	const isSelected = (image: string | null | undefined) => {
-		if (!image) return false;
-		if (bgSelections && bgSelections.length > 0) return bgSelections.includes(image);
-		// fallback to store comparison
-		const p = $players[$playerModalData.playerId - 1];
-		return isSameBackground(p?.backgroundImage, image as string | null | undefined);
+	const normalizeImageUrl = (url: string | null | undefined) => {
+		if (!url) return null;
+		const value = String(url).trim();
+		if (!value) return null;
+
+		try {
+			const base = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+			const parsed = new URL(value, base);
+			return `${parsed.origin}${parsed.pathname}`;
+		} catch {
+			return value.split('#')[0].split('?')[0];
+		}
+	};
+
+	const isStoredBackgroundInCandidates = (
+		stored: string | string[] | null | undefined,
+		candidates: Array<string | null | undefined>
+	) => {
+		if (!stored) return false;
+
+		const normalizedCandidates = candidates
+			.map((candidate) => normalizeImageUrl(candidate))
+			.filter(Boolean) as string[];
+		if (normalizedCandidates.length === 0) return false;
+
+		if (Array.isArray(stored)) {
+			const normalizedStored = stored.map((entry) => normalizeImageUrl(entry)).filter(Boolean) as string[];
+			return normalizedStored.some((entry) => normalizedCandidates.includes(entry));
+		}
+
+		const normalizedStored = normalizeImageUrl(stored);
+		if (!normalizedStored) return false;
+		return normalizedCandidates.includes(normalizedStored);
+	};
+
+	const isResultSelected = (result: { image?: string | null; cardImage?: string | null }) => {
+		const player = getModalPlayer();
+		const stored = player?.backgroundImage;
+		return isStoredBackgroundInCandidates(stored, [result.image, result.cardImage]);
+	};
+
+	const getSelectableImage = (result: { image?: string | null; cardImage?: string | null }) => {
+		return result.image ?? result.cardImage ?? null;
 	};
 
 	const toggleColorSelection = (playerId: number, c: string) => {
@@ -345,11 +392,10 @@
 			const payload = bgSelections.length > 0 ? bgSelections.slice(0, 2) : null;
 			setPlayerBackgroundImage(playerId, payload);
 		} else {
-			const player = $players.find((p) => p.id === playerId);
-			const currentBackground = player?.backgroundImage;
-			const shouldClearCurrent = isSameBackground(currentBackground, imageUrl);
+			const player = getModalPlayer();
+			const isSameAsCurrentSingle = !!imageUrl && isStoredBackgroundInCandidates(player?.backgroundImage, [imageUrl]);
 
-			if (!imageUrl || shouldClearCurrent) {
+			if (!imageUrl || isSameAsCurrentSingle) {
 				bgSelections = [];
 				setPlayerBackgroundImage(playerId, null);
 			} else {
@@ -544,7 +590,7 @@
 								>
 								<button
 									class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg"
-									on:click={() => { hasSearched = false; searchOptionActive = false; setPlayerBackgroundImage($playerModalData.playerId, null); }}
+									on:click={() => { hasSearched = false; searchOptionActive = false; bgSelections = []; setPlayerBackgroundImage($playerModalData.playerId, null); }}
 									>{$_('clear_background')}</button
 								>
 							</div>
@@ -566,7 +612,7 @@
 									<div class="text-sm text-gray-500">{$_('scryfall_search_noresult')}</div>
 								{/if}
 							{/if}
-							{#each searchResults as r}
+							{#each searchResults as r (r.id + '|' + (getSelectableImage(r) ?? 'no-image'))}
 								<div class="flex gap-2 mb-3 p-2 border rounded-lg bg-white">
 									<div class="flex-1 text-left">
 										<div class="font-semibold text-xl">{r.name}</div>
@@ -576,11 +622,11 @@
 										<div class="mt-2">
 											<button
 												class="px-3 py-1 text-white text-sm rounded"
-												class:bg-gray-500={isSelected(r.image)}
-												class:bg-green-600={!isSelected(r.image)}
-												on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image, r.artist ?? null, r.set_name ?? null)}
+												class:bg-gray-500={isResultSelected(r)}
+												class:bg-green-600={!isResultSelected(r)}
+												on:click={() => { const img = getSelectableImage(r); if (img) chooseBackground($playerModalData.playerId, img, r.artist ?? null, r.set_name ?? null); }}
 											>
-												{isSelected(r.image) ? $_('scryfall_search_chosen') : $_('scryfall_search_choose')}
+												{isResultSelected(r) ? $_('scryfall_search_chosen') : $_('scryfall_search_choose')}
 											</button>
 										</div>
 									</div>
