@@ -26,7 +26,8 @@ const config: CapacitorConfig = {
     SystemBars: {
       insetsHandling: "css",
       style: "DEFAULT", // "DARK" ou "LIGHT" selon votre thème
-      hidden: false, // On ne cache pas les barres (cacher les pour une expérience plus immersive)
+      // hidden: false, // On ne cache pas les barres pour permettre l'accès aux gestes de navigation, mais on les stylise pour qu'elles se fondent dans le thème de l'app
+      hidden: true, // On cache les barres (pour une expérience plus immersive)
       animation: "NONE"
     },
   }

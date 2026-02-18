@@ -12,7 +12,7 @@
 	:root {
 		/* On définit des variables par défaut au cas où env() ne soit pas supporté */
 		--safe-area-inset-top: 0px;
-		--safe-area-inset-bottom: 0px;
+		--safe-area-inset-bottom: 48px;
 	}
 
 	/* Ensure the app spans the full viewport and remove default body margins */
@@ -29,7 +29,7 @@
 	body {
 		/* On utilise les constantes fournies par le moteur de rendu de l'appareil */
 		padding-top: env(safe-area-inset-top, var(--safe-area-inset-top, 0px));
-		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 0px));
+		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 48px)) !important;
 		/* Assurez-vous que votre application ne dépasse pas */
 		box-sizing: content-box;
 	}
