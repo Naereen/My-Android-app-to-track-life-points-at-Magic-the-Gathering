@@ -497,6 +497,7 @@
 						</div>
 
 					{#if mode === 'background'}
+					{#if hasSearched || searchOptionActive}
 						<div class="w-8/10 mb-3">
 							<div class="gap-4">
 								<div class="relative w-full">
@@ -543,6 +544,7 @@
 								</label>
 							</div>
 						</div>
+						{/if}
 						<div class="w-full max-h-60 overflow-auto">
 							{#if gifMode && !klipyKeyPresent}
 								<div class="text-sm text-red-600">
@@ -623,7 +625,7 @@
 					<!-- {/if} -->
 
 						<label
-							class="block mb-2"
+							class="block mb-2 rounded-full border"
 							class:font-semibold={!searchOptionActive && !hasSearched}
 							role="button"
 							tabindex="0"
