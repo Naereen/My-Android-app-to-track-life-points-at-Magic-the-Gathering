@@ -20,9 +20,9 @@ It is updated after every commit I make on the codebase, so you can see the late
 
 ## 📹 Video demonstrations
 
-![Demo of the app (video) 1/2](screenshots/screenshot-video-1.gif)
+<img src="screenshots/screenshot-video-1.gif" alt="Video (GIF) demo of the Naereen's MTG Life Tracker app (1/2)" width="300"/>
 
-![Demo of the app (video) 2/2](screenshots/screenshot-video-2.gif)
+<img src="screenshots/screenshot-video-2.gif" alt="Video (GIF) demo of the Naereen's MTG Life Tracker app (2/2)" width="300"/>
 
 ## 📸 Screenshots
 
