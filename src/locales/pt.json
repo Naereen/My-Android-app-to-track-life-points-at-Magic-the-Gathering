@@ -58,6 +58,8 @@
     "choose_your_language": "Escolha seu idioma",
     "scryfall_searching": "Procurando no Scryfall...",
     "scryfall_search": "Pesquisar nome da carta",
+    "klipy_search": "Pesquisar Klipy",
+    "klipy_search_choose_random": "Escolher Klipy aleatório",
     "scryfall_search_noresult": "Sintaxe Scryfall é suportada. Sem resultado. Offline? Tente outra busca?",
     "scryfall_search_choose": "Escolher",
     "scryfall_search_remove": "Remover",

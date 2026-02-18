@@ -57,6 +57,8 @@
     "choose_your_language": "Elige tu idioma",
     "scryfall_searching": "Buscando en Scryfall...",
     "scryfall_search": "Buscar nombre de carta",
+    "klipy_search": "Buscar Klipy",
+    "klipy_search_choose_random": "Elegir Klipy aleatorio",
     "scryfall_search_noresult": "Scryfall syntax is supported. No hay resultados. ¿Sin conexión? ¿Intenta otra búsqueda?",
     "scryfall_search_choose": "Elegir",
     "scryfall_search_remove": "Quitar",

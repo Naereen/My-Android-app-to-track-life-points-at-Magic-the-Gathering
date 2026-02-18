@@ -57,6 +57,8 @@
     "choose_your_language": "Wähle deine Sprache",
     "scryfall_searching": "Suche in Scryfall...",
     "scryfall_search": "Suchen Kartennamen",
+    "klipy_search": "Klipy suchen",
+    "klipy_search_choose_random": "Zufälliges Klipy auswählen",
     "scryfall_search_noresult": "Scryfall-Syntax wird unterstützt. Keine Ergebnisse. Offline? Versuchen Sie eine andere Suche?",
     "scryfall_search_choose": "Wählen",
     "scryfall_search_remove": "Entfernen",
