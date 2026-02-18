@@ -276,7 +276,7 @@
 				name: g.title,
 				cardImage: g.preview ?? null,
 				image: g.url ?? null,
-				artist: g.provider ?? 'GIF'
+				artist: "Klipy GIF"
 			}));
 		} else {
 			searchResults = await searchCards(searchQuery);
@@ -302,7 +302,7 @@
 				const gifs = await searchGifs(searchQuery || 'random');
 				if (gifs && gifs.length > 0) {
 					const g = gifs[Math.floor(Math.random() * gifs.length)];
-					chooseBackground(playerId, g.url ?? null, g.provider ?? null, null);
+					chooseBackground(playerId, g.url ?? null, "Klipy GIF", null);
 				}
 			} else {
 				// use a broad query so the util can return a random art card
