@@ -38,6 +38,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] ONLY FOR THE TWO-PLAYERS MODE: do not include the EDH damage panel (in the PlayerDataModal.svelte) and remove all the inclusions of the CommanderDamage svelte component (**only for the 2-player mode**).
 
+- [ ] Regenerate all the screenshots for the README documentation, as they are already a bit old and don't reflect the latest design of the app.
+
 ## State saving improvements
 
 - [x] Save the state in the local storage of the browser, so that reloading the page does not reset everything
@@ -89,7 +91,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 ### The "and also shuffle players' positions" option, in the "Restart the Game" panel, is totally bugged!
 
-- [ ] When clicking on "Restart the Game" button, with the "and also shuffle players' positions" option enabled, the players' positions are not shuffled at all, instead random new players outside of the interval [1...nbPlayers] seem to appear! This is a serious bug, as it makes this option completely useless. This bug is present in all modes (2-player, 3-player, 4-player, etc).
+- [x] When clicking on "Restart the Game" button, with the "and also shuffle players' positions" option enabled, the players' positions are not shuffled at all, instead random new players outside of the interval [1...nbPlayers] seem to appear! This is a serious bug, as it makes this option completely useless. This bug is present in all modes (2-player, 3-player, 4-player, etc).
 
 ### The active player "glowing effect"
 

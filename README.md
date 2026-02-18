@@ -20,25 +20,17 @@ It is updated after every commit I make on the codebase, so you can see the late
 
 ## 📹 Video demonstrations
 
-<img src="screenshots/screenshot-video-1.gif" alt="Video (GIF) demo of the Naereen's MTG Life Tracker app (1/2)" width="300"/>
+<img src="screenshots/screenshot-video-1.gif" alt="Video (GIF) demo of the Naereen's MTG Life Tracker app (1/2)" width="300"/> <img src="screenshots/screenshot-video-2.gif" alt="Video (GIF) demo of the Naereen's MTG Life Tracker app (2/2)" width="300"/>
 
-<img src="screenshots/screenshot-video-2.gif" alt="Video (GIF) demo of the Naereen's MTG Life Tracker app (2/2)" width="300"/>
+> **Yes, I like GIF 🚀**. They are awesome as interactive and exciting backgrounds for your player's area! Be careful not to empty your battery too quickly, if you choose a very animated one, though!
 
 ## 📸 Screenshots
 
-<img src="screenshots/screenshot-demo-6.png" alt="Demo of the webpage (6/4)" width="300"/>
-
-<img src="screenshots/screenshot-demo-7.png" alt="Demo of the webpage (7/4)" width="300"/>
+<img src="screenshots/screenshot-demo-6.png" alt="Demo of the webpage (6/4)" width="300"/> <img src="screenshots/screenshot-demo-7.png" alt="Demo of the webpage (7/4)" width="300"/>
 
 Older screenshots:
 
-<img src="screenshots/screenshot-demo-2.png" alt="Demo of the webpage (2/4)" width="300"/>
-
-<img src="screenshots/screenshot-demo-3.png" alt="Demo of the webpage (3/4)" width="300"/>
-
-<img src="screenshots/screenshot-demo-4.png" alt="Demo of the webpage (4/4)" width="300"/>
-
-> TODO: reshot all the screenshots, as they are already a bit old and don't reflect the latest design of the app.
+<img src="screenshots/screenshot-demo-2.png" alt="Demo of the webpage (2/4)" width="300"/> <img src="screenshots/screenshot-demo-3.png" alt="Demo of the webpage (3/4)" width="300"/> <img src="screenshots/screenshot-demo-4.png" alt="Demo of the webpage (4/4)" width="300"/>
 
 ---
 
@@ -46,11 +38,25 @@ Older screenshots:
 
 The latest stable release is here: <https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/latest>
 
-The apk file is named [`naereen-mtg-life-tracker.apk`](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/main.13/app-release-unsigned-signed.apk). You can download it and install it on your Android device.
+The apk file is named [`app-release-unsigned-signed.apk`](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/main.13/app-release-unsigned-signed.apk). You can download it and install it on your Android device.
+It is [now](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/22) automatically built at every release (not every commit), and you can find it in the "Assets" section of [the release page](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/latest).
 
 <https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/main.13/app-release-unsigned-signed.apk>
 
-> Note: that you may need to allow installation from unknown sources in your device settings:
+> Note: that you may need to allow installation from unknown sources in your device settings.
+
+### The application is not yet available on the Google Play Store, but it will be soon! Stay tuned!
+
+> It is a work in progress!
+
+### A similar offline-aware app for iOS ?
+
+No, I do not plan on even trying this.
+
+1. I don't have any Apple device to test it on, and I don't want to buy one just for this project.
+2. I don't want to pay the Apple developer fee (99$ per year) just to publish a free app that I made for fun.
+3. I don't want to deal with the Apple App Store review process, which can be very long and frustrating, especially for a small indie project like this one.
+4. I don't really like Apple products in general, 🤣.
 
 ---
 

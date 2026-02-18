@@ -345,7 +345,17 @@
 			const payload = bgSelections.length > 0 ? bgSelections.slice(0, 2) : null;
 			setPlayerBackgroundImage(playerId, payload);
 		} else {
-			setPlayerBackgroundImage(playerId, { imageUrl, artist, set_name });
+			const player = $players.find((p) => p.id === playerId);
+			const currentBackground = player?.backgroundImage;
+			const shouldClearCurrent = isSameBackground(currentBackground, imageUrl);
+
+			if (!imageUrl || shouldClearCurrent) {
+				bgSelections = [];
+				setPlayerBackgroundImage(playerId, null);
+			} else {
+				bgSelections = [imageUrl];
+				setPlayerBackgroundImage(playerId, { imageUrl, artist, set_name });
+			}
 		}
 
 		// clear color so background shows clearly
@@ -564,15 +574,14 @@
 										<div class="text-sm text-gray-600">Artist: {r.artist}</div>
 										<div class="text-sm text-gray-600">© Wizards of the Coast</div>
 										<div class="mt-2">
-											{#if isSelected(r.image)}
-												<span class="inline-block px-2 py-1 bg-yellow-300 text-black text-sm rounded mr-2">{$_('scryfall_search_chosen')}</span>
-												<button class="px-3 py-1 bg-gray-400 text-white text-sm rounded" on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image, r.artist ?? null, r.set_name ?? null)}>{$_('scryfall_search_remove') ?? 'Remove'}</button>
-												{:else}
-													<button
-														class="px-3 py-1 bg-green-600 text-white text-sm rounded"
-														on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image, r.artist ?? null, r.set_name ?? null)}
-														>{$_('scryfall_search_choose')}</button>
-												{/if}
+											<button
+												class="px-3 py-1 text-white text-sm rounded"
+												class:bg-gray-500={isSelected(r.image)}
+												class:bg-green-600={!isSelected(r.image)}
+												on:click={() => r.image && chooseBackground($playerModalData.playerId, r.image, r.artist ?? null, r.set_name ?? null)}
+											>
+												{isSelected(r.image) ? $_('scryfall_search_chosen') : $_('scryfall_search_choose')}
+											</button>
 										</div>
 									</div>
 									<div class="w-32 flex-shrink-0">
