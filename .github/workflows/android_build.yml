@@ -59,8 +59,8 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew --stacktrace --scan assemble
-          # ./gradlew assembleRelease
+          # ./gradlew --stacktrace --scan assemble
+          ./gradlew assembleRelease
         env:
           ANDROID_VERSION_NAME: ${{ steps.vars.outputs.tag }}
           ANDROID_VERSION_CODE: ${{ steps.vars.outputs.count }}
@@ -74,6 +74,7 @@ jobs:
           alias: ${{ secrets.ANDROID_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          buildToolsVersion: "34.0.0"
 
       - name: Create Release and Upload APK
         uses: softprops/action-gh-release@v2
