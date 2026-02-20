@@ -190,13 +190,6 @@
 		else bgSelections = [];
 	}
 
-	// helper to compare stored background (string or array) to a single image url
-	const isSameBackground = (stored: string | string[] | null | undefined, candidate: string | null | undefined) => {
-		if (!stored) return false;
-		if (Array.isArray(stored)) return candidate ? stored.includes(candidate) : false;
-		return stored === candidate;
-	};
-
 	const normalizeImageUrl = (url: string | null | undefined) => {
 		if (!url) return null;
 		const value = String(url).trim();
