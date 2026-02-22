@@ -415,7 +415,8 @@
 									<span
 										class="flex items-center text-center text-shadow-xl/120 text-white font-bold"
 										class:opacity-25={isDead}
-										class:text-7xl={$appSettings.playerCount <= 4}
+										class:text-9xl={$appSettings.playerCount === 2}
+										class:text-7xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
 										class:text-5xl={$appSettings.playerCount >= 5}
 										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
 									>
