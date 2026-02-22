@@ -1,9 +1,19 @@
 import { persist } from './persist';
-import { get } from 'svelte/store';
+import { get, derived } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { vibrate } from '$lib/utils/haptics';
 import { players } from './player';
 import { turnTimer } from './turnTimer';
+
+const MAX_STREAM_PLAYERS = 6;
+
+export interface StreamGameState {
+	playerCount: number;
+	currentTurn: number;
+	updatedAt: number;
+	names: string[];
+	lifeTotals: number[];
+}
 
 export const appState = persist('appState', {
 	isMenuOpen: false,
@@ -24,12 +34,12 @@ export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 		if (!wasOpen) {
 			// opening
 			if ((get(appSettings)?.turnTimerEnabled)) {
-				try { turnTimer.pause(); } catch (e) {}
+				try { (turnTimer as any).pause?.(); } catch (e) {}
 			}
 		} else {
 			// closing
 			if ((get(appSettings)?.turnTimerEnabled)) {
-				try { turnTimer.resume(); } catch (e) {}
+				try { (turnTimer as any).resume?.(); } catch (e) {}
 			}
 		}
 	} catch (e) {
@@ -145,3 +155,26 @@ export const prevTurn = () => {
 	// No alive player found
 	appState.update((data) => ({ ...data, currentTurn: -1 }));
 };
+
+export const gameState = derived([players, appSettings, appState], ([$players, $appSettings, $appState]) => {
+	const playerCount = $appSettings.playerCount ?? 4;
+	const activePlayers = $players.slice(0, playerCount);
+
+	const names = Array.from({ length: MAX_STREAM_PLAYERS }, (_, index) => {
+		const player = activePlayers[index];
+		return player?.playerName ?? `Player ${index + 1}`;
+	});
+
+	const lifeTotals = Array.from({ length: MAX_STREAM_PLAYERS }, (_, index) => {
+		const player = activePlayers[index];
+		return player?.lifeTotal ?? 0;
+	});
+
+	return {
+		playerCount,
+		currentTurn: $appState.currentTurn,
+		updatedAt: Date.now(),
+		names,
+		lifeTotals
+	} satisfies StreamGameState;
+});

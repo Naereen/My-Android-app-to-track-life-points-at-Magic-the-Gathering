@@ -1,6 +1,8 @@
 <script lang="ts">
 	import {
 		appSettings,
+		setIsStreamMode,
+		setRemoteServerUrl,
 		setCustomStartingLifeTotal,
 		setPlayerCount,
 		setStartingLifeTotal,
@@ -34,6 +36,11 @@
 	} from '$lib/store/appSettings';
 	import { setEnableCurrentPlayerGlow, setShowNextPlayerButton } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
+
+	type RelayHealthStatus = 'idle' | 'testing' | 'ok' | 'ko';
+
+	let relayHealthStatus: RelayHealthStatus = 'idle';
+	let relayHealthMessage = '';
 
 	const resetLocalStorage = async () => {
 		const confirmReset = await showConfirm($_('window_confirm_reset_local_storage'));
@@ -227,6 +234,76 @@
 	const handleTurnTimerSoundChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setTurnTimerSound(!!target.checked);
+	};
+
+	const handleStreamModeChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setIsStreamMode(!!target.checked);
+	};
+
+	const handleStreamRemoteServerUrlChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setRemoteServerUrl(target.value || '');
+		relayHealthStatus = 'idle';
+		relayHealthMessage = '';
+	};
+
+	const getSanitizedRelayBaseUrl = (rawUrl: string) => {
+		const trimmed = (rawUrl || '').trim();
+		if (!trimmed) return '';
+		try {
+			const url = new URL(trimmed);
+			if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+			return trimmed.replace(/\/$/, '');
+		} catch {
+			return '';
+		}
+	};
+
+	$: relayBaseUrl = getSanitizedRelayBaseUrl($appSettings.remoteServerUrl);
+	$: relayHealthUrl = relayBaseUrl ? `${relayBaseUrl}/health` : '';
+
+	const testRelayHealth = async () => {
+		relayHealthMessage = '';
+		const baseUrl = getSanitizedRelayBaseUrl($appSettings.remoteServerUrl);
+		if (!baseUrl) {
+			relayHealthStatus = 'ko';
+			relayHealthMessage = $_('stream_mode_status_invalid_url') || 'Invalid relay URL';
+			return;
+		}
+
+		relayHealthStatus = 'testing';
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+		try {
+			const response = await fetch(`${baseUrl}/health`, {
+				method: 'GET',
+				signal: controller.signal
+			});
+
+			if (!response.ok) {
+				relayHealthStatus = 'ko';
+				relayHealthMessage = `HTTP ${response.status}`;
+				return;
+			}
+
+			relayHealthStatus = 'ok';
+			relayHealthMessage = '';
+		} catch (error) {
+			relayHealthStatus = 'ko';
+			relayHealthMessage = (error as Error).name === 'AbortError'
+				? $_('stream_mode_status_timeout') || 'Connection timeout'
+				: $_('stream_mode_status_unreachable') || 'Server unreachable';
+		} finally {
+			clearTimeout(timeoutId);
+		}
+	};
+
+	const handleOpenRelayHealthClick = (event: MouseEvent) => {
+		if (!relayHealthUrl) {
+			event.preventDefault();
+		}
 	};
 
 	const languages = [
@@ -664,6 +741,76 @@
 				</label>
 			</div>
 		{/if}
+
+		<!-- Stream mode settings (LAN relay) -->
+		<div class="w-full flex justify-center mt-2 mb-0">
+			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
+				<div class="text-2xl font-bold">{$_('stream_mode_title') || 'Stream Mode (LAN relay)'}</div>
+			</div>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.isStreamMode}
+					on:change={handleStreamModeChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('stream_mode_enable') || 'Enable stream mode'}</span>
+			</label>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0 px-8">
+			<div style="min-width: 12rem; max-width: 32rem;" class="w-full">
+				<div class="text-sm text-gray-400 mb-1">{$_('stream_mode_help') || 'Use the local relay URL, e.g. http://192.168.1.42:8787'}</div>
+				<input
+					type="url"
+					value={$appSettings.remoteServerUrl}
+					on:change={handleStreamRemoteServerUrlChange}
+					placeholder={$_('stream_mode_server_url_placeholder') || 'http://192.168.1.42:8787'}
+					class="w-full bg-gray-700 text-white rounded px-3 py-2 outline-none border border-gray-500"
+				/>
+				<div class="text-sm mt-1">{$_('stream_mode_server_url') || 'Relay server URL'}</div>
+				<div class="mt-2 flex items-center gap-3">
+					<button
+						on:click={testRelayHealth}
+						class="px-3 py-1 rounded bg-gray-700 border border-gray-500"
+						disabled={relayHealthStatus === 'testing'}
+					>
+						{$_('stream_mode_test_button') || 'Test relay'}
+					</button>
+					<a
+						href={relayHealthUrl || '#'}
+						target="_blank"
+						rel="noreferrer"
+						class="px-3 py-1 rounded border border-gray-500"
+						class:text-blue-300={!!relayHealthUrl}
+						class:text-gray-500={!relayHealthUrl}
+						on:click={handleOpenRelayHealthClick}
+					>
+						{$_('stream_mode_open_health_link') || 'Open /health'}
+					</a>
+					<span
+						class:text-gray-400={relayHealthStatus === 'idle'}
+						class:text-yellow-300={relayHealthStatus === 'testing'}
+						class:text-green-300={relayHealthStatus === 'ok'}
+						class:text-red-300={relayHealthStatus === 'ko'}
+					>
+						{#if relayHealthStatus === 'testing'}
+							{$_('stream_mode_status_testing') || 'Testing...'}
+						{:else if relayHealthStatus === 'ok'}
+							{$_('stream_mode_status_ok') || 'Relay OK'}
+						{:else if relayHealthStatus === 'ko'}
+							{$_('stream_mode_status_ko') || 'Relay KO'}{relayHealthMessage ? ` (${relayHealthMessage})` : ''}
+						{:else}
+							{$_('stream_mode_status_idle') || 'Not tested'}
+						{/if}
+					</span>
+				</div>
+			</div>
+		</div>
 
 		<!-- Language selection -->
 		<div class="w-full flex justify-center mt-6 mb-4">

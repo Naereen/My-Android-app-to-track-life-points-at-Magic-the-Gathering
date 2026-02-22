@@ -186,6 +186,8 @@ const createTurnTimer = () => {
     return {
         subscribe,
         startForPlayer,
+        pause,
+        resume,
         stop,
         resetForCurrent
     };

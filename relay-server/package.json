@@ -1,0 +1,9 @@
+{
+  "name": "naereen-mtg-life-tracker-relay-server",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  }
+}

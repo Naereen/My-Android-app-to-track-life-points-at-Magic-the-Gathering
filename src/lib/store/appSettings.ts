@@ -50,6 +50,10 @@ interface AppSettings {
 	turnTimerDuration: number;
 	// play a short sound when timer reaches zero
 	turnTimerSound: boolean;
+	// stream mode (controller sends game updates to LAN relay)
+	isStreamMode: boolean;
+	// relay base URL, e.g. http://192.168.1.42:8787
+	remoteServerUrl: string;
 }
 
 export const appSettings: Writable<AppSettings> = persist('appSettings', {
@@ -99,7 +103,11 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	// default per-turn duration in seconds (2 minutes)
 	turnTimerDuration: 120,
 	// play a short sound when timer reaches zero
-	turnTimerSound: false
+	turnTimerSound: false,
+	// stream mode (controller sends game updates to LAN relay)
+	isStreamMode: false,
+	// relay base URL, e.g. http://192.168.1.42:8787
+	remoteServerUrl: ''
 });
 
 export const setPlayerCount = (playerCount: number) => {
@@ -184,6 +192,14 @@ export const setTurnTimerDuration = (seconds: number) => {
 
 export const setTurnTimerSound = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, turnTimerSound: enabled }));
+};
+
+export const setIsStreamMode = (isStreamMode: boolean) => {
+	appSettings.update((data) => ({ ...data, isStreamMode }));
+};
+
+export const setRemoteServerUrl = (remoteServerUrl: string) => {
+	appSettings.update((data) => ({ ...data, remoteServerUrl: remoteServerUrl.trim() }));
 };
 
 export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {

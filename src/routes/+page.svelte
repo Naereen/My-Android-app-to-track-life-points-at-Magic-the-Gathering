@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { appSettings } from '$lib/store/appSettings';
+	import { gameState, type StreamGameState } from '$lib/store/appState';
+	import { derived } from 'svelte/store';
 	import TwoPlayerLayout from '$lib/layouts/TwoPlayerLayout.svelte';
 	import ThreePlayerLayout from '$lib/layouts/ThreePlayerLayout.svelte';
 	import FourPlayerLayoutOne from '$lib/layouts/FourPlayerLayoutOne.svelte';
@@ -23,6 +25,58 @@
 	import { initWakeLock, setKeepAwake, stopWakeLockManager } from '$lib/utils/wakeLock';
 
 	let unsubscribeAppSettings: (() => void) | null = null;
+	let unsubscribeStreamSync: (() => void) | null = null;
+	let streamDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+	let streamSyncAbortController: AbortController | null = null;
+	let lastSentSignature = '';
+
+	const streamSyncState = derived([appSettings, gameState], ([$appSettings, $gameState]) => ({
+		appSettings: $appSettings,
+		gameState: $gameState
+	}));
+
+	const getStreamEndpoint = (remoteServerUrl: string) => {
+		const trimmedUrl = (remoteServerUrl || '').trim();
+		if (!trimmedUrl) return '/api/stream';
+		return `${trimmedUrl.replace(/\/$/, '')}/api/stream`;
+	};
+
+	const getGameStateSignature = (state: StreamGameState) => {
+		return JSON.stringify({
+			playerCount: state.playerCount,
+			currentTurn: state.currentTurn,
+			names: state.names,
+			lifeTotals: state.lifeTotals
+		});
+	};
+
+	const postStreamUpdate = async (remoteServerUrl: string, payload: StreamGameState) => {
+		const endpoint = getStreamEndpoint(remoteServerUrl);
+
+		if (streamSyncAbortController) {
+			streamSyncAbortController.abort();
+		}
+
+		streamSyncAbortController = new AbortController();
+
+		try {
+			const response = await fetch(endpoint, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+				signal: streamSyncAbortController.signal
+			});
+
+			if (!response.ok) {
+				throw new Error(`Stream sync failed with status ${response.status}`);
+			}
+		} catch (error) {
+			if ((error as Error).name !== 'AbortError') {
+				lastSentSignature = '';
+				console.error('Stream sync error:', error);
+			}
+		}
+	};
 
 	onMount(() => {
 		initWakeLock();
@@ -30,10 +84,32 @@
 		unsubscribeAppSettings = appSettings.subscribe((s) => {
 			setKeepAwake(!!(s as any).preventScreenSleep);
 		});
+
+		unsubscribeStreamSync = streamSyncState.subscribe(({ appSettings, gameState }) => {
+			if (!appSettings.isStreamMode) return;
+			if (!appSettings.remoteServerUrl?.trim()) return;
+
+			const signature = getGameStateSignature(gameState);
+			if (signature === lastSentSignature) return;
+
+			if (streamDebounceTimer) {
+				clearTimeout(streamDebounceTimer);
+			}
+
+			streamDebounceTimer = setTimeout(() => {
+				lastSentSignature = signature;
+				void postStreamUpdate(appSettings.remoteServerUrl, gameState);
+			}, 250);
+		});
 	});
 
 	onDestroy(() => {
 		unsubscribeAppSettings?.();
+		unsubscribeStreamSync?.();
+		if (streamDebounceTimer) {
+			clearTimeout(streamDebounceTimer);
+		}
+		streamSyncAbortController?.abort();
 		stopWakeLockManager();
 	});
 </script>
