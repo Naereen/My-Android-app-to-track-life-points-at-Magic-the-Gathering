@@ -122,7 +122,7 @@
     "enable_current_player_glow": "Faire briller le joueur actif",
     "show_next_player_button": "Afficher le bouton « Joueur suivant »",
     "show_emblem_menu_button": "Afficher le menu « Emblèmes & Donjons »",
-    "show_game_history_menu_button": "Afficher le bouton « Historique de la partie »",
+    "show_game_history_menu_button": "Afficher l'historique de la partie",
     "game_history": "Historique de la partie",
     "game_history_empty": "Aucun changement enregistré pour l'instant.",
     "game_history_clear_button": "Effacer l'historique actuel",

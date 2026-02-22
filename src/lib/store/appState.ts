@@ -13,6 +13,18 @@ export interface StreamGameState {
 	updatedAt: number;
 	names: string[];
 	lifeTotals: number[];
+	namePlayer1: string;
+	namePlayer2: string;
+	namePlayer3: string;
+	namePlayer4: string;
+	namePlayer5: string;
+	namePlayer6: string;
+	lifePlayer1: number;
+	lifePlayer2: number;
+	lifePlayer3: number;
+	lifePlayer4: number;
+	lifePlayer5: number;
+	lifePlayer6: number;
 }
 
 export const appState = persist('appState', {
@@ -175,6 +187,18 @@ export const gameState = derived([players, appSettings, appState], ([$players, $
 		currentTurn: $appState.currentTurn,
 		updatedAt: Date.now(),
 		names,
-		lifeTotals
+		lifeTotals,
+		namePlayer1: names[0] ?? '',
+		namePlayer2: names[1] ?? '',
+		namePlayer3: names[2] ?? '',
+		namePlayer4: names[3] ?? '',
+		namePlayer5: names[4] ?? '',
+		namePlayer6: names[5] ?? '',
+		lifePlayer1: lifeTotals[0] ?? 0,
+		lifePlayer2: lifeTotals[1] ?? 0,
+		lifePlayer3: lifeTotals[2] ?? 0,
+		lifePlayer4: lifeTotals[3] ?? 0,
+		lifePlayer5: lifeTotals[4] ?? 0,
+		lifePlayer6: lifeTotals[5] ?? 0
 	} satisfies StreamGameState;
 });
