@@ -9,11 +9,13 @@ const config = {
 
 	kit: {
 		// Adapter pour générer une application statique (HTML/CSS/JS)
-		adapter: adapter(),
+		adapter: adapter({
+			strict: false // XXX: experimental!
+		}),
 		// Utiliser des chemins relatifs pour permettre un déploiement dans n'importe quel sous-dossier
 		paths: {
 			relative: true
-		}
+		}		
 	}
 };
 
