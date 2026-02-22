@@ -214,11 +214,11 @@
 	});
 </script>
 
-<div class="w-screen h-screen bg-transparent text-white p-8 flex flex-col justify-center">
-	<div class="mb-6 flex items-center justify-between text-3xl font-black uppercase tracking-widest">
-		<div class="opacity-90">
+<div class="w-screen h-screen bg-transparent text-white p-4 flex flex-col justify-center">
+	<div class="mb-6 flex items-center justify-between text-3xl font-black tracking-widest">
+		<div>
             <h1 class="text-4xl">Naereen's MTG Life Tracker</h1>
-            <h2 class="text-lg">Stream Overlay</h2>
+            <h2 class="text-lg opacity-80">Stream Overlay</h2>
         </div>
 		<div class="tabular-nums"
             class:text-green-300={status === 'connected'}
@@ -228,14 +228,13 @@
 		</div>
 	</div>
 
-	<div class="grid gap-8" style={`grid-template-columns: repeat(${Math.min(3, visiblePlayers().length)}, minmax(0, 1fr)); container-type: inline-size;`}>
+	<div class="grid gap-8 mb-12" style={`grid-template-columns: repeat(${Math.min(3, visiblePlayers().length)}, minmax(0, 1fr)); container-type: inline-size;`}>
 		{#each visiblePlayers() as player}
 			<div
 				class="rounded-2xl border border-white/60 bg-black/60 px-8 py-6 text-center"
 				class:shadow-[0_0_40px_rgba(250,204,21,0.8)]={player.isCurrent}
 			>
 				<div class="text-4xl font-bold truncate">
-                <!-- class="uppercase" : ? -->
                     {player.name}
                 </div>
 				<div class="mt-2 font-black tabular-nums leading-none"
