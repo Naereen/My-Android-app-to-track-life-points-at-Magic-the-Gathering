@@ -83,6 +83,8 @@
     "tooltip_status_initiative": "Il giocatore ha l'iniziativa",
     "tooltip_status_ascend": "Effetto Ascesa attivo",
     "tooltip_status_day_night": "Effetto Giorno/Notte attivo",
+    "storied": "Storied",
+    "tooltip_status_storied": "Storied Status",
     "tooltip_status_ko": "Il giocatore è K.O.",
     "tooltip_status_poison": "Contatori di veleno",
     "tooltip_status_energy": "Contatori di energia",

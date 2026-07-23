@@ -81,6 +81,8 @@
     "tooltip_status_initiative": "Jogador tem Iniciativa",
     "tooltip_status_ascend": "Jogador tem Ascender",
     "tooltip_status_day_night": "Efeito Dia / Noite ativo",
+    "storied": "Storied",
+    "tooltip_status_storied": "Storied Status",
     "tooltip_status_ko": "Jogador está nocauteado",
     "tooltip_status_poison": "Contadores de Veneno",
     "tooltip_status_energy": "Contadores de Energia",

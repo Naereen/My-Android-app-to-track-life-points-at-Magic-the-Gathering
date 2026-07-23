@@ -77,6 +77,7 @@ declare global {
 					monarch?: boolean;
 					initiative?: boolean;
 					ascend?: boolean;
+					storied?: boolean;
 					dayNight?: boolean;
 					ko?: boolean;
 					energy?: number;

@@ -81,6 +81,8 @@
     "tooltip_status_initiative": "Player has Initiative",
     "tooltip_status_ascend": "Player has Ascend",
     "tooltip_status_day_night": "Day / Night effect active",
+    "storied": "Storied",
+    "tooltip_status_storied": "Storied Status",
     "tooltip_status_ko": "Player is knocked out",
     "tooltip_status_poison": "Poison counters",
     "tooltip_status_energy": "Energy counters",
