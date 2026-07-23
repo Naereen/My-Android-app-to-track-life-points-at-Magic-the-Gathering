@@ -81,6 +81,8 @@
     "tooltip_status_initiative": "Spieler hat Initiative",
     "tooltip_status_ascend": "Aufstiegs-Effekt aktiv",
     "tooltip_status_day_night": "Tag/Nacht Effekt aktiv",
+    "storied": "Storied",
+    "tooltip_status_storied": "Storied Status",
     "tooltip_status_ko": "Spieler ist K.O.",
     "tooltip_status_poison": "Giftzähler",
     "tooltip_status_energy": "Energiezähler",

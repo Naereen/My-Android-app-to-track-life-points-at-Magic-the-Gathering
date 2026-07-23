@@ -16,6 +16,7 @@
 	import Initiative from '$lib/assets/icons/Initiative.svelte';
 	import Ascend from '$lib/assets/icons/Ascend.svelte';
 	import DayNight from '$lib/assets/icons/DayNight.svelte';
+	import Storied from '$lib/assets/icons/Storied.svelte';
 	import PoisonIcon from '$lib/assets/icons/Poison.svelte';
 	import Energy from '$lib/assets/icons/Energy.svelte';
 	import Experience from '$lib/assets/icons/Experience.svelte';
@@ -807,6 +808,20 @@
 								>
 								<!-- FIXME: enable again the day/night switch setting -->
 								<!-- <label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight title={$_('tooltip_status_day_night')} /> { $_('day_night') }</label> -->
+								<label class="flex items-center gap-1"
+									><input
+										type="checkbox"
+										checked={$players[$playerModalData.playerId - 1].statusEffects?.storied ?? false}
+										on:change={() =>
+											setPlayerStatusBoolean(
+												$playerModalData.playerId,
+												'storied',
+												!($players[$playerModalData.playerId - 1].statusEffects?.storied ?? false)
+											)}
+									/>
+									<Storied />
+									{String($_('storied'))}</label
+								>
 								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
