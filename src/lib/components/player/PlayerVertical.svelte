@@ -277,7 +277,6 @@
 	class:h-full={!$appState.isMenuOpen}
 	class:rotate-180={orientation === 'down'}
 	class:opacity-75={$players[index].highlighted}
-	class:bg-player-dark={isDead}
 >
 	<!-- Overlay au-dessus du background (non-interactif) -->
 	<div
