@@ -352,9 +352,9 @@ Contributions are welcome! Feel free to:
 
 ## ✏️ Authors
 
-**Hacked with ❤️ by [@Naereen](https://github.com/Naereen) in France**
-**Initial work by [GuessImNick](https://github.com/GuessImNick)**
-**Huge inspiration from [Lifetap](https://play.google.com/store/apps/details?id=com.lifetap) by Mike Bourkas**
+- **Hacked with ❤️ by Lilian Besson [@Naereen](https://github.com/Naereen) in France**
+- **Initial work by [GuessImNick](https://github.com/GuessImNick)**
+- **Huge inspiration from [Lifetap](https://play.google.com/store/apps/details?id=com.lifetap) by Mike Bourkas**
 
 ## 📋 TODO / Feature Ideas
 
@@ -363,6 +363,7 @@ See the [TODO-ROADMAP.md](./TODO-ROADMAP.md) file for a list of planned features
 ## 📝 [License](./LICENSE)
 
 This project is open source and available for personal use: MIT Licensed.
+Current version is: **0.4.10**.
 
 ## 🙏 Acknowledgments
 
