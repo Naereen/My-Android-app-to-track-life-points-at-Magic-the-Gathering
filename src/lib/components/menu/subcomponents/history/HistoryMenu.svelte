@@ -79,6 +79,10 @@
 			return `→ ${toPlayerName}, ${turnLabel} ${toTurn}`;
 		}
 
+		if (entry.kind === 'gameRestart') {
+			return String($_('history_game_restarted') || 'Game restarted');
+		}
+
 		return '';
 	};
 
@@ -106,6 +110,10 @@
 
 		if (entry.kind === 'turnChange') {
 			return { glyph: '🔂', className: 'text-purple-300' };
+		}
+
+		if (entry.kind === 'gameRestart') {
+			return { glyph: '↻', className: 'text-orange-300' };
 		}
 
 		return { glyph: '•', className: 'text-gray-300' };

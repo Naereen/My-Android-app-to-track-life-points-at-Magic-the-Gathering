@@ -7,7 +7,8 @@ export type GameHistoryEntryKind =
 	| 'statusBoolean'
 	| 'statusNumeric'
 	| 'commanderDamage'
-	| 'turnChange';
+	| 'turnChange'
+	| 'gameRestart';
 
 export type GameHistoryEntry = {
 	id: string;

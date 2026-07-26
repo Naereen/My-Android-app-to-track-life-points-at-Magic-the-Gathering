@@ -129,6 +129,7 @@
     "game_history": "Histórico da partida",
     "game_history_empty": "Nenhuma alteração registrada ainda.",
     "game_history_clear_button": "Limpar histórico atual",
+    "history_game_restarted": "Partida reiniciada",
     "history_state_on": "ATIVO",
     "history_state_off": "INATIVO",
     "history_from_player": "do jogador",

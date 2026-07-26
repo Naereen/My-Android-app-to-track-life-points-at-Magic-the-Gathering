@@ -1025,6 +1025,12 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	const startingLifeTotal = get(appSettings).startingLifeTotal;
 	removeFirstPlace();
 	clearGameHistory();
+	addGameHistoryEntry({
+		playerId: 0,
+		playerName: '',
+		kind: 'gameRestart',
+		payload: {}
+	});
 
 	// reset current turn and turn count
 	setCurrentTurn(0, false);

@@ -313,11 +313,11 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
 - [x] For each of the status effect, do NOT display the "-" (MINUS) button if the value is currently 0, and do not display the "+" (PLUS) button if the value is currently at its maximum (e.g. 10 for poison counter, 4 for the Ring Bearer and Speed status effects, etc.). This is a nice visual feedback to show that the value cannot be decreased/increased anymore, and it can prevent some mistakes of clicking on the +1/-1 buttons when the value is already at its minimum/maximum.
 
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
-  - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is supported by the Lifetap app, but not yet implemented here.
+  - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is NOT supported by the Lifetap app, and not yet implemented here.
 
 - [x] (improve the UX) TODO: allow to « drag-and-drop » each of the entire player panel, to change their position around the table, and thus change the layout of the app. This is a very cool feature, but it can be hard to implement, especially on mobile devices, so it is a "nice to have" feature for later.
   - [x] This has been implemented, so far only for the 3-player mode.
-  - [ ] TODO: this fails on some cases: if the origin index of the player is = 1, the swap is very hard to do. If the destination index of the player is = 1, the swap is also very hard to do, but it is bugged! If the swap is between players 2 and 3 (indeces - 1) it works fine.
+  - [ ] TODO: this fails on some cases: if the origin index of the player is = 1, the swap is very hard to do. If the destination index of the player is = 1, the swap is also very hard to do, but it is bugged! If the swap is between players 2 and 3 (indices - 1) it works fine.
   - [ ] TODO: add for the 2-player, the two 4-player, the 5-player and the two 6-player modes
 
 ## Variants already existing in Lifetap but not yet implemented here
@@ -331,14 +331,14 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
 
 ### Choose <=> Chosen bug for the backgrounds
 
-- [ ] When choosing a simple background (a single one), the "Choose <=> Chosen" action (on the verb (on the button)) seems to not be working as expected. For instance, if I click on a card image, to select it as background, the button text should change to "Chosen", but if I click again on the same color to deselect it, the button text doesn't change back to "Choose", even though the background is correctly deselected. This is a minor bug, but it can be confusing for users, as the button text doesn't reflect the current state of the background selection.
+- [x] FIXED: When choosing a simple background (a single one), the "Choose <=> Chosen" action (on the verb (on the button)) seems to not be working as expected. For instance, if I click on a card image, to select it as background, the button text should change to "Chosen", but if I click again on the same color to deselect it, the button text doesn't change back to "Choose", even though the background is correctly deselected. This is a minor bug, but it can be confusing for users, as the button text doesn't reflect the current state of the background selection.
 
 ### GIF as backgrounds
 
 > See [issue #13](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/13).
 
 - [x] Like in LifeLinked app, also allow to chose a GIF (from Tenor GIF?) as a background image for players, in addition to the current options of solid colors, color gradients and card images. This can be a fun and visually appealing feature, as it allows to have animated backgrounds for the player panels, which can make the app more lively and enjoyable to use. It can also be useful for players who want to have a more personalized and unique background for their player panel, by choosing a GIF that matches their personality or their favorite cards/characters.
-- [x] Use the KLIPY GIF API, with the key stored in `klipy_api.key` (where? it shouldn't be here... maybe in the home folder of this repository, or `~/.klipy_api.key` ign the home folder of my user).
+- [x] Use the KLIPY GIF API, with the key stored in `klipy_api.key` (where? it shouldn't be here... maybe in the home folder of this repository, or `~/.klipy_api.key` in the home folder of my user).
 
 ### Add a menu (somewhere, in the dice Randomizer menu?) to display an "emblem card" if needed
 
@@ -367,7 +367,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 ### Add a way to be visualize the rooms of a dungeons and the players' positions in the dungeons!
 
-- [ ] TODO: implement afeature to be able (for each player!) to quickly move from one room to a next one, by clicking on the image of the current room, and showing the image of the next room (with a small transition animation), and keeping in memory the current room of each player, so that when opening again the dungeon menu, it shows the current room of each player. This can be a fun and visually appealing feature, as it allows to track the progress of each player in the dungeon, and to have a nice visual representation of it. It can also be useful for players who want to play with the Dungeons & Dragons adventures, which are pretty cool!
+- [ ] TODO: implement a feature to be able (for each player!) to quickly move from one room to a next one, by clicking on the image of the current room, and showing the image of the next room (with a small transition animation), and keeping in memory the current room of each player, so that when opening again the dungeon menu, it shows the current room of each player. This can be a fun and visually appealing feature, as it allows to track the progress of each player in the dungeon, and to have a nice visual representation of it. It can also be useful for players who want to play with the Dungeons & Dragons adventures, which are pretty cool!
 
 ### Implement a very good feature to track successive Head/Tail coin flips, like in the "LifeLinked" MTG app
 
@@ -382,7 +382,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 ### Active turn indicator and statistics of which player spent the most time during their turns
 
 - [ ] even if the timer of the current turn is not shown (it should be possible to enable/disable it in the settings), the app could count the time of each turn in the background, and display some statistics at the end: Akroma played for 19% of the time of the game, while Cho-Manno played for 32% of the total time.
-- [ ] implement a timer that can be shown and decreases / increases (which is best?). Add a discrete but long vibration when the timer reaches 0 seconds (if decreasing) or X minutes (if increasing).
+- [x] implement a timer that can be shown and decreases / increases (which is best?). Add a discrete but long vibration when the timer reaches 0 seconds (if decreasing) or X minutes (if increasing).
 
 ### Nope
 
