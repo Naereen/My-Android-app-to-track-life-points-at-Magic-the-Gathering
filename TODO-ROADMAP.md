@@ -121,7 +121,7 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
 - [x] In this layout, the "K.O." player dark overlay is displayed with a stronger "z-index" that it should have? So when a player is K.O.'d, the "K.O." overlay is displayed above all the other panels, including the "edit player" panel, which makes it impossible to edit a K.O.'d player. This bug is not present in the default layout (the "2 x 2" layout), only in the "1 / 2 / 1" layout.
 
-- [ ] In any layout, the "K.O." player dark overlay should be clearly visible, with a strong "z-index" (below the dark gray overlay). Right now: when a player is K.O., its background (color gradient or color background) panel is NOT shown as grayed or darker. TODO: fix that!
+- [x] In any layout, the "K.O." player dark overlay should be clearly visible, with a strong "z-index" (below the dark gray overlay). Right now: when a player is K.O., its background (color gradient or color background) panel is NOT shown as grayed or darker. Fixed by removing the opaque `bg-player-dark` background from the inner content div (which was sitting above the semi-transparent dead overlay at z-10, hiding it completely).
 
 ### Disable the auto-kill by EDH Commander damage, for 2-player mode
 
