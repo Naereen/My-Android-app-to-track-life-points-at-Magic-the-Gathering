@@ -6,7 +6,8 @@ export type GameHistoryEntryKind =
 	| 'poison'
 	| 'statusBoolean'
 	| 'statusNumeric'
-	| 'commanderDamage';
+	| 'commanderDamage'
+	| 'turnChange';
 
 export type GameHistoryEntry = {
 	id: string;
@@ -20,6 +21,9 @@ export type GameHistoryEntry = {
 		to?: number | boolean;
 		fromPlayerId?: number;
 		lifeDelta?: number;
+		toPlayerName?: string;
+		fromTurn?: number;
+		toTurn?: number;
 	};
 };
 

@@ -134,6 +134,7 @@
     "history_state_on": "ATTIVO",
     "history_state_off": "DISATTIVO",
     "history_from_player": "dal giocatore",
+    "turn": "turno",
     "set_life_total": "Imposta punti vita",
     "set_commander_damage": "Imposta danno del comandante",
     "enter_life_total_placeholder": "Inserisci punti vita",

@@ -67,6 +67,18 @@
 			return `${entry.playerName} · ${$_('commander_damage')} (${$_('history_from_player')} #${entry.payload.fromPlayerId ?? '-' }): ${fromValue} → ${toValue}${lifePart}`;
 		}
 
+		if (entry.kind === 'turnChange') {
+			const fromTurn = entry.payload.fromTurn ?? 0;
+			const toTurn = entry.payload.toTurn ?? 0;
+			const toPlayerName = entry.payload.toPlayerName ?? '';
+			const fromPlayerName = entry.playerName;
+			const turnLabel = $_('turn');
+			if (fromPlayerName) {
+				return `${fromPlayerName} · ${turnLabel} ${fromTurn} → ${toPlayerName}, ${turnLabel} ${toTurn}`;
+			}
+			return `→ ${toPlayerName}, ${turnLabel} ${toTurn}`;
+		}
+
 		return '';
 	};
 
@@ -90,6 +102,10 @@
 
 		if (entry.kind === 'commanderDamage') {
 			return { glyph: '⚔', className: 'text-amber-300' };
+		}
+
+		if (entry.kind === 'turnChange') {
+			return { glyph: '🔂', className: 'text-purple-300' };
 		}
 
 		return { glyph: '•', className: 'text-gray-300' };
