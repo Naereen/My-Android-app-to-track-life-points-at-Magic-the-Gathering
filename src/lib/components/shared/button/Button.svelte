@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { haptic } from '$lib/utils/haptics';
 	export let type: 'light' | 'dark' = 'light';
+	export let hapticPattern: number | number[] = 20;
 </script>
 
 <button
 	on:click
-	use:haptic={20}
+	use:haptic={hapticPattern}
 	on:contextmenu|preventDefault
 	draggable="false"
 	class="no-longpress border rounded-md px-2 w-20 {type === 'light'
