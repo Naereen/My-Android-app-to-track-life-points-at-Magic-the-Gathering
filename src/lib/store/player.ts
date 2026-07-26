@@ -951,10 +951,10 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	let clearProfiles = false;
 	// For 2-player mode: 0 = Player 1 starts, 1 = Player 2 starts, 2 = Random
 	let startingPlayerChoice: number = 2;
+	const playerCount = get(appSettings).playerCount;
+	const isTwoPlayerMode = playerCount === 2;
 
 	if (!alreadyConfirmed) {
-		const playerCount = get(appSettings).playerCount;
-		const isTwoPlayerMode = playerCount === 2;
 
 		const confirmOptions: {
 			checkboxLabel: string[];
@@ -1098,8 +1098,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	await assignRandomVanguardsForGame();
 	await assignRandomTreacheryForGame();
 
-	const playerCount = get(appSettings).playerCount;
-	if (playerCount === 2 && startingPlayerChoice !== 2) {
+	if (isTwoPlayerMode && startingPlayerChoice !== 2) {
 		// Directly set the chosen player as the starting player (no spin animation)
 		setFirstPlayer(startingPlayerChoice);
 	} else {
