@@ -4,6 +4,7 @@ import { appSettings } from './appSettings';
 import { vibrate } from '$lib/utils/haptics';
 import { players } from './player';
 import { turnTimer } from './turnTimer';
+import { addGameHistoryEntry } from './gameHistory';
 
 const MAX_STREAM_PLAYERS = 6;
 
@@ -112,6 +113,8 @@ export const nextTurn = () => {
 	// Advance to the next non-dead player. If all players are dead, set to -1.
 	const playersList = get(players);
 	const current = get(appState).currentTurn;
+	const fromPlayer = current >= 0 ? playersList[current] : undefined;
+	const fromTurnCount = get(appState).turnCount;
 	let nextIndex = (current + 1) % totalPlayers;
 	let attempts = 0;
 	// Limit search to totalPlayers steps to avoid infinite loop
@@ -127,6 +130,16 @@ export const nextTurn = () => {
 		// If the candidate is alive, set as current turn.
 		if (candidate && !isDead) {
 			setCurrentTurn(nextIndex, true);
+			addGameHistoryEntry({
+				playerId: fromPlayer?.id ?? -1,
+				playerName: fromPlayer?.playerName ?? '',
+				kind: 'turnChange',
+				payload: {
+					toPlayerName: candidate.playerName,
+					fromTurn: fromTurnCount,
+					toTurn: get(appState).turnCount
+				}
+			});
 			return;
 		}
 		// If there's no candidate (defensive), treat as dead and continue
@@ -143,6 +156,8 @@ export const prevTurn = () => {
 	// Advance to the next non-dead player. If all players are dead, set to -1.
 	const playersList = get(players);
 	const current = get(appState).currentTurn;
+	const fromPlayer = current >= 0 ? playersList[current] : undefined;
+	const fromTurnCount = get(appState).turnCount;
 	let nextIndex = (current - 1 + totalPlayers) % totalPlayers;
 	let attempts = 0;
 	// Limit search to totalPlayers steps to avoid infinite loop
@@ -158,6 +173,16 @@ export const prevTurn = () => {
 		// If the candidate is alive, set as current turn.
 		if (candidate && !isDead) {
 			setCurrentTurn(nextIndex, false);
+			addGameHistoryEntry({
+				playerId: fromPlayer?.id ?? -1,
+				playerName: fromPlayer?.playerName ?? '',
+				kind: 'turnChange',
+				payload: {
+					toPlayerName: candidate.playerName,
+					fromTurn: fromTurnCount,
+					toTurn: get(appState).turnCount
+				}
+			});
 			return;
 		}
 		// If there's no candidate (defensive), treat as dead and continue
