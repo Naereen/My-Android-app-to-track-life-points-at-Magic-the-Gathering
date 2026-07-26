@@ -7,9 +7,10 @@
 	export let cancelText = $_('cancel_modal');
 
 	let checkboxValues: boolean[] = [];
+	let radioValue: number = 0;
 	let previousIsOpen = false;
 
-	// Reset checkbox values only when modal transitions from closed to open
+	// Reset checkbox and radio values only when modal transitions from closed to open
 	$: if ($confirmModalData.isOpen && !previousIsOpen) {
 		const labels = $confirmModalData.checkboxLabel;
 		const def = $confirmModalData.checkboxDefaultValue;
@@ -19,23 +20,28 @@
 		} else {
 			checkboxValues = [Array.isArray(def) ? def[0] ?? false : def ?? false];
 		}
+		radioValue = $confirmModalData.radioDefaultValue ?? 0;
 		previousIsOpen = true;
 	} else if (!$confirmModalData.isOpen) {
 		previousIsOpen = false;
+	}
+
+	function getCheckboxValue() {
+		return Array.isArray($confirmModalData.checkboxLabel) ? checkboxValues : (checkboxValues[0] ?? false);
 	}
 </script>
 
 {#if $confirmModalData.isOpen}
 	<div
 		class="bg-black/70 absolute w-full h-full top-0 left-0 flex justify-center items-center"
-		on:click={() => respondConfirm(false, checkboxValues)}
+		on:click={() => respondConfirm(false, getCheckboxValue(), radioValue)}
 		role="button"
 		aria-label="close dialog"
 		tabindex="0"
 		on:keydown={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				e.preventDefault();
-				respondConfirm(false, checkboxValues);
+				respondConfirm(false, getCheckboxValue(), radioValue);
 			}
 		}}
 	>
@@ -46,14 +52,14 @@
 			tabindex="0"
 			on:keydown={(e) => {
 				if (e.key === 'Escape') {
-					respondConfirm(false, checkboxValues);
+					respondConfirm(false, getCheckboxValue(), radioValue);
 				}
 			}}
-			class="bg-white max-w-[85%] w-11/12 max-h-80 rounded-[1rem] flex flex-col justify-center items-center text-black p-5 relative"
+			class="bg-white max-w-[85%] w-11/12 max-h-80 rounded-[1rem] flex flex-col justify-center items-center text-black p-5 relative overflow-y-auto"
 		>
 			<button
 				class="absolute right-3 top-3"
-				on:click={() => respondConfirm(false, checkboxValues)}
+				on:click={() => respondConfirm(false, getCheckboxValue(), radioValue)}
 				on:contextmenu|preventDefault
 				draggable="false"><X /></button
 			>
@@ -76,14 +82,33 @@
 						</div>
 					{/if}
 				{/if}
+				{#if $confirmModalData.radioOptions && $confirmModalData.radioOptions.length > 0}
+					<div class="mb-4 flex flex-col items-start gap-2">
+						{#if $confirmModalData.radioGroupLabel}
+							<p class="text-sm font-semibold">{$confirmModalData.radioGroupLabel}</p>
+						{/if}
+						{#each $confirmModalData.radioOptions as option, i}
+							<div class="flex items-center gap-2">
+								<input
+									type="radio"
+									id={"confirm-radio-" + i}
+									name="confirm-radio-group"
+									value={i}
+									bind:group={radioValue}
+								/>
+								<label for={"confirm-radio-" + i} class="text-sm">{option}</label>
+							</div>
+						{/each}
+					</div>
+				{/if}
 				<div class="flex gap-4 justify-center">
 					<button
 						class="px-4 py-2 rounded-lg text-lg bg-gray-200"
-						on:click={() => respondConfirm(false, Array.isArray($confirmModalData.checkboxLabel) ? checkboxValues : (checkboxValues[0] ?? false))}>{cancelText}</button
+						on:click={() => respondConfirm(false, getCheckboxValue(), radioValue)}>{cancelText}</button
 					>
 					<button
 						class="px-4 py-2 rounded-lg text-lg bg-cyan-600 text-white"
-						on:click={() => respondConfirm(true, Array.isArray($confirmModalData.checkboxLabel) ? checkboxValues : (checkboxValues[0] ?? false))}>{confirmText}</button
+						on:click={() => respondConfirm(true, getCheckboxValue(), radioValue)}>{confirmText}</button
 					>
 				</div>
 			</div>
