@@ -130,16 +130,18 @@ export const nextTurn = () => {
 		// If the candidate is alive, set as current turn.
 		if (candidate && !isDead) {
 			setCurrentTurn(nextIndex, true);
-			addGameHistoryEntry({
-				playerId: fromPlayer?.id ?? -1,
-				playerName: fromPlayer?.playerName ?? '',
-				kind: 'turnChange',
-				payload: {
-					toPlayerName: candidate.playerName,
-					fromTurn: fromTurnCount,
-					toTurn: get(appState).turnCount
-				}
-			});
+			if (fromPlayer) {
+				addGameHistoryEntry({
+					playerId: fromPlayer.id,
+					playerName: fromPlayer.playerName,
+					kind: 'turnChange',
+					payload: {
+						toPlayerName: candidate.playerName,
+						fromTurn: fromTurnCount,
+						toTurn: get(appState).turnCount
+					}
+				});
+			}
 			return;
 		}
 		// If there's no candidate (defensive), treat as dead and continue
@@ -173,16 +175,18 @@ export const prevTurn = () => {
 		// If the candidate is alive, set as current turn.
 		if (candidate && !isDead) {
 			setCurrentTurn(nextIndex, false);
-			addGameHistoryEntry({
-				playerId: fromPlayer?.id ?? -1,
-				playerName: fromPlayer?.playerName ?? '',
-				kind: 'turnChange',
-				payload: {
-					toPlayerName: candidate.playerName,
-					fromTurn: fromTurnCount,
-					toTurn: get(appState).turnCount
-				}
-			});
+			if (fromPlayer) {
+				addGameHistoryEntry({
+					playerId: fromPlayer.id,
+					playerName: fromPlayer.playerName,
+					kind: 'turnChange',
+					payload: {
+						toPlayerName: candidate.playerName,
+						fromTurn: fromTurnCount,
+						toTurn: get(appState).turnCount
+					}
+				});
+			}
 			return;
 		}
 		// If there's no candidate (defensive), treat as dead and continue

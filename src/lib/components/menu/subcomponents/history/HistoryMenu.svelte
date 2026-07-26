@@ -72,10 +72,11 @@
 			const toTurn = entry.payload.toTurn ?? 0;
 			const toPlayerName = entry.payload.toPlayerName ?? '';
 			const fromPlayerName = entry.playerName;
+			const turnLabel = $_('turn');
 			if (fromPlayerName) {
-				return `${fromPlayerName} · ${$_('turn')} ${fromTurn} → ${toPlayerName}, ${$_('turn')} ${toTurn}`;
+				return `${fromPlayerName} · ${turnLabel} ${fromTurn} → ${toPlayerName}, ${turnLabel} ${toTurn}`;
 			}
-			return `→ ${toPlayerName}, ${$_('turn')} ${toTurn}`;
+			return `→ ${toPlayerName}, ${turnLabel} ${toTurn}`;
 		}
 
 		return '';
