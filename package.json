@@ -50,5 +50,12 @@
 		"@capacitor/splash-screen": "^8.0.0",
 		"@capacitor/status-bar": "^8.0.0",
 		"@capawesome/capacitor-android-edge-to-edge-support": "^8.0.5"
+	},
+	"allowScripts": {
+		"es5-ext@0.10.64": true,
+		"esbuild@0.21.5": true,
+		"esbuild@0.19.12": true,
+		"sharp@0.32.6": true,
+		"svelte-preprocess@5.1.4": true
 	}
 }

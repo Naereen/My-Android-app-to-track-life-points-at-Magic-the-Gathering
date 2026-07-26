@@ -106,9 +106,12 @@ export const resetPlayerModalData = () => {
 type ConfirmModalState = {
 	isOpen: boolean;
 	message: string;
-	resolve: ((value: boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[] }) => void) | null;
+	resolve: ((value: boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[]; radioValue?: number }) => void) | null;
 	checkboxLabel?: string | string[];
 	checkboxDefaultValue?: boolean | boolean[];
+	radioGroupLabel?: string;
+	radioOptions?: string[];
+	radioDefaultValue?: number;
 };
 
 const initialConfirmModalState: ConfirmModalState = { isOpen: false, message: '', resolve: null };
@@ -119,26 +122,32 @@ export const showConfirm = (
 	message: string,
 	options?: {
 		checkboxLabel?: string | string[];
-		checkboxDefaultValue?: boolean | boolean[]
+		checkboxDefaultValue?: boolean | boolean[];
+		radioGroupLabel?: string;
+		radioOptions?: string[];
+		radioDefaultValue?: number;
 	}
 ) => {
-	return new Promise<boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[] }>((resolve) => {
+	return new Promise<boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[]; radioValue?: number }>((resolve) => {
 		confirmModalData.set({
 			isOpen: true,
 			message,
 			resolve,
 			checkboxLabel: options?.checkboxLabel,
-			checkboxDefaultValue: options?.checkboxDefaultValue ?? false
+			checkboxDefaultValue: options?.checkboxDefaultValue ?? false,
+			radioGroupLabel: options?.radioGroupLabel,
+			radioOptions: options?.radioOptions,
+			radioDefaultValue: options?.radioDefaultValue ?? 0
 		});
 	});
 };
 
-export const respondConfirm = (value: boolean, checkboxValue?: boolean | boolean[]) => {
+export const respondConfirm = (value: boolean, checkboxValue?: boolean | boolean[], radioValue?: number) => {
 	const current = get(confirmModalData);
 	if (current && current.resolve) {
 		try {
-			if (current.checkboxLabel !== undefined) {
-				current.resolve({ confirmed: value, checkboxValue });
+			if (current.checkboxLabel !== undefined || current.radioOptions !== undefined) {
+				current.resolve({ confirmed: value, checkboxValue, radioValue });
 			} else {
 				current.resolve(value);
 			}

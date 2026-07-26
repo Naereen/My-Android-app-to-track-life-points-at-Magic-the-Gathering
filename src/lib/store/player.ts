@@ -949,22 +949,48 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	let resetProfiles = false;
 	let randomizeSeats = false;
 	let clearProfiles = false;
+	// For 2-player mode: 0 = Player 1 starts, 1 = Player 2 starts, 2 = Random
+	let startingPlayerChoice: number = 2;
+	const playerCount = get(appSettings).playerCount;
+	const isTwoPlayerMode = playerCount === 2;
 
 	if (!alreadyConfirmed) {
+
+		const confirmOptions: {
+			checkboxLabel: string[];
+			checkboxDefaultValue: boolean[];
+			radioGroupLabel?: string;
+			radioOptions?: string[];
+			radioDefaultValue?: number;
+		} = {
+			checkboxLabel: [
+				get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
+				get(_)('reset_player_profiles_checkbox_plus_randomize_seats') || 'Also randomize player seats?',
+				get(_)('reset_player_profiles_checkbox_plus_clear_profile') || 'Also clear player profiles (name and background)?',
+			],
+			checkboxDefaultValue: [
+				false,
+				false,
+				false,
+			]
+		};
+
+		if (isTwoPlayerMode) {
+			const currentPlayers = get(players);
+			const player1Name = currentPlayers[0]?.playerName || (get(_)('player') ? `${get(_)('player')} 1` : 'Player 1');
+			const player2Name = currentPlayers[1]?.playerName || (get(_)('player') ? `${get(_)('player')} 2` : 'Player 2');
+			confirmOptions.radioGroupLabel = get(_)('reset_game_who_starts') || 'Who should start?';
+			confirmOptions.radioOptions = [
+				(get(_)('reset_game_player1_starts') || '{player} starts').replace('{player}', player1Name),
+				(get(_)('reset_game_player2_starts') || '{player} starts').replace('{player}', player2Name),
+				get(_)('reset_game_random_start') || 'Random',
+			];
+			confirmOptions.radioDefaultValue = 2;
+		}
+
 		const result = await showConfirm(
 			get(_)('window_confirm_reset_game') || 'Are you sure you want to continue?',
-			{
-				checkboxLabel: [
-					get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
-					get(_)('reset_player_profiles_checkbox_plus_randomize_seats') || 'Also reset player profiles (colors) + Randomize seats',
-					get(_)('reset_player_profiles_checkbox_plus_clear_profile') || 'Also reset player profiles (colors) + Clear profile',
-				],
-				checkboxDefaultValue: [
-					false,
-					false,
-					false,
-				]
-			}
+			confirmOptions
 		);
 
 		if (typeof result === 'boolean') {
@@ -989,6 +1015,9 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 			if (typeof result.checkboxValue === 'boolean') {
 				// Backwards compatibility: if checkboxValue is just a boolean, use it to decide whether to reset profiles
 				resetProfiles = result.checkboxValue ?? false;
+			}
+			if (isTwoPlayerMode && typeof result.radioValue === 'number') {
+				startingPlayerChoice = result.radioValue;
 			}
 		}
 	}
@@ -1069,7 +1098,12 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	await assignRandomVanguardsForGame();
 	await assignRandomTreacheryForGame();
 
-	spinToSelectFirstPlayer();
+	if (isTwoPlayerMode && startingPlayerChoice !== 2) {
+		// Directly set the chosen player as the starting player (no spin animation)
+		setFirstPlayer(startingPlayerChoice);
+	} else {
+		spinToSelectFirstPlayer();
+	}
 };
 
 /**
@@ -1328,6 +1362,18 @@ export const removeFirstPlace = () => {
 };
 
 export const spinning = writable(false);
+
+export const setFirstPlayer = (playerIndex: number) => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player, index) => ({
+			...player,
+			isFirst: index === playerIndex,
+			highlighted: false,
+			isDead: false
+		}));
+	});
+	setCurrentTurn(playerIndex, true);
+};
 
 export const spinToSelectFirstPlayer = () => {
 	const totalPlayers = get(appSettings).playerCount;
