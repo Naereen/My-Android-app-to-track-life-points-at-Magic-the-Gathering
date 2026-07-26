@@ -267,7 +267,7 @@
 <svelte:window bind:innerWidth />
 
 <div
-	class="flex w-full rounded-3xl flex-grow h-6"
+	class="relative flex w-full rounded-3xl flex-grow h-6"
 	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
 	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
 	class:bg-rotated={!!$players[index].backgroundImage}
@@ -286,7 +286,7 @@
 		class:dead={isDead}
 	></div>
 	<div
-		class="flex w-full rounded-2xl flex-grow h-6"
+		class="relative z-20 flex w-full rounded-2xl flex-grow h-6"
 		class:h-full={!$appState.isMenuOpen}
 		class:opacity-75={$players[index].highlighted}
 		class:bg-player-dark={isDead}
@@ -460,7 +460,7 @@
 		{/if}
 	</div>
 	<!-- Status effects bar -->
-	<div class="absolute left-0 right-0 bottom-2 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
+	<div class="absolute z-20 left-0 right-0 bottom-2 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
 		<div
 			class="bg-black/40 text-white text-xs rounded-full px-1 py-0 flex gap-0.5 items-center pointer-events-auto"
 		>

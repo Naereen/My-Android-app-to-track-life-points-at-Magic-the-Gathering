@@ -25,7 +25,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] Reduce the vertical space taken by the "ressources" menu (mana/storm symbols) ==> NOPE
 - [x] Increase the font-size of the names of the players, especially on mobile devices. DONE but don't do it too much!
 
-- [x] When showing the playerName, truncate it to max 20 caracters, in order to be sure that it will not be too large?
+- [x] When showing the playerName, truncate it to max 20 characters, in order to be sure that it will not be too large?
 
 - [x] Add an animation showing the dice D6/D8/D10/etc rolling a little bit (like for 1 seconds, 6 different results appearing one after the other, before showing the final result).
   - [x] the animation is implemented, but so far it shows the maximum face of the dice (eg. a face showing 20 for a D20), and a number moving randomly, below this face of the dice.
@@ -63,6 +63,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] Italian
   - [x] Portuguese
   - [ ] Japanese? I don't care. I can't verify it AT ALL, so I don't see the point.
+  - [ ] Others? Same remark.
 
 - [x] Add a language selection menu in the settings dialog
   - [x] Reduce the size ot the labels of each language
@@ -72,13 +73,13 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 ## Bugs fixing:
 
 - [x] Fix the bug where the "download / share / print" long click menu appear (on mobile devices)
-- [x] When throwing a die, the result is displayed too close to the die icon, spacen then a bit more!
+- [x] When throwing a die, the result is displayed too close to the die icon, space then a bit more!
 
-- [ ] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks). I couldn't reproduce this bug anymore...
+- [x] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks). I couldn't reproduce this bug anymore...
 
 - [ ] FIXME: enable again the day/night switch setting in the player status effects, which is currently disabled because I was lazy to implement the day/night cycle feature, but I want to enable it again (some day), even if the day/night cycle is not implemented yet, as it can be useful for players to track this status effect, even without the full day/night cycle feature.
 
-- [x] When editing the life total of a player (by double clicking on it), for the PlayerHorizontal layout, the edition menu shoud face the user (so it has to be 180deg rotated if the orientation===right I guess?)
+- [x] When editing the life total of a player (by double clicking on it), for the PlayerHorizontal layout, the edition menu should face the user (so it has to be 180deg rotated if the orientation===right I guess?)
 
 ### About the ServiceWorker.js script
 
@@ -91,13 +92,13 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 ### The "and also shuffle players' positions" option, in the "Restart the Game" panel, is totally bugged!
 
-- [x] When clicking on "Restart the Game" button, with the "and also shuffle players' positions" option enabled, the players' positions are not shuffled at all, instead random new players outside of the interval [1...nbPlayers] seem to appear! This is a serious bug, as it makes this option completely useless. This bug is present in all modes (2-player, 3-player, 4-player, etc).
+- [ ] When clicking on "Restart the Game" button, with the "and also shuffle players' positions" option enabled, the players' positions are not shuffled at all, instead random new players outside of the interval [1...nbPlayers] seem to appear! This is a serious bug, as it makes this option completely useless. This bug is present in all modes (2-player, 3-player, 4-player, 5-player, 6-player).
 
 ### The active player "glowing effect"
 
 - [x] When enabling the "active player glowing effect" setting, the glowing effect is not displayed correctly for the right/left facing players (player 3 in 3-player mode, player 3 and 4 in 4-player mode, etc). Currently, the glow effect is correctly displayed, but it disable the button on the playerName that opens the PlayerDataModal. This is a serious bug. This bug is not present for the bottom/top facing players (in various modes).
 
-- [x] When "spining" to select a random starting player or a random player, temporily disabl the "glowing effect" for the active player, as it can be confusing with the "spinning" animation of the randomizer, which also use a glowing effect. This is a minor issue, but it can improve the user experience.
+- [x] When "spinning" to select a random starting player or a random player, temporarily disable the "glowing effect" for the active player, as it can be confusing with the "spinning" animation of the randomizer, which also use a glowing effect. This is a minor issue, but it can improve the user experience.
 
 ### The image background
 
@@ -120,7 +121,7 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
 - [x] In this layout, the "K.O." player dark overlay is displayed with a stronger "z-index" that it should have? So when a player is K.O.'d, the "K.O." overlay is displayed above all the other panels, including the "edit player" panel, which makes it impossible to edit a K.O.'d player. This bug is not present in the default layout (the "2 x 2" layout), only in the "1 / 2 / 1" layout.
 
-- [x] In any layout, the "K.O." player dark overlay should be clearly visible, with a strong "z-index". So when a player is K.O.'d, it's (color gradient or color backgroun) panel is NOT shown as grayed or darker
+- [ ] In any layout, the "K.O." player dark overlay should be clearly visible, with a strong "z-index" (below the dark gray overlay). Right now: when a player is K.O., its background (color gradient or color background) panel is NOT shown as grayed or darker. TODO: fix that!
 
 ### Disable the auto-kill by EDH Commander damage, for 2-player mode
 
