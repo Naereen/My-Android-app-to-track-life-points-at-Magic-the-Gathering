@@ -178,7 +178,7 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
 - [x] Harder to track: implement the Commander Damage tracker (from each opponent).
 
-  - [x] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Inicie) or not (Ascend, etc)
+  - [x] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Initiative) or not (Ascend, etc)
   - [x] After, make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
 
 - [x] Add support for the poison counter: you can die to them!
@@ -213,13 +213,13 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
 - [x] If the settings "show_next_player_button" is disabled, force a disable of the other setting "enable_current_player_glow", as it doesn't make sense to show the player glow in gold, if it's impossible to go to the next player turn!
 
-- [x] Implement a counter of the number of turns. It can be an integer betwen 0 and 99. It should be displayed next to the "▶" « next turn » button (in the gray-colored circle). In this section of the global horizontal menu, show the number of turns that have been played, starting from 1 at the beginning of the game, and incrementing by 1 each time the "next turn" button is clicked enough so that the initial starting player is the active player again. This can be useful for players to track the number of turns, especially for certain cards that have effects based on the number of turns (e.g. "[Serra Avenger](https://scryfall.com/card/tsp/40/serra-avenger)"), or for tournament games where there is a time limit of (60 minutes or) 12 turns, etc.
+- [x] Implement a counter of the number of turns. It can be an integer between 0 and 99. It should be displayed next to the "▶" « next turn » button (in the gray-colored circle). In this section of the global horizontal menu, show the number of turns that have been played, starting from 1 at the beginning of the game, and incrementing by 1 each time the "next turn" button is clicked enough so that the initial starting player is the active player again. This can be useful for players to track the number of turns, especially for certain cards that have effects based on the number of turns (e.g. "[Serra Avenger](https://scryfall.com/card/tsp/40/serra-avenger)"), or for tournament games where there is a time limit of (60 minutes or) 12 turns, etc.
 
 - [x] Implement a timer for each turn (like in Lifetap app). This feature should be optional, as it can be annoying for some people, especially if they are not used to play with a timer, but it can be useful for people who want to play with a timer, or for tournament games.
 
-  - [x] A way to set the timer duration (global setting). By default, it should be 4 minutes by turn.
+  - [x] A way to set the timer duration (global setting). By default, it should be 3 minutes by turn.
   - [x] Show the remaining time for the current player's turn: show it in the top left corner of the player's panel, with a small circular progress bar around it, to show the remaining time visually.
-  - [x] (Strong) haptic vibration feedbak, when the time is up
+  - [x] (Strong) haptic vibration feedback, when the time is up
   - [x] ? and play a discrete tiny alarm sound, when the time is up?
   - [x] The timer gets reset every time a global menu is opened, this is a serious bug, as it can be used to "cheat" by opening the menu to reset the timer, so it should be fixed as soon as possible. The timer should not be reset when opening the global menu, but it should be paused, and then resumed when closing the global menu.
   - [x] When clicking on the "golden circle" timer SVG element, if it currently finished, reset it and start it again, for the current player's turn. This can be useful for players to manually reset the timer if they want to, without having to wait for the "next turn" button to be clicked enough times to get back to the initial starting player.

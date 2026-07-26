@@ -1372,7 +1372,7 @@ export const setFirstPlayer = (playerIndex: number) => {
 			isDead: false
 		}));
 	});
-	setCurrentTurn(playerIndex, true);
+	setCurrentTurn(playerIndex, true, true);
 };
 
 export const spinToSelectFirstPlayer = () => {
@@ -1415,7 +1415,7 @@ export const spinToSelectFirstPlayer = () => {
 					});
 				});
 				// set the current turn to the selected starting player
-				setCurrentTurn((currentIndex - 1 + totalPlayers) % totalPlayers, true);
+				setCurrentTurn((currentIndex - 1 + totalPlayers) % totalPlayers, true, true);
 			}, finalPauseTime);
 		}
 	};

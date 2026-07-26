@@ -25,12 +25,13 @@ const createTurnTimer = () => {
         }
     };
 
-    const startForPlayer = (playerIndex: number) => {
+    const startForPlayer = (playerIndex: number, options?: { forceReset?: boolean }) => {
+        const forceReset = !!options?.forceReset;
         const duration = get(appSettings).turnTimerDuration || 240;
         // If already running for this player, don't reset
-        if (state.playerIndex === playerIndex && state.running) return;
+        if (!forceReset && state.playerIndex === playerIndex && state.running) return;
         // If same player but currently paused and has remaining > 0, resume without resetting
-        if (state.playerIndex === playerIndex && !state.running && state.remaining > 0) {
+        if (!forceReset && state.playerIndex === playerIndex && !state.running && state.remaining > 0) {
             // start interval without resetting remaining/total
             if (!interval) {
                 interval = setInterval(() => {
@@ -177,9 +178,9 @@ const createTurnTimer = () => {
         update((s) => ({ ...s, running: false }));
     };
 
-    const resetForCurrent = () => {
+    const resetForCurrent = (forceReset = false) => {
         const idx = get(appState).currentTurn;
-        if (idx >= 0) startForPlayer(idx);
+        if (idx >= 0) startForPlayer(idx, { forceReset });
         else stop();
     };
 

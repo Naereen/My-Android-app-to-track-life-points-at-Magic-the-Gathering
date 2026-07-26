@@ -61,7 +61,7 @@ export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 	appState.update((data) => ({ ...data, activeMenu: menu, isMenuOpen: !data.isMenuOpen }));
 };
 
-export const setCurrentTurn = (index: number, updateIsPositive: boolean) => {
+export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTimerReset = false) => {
 	appState.update((data) => {
 		const newData = { ...data, currentTurn: index } as any;
 
@@ -99,7 +99,7 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean) => {
 	// if turn timer enabled, reset/start timer for the new current turn
 	try {
 		if ((get(appSettings)?.turnTimerEnabled)) {
-			turnTimer.resetForCurrent();
+			turnTimer.resetForCurrent(forceTimerReset);
 		}
 	} catch (e) {
 		// ignore
