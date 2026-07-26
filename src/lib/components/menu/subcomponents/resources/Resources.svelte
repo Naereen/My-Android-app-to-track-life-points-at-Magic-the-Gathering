@@ -6,6 +6,7 @@
 	import { resetResources } from '$lib/store/resources';
 	import ManaCoutner from './subcomponents/manaCoutner/ManaCoutner.svelte';
 	import { _ } from 'svelte-i18n';
+	import { haptic } from '$lib/utils/haptics';
 
 	$: innerHeight = 0;
 </script>
@@ -25,6 +26,7 @@
 				on:click={() => toggleIsMenuOpen('')}
 				on:contextmenu|preventDefault
 				draggable="false"
+				use:haptic={100}
 				class="text-white absolute left-0 pl-4"
 			>
 				<Arrow />
@@ -54,8 +56,8 @@
 				</div>
 			</div>
 			<div class="flex justify-center gap-2 py-2">
-				<Button on:click={() => toggleIsMenuOpen('')}>{$_('close')}</Button>
-				<Button on:click={resetResources} type="dark">{$_('clear')}</Button>
+				<Button on:click={() => toggleIsMenuOpen('')} hapticPattern={100}>{$_('close')}</Button>
+				<Button on:click={resetResources} hapticPattern={100} type="dark">{$_('clear')}</Button>
 			</div>
 		</div>
 	</div>
