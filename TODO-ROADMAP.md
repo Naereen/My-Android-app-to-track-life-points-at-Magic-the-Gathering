@@ -228,7 +228,7 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 - [x] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel. DONE!
   - [x] Add a setting in the global setting menu, to enable/disable this glowing border for the current player, as it can be too much for some people, especially on mobile devices (it can be too much visual noise, especially with image backgrounds, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to know whose turn it is, but it should be possible to disable it from the settings.
   - [x] Also add a setting to enable/disable the "next player" button from the main menu, as it can be too much for some people, especially on mobile devices (it can consume more screen space, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to have a button to advance to the next player's turn, but it should be possible to disable it from the settings.
-  - [ ] Add logging for time and current number of turns in game history (see PR: #44, issue: #43).
+  - [x] Added logging for time and current number of turns in game history (see PR: #44, issue: #43).
 
 - [x] Implement two layouts for the four-players mode:
 
