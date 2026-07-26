@@ -175,7 +175,7 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
 - [x] For the "Ring Bearer" and the "Speed" status, if the value reaches the maximum (4), the icon should switch from "ss-uncommon" to "ss-rare" (with a golden gradient), to show that the maximum has been reached. This is a nice visual feedback for these two status effects, as they have a maximum value of 4.
 
-- [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch Initiative. So when one player gets it, remove it from all the other players automatically.
+- [x] Improve the following boolean status effects, as only one player can have them at a time: Monarch, Initiative. So when one player gets it, remove it from all the other players automatically.
 
 - [x] Harder to track: implement the Commander Damage tracker (from each opponent).
 

@@ -260,7 +260,7 @@
 	/* état mort : overlay sombre mais avec opacité 0.7 */
 	.bg-rotated-overlay.dead, .bg-rotated-horizontal-overlay.dead {
 		background: rgba(0, 0, 0, 0.75);
-		opacity: 0.9;
+		opacity: 0.5;
 	}
 
 	/* Assurer que le contenu reste au-dessus du background */

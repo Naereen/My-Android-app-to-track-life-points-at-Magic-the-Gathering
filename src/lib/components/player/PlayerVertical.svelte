@@ -289,7 +289,6 @@
 		class="relative z-20 flex w-full rounded-2xl flex-grow h-6"
 		class:h-full={!$appState.isMenuOpen}
 		class:opacity-75={$players[index].highlighted}
-		class:bg-player-dark={isDead}
 	>
 		{#if !$appState.isMenuOpen}
 			<div class="flex w-full relative">
