@@ -226,12 +226,6 @@
 		return normalizedCandidates.includes(normalizedStored);
 	};
 
-	const isResultSelected = (result: { image?: string | null; cardImage?: string | null }) => {
-		const player = getModalPlayer();
-		const stored = player?.backgroundImage;
-		return isStoredBackgroundInCandidates(stored, [result.image, result.cardImage]);
-	};
-
 	const getSelectableImage = (result: { image?: string | null; cardImage?: string | null }) => {
 		return result.image ?? result.cardImage ?? null;
 	};
@@ -607,6 +601,7 @@
 								{/if}
 							{/if}
 							{#each searchResults as r (r.id + '|' + (getSelectableImage(r) ?? 'no-image'))}
+								{@const imgSelected = isStoredBackgroundInCandidates(bgSelections, [r.image, r.cardImage])}
 								<div class="flex gap-2 mb-3 p-2 border rounded-lg bg-white">
 									<div class="flex-1 text-left">
 										<div class="font-semibold text-xl">{r.name}</div>
@@ -616,11 +611,11 @@
 										<div class="mt-2">
 											<button
 												class="px-3 py-1 text-white text-sm rounded"
-												class:bg-gray-500={isResultSelected(r)}
-												class:bg-green-600={!isResultSelected(r)}
+												class:bg-gray-500={imgSelected}
+												class:bg-green-600={!imgSelected}
 												on:click={() => { const img = getSelectableImage(r); if (img) chooseBackground($playerModalData.playerId, img, r.artist ?? null, r.set_name ?? null); }}
 											>
-												{isResultSelected(r) ? $_('scryfall_search_chosen') : $_('scryfall_search_choose')}
+												{imgSelected ? $_('scryfall_search_chosen') : $_('scryfall_search_choose')}
 											</button>
 										</div>
 									</div>
