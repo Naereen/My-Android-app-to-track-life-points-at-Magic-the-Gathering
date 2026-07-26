@@ -13,7 +13,6 @@
 	import HistoryMenu from './subcomponents/history/HistoryMenu.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
-	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import { vibrate } from '$lib/utils/haptics';
 	import { _ } from 'svelte-i18n';
     import { onMount, onDestroy } from 'svelte';
