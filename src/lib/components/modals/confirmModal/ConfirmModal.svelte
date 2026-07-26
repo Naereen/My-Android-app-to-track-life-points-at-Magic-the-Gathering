@@ -55,7 +55,7 @@
 					respondConfirm(false, getCheckboxValue(), radioValue);
 				}
 			}}
-			class="bg-white max-w-[85%] w-11/12 max-h-80 rounded-[1rem] flex flex-col justify-center items-center text-black p-5 relative overflow-y-auto"
+			class="bg-white max-w-[85%] w-11/12 max-h-120 rounded-[1rem] flex flex-col justify-center items-center text-black p-5 relative overflow-y-auto"
 		>
 			<button
 				class="absolute right-3 top-3"
