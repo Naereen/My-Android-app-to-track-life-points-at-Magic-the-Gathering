@@ -260,6 +260,7 @@
 	/* état mort : sombre clairement le panneau sans masquer totalement le fond */
 	.bg-rotated-overlay.dead, .bg-rotated-horizontal-overlay.dead {
 		/* keep a strong overlay layer while preserving background details */
+		z-index: 4000;
 		background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.55));
 		opacity: 0.65;
 		mix-blend-mode: multiply;
