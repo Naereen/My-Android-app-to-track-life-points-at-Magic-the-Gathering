@@ -114,8 +114,8 @@
 		}
 
 		if (entry.kind === 'negativeLife') {
-			return { glyph: '❤', className: 'text-red-300' };
-			// return { glyph: '💔', className: 'text-red-300' };
+			// return { glyph: '❤', className: 'text-red-300' };
+			return { glyph: '💔', className: 'text-red-300' };
 		}
 
 		if (entry.kind === 'poison') {

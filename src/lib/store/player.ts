@@ -7,6 +7,7 @@ import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
 import { playGameplaySound } from '$lib/utils/gameplaySound';
 import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
+import { resetResources } from './resources';
 import { searchVanguardCards, type ScryfallEmblemCard } from '$lib/utils/scryfall';
 import {
 	fetchTreacheryCardBySlug,
@@ -1024,6 +1025,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 
 	const startingLifeTotal = get(appSettings).startingLifeTotal;
 	removeFirstPlace();
+	resetResources();
 	clearGameHistory();
 	addGameHistoryEntry({
 		playerId: 0,
