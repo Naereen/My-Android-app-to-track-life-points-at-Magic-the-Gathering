@@ -26,11 +26,13 @@ export const setResource = (resourceType: App.Resources.Resource, count: number)
 		previousCount = resources[resourceType] ?? 0;
 		if (previousCount === nextCount) {
 			returnedResources = resources;
+			return resources; // No change, return early
 		}
 
 		resources[resourceType] = nextCount;
 		changed = true;
 		returnedResources = resources;
+		return returnedResources;
 	});
 
 	if (changed) {
