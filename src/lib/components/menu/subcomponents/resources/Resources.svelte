@@ -4,7 +4,7 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { resetResources } from '$lib/store/resources';
-	import ManaCoutner from './subcomponents/manaCoutner/ManaCoutner.svelte';
+	import ManaCounter from './subcomponents/ManaCounter/ManaCounter.svelte';
 	import { _ } from 'svelte-i18n';
 	import { haptic } from '$lib/utils/haptics';
 
@@ -38,12 +38,12 @@
 			<div class="w-full text-center text-white flex flex-col items-center">
 				<div class="w-2/4 flex justify-center">
 					<ul class="w-full flex flex-col gap-2">
-						<ManaCoutner type="white" />
-						<ManaCoutner type="blue" />
-						<ManaCoutner type="black" />
-						<ManaCoutner type="red" />
-						<ManaCoutner type="green" />
-						<ManaCoutner type="waste" />
+						<ManaCounter type="white" />
+						<ManaCounter type="blue" />
+						<ManaCounter type="black" />
+						<ManaCounter type="red" />
+						<ManaCounter type="green" />
+						<ManaCounter type="waste" />
 					</ul>
 				</div>
 			</div>
@@ -51,7 +51,7 @@
 				<span class="text-white text-center text-3xl">{$_('storm_counter')}</span>
 				<div class="w-2/4 flex justify-center">
 					<ul class="w-full">
-						<ManaCoutner type="storm" />
+						<ManaCounter type="storm" />
 					</ul>
 				</div>
 			</div>

@@ -21,7 +21,7 @@
 <li class="flex flex-row items-center justify-between w-full">
 	<div>
 		<CircularButton
-			on:click={() => setResource(type, --$resourceCounter[type])}
+			on:click={() => setResource(type, $resourceCounter[type] - 1)}
 			customText
 			highlight
 			light
@@ -38,7 +38,7 @@
 	</div>
 	<div>
 		<CircularButton
-			on:click={() => setResource(type, ++$resourceCounter[type])}
+			on:click={() => setResource(type, $resourceCounter[type] + 1)}
 			customText
 			highlight
 			light
