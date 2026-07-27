@@ -4,7 +4,7 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { resetResources } from '$lib/store/resources';
-	import ManaCounter from './subcomponents/ManaCounter/ManaCounter.svelte';
+	import ManaCounter from './subcomponents/manaCounter/ManaCounter.svelte';
 	import { _ } from 'svelte-i18n';
 	import { haptic } from '$lib/utils/haptics';
 
