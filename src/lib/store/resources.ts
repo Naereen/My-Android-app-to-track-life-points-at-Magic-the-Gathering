@@ -19,15 +19,18 @@ export const setResource = (resourceType: App.Resources.Resource, count: number)
 	const nextCount = Math.max(0, Math.trunc(count));
 	let previousCount = 0;
 	let changed = false;
+	let returnedResources = undefined;
 
 	resourceCounter.update((currentResources) => {
 		const resources = { ...currentResources };
 		previousCount = resources[resourceType] ?? 0;
-		if (previousCount === nextCount) return resources;
+		if (previousCount === nextCount) {
+			returnedResources = resources;
+		}
 
 		resources[resourceType] = nextCount;
 		changed = true;
-		return resources;
+		returnedResources = resources;
 	});
 
 	if (changed) {
@@ -42,6 +45,10 @@ export const setResource = (resourceType: App.Resources.Resource, count: number)
 			}
 		});
 	}
+
+	// Now, return the updated resources after the update has been applied to the game history.
+	// This ensures that the returned resources reflect the latest state after the change.
+	return returnedResources;
 };
 
 export const resetResources = () => {
