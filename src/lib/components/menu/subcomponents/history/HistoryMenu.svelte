@@ -39,6 +39,20 @@
 		return statusKey;
 	};
 
+	const resourceLabel = (resourceKey: string | undefined) => {
+		if (!resourceKey) return '';
+
+		if (resourceKey === 'white') return String($_('history_resource_white'));
+		if (resourceKey === 'blue') return String($_('history_resource_blue'));
+		if (resourceKey === 'black') return String($_('history_resource_black'));
+		if (resourceKey === 'red') return String($_('history_resource_red'));
+		if (resourceKey === 'green') return String($_('history_resource_green'));
+		if (resourceKey === 'waste') return String($_('history_resource_waste'));
+		if (resourceKey === 'storm') return String($_('history_resource_storm'));
+
+		return resourceKey;
+	};
+
 	const formatEntry = (entry: GameHistoryEntry) => {
 		const fromValue = entry.payload.from ?? 0;
 		const toValue = entry.payload.to ?? 0;
@@ -65,6 +79,14 @@
 					? ` · ${$_('life')} ${entry.payload.lifeDelta > 0 ? '+' : ''}${entry.payload.lifeDelta}`
 					: '';
 			return `${entry.playerName} · ${$_('commander_damage')} (${$_('history_from_player')} #${entry.payload.fromPlayerId ?? '-' }): ${fromValue} → ${toValue}${lifePart}`;
+		}
+
+		if (entry.kind === 'resourceChange') {
+			return `${resourceLabel(entry.payload.key)}: ${fromValue} → ${toValue}`;
+		}
+
+		if (entry.kind === 'resourceReset') {
+			return String($_('history_resources_cleared'));
 		}
 
 		if (entry.kind === 'turnChange') {
@@ -110,6 +132,10 @@
 
 		if (entry.kind === 'turnChange') {
 			return { glyph: '🔂', className: 'text-purple-300' };
+		}
+
+		if (entry.kind === 'resourceChange' || entry.kind === 'resourceReset') {
+			return { glyph: '◈', className: 'text-cyan-300' };
 		}
 
 		if (entry.kind === 'gameRestart') {

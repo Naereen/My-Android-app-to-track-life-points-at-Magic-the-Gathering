@@ -40,6 +40,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [ ] Regenerate all the screenshots for the README documentation, as they are already a bit old and don't reflect the latest design of the app.
 
+- [x] Also log all the changes made manually from the mana/storm panel, like +1 red mana, +1 storm count, etc ; in the game history panel.
+
 ## State saving improvements
 
 - [x] Save the state in the local storage of the browser, so that reloading the page does not reset everything
@@ -329,7 +331,7 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
 
 ## New features to implement
 
-### Choose <=> Chosen bug for the backgrounds
+### FIXED: Choose <=> Chosen bug for the backgrounds
 
 - [x] FIXED: When choosing a simple background (a single one), the "Choose <=> Chosen" action (on the verb (on the button)) seems to not be working as expected. For instance, if I click on a card image, to select it as background, the button text should change to "Chosen", but if I click again on the same color to deselect it, the button text doesn't change back to "Choose", even though the background is correctly deselected. This is a minor bug, but it can be confusing for users, as the button text doesn't reflect the current state of the background selection.
 

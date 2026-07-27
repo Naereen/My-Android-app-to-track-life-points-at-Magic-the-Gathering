@@ -7,6 +7,8 @@ export type GameHistoryEntryKind =
 	| 'statusBoolean'
 	| 'statusNumeric'
 	| 'commanderDamage'
+	| 'resourceChange'
+	| 'resourceReset'
 	| 'turnChange'
 	| 'gameRestart';
 
