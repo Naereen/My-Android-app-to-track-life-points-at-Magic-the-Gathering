@@ -257,10 +257,12 @@
 		opacity: 0.7;
 	}
 
-	/* état mort : overlay sombre mais avec opacité 0.75 */
+	/* état mort : sombre clairement le panneau sans masquer totalement le fond */
 	.bg-rotated-overlay.dead, .bg-rotated-horizontal-overlay.dead {
-		background: rgba(0, 0, 0, 0.5);
-		opacity: 0.75;
+		/* keep a strong overlay layer while preserving background details */
+		background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.55));
+		opacity: 0.65;
+		mix-blend-mode: multiply;
 	}
 
 	/* Assurer que le contenu reste au-dessus du background */
