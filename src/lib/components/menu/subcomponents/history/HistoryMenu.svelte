@@ -1,5 +1,21 @@
 <script lang="ts">
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
+	import Acorn from '$lib/assets/icons/Acorn.svelte';
+	import Ascend from '$lib/assets/icons/Ascend.svelte';
+	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
+	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
+	import Crown from '$lib/assets/icons/Crown.svelte';
+	import DayNight from '$lib/assets/icons/DayNight.svelte';
+	import Energy from '$lib/assets/icons/Energy.svelte';
+	import Experience from '$lib/assets/icons/Experience.svelte';
+	import Initiative from '$lib/assets/icons/Initiative.svelte';
+	import PoisonIcon from '$lib/assets/icons/Poison.svelte';
+	import Rad from '$lib/assets/icons/Rad.svelte';
+	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
+	import StatusSkull from '$lib/assets/icons/StatusSkull.svelte';
+	import Storied from '$lib/assets/icons/Storied.svelte';
+	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
+	import Ticket from '$lib/assets/icons/Ticket.svelte';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { appSettings } from '$lib/store/appSettings';
 	import { clearGameHistory, gameHistory, type GameHistoryEntry } from '$lib/store/gameHistory';
@@ -52,6 +68,26 @@
 
 		return resourceKey;
 	};
+
+	const statusBooleanIconMap = {
+		monarch: Crown,
+		initiative: Initiative,
+		ascend: Ascend,
+		storied: Storied,
+		dayNight: DayNight,
+		ko: StatusSkull
+	} as const;
+
+	const statusNumericIconMap = {
+		energy: Energy,
+		experience: Experience,
+		rad: Rad,
+		acorn: Acorn,
+		ticket: Ticket,
+		commandTax: CommandTax,
+		ringBearer: TheRingerBearer,
+		startYourEngineSpeed: StartYourEngineSpeed
+	} as const;
 
 	const formatEntry = (entry: GameHistoryEntry) => {
 		const fromValue = entry.payload.from ?? 0;
@@ -125,21 +161,32 @@
 		}
 
 		if (entry.kind === 'poison') {
-			return { glyph: '☠', className: 'text-lime-300' };
+			return { component: PoisonIcon, className: 'text-lime-300' };
 		}
 
-		if (entry.kind === 'statusBoolean' || entry.kind === 'statusNumeric') {
-			return { glyph: '◉', className: 'text-sky-300' };
+		if (entry.kind === 'statusBoolean') {
+			return {
+				component: statusBooleanIconMap[entry.payload.key as keyof typeof statusBooleanIconMap],
+				className: 'text-sky-300'
+			};
+		}
+
+		if (entry.kind === 'statusNumeric') {
+			return {
+				component: statusNumericIconMap[entry.payload.key as keyof typeof statusNumericIconMap],
+				className: 'text-sky-300'
+			};
 		}
 
 		if (entry.kind === 'commanderDamage') {
-			return { glyph: '⚔', className: 'text-amber-300' };
+			return { component: CommanderDamage, className: 'text-amber-300' };
 		}
 
 		if (entry.kind === 'turnChange') {
 			return { glyph: '🔂', className: 'text-purple-300' };
 		}
 
+		// Should now be useless
 		if (entry.kind === 'resourceChange' || entry.kind === 'resourceReset') {
 			return { glyph: '◈', className: 'text-cyan-300' };
 		}
@@ -155,6 +202,7 @@
 		return { glyph: '•', className: 'text-gray-300' };
 	};
 
+	const iconComponent = (entry: GameHistoryEntry) => iconForEntry(entry).component;
 	const iconGlyph = (entry: GameHistoryEntry) => iconForEntry(entry).glyph;
 	const iconClassName = (entry: GameHistoryEntry) => iconForEntry(entry).className;
 </script>
@@ -188,7 +236,13 @@
 					{#each $gameHistory as entry (entry.id)}
 						<li class="bg-gray-900/95 border border-gray-800 rounded-lg px-2.5 py-2 text-sm">
 							<div class="flex gap-2">
-								<div class={`mt-auto mb-auto w-8 text-center text-3xl select-none ${iconClassName(entry)}`}>{iconGlyph(entry)}</div>
+								<div class={`mt-auto mb-auto w-8 h-8 shrink-0 flex items-center justify-center select-none ${iconClassName(entry)}`}>
+									{#if iconComponent(entry)}
+										<svelte:component this={iconComponent(entry)} />
+									{:else}
+										<span class="text-4xl leading-none">{iconGlyph(entry)}</span>
+									{/if}
+								</div>
 								<div class="min-w-0 flex-1">
 									<div class="text-gray-400 text-1.25rem">{formatTime(entry.timestamp)}</div>
 									<div class="break-words text-xl">{formatEntry(entry)}</div>
