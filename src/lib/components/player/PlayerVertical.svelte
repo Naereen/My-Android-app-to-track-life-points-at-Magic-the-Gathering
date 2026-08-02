@@ -395,6 +395,12 @@
 						</button>
 					</div>
 					<div class="h-1/3 w-full relative flex items-center justify-center">
+						<div
+							class="absolute right-0 top-1/2 -translate-x-[33%] -translate-y-1/2 w-24 text-center text-3xl text-shadow-xl/100 text-shadow-black text-white"
+							style="text-shadow: 0 0 20px black;"
+						>
+							{$players[index].tempLifeDiff < 0 ? `${$players[index].tempLifeDiff}` : ''}
+						</div>
 						{#if $appSettings.showLifeChangeHistory}
 							<div class="absolute left-0 top-1/2 translate-x-12 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2">
 								<LifeChangeHistory
@@ -457,7 +463,7 @@
 							{/if}
 						</div>
 						<div
-							class="absolute right-0 top-1/2 -translate-x-10 -translate-y-1/2 w-24 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
+							class="absolute right-0 top-1/2 -translate-x-[33%] -translate-y-1/2 w-24 text-center text-3xl text-shadow-xl/100 text-shadow-black text-white"
 							style="text-shadow: 0 0 20px black;"
 						>
 							{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}

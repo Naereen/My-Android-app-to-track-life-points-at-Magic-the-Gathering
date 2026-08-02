@@ -883,7 +883,7 @@
 				</label>
 			</div>
 
-			<div class="w-full flex justify-start mt-0 mb-0">
+			<div class="w-full flex justify-center mt-0 mb-0">
 				<label
 					class="flex gap-2 text-sm px-4 py-2 rounded-full"
 					style="min-width: 12rem;"
