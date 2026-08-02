@@ -108,6 +108,7 @@
     "damage_from_player": "Damage from Player:",
     "haptic_feedback": "Haptic feedback",
     "sound_effects": "Sound effects",
+    "show_life_change_history": "Show life change history",
     "turn_timer": "Turn timer",
     "turn_timer_enable": "Enable per-turn timer",
     "turn_timer_enabled": "Per-turn timer enabled",

@@ -106,6 +106,7 @@
     "damage_from_player": "Schaden von Spieler:",
     "haptic_feedback": "Haptisches Feedback",
     "sound_effects": "Soundeffekte",
+    "show_life_change_history": "Verlauf der Lebenspunkteänderungen anzeigen",
     "turn_timer": "Runden-Timer",
     "turn_timer_enable": "Runden-Timer aktivieren",
     "turn_timer_enabled": "Runden-Timer aktiviert",

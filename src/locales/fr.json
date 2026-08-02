@@ -109,6 +109,7 @@
     "damage_from_player": "Dégâts infligés par :",
     "haptic_feedback": "Retour haptique (vibrations)",
     "sound_effects": "Effets sonores",
+    "show_life_change_history": "Afficher l'historique des variations de PV",
     "turn_timer": "Minuteur par tour",
     "turn_timer_enabled": "Minuteur par tour activé",
     "turn_timer_enable": "Activer le minuteur par tour",

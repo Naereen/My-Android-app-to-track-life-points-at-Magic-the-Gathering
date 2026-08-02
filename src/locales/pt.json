@@ -106,6 +106,7 @@
     "damage_from_player": "Dano do jogador:",
     "haptic_feedback": "Feedback Háptico",
     "sound_effects": "Efeitos sonoros",
+    "show_life_change_history": "Mostrar histórico de mudanças de vida",
     "turn_timer": "Temporizador por turno",
     "turn_timer_enable": "Ativar temporizador por turno",
     "turn_timer_enabled": "Temporizador por turno ativado",
