@@ -195,6 +195,8 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
 - [x] Increase font-size and change color to full-white with a shadow, for the -X/+X numbers that appear when changing life total, to improve visibility on mobile devices or on image backgrounds
 
+- [x] Add a compact in-panel history stack for life changes (max 8 lines): show previous score with strikethrough and signed delta (+/-), with the current score as the last non-struck row.
+
 - [x] Rotate to the left/right or 180deg the CONTENT of the panel showing the status effects, depending on the player's position, so that the text is always readable (not upside down or left/right).
 
 - [x] Move the unique status effects (Monarch, Initiative) to the player name area, before/after the player's name, with a small icon, so that they are always visible and don't consume too much space in the status effect section at the bottom of the panel. This will also make it easier to implement the "rotate the content of the status effect section" feature, as there will be less text to rotate.
