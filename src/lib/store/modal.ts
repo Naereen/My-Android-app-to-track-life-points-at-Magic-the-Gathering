@@ -1,5 +1,6 @@
 import { get, writable } from 'svelte/store';
 import { appSettings } from './appSettings';
+import { addGameHistoryEntry } from './gameHistory';
 import { players } from './player';
 import { vibrate } from '../utils/haptics';
 
@@ -39,6 +40,27 @@ export const generateRandomNumber = (type: string) => {
 
 	const max = dieTypes[type] || 0;
 	const result = type === 'dplanar' ? rollPlanarDie() : max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
+	if (max > 0) {
+		const diceResult =
+			type === 'dplanar'
+				? result === 0
+					? 'Blank'
+					: result === 1
+						? 'Planeswalk'
+						: 'Chaos'
+				: result;
+
+		addGameHistoryEntry({
+			playerId: 0,
+			playerName: '',
+			kind: 'diceRoll',
+			payload: {
+				diceSides: max,
+				diceResult
+			}
+		});
+	}
+
 	if (type === 'custom') {
 		randomizerModalData.set({ isOpen: true, result, type, playerId: null, playerName: null, backgroundImage: null });
 	} else {

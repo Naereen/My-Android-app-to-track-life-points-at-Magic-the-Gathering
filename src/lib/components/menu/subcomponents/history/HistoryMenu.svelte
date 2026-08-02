@@ -58,11 +58,11 @@
 		const toValue = entry.payload.to ?? 0;
 
 		if (entry.kind === 'positiveLife' || entry.kind === 'negativeLife') {
-			return `${entry.playerName} · ${$_('life')}: ${fromValue} → ${toValue}`;
+			return `${entry.playerName} · ${$_('life')} : ${fromValue} → ${toValue}`;
 		}
 
 		if (entry.kind === 'poison') {
-			return `${entry.playerName} · ${$_('poison')}: ${fromValue} → ${toValue}`;
+			return `${entry.playerName} · ${$_('poison')} : ${fromValue} → ${toValue}`;
 		}
 
 		if (entry.kind === 'statusBoolean') {
@@ -78,11 +78,11 @@
 				typeof entry.payload.lifeDelta === 'number' && entry.payload.lifeDelta !== 0
 					? ` · ${$_('life')} ${entry.payload.lifeDelta > 0 ? '+' : ''}${entry.payload.lifeDelta}`
 					: '';
-			return `${entry.playerName} · ${$_('commander_damage')} (${$_('history_from_player')} #${entry.payload.fromPlayerId ?? '-' }): ${fromValue} → ${toValue}${lifePart}`;
+			return `${entry.playerName} · ${$_('commander_damage')} (${$_('history_from_player')} #${entry.payload.fromPlayerId ?? '-' }) : ${fromValue} → ${toValue}${lifePart}`;
 		}
 
 		if (entry.kind === 'resourceChange') {
-			return `${resourceLabel(entry.payload.key)}: ${fromValue} → ${toValue}`;
+			return `${resourceLabel(entry.payload.key)} : ${fromValue} → ${toValue}`;
 		}
 
 		if (entry.kind === 'resourceReset') {
@@ -105,17 +105,22 @@
 			return String($_('history_game_restarted') || 'Game restarted');
 		}
 
+		if (entry.kind === 'diceRoll') {
+			const diceSides = entry.payload.diceSides ?? 0;
+			const diceResult = entry.payload.diceResult ?? 0;
+			return `${$_('history_dice_roll_prefix')} ${diceSides} ${$_('history_dice_roll_sides')} : ${$_('history_dice_roll_result')} = ${diceResult}.`;
+		}
+
 		return '';
 	};
 
 	const iconForEntry = (entry: GameHistoryEntry) => {
 		if (entry.kind === 'positiveLife') {
-			return { glyph: '❤', className: 'text-green-300' };
+			return { glyph: '💚', className: 'text-green-200' };
 		}
 
 		if (entry.kind === 'negativeLife') {
-			// return { glyph: '❤', className: 'text-red-300' };
-			return { glyph: '💔', className: 'text-red-300' };
+			return { glyph: '💔', className: 'text-red-200' };
 		}
 
 		if (entry.kind === 'poison') {
@@ -140,6 +145,10 @@
 
 		if (entry.kind === 'gameRestart') {
 			return { glyph: '↻', className: 'text-orange-300' };
+		}
+
+		if (entry.kind === 'diceRoll') {
+			return { glyph: '🎲', className: 'text-yellow-300' };
 		}
 
 		return { glyph: '•', className: 'text-gray-300' };
@@ -181,7 +190,7 @@
 								<div class={`mt-auto mb-auto w-8 text-center text-3xl select-none ${iconClassName(entry)}`}>{iconGlyph(entry)}</div>
 								<div class="min-w-0 flex-1">
 									<div class="text-gray-400 text-1.25rem">{formatTime(entry.timestamp)}</div>
-									<div class="break-words text-1.75rem">{formatEntry(entry)}</div>
+									<div class="break-words text-xl">{formatEntry(entry)}</div>
 								</div>
 							</div>
 						</li>

@@ -10,7 +10,8 @@ export type GameHistoryEntryKind =
 	| 'resourceChange'
 	| 'resourceReset'
 	| 'turnChange'
-	| 'gameRestart';
+	| 'gameRestart'
+	| 'diceRoll';
 
 export type GameHistoryEntry = {
 	id: string;
@@ -22,6 +23,8 @@ export type GameHistoryEntry = {
 		key?: string;
 		from?: number | boolean;
 		to?: number | boolean;
+		diceSides?: number;
+		diceResult?: number | string;
 		fromPlayerId?: number;
 		lifeDelta?: number;
 		toPlayerName?: string;
