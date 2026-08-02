@@ -396,13 +396,13 @@
 					</div>
 					<div class="h-1/3 w-full relative flex items-center justify-center">
 						<div
-							class="absolute right-0 top-1/2 -translate-x-[33%] -translate-y-1/2 w-24 text-center text-3xl text-shadow-xl/100 text-shadow-black text-white"
+							class="absolute left-0 top-1/2 translate-x-[33%] -translate-y-1/2 w-24 text-center text-3xl text-shadow-xl/100 text-shadow-black text-white"
 							style="text-shadow: 0 0 20px black;"
 						>
 							{$players[index].tempLifeDiff < 0 ? `${$players[index].tempLifeDiff}` : ''}
 						</div>
 						{#if $appSettings.showLifeChangeHistory}
-							<div class="absolute left-0 top-1/2 translate-x-12 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2">
+							<div class="absolute left-0 top-1/2 translate-x-28 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2">
 								<LifeChangeHistory
 									score={$players[index].lifeTotal}
 									maxLines={numberOfPlayers >= 3 ? 6 : 12}
@@ -432,9 +432,9 @@
 									<span
 										class="flex items-center text-center text-shadow-xl/120 text-white font-bold"
 										class:opacity-25={isDead}
-										class:text-9xl={$appSettings.playerCount === 2}
-										class:text-7xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
-										class:text-5xl={$appSettings.playerCount >= 5}
+										class:text-xxl={$appSettings.playerCount === 2}
+										class:text-8xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
+										class:text-7xl={$appSettings.playerCount >= 5}
 										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
 									>
 								</button>
@@ -463,7 +463,7 @@
 							{/if}
 						</div>
 						<div
-							class="absolute right-0 top-1/2 -translate-x-[33%] -translate-y-1/2 w-24 text-center text-3xl text-shadow-xl/100 text-shadow-black text-white"
+							class="absolute right-0 top-1/2 -translate-x-[33%] -translate-y-1/2 w-24 text-center text-4xl text-shadow-xl/100 text-shadow-black text-white"
 							style="text-shadow: 0 0 20px black;"
 						>
 							{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}

@@ -482,10 +482,12 @@
 							</div>
 							{#if orientation === 'left'}
 								<div
-									class="absolute left-0 top-0 translate-x-1/2 h-16 w-24 rotate-180 translate-y-0 flex justify-start items-center pointer-events-none pl-2"
+									class="absolute left-1/2 top-1/2 -translate-x-[50%] h-16 w-24 rotate-180 flex justify-start items-center pointer-events-none pl-2"
 									class:h-8={$appSettings.playerCount >= 5}
-									class:-translate-y-8={$appSettings.playerCount <= 4}
-									class:-translate-y-3={$appSettings.playerCount > 4}
+									class:translate-y-[125%]={$appSettings.playerCount <= 4}
+									class:translate-y-[100%]={$appSettings.playerCount > 4}
+									class:text-xl={$appSettings.playerCount === 2}
+									class:text-lg={$appSettings.playerCount > 2}
 								>
 									{#if $appSettings.showLifeChangeHistory }
 										<LifeChangeHistory
@@ -498,8 +500,10 @@
 							{/if}
 							{#if orientation === 'right'}
 								<div
-									class="absolute right-0 top-1/2 -translate-y-1/2 h-16 w-24 -translate-x-2 -translate-y-2 flex justify-start items-center pointer-events-none pl-2"
+									class="absolute right-0 top-1/2 -translate-x-0 h-16 w-24 flex justify-start items-center pointer-events-none pl-2"
 									class:h-8={$appSettings.playerCount >= 5}
+									class:-translate-y-[225%]={$appSettings.playerCount <= 4}
+									class:-translate-y-[100%]={$appSettings.playerCount > 4}
 								>
 									{#if $appSettings.showLifeChangeHistory }
 										<LifeChangeHistory
@@ -523,7 +527,10 @@
 									<br />
 								</div>
 							{/if}
-							<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+							<div class="absolute left-1/2 top-1/2  -translate-y-1/2 flex items-center justify-center pointer-events-none"
+								class:-translate-x-[33%]={orientation === 'left'}
+								class:-translate-x-[67%]={orientation === 'right'}
+							>
 								{#if !editing}
 									<button
 										on:dblclick={startEdit}
@@ -532,9 +539,9 @@
 									>
 										<span
 											class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center leading-none"
-											class:text-9xl={$appSettings.playerCount === 2}
-											class:text-7xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
-											class:text-5xl={$appSettings.playerCount >= 5}
+											class:text-xxl={$appSettings.playerCount === 2}
+											class:text-8xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
+											class:text-6xl={$appSettings.playerCount >= 5}
 											class:-rotate-180={orientation === 'left'}
 											class:opacity-25={isDead}
 											style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
@@ -579,8 +586,6 @@
 								class:translate-x-[100%]={orientation === 'left'}
 								class:-translate-x-[0%]={orientation === 'right'}
 								>
-								<!-- FIXME: remove this {orientation} DEBUG: comment -->
-								<!-- {orientation} -->
 								{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}
 							</div>
 						</div>
