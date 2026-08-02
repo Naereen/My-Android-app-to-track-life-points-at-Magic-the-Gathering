@@ -897,44 +897,65 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 	});
 };
 
+const extractScryfallImagePayload = (data: any) => {
+	// try common image locations
+	let imageUrl: string | null = null;
+	if (data.image_uris && data.image_uris.art_crop) {
+		imageUrl = data.image_uris.art_crop;
+	} else if (data.image_uris && data.image_uris.large) {
+		imageUrl = data.image_uris.large;
+	} else if (data.image_uris && data.image_uris.normal) {
+		imageUrl = data.image_uris.normal;
+	} else if (data.card_faces && data.card_faces[0] && data.card_faces[0].image_uris) {
+		imageUrl =
+			data.card_faces[0].image_uris.art_crop ||
+			data.card_faces[0].image_uris.large ||
+			data.card_faces[0].image_uris.normal ||
+			null;
+	}
+
+	const artist =
+		data.artist ??
+		(data.card_faces && data.card_faces[0] && data.card_faces[0].artist_name) ??
+		null;
+	const set_name = data.set_name ?? null;
+
+	if (!imageUrl) return null;
+
+	return { imageUrl, artist, set_name };
+};
+
 // Try to fetch a random card image from Scryfall matching a given name.
 // Returns a payload compatible with `setPlayerBackgroundImage` helper or null on failure.
 const fetchScryfallImageForName = async (name: string) => {
 	if (typeof window === 'undefined' || !name) return null;
 
-	try {
-		// Use the random card endpoint with a query scoped to commanders and the provided name
-		const q = encodeURIComponent(`is:commander ${name}`);
-		const url = `https://api.scryfall.com/cards/random?q=${q}`;
-		const res = await fetch(url);
-		if (!res.ok) return null;
-		const data = await res.json();
+	const queries = [
+		`type:planeswalker ${name}`,
+		`is:commander ${name}`,
+		`${name} (type:planeswalker or is:commander)`,
+		`type:planeswalker`,
+		`(is:commander or type:planeswalker)`
+	];
 
-		// try common image locations
-		let imageUrl: string | null = null;
-		if (data.image_uris && data.image_uris.art_crop) {
-			imageUrl = data.image_uris.art_crop;
-		} else if (data.image_uris && data.image_uris.large) {
-			imageUrl = data.image_uris.large;
-		} else if (data.image_uris && data.image_uris.normal) {
-			imageUrl = data.image_uris.normal;
-		} else if (data.card_faces && data.card_faces[0] && data.card_faces[0].image_uris) {
-			imageUrl =
-				data.card_faces[0].image_uris.art_crop ||
-				data.card_faces[0].image_uris.large ||
-				data.card_faces[0].image_uris.normal ||
-				null;
+	try {
+		for (const query of queries) {
+			const q = encodeURIComponent(query);
+			const url = `https://api.scryfall.com/cards/random?q=${q}`;
+			for (let attempt = 0; attempt < 2; attempt++) {
+				const res = await fetch(url);
+				if (!res.ok) {
+					continue;
+				}
+				const data = await res.json();
+				const payload = extractScryfallImagePayload(data);
+				if (payload && payload.imageUrl) {
+					return payload;
+				}
+			}
 		}
 
-		const artist =
-			data.artist ??
-			(data.card_faces && data.card_faces[0] && data.card_faces[0].artist_name) ??
-			null;
-		const set_name = data.set_name ?? null;
-
-		if (!imageUrl) return null;
-
-		return { imageUrl, artist, set_name };
+		return null;
 	} catch (e) {
 		// network or parsing failure, ignore and continue
 		return null;
