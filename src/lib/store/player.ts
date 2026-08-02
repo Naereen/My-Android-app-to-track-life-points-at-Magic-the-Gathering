@@ -1275,6 +1275,7 @@ export const manageLifeTotal = (
 			playerId: targetAfter.id,
 			playerName: targetAfter.playerName,
 			kind: type === 'add' ? 'positiveLife' : 'negativeLife',
+			mergeKey: `life:${targetAfter.id}:${type}`,
 			payload: {
 				from: targetBefore.lifeTotal,
 				to: targetAfter.lifeTotal

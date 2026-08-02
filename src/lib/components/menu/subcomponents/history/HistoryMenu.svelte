@@ -58,7 +58,8 @@
 		const toValue = entry.payload.to ?? 0;
 
 		if (entry.kind === 'positiveLife' || entry.kind === 'negativeLife') {
-			return `${entry.playerName} · ${$_('life')} : ${fromValue} → ${toValue}`;
+			const delta = typeof fromValue === 'number' && typeof toValue === 'number' ? toValue - fromValue : 0;
+			return `${entry.playerName} · ${$_('life')} : ${delta > 0 ? '+' : ''}${delta} (${fromValue} → ${toValue})`;
 		}
 
 		if (entry.kind === 'poison') {
@@ -108,7 +109,7 @@
 		if (entry.kind === 'diceRoll') {
 			const diceSides = entry.payload.diceSides ?? 0;
 			const diceResult = entry.payload.diceResult ?? 0;
-			return `${$_('history_dice_roll_prefix')} ${diceSides} ${$_('history_dice_roll_sides')} : ${$_('history_dice_roll_result')} = ${diceResult}.`;
+			return `${$_('history_dice_roll_prefix')} ${diceSides} ${$_('history_dice_roll_sides')} : ${$_('history_dice_roll_result')} = ${diceResult}`;
 		}
 
 		return '';
