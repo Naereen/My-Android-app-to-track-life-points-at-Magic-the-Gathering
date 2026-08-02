@@ -273,15 +273,42 @@
 	}
 
 	.vert {
+		-webkit-writing-mode: vertical-rl;
 		writing-mode: vertical-rl;
+		text-orientation: mixed;
 	}
 
 	.vert-left {
+		-webkit-writing-mode: vertical-rl;
 		writing-mode: vertical-rl;
+		text-orientation: mixed;
 	}
 
 	.vert-right {
+		-webkit-writing-mode: vertical-lr;
 		writing-mode: vertical-lr;
+		text-orientation: mixed;
+	}
+
+	/* Fallback for older mobile browsers where writing-mode is missing or buggy. */
+	@supports not ((writing-mode: vertical-rl) or (-webkit-writing-mode: vertical-rl)) {
+		.vert,
+		.vert-left,
+		.vert-right {
+			-webkit-writing-mode: horizontal-tb;
+			writing-mode: horizontal-tb;
+			text-orientation: mixed;
+			transform-origin: center center;
+		}
+
+		.vert,
+		.vert-right {
+			transform: rotate(90deg);
+		}
+
+		.vert-left {
+			transform: rotate(-90deg);
+		}
 	}
 
 	/* Disable long-press and dragging on elements with the no-longpress class */
