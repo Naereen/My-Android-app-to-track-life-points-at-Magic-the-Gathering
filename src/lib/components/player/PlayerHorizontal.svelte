@@ -36,7 +36,7 @@
 	import { colorToBg } from '$lib/components/colorToBg';
 	import Minimap from './Minimap.svelte';
 	import LifeChangeHistory from './LifeChangeHistory.svelte';
-	const doNotShowMinimap: boolean = false; // FIXME: for testing purposes, to hide the minimap in the player component
+	const doNotShowMinimap: boolean = false; // XXX: for testing purposes, to hide the minimap in the player component
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
 

@@ -5,6 +5,7 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import { resetLifeTotals, spinToSelectRandomPlayer } from '$lib/store/player';
 	import { appState, toggleIsMenuOpen, nextTurn, prevTurn } from '$lib/store/appState';
+	import { replayLastRandomizerRoll } from '$lib/store/modal';
 	import CircularButton from '../shared/circularButton/CircularButton.svelte';
 	import Randomizer from './subcomponents/randomizer/Randomizer.svelte';
 	import EmblemMenu from './subcomponents/emblem/EmblemMenu.svelte';
@@ -59,11 +60,14 @@
 
 	const handleRandomPlayerDown = () => {
 		vibrate(20);
-		// start long-press to go to previous player (on Next button)
+		// Long press: replay last randomizer die roll, or fallback to random player selection.
 		if (randomPlayerTimeout) clearTimeout(randomPlayerTimeout);
 		randomPlayerTimeout = setTimeout(() => {
 			randomPlayerTriggered = true;
-			spinToSelectRandomPlayer();
+			const replayedLastRoll = replayLastRandomizerRoll();
+			if (!replayedLastRoll) {
+				spinToSelectRandomPlayer();
+			}
 		}, 500);
 	};
 
@@ -79,6 +83,15 @@
 				randomPlayerTriggered = false;
 			}, 50);
 		}
+	};
+
+	const handleRandomizerClick = () => {
+		if (randomPlayerTriggered) {
+			// consumed by long-press
+			randomPlayerTriggered = false;
+			return;
+		}
+		toggleIsMenuOpen('randomizer');
 	};
 
 	const handleManaClick = () => {
@@ -273,7 +286,7 @@ $: if ($appState.turnCount !== prevTurnCount) {
 			<div class="flex justify-center items-center flex-grow text-sm"
 			>
 				<button
-					on:click={() => toggleIsMenuOpen('randomizer')}
+					on:click={handleRandomizerClick}
 					on:mousedown={handleRandomPlayerDown}
 					on:mouseup={handleRandomPlayerUp}
 					on:mouseleave={handleRandomPlayerUp}

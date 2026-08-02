@@ -4,6 +4,7 @@ import { appSettings } from './appSettings';
 import { addGameHistoryEntry } from './gameHistory';
 import { players } from './player';
 import { vibrate } from '../utils/haptics';
+import { persist } from './persist';
 
 type RandomizerModalState = {
 	isOpen: boolean;
@@ -14,9 +15,28 @@ type RandomizerModalState = {
 	backgroundImage?: string | string[] | null;
 };
 
+type ReplayableRandomizerType = 'd2' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'dplanar' | 'custom';
+
 const initialRandomizerModalState: RandomizerModalState = { isOpen: false, result: 0, type: '', playerId: null, playerName: null, backgroundImage: null };
 
 export const randomizerModalData = writable<RandomizerModalState>(initialRandomizerModalState);
+
+const replayableRandomizerTypes: ReplayableRandomizerType[] = ['d2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20', 'dplanar', 'custom'];
+
+const isReplayableRandomizerType = (type: string): type is ReplayableRandomizerType => {
+	return replayableRandomizerTypes.includes(type as ReplayableRandomizerType);
+};
+
+const isPersistedReplayableRandomizerType = (value: unknown): value is ReplayableRandomizerType => {
+	return typeof value === 'string' && isReplayableRandomizerType(value);
+};
+
+export const lastReplayableRandomizerType = persist<ReplayableRandomizerType | null>('lastReplayableRandomizerType', null);
+
+const restoredLastType = get(lastReplayableRandomizerType);
+if (restoredLastType !== null && !isPersistedReplayableRandomizerType(restoredLastType)) {
+	lastReplayableRandomizerType.set(null);
+}
 
 const rollPlanarDie = () => {
 	const roll = Math.floor(Math.random() * 6) + 1;
@@ -41,6 +61,11 @@ export const generateRandomNumber = (type: string) => {
 
 	const max = dieTypes[type] || 0;
 	const result = type === 'dplanar' ? rollPlanarDie() : max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
+
+	if (max > 0 && isReplayableRandomizerType(type)) {
+		lastReplayableRandomizerType.set(type);
+	}
+
 	if (max > 0) {
 		const t = get(_);
 		const diceResult =
@@ -70,6 +95,13 @@ export const generateRandomNumber = (type: string) => {
 	}
 
 	return result;
+};
+
+export const replayLastRandomizerRoll = () => {
+	const lastType = get(lastReplayableRandomizerType);
+	if (!lastType) return false;
+	generateRandomNumber(lastType);
+	return true;
 };
 
 export const selectRandomPlayer = (randomIndex: number | null = null) => {
