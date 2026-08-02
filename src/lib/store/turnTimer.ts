@@ -25,51 +25,57 @@ const createTurnTimer = () => {
         }
     };
 
+    const notifyTimeoutReached = () => {
+        try {
+            if (get(appSettings).hapticsEnabled) vibrate(200);
+        } catch (e) {
+            // ignore
+        }
+        if (get(appSettings).turnTimerSound) {
+            try {
+                const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.type = 'sine';
+                o.frequency.value = 880;
+                o.connect(g);
+                g.connect(ctx.destination);
+                g.gain.value = 0.0001;
+                o.start();
+                g.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 0.01);
+                g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+                setTimeout(() => {
+                    o.stop();
+                    try { ctx.close(); } catch (e) {}
+                }, 300);
+            } catch (e) {
+                // ignore
+            }
+        }
+    };
+
+    const tickTimer = (s: TimerState): TimerState => {
+        if (!s.running) return s;
+        const nextRemaining = s.remaining - 1;
+        const crossedTimeout = s.remaining > 0 && nextRemaining <= 0;
+        const next = { ...s, remaining: nextRemaining };
+        if (crossedTimeout) {
+            notifyTimeoutReached();
+        }
+        return next;
+    };
+
     const startForPlayer = (playerIndex: number, options?: { forceReset?: boolean }) => {
         const forceReset = !!options?.forceReset;
         const duration = get(appSettings).turnTimerDuration || 240;
         // If already running for this player, don't reset
         if (!forceReset && state.playerIndex === playerIndex && state.running) return;
-        // If same player but currently paused and has remaining > 0, resume without resetting
-        if (!forceReset && state.playerIndex === playerIndex && !state.running && state.remaining > 0) {
-            // start interval without resetting remaining/total
+        // If same player but currently paused, resume without resetting
+        if (!forceReset && state.playerIndex === playerIndex && !state.running) {
+            // start interval without resetting remaining/total (supports overtime too)
             if (!interval) {
                 interval = setInterval(() => {
-                    update((s) => {
-                        if (!s.running) return s;
-                        const next = { ...s, remaining: Math.max(0, s.remaining - 1) };
-                        if (next.remaining === 0) {
-                            next.running = false;
-                            stopInternal();
-                            try {
-                                if (get(appSettings).hapticsEnabled) vibrate(200);
-                            } catch (e) {
-                                // ignore
-                            }
-                            if (get(appSettings).turnTimerSound) {
-                                try {
-                                    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-                                    const o = ctx.createOscillator();
-                                    const g = ctx.createGain();
-                                    o.type = 'sine';
-                                    o.frequency.value = 880;
-                                    o.connect(g);
-                                    g.connect(ctx.destination);
-                                    g.gain.value = 0.0001;
-                                    o.start();
-                                    g.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 0.01);
-                                    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
-                                    setTimeout(() => {
-                                        o.stop();
-                                        try { ctx.close(); } catch (e) {}
-                                    }, 300);
-                                } catch (e) {
-                                    // ignore
-                                }
-                            }
-                        }
-                        return next;
-                    });
+                    update((s) => tickTimer(s));
                 }, 1000) as unknown as number;
             }
             update((s) => ({ ...s, running: true }));
@@ -79,43 +85,7 @@ const createTurnTimer = () => {
         stopInternal();
         set({ remaining: duration, total: duration, running: true, playerIndex });
         interval = setInterval(() => {
-            update((s) => {
-                if (!s.running) return s;
-                const next = { ...s, remaining: Math.max(0, s.remaining - 1) };
-                if (next.remaining === 0) {
-                    // timeout reached
-                    next.running = false;
-                    stopInternal();
-                    try {
-                        if (get(appSettings).hapticsEnabled) vibrate(200);
-                    } catch (e) {
-                        // ignore
-                    }
-                    if (get(appSettings).turnTimerSound) {
-                        // play a short beep using WebAudio
-                        try {
-                            const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-                            const o = ctx.createOscillator();
-                            const g = ctx.createGain();
-                            o.type = 'sine';
-                            o.frequency.value = 880;
-                            o.connect(g);
-                            g.connect(ctx.destination);
-                            g.gain.value = 0.0001;
-                            o.start();
-                            g.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 0.01);
-                            g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
-                            setTimeout(() => {
-                                o.stop();
-                                try { ctx.close(); } catch (e) {}
-                            }, 300);
-                        } catch (e) {
-                            // ignore
-                        }
-                    }
-                }
-                return next;
-            });
+            update((s) => tickTimer(s));
         }, 1000) as unknown as number;
     };
 
@@ -126,48 +96,13 @@ const createTurnTimer = () => {
     };
 
     const resume = () => {
-        // resume only if there's an active playerIndex and remaining > 0
+        // resume only if there's an active playerIndex
         if (state.playerIndex === null) return;
-        if ((state.remaining || 0) <= 0) return;
         if (state.running) return;
         // start interval if not present
         if (!interval) {
             interval = setInterval(() => {
-                update((s) => {
-                    if (!s.running) return s;
-                    const next = { ...s, remaining: Math.max(0, s.remaining - 1) };
-                    if (next.remaining === 0) {
-                        next.running = false;
-                        stopInternal();
-                        try {
-                            if (get(appSettings).hapticsEnabled) vibrate(200);
-                        } catch (e) {
-                            // ignore
-                        }
-                        if (get(appSettings).turnTimerSound) {
-                            try {
-                                const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-                                const o = ctx.createOscillator();
-                                const g = ctx.createGain();
-                                o.type = 'sine';
-                                o.frequency.value = 880;
-                                o.connect(g);
-                                g.connect(ctx.destination);
-                                g.gain.value = 0.0001;
-                                o.start();
-                                g.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 0.01);
-                                g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
-                                setTimeout(() => {
-                                    o.stop();
-                                    try { ctx.close(); } catch (e) {}
-                                }, 300);
-                            } catch (e) {
-                                // ignore
-                            }
-                        }
-                    }
-                    return next;
-                });
+                update((s) => tickTimer(s));
             }, 1000) as unknown as number;
         }
         update((s) => ({ ...s, running: true }));
