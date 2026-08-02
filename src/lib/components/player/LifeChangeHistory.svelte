@@ -2,7 +2,10 @@
 	type HistoryEntry = {
 		oldScore: number;
 		delta: number;
+		timestamp: number;
 	};
+
+	const MERGE_WINDOW_MS = 2000;
 
 	export let score: number;
 	export let maxLines = 8;
@@ -22,8 +25,33 @@
 		}
 	};
 
+	const canMergeEntries = (previous: HistoryEntry, nextOldScore: number, nextDelta: number) => {
+		if (Date.now() - previous.timestamp > MERGE_WINDOW_MS) return false;
+		// PROPOSAL: If the previous entry's delta and the next delta have different signs, we don't merge them.
+		// REASON: This is a good idea, as it prevents merging entries that represent opposite changes in score. We can implement this by checking the sign of the previous delta and the next delta. If they have different signs, we return false to indicate that they should not be merged.
+		// ANSWER: It is the opposite of what I wanted.
+		// if (Math.sign(previous.delta) !== Math.sign(nextDelta)) return false;
+		const previousTo = previous.oldScore + previous.delta;
+		if (previousTo !== nextOldScore) return false;
+		return true;
+	};
+
 	const pushHistoryEntry = (oldScore: number, delta: number) => {
-		historyEntries = [...historyEntries, { oldScore, delta }];
+		const previous = historyEntries[historyEntries.length - 1];
+		if (previous && canMergeEntries(previous, oldScore, delta)) {
+			historyEntries = [
+				...historyEntries.slice(0, -1),
+				{
+					...previous,
+					delta: previous.delta + delta,
+					timestamp: Date.now()
+				}
+			];
+			trimHistoryToLimit();
+			return;
+		}
+
+		historyEntries = [...historyEntries, { oldScore, delta, timestamp: Date.now() }];
 		trimHistoryToLimit();
 	};
 
