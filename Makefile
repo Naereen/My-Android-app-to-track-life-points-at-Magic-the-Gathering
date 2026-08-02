@@ -32,7 +32,7 @@ install-capacitor-apk:
 	adb install android/app/build/outputs/apk/release/app-release-signed.apk
 
 dev:
-	npm run dev
+	npm run dev -- --host
 
 send:	send_zamok
 send_zamok:
