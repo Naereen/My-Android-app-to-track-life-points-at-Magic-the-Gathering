@@ -3,9 +3,10 @@
 	import { appState } from '$lib/store/appState';
 	import PlayerHorizontal from '$lib/components/player/PlayerHorizontal.svelte';
 	import PlayerVertical from '$lib/components/player/PlayerVertical.svelte';
+	import DraggablePlayerSlot from '$lib/components/player/DraggablePlayerSlot.svelte';
 </script>
 
-<div class="flex flex-col gap-0 h-full justify-between">
+<div class="flex flex-col gap-0 h-full justify-between" data-dnd-layout>
 	<div
 		class="flex flex-col gap-2 bg-black sticky top-0 pb-2"
 		class:h-[24%]={!$appState.isMenuOpen}
@@ -13,7 +14,9 @@
 	>
 		<div class="h-full w-full flex justify-between gap-2">
 			<div class="w-full">
-				<PlayerVertical orientation="down" layout="one-two-one" id={4} />
+				<DraggablePlayerSlot className="w-full h-full" seatId={4}>
+					<PlayerVertical orientation="down" layout="one-two-one" id={4} />
+				</DraggablePlayerSlot>
 			</div>
 		</div>
 	</div>
@@ -25,10 +28,14 @@
 		class:pt-2={$appState.isMenuOpen}
 	>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-            <PlayerHorizontal orientation="right" layout="one-two-one" id={3} />
+			<DraggablePlayerSlot className="w-full h-full" seatId={3}>
+            	<PlayerHorizontal orientation="right" layout="one-two-one" id={3} />
+			</DraggablePlayerSlot>
         </div>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-            <PlayerHorizontal orientation="left" layout="one-two-one" id={5} />
+			<DraggablePlayerSlot className="w-full h-full" seatId={5}>
+            	<PlayerHorizontal orientation="left" layout="one-two-one" id={5} />
+			</DraggablePlayerSlot>
 		</div>
 	</div>
 	{/if}
@@ -44,10 +51,14 @@
 		class:pt-2={$appState.isMenuOpen}
 	>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-            <PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
+			<DraggablePlayerSlot className="w-full h-full" seatId={2}>
+            	<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
+			</DraggablePlayerSlot>
         </div>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-            <PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
+			<DraggablePlayerSlot className="w-full h-full" seatId={6}>
+            	<PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
+			</DraggablePlayerSlot>
         </div>
 	</div>
 	{/if}
@@ -59,7 +70,9 @@
 	>
 		<div class="h-full w-full flex justify-between gap-2">
 			<div class="w-full">
-				<PlayerVertical orientation="up" layout="one-two-one" id={1} />
+				<DraggablePlayerSlot className="w-full h-full" seatId={1}>
+					<PlayerVertical orientation="up" layout="one-two-one" id={1} />
+				</DraggablePlayerSlot>
 			</div>
 		</div>
 	</div>

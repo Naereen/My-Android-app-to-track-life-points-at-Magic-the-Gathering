@@ -1300,24 +1300,33 @@ export const setPlayerName = (playerId: number, playerName: string) => {
 	});
 };
 
-// Reorder players array by moving element at fromIndex to toIndex (0-based indices)
-export const reorderPlayers = (fromIndex: number, toIndex: number) => {
+const normalizeSeatIds = (list: App.Player.Data[]) => {
+	return list.map((player, index) => ({
+		...player,
+		id: index + 1
+	}));
+};
+
+// Swap exactly two player seats (0-based indices).
+// This keeps seat-based ids consistent with visual positions.
+export const swapPlayersSeats = (fromIndex: number, toIndex: number) => {
 	players.update((currentPlayers) => {
-		//
-		let targetIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
-		//
 		const n = currentPlayers.length;
-		if (fromIndex < 0 || fromIndex >= n) return currentPlayers;
+		const activeCount = get(appSettings).playerCount || n;
+		if (fromIndex < 0 || toIndex < 0 || fromIndex >= activeCount || toIndex >= activeCount) {
+			return currentPlayers;
+		}
 		if (fromIndex === toIndex) return currentPlayers;
 
 		const newPlayers = currentPlayers.slice();
-		const [item] = newPlayers.splice(fromIndex, 1);
-
-		if (targetIndex < 0) targetIndex = 0;
-		if (targetIndex >= n) targetIndex = n;
-		newPlayers.splice(targetIndex, 0, item);
-		return newPlayers;
+		[newPlayers[fromIndex], newPlayers[toIndex]] = [newPlayers[toIndex], newPlayers[fromIndex]];
+		return normalizeSeatIds(newPlayers);
 	});
+};
+
+// Reorder players array by moving element at fromIndex to toIndex (0-based indices)
+export const reorderPlayers = (fromIndex: number, toIndex: number) => {
+	swapPlayersSeats(fromIndex, toIndex);
 };
 
 export const setTempLifeDiff = (

@@ -136,7 +136,7 @@ export const getDefaultGlobalGameTimerDuration = (playerCount: number): number =
 
 export const getDefaultStartingLifeTotal = (playerCount: number): number => {
 	if (playerCount === 2) return 20;
-	if (playerCount === 3) return 30;
+	// if (playerCount === 3) return 30; // 3-player games are supported, but the default starting life total is NOT 30, it is also 40!
 	return 40;
 };
 
