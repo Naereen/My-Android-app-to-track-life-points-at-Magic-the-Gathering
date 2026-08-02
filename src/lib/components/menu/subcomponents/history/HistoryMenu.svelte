@@ -67,7 +67,7 @@
 		}
 
 		if (entry.kind === 'statusBoolean') {
-			return `${entry.playerName} · ${statusLabel(entry.payload.key)}: ${entry.payload.to ? $_('history_state_on') : $_('history_state_off')}`;
+			return `${entry.playerName} · ${statusLabel(entry.payload.key)} : ${entry.payload.to ? $_('history_state_on') : $_('history_state_off')}`;
 		}
 
 		if (entry.kind === 'statusNumeric') {

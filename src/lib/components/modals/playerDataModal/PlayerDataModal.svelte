@@ -21,8 +21,8 @@
 	import Energy from '$lib/assets/icons/Energy.svelte';
 	import Experience from '$lib/assets/icons/Experience.svelte';
 	import Rad from '$lib/assets/icons/Rad.svelte';
- 	import Acorn from '$lib/assets/icons/Acorn.svelte';
- 	import Ticket from '$lib/assets/icons/Ticket.svelte';
+	import Acorn from '$lib/assets/icons/Acorn.svelte';
+	import Ticket from '$lib/assets/icons/Ticket.svelte';
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
@@ -31,8 +31,6 @@
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { vibrate } from '$lib/utils/haptics';
-
-	let gradientMode = false;
 	let selectedColors: string[] = [];
 	let mode: 'background' | 'commander' | 'status_effects' = 'status_effects';
 	let searchQuery = '';
@@ -80,6 +78,7 @@
 		checkKlipyKey();
 	}
 
+	let gradientMode = false;
 	// allow choosing two images
 	let doubleBackground = false;
 	let bgSelections: string[] = [];
@@ -843,7 +842,7 @@
 												setPlayerPoison(
 													$playerModalData.playerId,
 													Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1)
-												)}>-</button>
+													)}>-</button>
 									{/if}
 									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
 									{#if ($players[$playerModalData.playerId - 1].poison ?? 0) < POISON_MAX}
@@ -901,7 +900,7 @@
 												$playerModalData.playerId,
 												'energy',
 												($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) + 1
-											)}>+</button>
+												)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
@@ -949,7 +948,7 @@
 												$playerModalData.playerId,
 												'experience',
 												($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) + 1
-											)}>+</button>
+												)}>+</button>
 								</div>
 
 								<div class="flex items-center gap-2">
@@ -995,7 +994,7 @@
 												$playerModalData.playerId,
 												'rad',
 												($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1
-											)}>+</button>
+											)}>-</button>
 								</div>
 
 								<div class="flex items-center gap-2">

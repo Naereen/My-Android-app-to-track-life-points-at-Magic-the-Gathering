@@ -35,24 +35,32 @@ export type GameHistoryEntry = {
 };
 
 const MAX_GAME_HISTORY_ENTRIES = 500;
+const MERGE_WINDOW_MS = 2000;
+const MERGEABLE_STATUS_KEYS = new Set(['energy', 'experience', 'rad', 'acorn', 'ticket']);
 
 export const gameHistory = persist<GameHistoryEntry[]>('gameHistory', []);
 
 const canMergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry, 'id' | 'timestamp'>) => {
-	if (!next.mergeKey || previous.mergeKey !== next.mergeKey) return false;
-	if (previous.kind !== next.kind) return false;
-	if (previous.kind !== 'positiveLife' && previous.kind !== 'negativeLife') return false;
 	if (previous.playerId !== next.playerId) return false;
+	if (previous.kind !== next.kind) return false;
+	if (Date.now() - previous.timestamp > MERGE_WINDOW_MS) return false;
 
 	const previousFrom = previous.payload.from;
 	const previousTo = previous.payload.to;
 	const nextFrom = next.payload.from;
 	const nextTo = next.payload.to;
-
 	if (typeof previousFrom !== 'number' || typeof previousTo !== 'number') return false;
 	if (typeof nextFrom !== 'number' || typeof nextTo !== 'number') return false;
+	if (previousTo !== nextFrom) return false;
 
-	return previousTo === nextFrom;
+	if (previous.kind === 'poison') return true;
+	if (previous.kind === 'positiveLife' || previous.kind === 'negativeLife') return true;
+	if (previous.kind === 'statusNumeric') {
+		const key = previous.payload.key;
+		return !!key && MERGEABLE_STATUS_KEYS.has(key) && key === next.payload.key;
+	}
+
+	return false;
 };
 
 const mergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry, 'id' | 'timestamp'>): GameHistoryEntry => {
