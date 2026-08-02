@@ -26,6 +26,7 @@
     import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
+		lifeChangeHistoryResetKey,
 		manageLifeTotal,
 		players,
 		setPlayerLifeAbsolute,
@@ -35,6 +36,7 @@
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import Minimap from './Minimap.svelte';
+	import LifeChangeHistory from './LifeChangeHistory.svelte';
 	const doNotShowMinimap: boolean = false; // FIXME: for testing purposes, to hide the minimap in the player component
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
@@ -389,11 +391,15 @@
 						</button>
 					</div>
 					<div class="h-1/3 flex justify-center items-center flex-row">
-						<span
-							class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
-							style="text-shadow: 0 0 20px black;"
-							>{$players[index].tempLifeDiff < 0 ? `-${$players[index].tempLifeDiff * -1}` : ''}</span
-						>
+						{#if $appSettings.showLifeChangeHistory}
+							<div class="w-24 translate-x-1 flex justify-start items-center pointer-events-none pl-2">
+								<LifeChangeHistory
+									score={$players[index].lifeTotal}
+									maxLines={12}
+									resetToken={$lifeChangeHistoryResetKey}
+								/>
+							</div>
+						{/if}
 						<div class="relative flex items-center justify-center">
 							{#if isDead}
 								<div

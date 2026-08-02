@@ -26,6 +26,7 @@
     import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
+		lifeChangeHistoryResetKey,
 		manageLifeTotal,
 		players,
 		setPlayerLifeAbsolute,
@@ -35,6 +36,7 @@
 	import { tick } from 'svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import Minimap from './Minimap.svelte';
+	import LifeChangeHistory from './LifeChangeHistory.svelte';
 	const doNotShowMinimap: boolean = false; // FIXME: for testing purposes, to hide the minimap in the player component
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
@@ -459,16 +461,31 @@
 					<div
 						class="w-1/3 flex justify-center items-center vert"
 					>
-						<span
-							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
-							style="text-shadow: 0 0 20px black;"
-							class:rotate-180={orientation === 'left'}
-							class:h-8={$appSettings.playerCount >= 5}
-							>{$players[index].tempLifeDiff < 0
-								? `-${$players[index].tempLifeDiff * -1}`
-								: ''}</span
-						>
 						<div class="relative flex items-center justify-center">
+							{#if $appSettings.showLifeChangeHistory && orientation === 'left'}
+								<div
+									class="h-16 w-24 rotate-180 -translate-y-8 translate-x-2 flex justify-start items-center pointer-events-none pl-2"
+									class:h-8={$appSettings.playerCount >= 5}
+								>
+									<LifeChangeHistory
+										score={$players[index].lifeTotal}
+										maxLines={6}
+										resetToken={$lifeChangeHistoryResetKey}
+									/>
+								</div>
+							{/if}
+							{#if $appSettings.showLifeChangeHistory && orientation === 'right'}
+								<div
+									class="h-16 w-24 -translate-x-2 translate-y-50 flex justify-start items-center pointer-events-none pl-2"
+									class:h-8={$appSettings.playerCount >= 5}
+								>
+									<LifeChangeHistory
+										score={$players[index].lifeTotal}
+										maxLines={6}
+										resetToken={$lifeChangeHistoryResetKey}
+									/>
+								</div>
+							{/if}
 							{#if isDead}
 								<div
 									class="z-10 text-black"

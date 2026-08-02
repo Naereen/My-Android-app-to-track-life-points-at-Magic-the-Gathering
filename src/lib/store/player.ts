@@ -321,6 +321,7 @@ const getInitialPlayers = (): App.Player.Data[] => {
 };
 
 export const players: Writable<App.Player.Data[]> = persist('players', getInitialPlayers());
+export const lifeChangeHistoryResetKey = writable(0);
 
 const isEliminated = (player: App.Player.Data) => {
 	const globalAllowNegative = get(appSettings).allowNegativeLife || false;
@@ -957,7 +958,7 @@ if (typeof window !== 'undefined') {
 }
 
 // Object to store timeout references for each player
-const resetTimers: { [key: number]: number } = {};
+const resetTimers: { [key: number]: ReturnType<typeof setTimeout> } = {};
 
 export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	let resetProfiles = false;
@@ -1051,6 +1052,9 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	setCurrentTurn(0, false);
 	appState.update((data) => ({ ...data, currentTurn: -1, turnCount: 0, startingPlayerIndex: null }));
 	vibrate(30);
+
+	// reset the lifeChangeHistoryResetKey to trigger any dependent components to reset their history
+	lifeChangeHistoryResetKey.update((value) => value + 1);
 
 	// Reset life totals and optionally profiles for all players
 	players.update((currentPlayers) => {

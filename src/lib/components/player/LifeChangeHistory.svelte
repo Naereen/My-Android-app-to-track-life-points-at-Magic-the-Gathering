@@ -109,7 +109,7 @@
 	.old-score {
 		position: relative;
 		display: inline-block;
-		font-size: 1.1rem;
+		font-size: 1.0rem;
 		opacity: 0.95;
 		text-decoration-line: line-through;
 		text-decoration-color: transparent;
@@ -124,7 +124,7 @@
 		top: 52%;
 		height: 0.12em;
 		background: currentColor;
-		transform: rotate(20deg);
+		transform: rotate(65deg);
 		transform-origin: center;
 		pointer-events: none;
 	}
@@ -148,7 +148,6 @@
 	}
 
 	.current-score {
-		font-size: 1.25rem;
-		font-weight: 700;
+		font-size: 1.0rem;
 	}
 </style>

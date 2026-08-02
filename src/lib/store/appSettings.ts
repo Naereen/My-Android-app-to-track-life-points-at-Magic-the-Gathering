@@ -22,6 +22,8 @@ interface AppSettings {
 	hapticsEnabled: boolean;
 	// whether to enable gameplay sound effects for major game events (default is true)
 	soundEffectsEnabled: boolean;
+	// show the life-change history stack near life total
+	showLifeChangeHistory: boolean;
 	// app locale (default is 'fr' for French, but it will be overridden by the device locale if it's supported by the app)
 	locale: string;
 	// show a glowing border around the current player's panel
@@ -76,6 +78,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	hapticsEnabled: true,
 	// whether to enable gameplay sound effects for major game events (default is true)
 	soundEffectsEnabled: true,
+	// show the life-change history stack near life total
+	showLifeChangeHistory: true,
 	// app locale (default is 'fr' for French, but it will be overridden by the device locale if it's supported by the app)
 	locale: 'fr',
 	// show a glowing border around the current player's panel
@@ -141,6 +145,21 @@ export const setHapticsEnabled = (hapticsEnabled: boolean) => {
 export const setSoundEffectsEnabled = (soundEffectsEnabled: boolean) => {
 	appSettings.update((data) => ({ ...data, soundEffectsEnabled }));
 };
+
+export const setShowLifeChangeHistory = (showLifeChangeHistory: boolean) => {
+	appSettings.update((data) => ({ ...data, showLifeChangeHistory }));
+};
+
+// Backward compatibility for existing localStorage payloads that predate this option.
+appSettings.update((data) => {
+	if (data.showLifeChangeHistory === undefined) {
+		return {
+			...data,
+			showLifeChangeHistory: true
+		};
+	}
+	return data;
+});
 
 export const setEnableCurrentPlayerGlow = (enable: boolean) => {
 	appSettings.update((data) => ({ ...data, enableCurrentPlayerGlow: enable }));
