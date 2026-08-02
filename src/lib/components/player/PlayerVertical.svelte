@@ -129,40 +129,36 @@
 		if (isLikelySyntheticMouseEvent()) {
 			return;
 		}
-		if (!isMobile) {
-			isHolding = true;
-			holdingType = type;
-			setPlayerHighlighted(id, true);
+		isHolding = true;
+		holdingType = type;
+		setPlayerHighlighted(id, true);
 
-			timeout = setTimeout(() => {
-				manageLifeTotal(type, id, 10);
-				if (isHolding) {
-					interval = setInterval(() => {
-						vibrate(10);
-						manageLifeTotal(type, id, 10);
-					}, 1000);
-				}
-			}, 1000);
-		}
+		timeout = setTimeout(() => {
+			manageLifeTotal(type, id, 10);
+			if (isHolding) {
+				interval = setInterval(() => {
+					vibrate(10);
+					manageLifeTotal(type, id, 10);
+				}, 1000);
+			}
+		}, 1000);
 	};
 
 	const handleMouseUp = (type: App.Player.LifeMoveType) => {
 		if (isLikelySyntheticMouseEvent()) {
 			return;
 		}
-		if (!isMobile) {
-			if (interval) {
-				clearInterval(interval);
-				interval = undefined;
-			} else {
-				manageLifeTotal(type, id);
-			}
-			clearTimeout(timeout);
-			timeout = undefined;
-			isHolding = false;
-			holdingType = null;
-			setPlayerHighlighted(id, false);
+		if (interval) {
+			clearInterval(interval);
+			interval = undefined;
+		} else {
+			manageLifeTotal(type, id);
 		}
+		clearTimeout(timeout);
+		timeout = undefined;
+		isHolding = false;
+		holdingType = null;
+		setPlayerHighlighted(id, false);
 	};
 
 	const handleTouchStart = (type: App.Player.LifeMoveType) => {
