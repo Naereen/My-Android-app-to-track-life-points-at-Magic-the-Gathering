@@ -397,7 +397,7 @@
 					</button>
 				</div>
 				<div
-					class="absolute h-full w-full top-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-none flex items-center"
+					class="absolute top-0 bottom-0 w-full -translate-x-1/2 cursor-pointer pointer-events-none flex items-center"
 					class:flex-row={orientation === 'left'}
 					class:left-[42%]={orientation === 'left'}
 					class:left-[58%]={orientation === 'right'}
@@ -466,13 +466,14 @@
 						class="w-1/3 flex justify-center items-center vert"
 					>
 						<div class="relative flex items-center justify-center">
+							{#if orientation === 'left'}
 							<div
-									class="h-16 w-24 rotate-180 translate-x-2 flex justify-start items-center pointer-events-none pl-2"
-									class:h-8={$appSettings.playerCount >= 5}
-									class:-translate-y-8={numberOfPlayers <= 4}
-									class:-translate-y-0={numberOfPlayers > 4}
-								>
-								{#if $appSettings.showLifeChangeHistory && orientation === 'left'}
+								class="inset-y-0 left-0 h-16 w-24 rotate-180 translate-x-2 flex justify-start items-center pointer-events-none pl-2"
+								class:h-8={$appSettings.playerCount >= 5}
+								class:-translate-y-8={$appSettings.playerCount <= 4}
+								class:-translate-y-3={$appSettings.playerCount > 4}
+							>
+								{#if $appSettings.showLifeChangeHistory }
 									<LifeChangeHistory
 										score={$players[index].lifeTotal}
 										maxLines={6}
@@ -480,13 +481,13 @@
 									/>
 								{/if}
 							</div>
+							{/if}
+							{#if orientation === 'right' }
 							<div
-									class="h-16 w-24 -translate-x-2 translate-y-45 flex justify-start items-center pointer-events-none pl-2"
+									class="inset-y-0 right-0 h-16 w-24 -translate-x-2 -translate-y-2 flex justify-start items-center pointer-events-none pl-2"
 									class:h-8={$appSettings.playerCount >= 5}
-									class:translate-y-45={numberOfPlayers <= 4}
-									class:translate-y-40={numberOfPlayers > 4}
 								>
-								{#if $appSettings.showLifeChangeHistory && orientation === 'right'}
+								{#if $appSettings.showLifeChangeHistory }
 									<LifeChangeHistory
 										score={$players[index].lifeTotal}
 										maxLines={6}
@@ -494,6 +495,7 @@
 									/>
 								{/if}
 							</div>
+							{/if}
 							{#if isDead}
 								<div
 									class="z-10 text-black"
@@ -518,7 +520,7 @@
 									class="bg-transparent border-none p-0 m-0 pointer-events-auto"
 								>
 									<span
-										class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center"
+										class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center leading-none"
 										class:text-9xl={$appSettings.playerCount === 2}
 										class:text-7xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
 										class:text-5xl={$appSettings.playerCount >= 5}
