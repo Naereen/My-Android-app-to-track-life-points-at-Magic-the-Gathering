@@ -11,6 +11,7 @@
 	import VanguardMenu from './subcomponents/vanguard/VanguardMenu.svelte';
 	import TreacheryMenu from './subcomponents/treachery/TreacheryMenu.svelte';
 	import HistoryMenu from './subcomponents/history/HistoryMenu.svelte';
+	import DayNightCycle from './subcomponents/dayNight/DayNightCycle.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
 	import { vibrate } from '$lib/utils/haptics';
@@ -228,6 +229,11 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				>
 					<span class="text-large">🕘</span>
 				</button>
+			</div>
+		{/if}
+		{#if $appState.dayNightCycleEnabled}
+			<div class="flex justify-center items-center flex-grow">
+				<DayNightCycle />
 			</div>
 		{/if}
 		{#if $appSettings.showResourcesButton}

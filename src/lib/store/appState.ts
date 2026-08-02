@@ -31,6 +31,8 @@ export interface StreamGameState {
 export const appState = persist('appState', {
 	isMenuOpen: false,
 	activeMenu: '',
+	dayNightCycleEnabled: false,
+	dayNightPhase: 'day' as 'day' | 'night',
 	// index of the current player's turn (0-based). Default to -1, to indicate no turn yet.
 	currentTurn: -1,
 	// number of turns played. 0 = not started, otherwise 1..99
@@ -60,6 +62,24 @@ export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 	}
 
 	appState.update((data) => ({ ...data, activeMenu: menu, isMenuOpen: !data.isMenuOpen }));
+};
+
+export const setDayNightCycleEnabled = (enabled: boolean) => {
+	appState.update((data) => ({
+		...data,
+		dayNightCycleEnabled: enabled,
+		dayNightPhase: enabled ? (data.dayNightPhase ?? 'day') : 'day'
+	}));
+};
+
+export const toggleDayNightPhase = () => {
+	appState.update((data) => {
+		if (!data.dayNightCycleEnabled) return data;
+		return {
+			...data,
+			dayNightPhase: data.dayNightPhase === 'day' ? 'night' : 'day'
+		};
+	});
 };
 
 export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTimerReset = false) => {
@@ -230,4 +250,13 @@ export const gameState = derived([players, appSettings, appState], ([$players, $
 		lifePlayer5: lifeTotals[4] ?? 0,
 		lifePlayer6: lifeTotals[5] ?? 0
 	} satisfies StreamGameState;
+});
+
+// Backward compatibility for existing localStorage payloads.
+appState.update((data) => {
+	return {
+		...data,
+		dayNightCycleEnabled: data.dayNightCycleEnabled ?? false,
+		dayNightPhase: data.dayNightPhase ?? 'day'
+	};
 });

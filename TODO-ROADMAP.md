@@ -81,7 +81,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] Fix a weird bug: when clicking fast on +1/-1 buttons, sometimes the life points are not updated correctly or the update continue to happen after releasing the button (worse with long clicks). I couldn't reproduce this bug anymore...
 
-- [ ] FIXME: enable again the day/night switch setting in the player status effects, which is currently disabled because I was lazy to implement the day/night cycle feature, but I want to enable it again (some day), even if the day/night cycle is not implemented yet, as it can be useful for players to track this status effect, even without the full day/night cycle feature.
+- [x] enable again the day/night switch setting in the player status effects, which is currently disabled because I was lazy to implement the day/night cycle feature, but I want to enable it again (some day), even if the day/night cycle is not implemented yet, as it can be useful for players to track this status effect, even without the full day/night cycle feature.
 
 - [x] When editing the life total of a player (by double clicking on it), for the PlayerHorizontal layout, the edition menu should face the user (so it has to be 180deg rotated if the orientation===right I guess?)
 

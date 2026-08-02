@@ -8,6 +8,7 @@
 	stroke-width="1.5"
 	stroke-linecap="round"
 	stroke-linejoin="round"
+	title="title"
 >
 	<circle cx="12" cy="12" r="4" fill="#fbbf24" stroke="#fbbf24" />
 	<path

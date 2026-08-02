@@ -800,8 +800,6 @@
 									<Ascend />
 									{String($_('ascend'))}</label
 								>
-								<!-- FIXME: enable again the day/night switch setting -->
-								<!-- <label class="flex items-center gap-2"><input type="checkbox" checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false} on:change={() => setPlayerStatusBoolean($playerModalData.playerId, 'dayNight', !($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false))} /> <DayNight title={$_('tooltip_status_day_night')} /> { $_('day_night') }</label> -->
 								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
@@ -830,6 +828,21 @@
 									<StatusSkull />
 									{String($_('ko'))}</label
 								>
+								<label class="flex items-center gap-1"
+									title={$_('tooltip_status_day_night') ?? 'Activate Day / Night Cycle'}
+									><input
+										type="checkbox"
+										checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false}
+										on:change={() =>
+											setPlayerStatusBoolean(
+												$playerModalData.playerId,
+												'dayNight',
+												!($players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false)
+											)}
+									/>
+									<DayNight />
+									{String($_('day_night'))}
+								</label>
 							</div>
 
 							<div class="w-full grid grid-cols-1 items-center text-center border-t pt-4">

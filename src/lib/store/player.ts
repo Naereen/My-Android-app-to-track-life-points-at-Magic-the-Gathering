@@ -2,7 +2,7 @@ import { get, writable, type Writable } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { _ } from 'svelte-i18n'; // i18n language toggle
 import { showConfirm, selectRandomPlayer } from '$lib/store/modal';
-import { setCurrentTurn, appState } from './appState';
+import { setCurrentTurn, appState, setDayNightCycleEnabled } from './appState';
 import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
 import { playGameplaySound } from '$lib/utils/gameplaySound';
@@ -602,6 +602,18 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 	const snapshot = getPlayerSnapshot(playerId);
 
 	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
+		if (key === 'dayNight') {
+			return currentPlayers.map((player) => {
+				const statusEffects = player.statusEffects ? { ...player.statusEffects } : {};
+				// @ts-ignore
+				statusEffects.dayNight = value;
+				return {
+					...player,
+					statusEffects
+				};
+			});
+		}
+
 		// If setting a unique status (monarch/initiative) to true,
 		// remove it from all other players so only one has it.
 		const uniqueKeys = ['monarch', 'initiative'];
@@ -644,6 +656,10 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 		});
 	});
 
+	if (key === 'dayNight') {
+		setDayNightCycleEnabled(value);
+	}
+
 	if (snapshot && previous !== value) {
 		addGameHistoryEntry({
 			playerId: snapshot.id,
@@ -656,6 +672,25 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 			}
 		});
 	}
+};
+
+export const clearDayNightStatus = () => {
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (!player.statusEffects?.dayNight) {
+				return player;
+			}
+			return {
+				...player,
+				statusEffects: {
+					...player.statusEffects,
+					dayNight: false
+				}
+			};
+		});
+	});
+
+	setDayNightCycleEnabled(false);
 };
 
 export const setPlayerStatusNumeric = (

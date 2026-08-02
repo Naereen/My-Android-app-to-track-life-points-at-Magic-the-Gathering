@@ -7,7 +7,6 @@
 	import Crown from '$lib/assets/icons/Crown.svelte';
 	import Initiative from '$lib/assets/icons/Initiative.svelte';
 	import Ascend from '$lib/assets/icons/Ascend.svelte';
-	import DayNight from '$lib/assets/icons/DayNight.svelte';
 	import Storied from '$lib/assets/icons/Storied.svelte';
 	import Acorn from '$lib/assets/icons/Acorn.svelte';
 	import Ticket from '$lib/assets/icons/Ticket.svelte';
@@ -111,7 +110,7 @@
 	})();
 
 	$: status = $players[index].statusEffects ?? {};
-	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'storied', 'dayNight', 'ko'].filter(
+	$: booleanStatuses = ['monarch', 'initiative', 'ascend', 'storied', 'ko'].filter(
 		(k) => status[k]
 	);
 	$: poisonCount = $players[index].poison ?? 0;
@@ -385,8 +384,6 @@
 										<Ascend />
 									{:else if s === 'storied'}
 										<Storied />
-									{:else if s === 'dayNight'}
-										<DayNight />
 									{:else if s === 'ko'}
 										<StatusSkull />
 									{/if}
