@@ -127,7 +127,7 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	// stream mode (controller sends game updates to LAN relay)
 	isStreamMode: false,
 	// relay base URL, e.g. http://192.168.1.113:8787
-	remoteServerUrl: ''
+	remoteServerUrl: 'http://192.168.1.113:8787'
 });
 
 export const getDefaultGlobalGameTimerDuration = (playerCount: number): number => {

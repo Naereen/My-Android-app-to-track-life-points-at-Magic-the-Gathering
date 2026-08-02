@@ -20,6 +20,7 @@
 		</div>
 	</div>
 
+	{#if !$appState.isMenuOpen}
 	<div class="flex gap-2 bg-black sticky top-0" class:h-[20%]={!$appState.isMenuOpen}>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={4}>
@@ -32,7 +33,9 @@
 			</DraggablePlayerSlot>
 		</div>
 	</div>
+	{/if}
 
+	{#if !$appState.isMenuOpen}
 	<div class="flex gap-2 bg-black sticky top-0" class:h-[20%]={!$appState.isMenuOpen}>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={3}>
@@ -45,11 +48,13 @@
 			</DraggablePlayerSlot>
 		</div>
 	</div>
+	{/if}
 
 	<div class="flex-grow gap-2 bg-black sticky top-0">
 		<Menu />
 	</div>
 
+	{#if !$appState.isMenuOpen}
 	<div class="flex gap-2 bg-black sticky top-0" class:h-[18%]={!$appState.isMenuOpen}>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={2}>
@@ -62,6 +67,7 @@
 			</DraggablePlayerSlot>
 		</div>
 	</div>
+	{/if}
 
 	<div
 		class="flex flex-col gap-2 bg-black sticky bottom-0"

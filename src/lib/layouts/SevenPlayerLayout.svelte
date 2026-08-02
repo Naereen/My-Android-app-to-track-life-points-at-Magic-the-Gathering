@@ -7,6 +7,7 @@
 </script>
 
 <div class="flex flex-col gap-0 h-full justify-between" data-dnd-layout>
+	{#if !$appState.isMenuOpen}
 	<div
 		class="flex flex-col gap-2 bg-black sticky top-0 pb-2"
 		class:h-[23%]={!$appState.isMenuOpen}
@@ -42,6 +43,7 @@
 			</DraggablePlayerSlot>
 		</div>
 	</div>
+	{/if}
 
 	<div class="flex-grow gap-2 bg-black sticky top-0">
 		<Menu />

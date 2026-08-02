@@ -6,6 +6,7 @@
 </script>
 
 <div class="flex flex-col h-full justify-between" data-dnd-layout>
+	{#if !$appState.isMenuOpen}
 	<div class="flex flex-col gap-2 bg-black sticky top-0" class:h-[66%]={!$appState.isMenuOpen}>
 		<div class="h-full w-full flex justify-between gap-2">
 			<div class="w-1/2">
@@ -33,11 +34,13 @@
 			</div>
 		</div>
 	</div>
+	{/if}
 
 	<div class="flex-grow">
 		<Menu />
 	</div>
 
+	{#if !$appState.isMenuOpen}
 	<div
 		class="flex flex-col gap-2 bg-black sticky bottom-0 pb-2"
 		class:h-[33%]={!$appState.isMenuOpen}
@@ -56,4 +59,5 @@
 			</div>
 		</div>
 	</div>
+	{/if}
 </div>

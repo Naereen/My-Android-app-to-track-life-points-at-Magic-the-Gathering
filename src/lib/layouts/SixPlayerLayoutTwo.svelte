@@ -29,12 +29,12 @@
 	>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={3}>
-            	<PlayerHorizontal orientation="right" layout="one-two-one" id={3} />
+				<PlayerHorizontal orientation="right" layout="one-two-one" id={3} />
 			</DraggablePlayerSlot>
         </div>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={5}>
-            	<PlayerHorizontal orientation="left" layout="one-two-one" id={5} />
+				<PlayerHorizontal orientation="left" layout="one-two-one" id={5} />
 			</DraggablePlayerSlot>
 		</div>
 	</div>
@@ -52,12 +52,12 @@
 	>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={2}>
-            	<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
+				<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
 			</DraggablePlayerSlot>
         </div>
         <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={6}>
-            	<PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
+				<PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
 			</DraggablePlayerSlot>
         </div>
 	</div>
@@ -66,7 +66,7 @@
 	<div
 		class="flex flex-col gap-2 bg-black sticky bottom-0"
 		class:h-[24%]={!$appState.isMenuOpen}
-		class:pt-2={!$appState.isMenuOpen}
+		class:pt-2={$appState.isMenuOpen}
 	>
 		<div class="h-full w-full flex justify-between gap-2">
 			<div class="w-full">
