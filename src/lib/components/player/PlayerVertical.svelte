@@ -390,9 +390,9 @@
 							</div>
 						</button>
 					</div>
-					<div class="h-1/3 flex justify-center items-center flex-row">
+					<div class="h-1/3 w-full relative flex items-center justify-center">
 						{#if $appSettings.showLifeChangeHistory}
-							<div class="w-24 translate-x-1 flex justify-start items-center pointer-events-none pl-2">
+							<div class="absolute left-0 top-1/2 translate-x-12 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2">
 								<LifeChangeHistory
 									score={$players[index].lifeTotal}
 									maxLines={12}
@@ -452,11 +452,12 @@
 								</div>
 							{/if}
 						</div>
-						<span
-							class="w-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
+						<div
+							class="absolute right-0 top-1/2 -translate-x-10 -translate-y-1/2 w-24 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
 							style="text-shadow: 0 0 20px black;"
-							>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
 						>
+							{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}
+						</div>
 					</div>
 					<div class="grow h-1/3"></div>
 				</div>

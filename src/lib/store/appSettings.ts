@@ -115,7 +115,12 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 });
 
 export const setPlayerCount = (playerCount: number) => {
-	appSettings.update((data) => ({ ...data, playerCount }));
+	appSettings.update((data) => ({
+		...data,
+		playerCount,
+		// Default behavior by format size: ON for 2 players, OFF otherwise.
+		showLifeChangeHistory: playerCount === 2
+	}));
 };
 
 export const setStartingLifeTotal = (startingLifeTotal: number) => {
