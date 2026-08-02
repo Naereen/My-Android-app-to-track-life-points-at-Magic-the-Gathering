@@ -232,7 +232,7 @@
 		{#each visiblePlayers() as player}
 			<div
 				class="rounded-2xl border border-white/60 bg-black/60 px-8 py-6 text-center"
-				class:shadow-[0_0_40px_rgba(250,204,21,0.8)]={player.isCurrent}
+				class:shadow-[0_0_50px_rgba(250,204,21,0.9)]={player.isCurrent}
 			>
 				<div class="text-4xl font-bold truncate">
                     {player.name}

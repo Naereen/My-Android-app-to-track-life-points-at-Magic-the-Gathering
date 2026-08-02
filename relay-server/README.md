@@ -22,7 +22,7 @@ Par défaut :
 
 - Host: `0.0.0.0`
 - Port: `8787`
-- URL LAN typique: `http://192.168.1.42:8787`
+- URL LAN typique: `http://192.168.1.113:8787`
 
 Variables optionnelles:
 
@@ -36,28 +36,28 @@ Dans ton app :
 
 - Activer `isStreamMode`
 - Régler `remoteServerUrl` à l'URL du relay (sans `/api/stream`), par ex:
-  - `http://192.168.1.42:8787`
+  - `http://192.168.1.113:8787`
 
 L'app enverra automatiquement les changements de PV vers :
 
-- `POST http://192.168.1.42:8787/api/stream`
+- `POST http://192.168.1.113:8787/api/stream`
 
 ## 3) Ouvrir l'overlay stream
 
 URL overlay (sur GitHub Pages ou ton hébergement statique):
 
 ```text
-https://naereen.github.io/My-Android-app-to-track-life-points-at-Magic-the-Gathering/stream?server=http://192.168.1.42:8787
+https://naereen.github.io/My-Android-app-to-track-life-points-at-Magic-the-Gathering/stream?server=http://192.168.1.113:8787
 ```
 
 L'overlay écoute alors :
 
-- `GET http://192.168.1.42:8787/api/stream`
+- `GET http://192.168.1.113:8787/api/stream`
 
 ## 4) Vérifier que le relay tourne
 
 ```bash
-curl http://192.168.1.42:8787/health
+curl http://192.168.1.113:8787/health
 ```
 
 Réponse attendue:

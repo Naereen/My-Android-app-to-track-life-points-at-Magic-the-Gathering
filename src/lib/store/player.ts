@@ -1091,7 +1091,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 			if (clearProfiles) {
 				updatedPlayer.color = 'white';
 				updatedPlayer.backgroundImage = null;
-				updatedPlayer.playerName = get(_)('player') ? `${get(_)('player')} ${1 + player.id}` : `Player ${1 + player.id}`;
+				updatedPlayer.playerName = get(_)('player') ? `${get(_)('player')} ${player.id}` : `Player ${player.id}`;
 			}
 
 			return updatedPlayer;
