@@ -42,6 +42,8 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 
 - [x] Also log all the changes made manually from the mana/storm panel, like +1 red mana, +1 storm count, etc ; in the game history panel.
 
+- [x] Add a "Planar die" to use with the PlaneChase mode (for now, of another app)
+
 ## State saving improvements
 
 - [x] Save the state in the local storage of the browser, so that reloading the page does not reset everything

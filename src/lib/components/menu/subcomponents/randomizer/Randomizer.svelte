@@ -115,7 +115,7 @@
 						on:click={() => {
 							generateRandomNumber('dplanar');
 						}}
-						text="{$_('roll-planar-die')}"><Dplanar size="4rem" /></DiceCard
+						text="{$_('roll-planar-die')}"><Dplanar size="5rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
