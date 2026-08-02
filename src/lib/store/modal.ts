@@ -1,4 +1,5 @@
 import { get, writable } from 'svelte/store';
+import { _ } from 'svelte-i18n';
 import { appSettings } from './appSettings';
 import { addGameHistoryEntry } from './gameHistory';
 import { players } from './player';
@@ -41,13 +42,14 @@ export const generateRandomNumber = (type: string) => {
 	const max = dieTypes[type] || 0;
 	const result = type === 'dplanar' ? rollPlanarDie() : max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
 	if (max > 0) {
+		const t = get(_);
 		const diceResult =
 			type === 'dplanar'
 				? result === 0
-					? 'Blank'
+					? String(t('planar_result_blank'))
 					: result === 1
-						? 'Planeswalk'
-						: 'Chaos'
+						? String(t('planar_result_planeswalk'))
+						: String(t('planar_result_chaos'))
 				: result;
 
 		addGameHistoryEntry({

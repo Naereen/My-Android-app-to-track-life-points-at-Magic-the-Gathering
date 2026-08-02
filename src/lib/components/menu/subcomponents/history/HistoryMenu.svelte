@@ -16,6 +16,7 @@
 	import Storied from '$lib/assets/icons/Storied.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import Ticket from '$lib/assets/icons/Ticket.svelte';
+	import { optimize } from '$lib/utils';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { appSettings } from '$lib/store/appSettings';
 	import { clearGameHistory, gameHistory, type GameHistoryEntry } from '$lib/store/gameHistory';
@@ -25,11 +26,20 @@
 
 	const formatTime = (timestamp: number) => {
 		try {
-			return new Date(timestamp).toLocaleTimeString($appSettings.locale || undefined, {
+			const locale = $appSettings.locale || undefined;
+			const date = new Date(timestamp);
+			const datePart = new Intl.DateTimeFormat(locale, {
+				weekday: 'long',
+				day: 'numeric',
+				month: 'long',
+				year: 'numeric'
+			}).format(date);
+			const timePart = new Intl.DateTimeFormat(locale, {
 				hour: '2-digit',
 				minute: '2-digit',
 				second: '2-digit'
-			});
+			}).format(date);
+			return `${datePart.charAt(0).toUpperCase()}${datePart.slice(1)} - ${timePart}`;
 		} catch (e) {
 			return '';
 		}
@@ -50,6 +60,7 @@
 		if (statusKey === 'ticket') return String($_('ticket'));
 		if (statusKey === 'commandTax') return String($_('command_tax'));
 		if (statusKey === 'ringBearer') return String($_('ring_bearer'));
+		if (statusKey === 'storied') return String($_('storied'));
 		if (statusKey === 'startYourEngineSpeed') return String($_('start_your_engine_speed'));
 
 		return statusKey;
@@ -89,6 +100,16 @@
 		startYourEngineSpeed: StartYourEngineSpeed
 	} as const;
 
+	const resourceIconMap = {
+		white: 'white-mana-symbol.webp',
+		blue: 'blue-mana-symbol.webp',
+		black: 'black-mana-symbol.webp',
+		red: 'red-mana-symbol.webp',
+		green: 'green-mana-symbol.webp',
+		waste: 'waste-mana-symbol.webp',
+		storm: 'storm-counter-symbol.webp'
+	} as const;
+
 	const formatEntry = (entry: GameHistoryEntry) => {
 		const fromValue = entry.payload.from ?? 0;
 		const toValue = entry.payload.to ?? 0;
@@ -107,7 +128,7 @@
 		}
 
 		if (entry.kind === 'statusNumeric') {
-			return `${entry.playerName} · ${statusLabel(entry.payload.key)}: ${fromValue} → ${toValue}`;
+			return `${entry.playerName} · ${statusLabel(entry.payload.key)} : ${fromValue} → ${toValue}`;
 		}
 
 		if (entry.kind === 'commanderDamage') {
@@ -186,8 +207,16 @@
 			return { glyph: '🔂', className: 'text-purple-300' };
 		}
 
-		// Should now be useless
-		if (entry.kind === 'resourceChange' || entry.kind === 'resourceReset') {
+		if (entry.kind === 'resourceChange') {
+			const key = entry.payload.key as keyof typeof resourceIconMap;
+			const resourceIcon = resourceIconMap[key];
+			if (resourceIcon) {
+				return { imageSrc: optimize(resourceIcon), className: 'text-cyan-300' };
+			}
+			return { glyph: '◈', className: 'text-cyan-300' };
+		}
+
+		if (entry.kind === 'resourceReset') {
 			return { glyph: '◈', className: 'text-cyan-300' };
 		}
 
@@ -203,8 +232,11 @@
 	};
 
 	const iconComponent = (entry: GameHistoryEntry) => iconForEntry(entry).component;
+	const iconImageSrc = (entry: GameHistoryEntry) => iconForEntry(entry).imageSrc;
 	const iconGlyph = (entry: GameHistoryEntry) => iconForEntry(entry).glyph;
 	const iconClassName = (entry: GameHistoryEntry) => iconForEntry(entry).className;
+	const isKeyruneIcon = (entry: GameHistoryEntry) =>
+		entry.kind === 'statusBoolean' || entry.kind === 'statusNumeric';
 </script>
 
 <svelte:window bind:innerHeight />
@@ -236,9 +268,11 @@
 					{#each $gameHistory as entry (entry.id)}
 						<li class="bg-gray-900/95 border border-gray-800 rounded-lg px-2.5 py-2 text-sm">
 							<div class="flex gap-2">
-								<div class={`mt-auto mb-auto w-8 h-8 shrink-0 flex items-center justify-center select-none ${iconClassName(entry)}`}>
+								<div class={`history-icon-shell ${isKeyruneIcon(entry) ? 'history-icon-shell--keyrune' : ''} mt-auto mb-auto w-9 h-9 shrink-0 flex items-center justify-center select-none ${iconClassName(entry)}`}>
 									{#if iconComponent(entry)}
 										<svelte:component this={iconComponent(entry)} />
+									{:else if iconImageSrc(entry)}
+										<img srcset={iconImageSrc(entry)} alt="resource icon" class="h-7 w-7 object-contain" />
 									{:else}
 										<span class="text-4xl leading-none">{iconGlyph(entry)}</span>
 									{/if}
@@ -265,3 +299,19 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.history-icon-shell :global(svg) {
+		width: 1.75rem;
+		height: 1.75rem;
+	}
+
+	.history-icon-shell--keyrune :global(span) {
+		font-size: 2.25rem !important;
+	}
+
+	.history-icon-shell--keyrune {
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+</style>
