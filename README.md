@@ -363,7 +363,7 @@ See the [TODO-ROADMAP.md](./TODO-ROADMAP.md) file for a list of planned features
 ## 📝 [License](./LICENSE)
 
 This project is open source and available for personal use: MIT Licensed.
-Current version is: **0.4.10**.
+Current version is: **0.4.11**.
 
 ## 🙏 Acknowledgments
 
