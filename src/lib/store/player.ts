@@ -737,11 +737,17 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 	}
 };
 
-export const setPlayerStatusNumeric = (playerId: number, key: string, value: number) => {
+export const setPlayerStatusNumeric = (playerId: number, key: string, value: number, mergeKey?: string) => {
 	const beforePlayers = get(players);
 	const targetBefore = beforePlayers.find((player) => player.id === playerId);
 	const previous = Number(targetBefore?.statusEffects?.[key] ?? 0);
 	const snapshot = getPlayerSnapshot(playerId);
+	const mergeableNumericStatuses = new Set(['energy', 'experience', 'rad', 'acorn', 'ticket']);
+	const autoMergeKey =
+		mergeKey ??
+		(mergeableNumericStatuses.has(key) && Math.abs(value - previous) === 1
+			? `status:${playerId}:${key}:${value > previous ? 'add' : 'subtract'}`
+			: undefined);
 
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -763,6 +769,7 @@ export const setPlayerStatusNumeric = (playerId: number, key: string, value: num
 			playerId: snapshot.id,
 			playerName: snapshot.playerName,
 			kind: 'statusNumeric',
+			mergeKey: autoMergeKey,
 			payload: {
 				key,
 				from: previous,
@@ -786,11 +793,16 @@ export const setPlayerHighlighted = (playerId: number, highlighted: boolean) => 
 	});
 };
 
-export const setPlayerPoison = (playerId: number, amount: number) => {
+export const setPlayerPoison = (playerId: number, amount: number, mergeKey?: string) => {
 	const beforePlayers = get(players);
 	const targetBefore = beforePlayers.find((player) => player.id === playerId);
 	const previous = Number(targetBefore?.poison ?? 0);
 	const snapshot = getPlayerSnapshot(playerId);
+	const autoMergeKey =
+		mergeKey ??
+		(Math.abs(amount - previous) === 1
+			? `poison:${playerId}:${amount > previous ? 'add' : 'subtract'}`
+			: undefined);
 
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -809,6 +821,7 @@ export const setPlayerPoison = (playerId: number, amount: number) => {
 			playerId: snapshot.id,
 			playerName: snapshot.playerName,
 			kind: 'poison',
+			mergeKey: autoMergeKey,
 			payload: {
 				from: previous,
 				to: amount

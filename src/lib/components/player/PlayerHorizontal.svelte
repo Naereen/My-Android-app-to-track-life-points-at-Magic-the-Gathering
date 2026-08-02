@@ -280,8 +280,9 @@
 	};
 
 	$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
-	$: timerMinutes = Math.floor(($turnTimer.remaining || 0) / 60);
-	$: timerSeconds = ($turnTimer.remaining || 0) % 60;
+	$: timerElapsed = Math.max(0, ($turnTimer.total || 0) - ($turnTimer.remaining || 0));
+	$: timerMinutes = Math.floor(timerElapsed / 60);
+	$: timerSeconds = timerElapsed % 60;
 
 	// circumference for the timer circle (radius = 18 from the SVG)
 	$: timerCircumference = 2 * Math.PI * 18;
