@@ -182,11 +182,13 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				</button>
 			</div>
 		{/if}
-		<div class="flex justify-center items-center flex-grow">
-			<button on:click={handleManaClick} on:contextmenu|preventDefault draggable="false">
-				<ManaPentagon />
-			</button>
-		</div>
+		{#if $appSettings.showResourcesButton}
+			<div class="flex justify-center items-center flex-grow">
+				<button on:click={handleManaClick} on:contextmenu|preventDefault draggable="false">
+					<ManaPentagon />
+				</button>
+			</div>
+		{/if}
 		{#if $appSettings.showNextPlayerButton}
 			<div class="flex justify-center items-center flex-grow">
 				<button
@@ -213,22 +215,24 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				</button>
 			</div>
 		{/if}
-		<div class="flex justify-center items-center flex-grow text-sm"
-		>
-			<button
-				on:click={() => toggleIsMenuOpen('randomizer')}
-				on:mousedown={handleRandomPlayerDown}
-				on:mouseup={handleRandomPlayerUp}
-				on:mouseleave={handleRandomPlayerUp}
-				on:touchstart={handleRandomPlayerDown}
-				on:touchend={handleRandomPlayerUp}
-				on:touchcancel={handleRandomPlayerUp}
-				on:contextmenu|preventDefault
-				draggable="false"
+		{#if $appSettings.showRandomizerButton}
+			<div class="flex justify-center items-center flex-grow text-sm"
 			>
-				<Dsix />
-			</button>
-		</div>
+				<button
+					on:click={() => toggleIsMenuOpen('randomizer')}
+					on:mousedown={handleRandomPlayerDown}
+					on:mouseup={handleRandomPlayerUp}
+					on:mouseleave={handleRandomPlayerUp}
+					on:touchstart={handleRandomPlayerDown}
+					on:touchend={handleRandomPlayerUp}
+					on:touchcancel={handleRandomPlayerUp}
+					on:contextmenu|preventDefault
+					draggable="false"
+				>
+					<Dsix />
+				</button>
+			</div>
+		{/if}
 	</div>
 {:else if $appState.activeMenu === 'settings'}
 	<Settings on:resetLifeTotals />

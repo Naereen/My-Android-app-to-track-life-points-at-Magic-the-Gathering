@@ -131,6 +131,8 @@
     "stream_mode_status_unreachable": "Server non raggiungibile",
     "enable_current_player_glow": "Attiva bagliore del giocatore corrente",
     "show_next_player_button": "Mostra il pulsante del giocatore successivo",
+    "show_resources_button": "Mostra il pulsante risorse",
+    "show_randomizer_button": "Mostra il pulsante casuale",
     "show_emblem_menu_button": "Mostra il pulsante del menu emblemi",
     "show_game_history_menu_button": "Mostra il pulsante cronologia partita",
     "game_history": "Cronologia partita",

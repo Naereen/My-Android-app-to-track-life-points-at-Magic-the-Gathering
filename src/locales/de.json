@@ -129,6 +129,8 @@
     "stream_mode_status_unreachable": "Server nicht erreichbar",
     "enable_current_player_glow": "Leuchten des aktuellen Spielers aktivieren",
     "show_next_player_button": "Button für nächsten Spieler anzeigen",
+    "show_resources_button": "Ressourcen-Button anzeigen",
+    "show_randomizer_button": "Zufalls-Button anzeigen",
     "show_emblem_menu_button": "Emblem-Menü-Button anzeigen",
     "show_game_history_menu_button": "Spielverlauf-Button anzeigen",
     "game_history": "Spielverlauf",

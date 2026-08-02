@@ -129,6 +129,8 @@
     "stream_mode_status_unreachable": "Servidor inaccesible",
     "enable_current_player_glow": "Activar resplandor del jugador actual",
     "show_next_player_button": "Mostrar botón de siguiente jugador",
+    "show_resources_button": "Mostrar botón de recursos",
+    "show_randomizer_button": "Mostrar botón aleatorio",
     "show_emblem_menu_button": "Mostrar botón del menú de emblemas",
     "show_game_history_menu_button": "Mostrar botón del historial de partida",
     "game_history": "Historial de partida",

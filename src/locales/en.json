@@ -131,6 +131,8 @@
     "stream_mode_status_unreachable": "Server unreachable",
     "enable_current_player_glow": "Enable current player glow",
     "show_next_player_button": "Show next-player button",
+    "show_resources_button": "Show resources button",
+    "show_randomizer_button": "Show randomizer button",
     "show_emblem_menu_button": "Show emblem menu button",
     "show_game_history_menu_button": "Show game history menu button",
     "game_history": "Game History",

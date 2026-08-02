@@ -30,6 +30,10 @@ interface AppSettings {
 	enableCurrentPlayerGlow: boolean;
 	// show the next-player button in the main menu
 	showNextPlayerButton: boolean;
+	// show the resources button in the main menu
+	showResourcesButton: boolean;
+	// show the randomizer button in the main menu
+	showRandomizerButton: boolean;
 	// show emblem menu button in the main menu
 	showEmblemMenu: boolean;
 	// show vanguard menu button in the main menu
@@ -86,6 +90,10 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	enableCurrentPlayerGlow: true,
 	// show the next-player button in the main menu
 	showNextPlayerButton: true,
+	// show the resources button in the main menu
+	showResourcesButton: true,
+	// show the randomizer button in the main menu
+	showRandomizerButton: true,
 	// show emblem menu button in the main menu
 	showEmblemMenu: false,
 	// show vanguard menu button in the main menu
@@ -163,6 +171,18 @@ appSettings.update((data) => {
 			showLifeChangeHistory: true
 		};
 	}
+	if (data.showResourcesButton === undefined) {
+		return {
+			...data,
+			showResourcesButton: true
+		};
+	}
+	if (data.showRandomizerButton === undefined) {
+		return {
+			...data,
+			showRandomizerButton: true
+		};
+	}
 	return data;
 });
 
@@ -172,6 +192,14 @@ export const setEnableCurrentPlayerGlow = (enable: boolean) => {
 
 export const setShowNextPlayerButton = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showNextPlayerButton: show }));
+};
+
+export const setShowResourcesButton = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showResourcesButton: show }));
+};
+
+export const setShowRandomizerButton = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showRandomizerButton: show }));
 };
 
 export const setShowEmblemMenu = (show: boolean) => {

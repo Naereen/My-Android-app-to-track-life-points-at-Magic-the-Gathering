@@ -132,6 +132,8 @@
     "stream_mode_status_unreachable": "Serveur injoignable",
     "enable_current_player_glow": "Faire briller le joueur actif",
     "show_next_player_button": "Afficher le bouton « Joueur suivant »",
+    "show_resources_button": "Afficher le bouton Ressources",
+    "show_randomizer_button": "Afficher le bouton Aléatoire",
     "show_emblem_menu_button": "Afficher le menu « Emblèmes & Donjons »",
     "show_game_history_menu_button": "Afficher l'historique de la partie",
     "game_history": "Historique de la partie",
