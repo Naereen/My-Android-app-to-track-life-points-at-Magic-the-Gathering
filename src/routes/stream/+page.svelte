@@ -31,6 +31,25 @@
 	let endpoint = '';
 	let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 	let errorDetail = '';
+	let isDarkTheme = false;
+	let previousBodyBackground = '';
+	let previousBodyColor = '';
+	let previousHtmlBackground = '';
+	let previousHtmlColor = '';
+	let previousLayoutBackground = '';
+	let previousLayoutForeground = '';
+
+	const applyDocumentTheme = () => {
+		if (typeof document === 'undefined') return;
+		const background = isDarkTheme ? 'rgb(0 0 0)' : 'rgb(241 245 249)';
+		const color = isDarkTheme ? 'rgb(255 255 255)' : 'rgb(15 23 42)';
+		document.body.style.backgroundColor = background;
+		document.body.style.color = color;
+		document.documentElement.style.backgroundColor = background;
+		document.documentElement.style.color = color;
+		document.documentElement.style.setProperty('--stream-layout-bg', background);
+		document.documentElement.style.setProperty('--stream-layout-fg', color);
+	};
 
 	const getConfiguredServerBaseUrl = () => {
 		if (typeof window === 'undefined') return '';
@@ -205,40 +224,75 @@
 	};
 
 	onMount(() => {
+		if (typeof document !== 'undefined') {
+			previousBodyBackground = document.body.style.backgroundColor;
+			previousBodyColor = document.body.style.color;
+			previousHtmlBackground = document.documentElement.style.backgroundColor;
+			previousHtmlColor = document.documentElement.style.color;
+			previousLayoutBackground = document.documentElement.style.getPropertyValue('--stream-layout-bg');
+			previousLayoutForeground = document.documentElement.style.getPropertyValue('--stream-layout-fg');
+		}
+		applyDocumentTheme();
 		connectToStream();
 	});
+
+	$: applyDocumentTheme();
 
 	onDestroy(() => {
 		clearReconnectTimer();
 		source?.close();
+		if (typeof document !== 'undefined') {
+			document.body.style.backgroundColor = previousBodyBackground;
+			document.body.style.color = previousBodyColor;
+			document.documentElement.style.backgroundColor = previousHtmlBackground;
+			document.documentElement.style.color = previousHtmlColor;
+			document.documentElement.style.setProperty('--stream-layout-bg', previousLayoutBackground);
+			document.documentElement.style.setProperty('--stream-layout-fg', previousLayoutForeground);
+		}
 	});
 </script>
 
-<div class="w-screen h-screen bg-transparent text-white p-4 flex flex-col justify-center">
-	<div class="mb-6 flex items-center justify-between text-3xl font-black tracking-widest">
+<div
+	class="relative h-full w-full box-border p-4 flex flex-col justify-between gap-4 transition-colors duration-300 overflow-hidden px-8"
+	style="width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);"
+	class:bg-black={isDarkTheme}
+	class:text-white={isDarkTheme}
+	class:bg-slate-100={ !isDarkTheme }
+	class:text-slate-900={ !isDarkTheme }
+>
+	<div class="flex items-center justify-between text-3xl font-black tracking-widest">
 		<div>
             <h1 class="text-4xl">Naereen's MTG Life Tracker</h1>
-            <h2 class="text-lg opacity-80">Stream Overlay</h2>
+            <h2 class="text-lg" class:opacity-80={isDarkTheme} class:opacity-70={!isDarkTheme}>Stream Overlay</h2>
         </div>
 		<div class="tabular-nums"
             class:text-green-300={status === 'connected'}
+            class:text-green-700={status === 'connected' && !isDarkTheme}
             class:text-red-300={status === 'error'}
+            class:text-red-700={status === 'error' && !isDarkTheme}
         >
 			{status}
 		</div>
 	</div>
 
-	<div class="grid gap-8 mb-12" style={`grid-template-columns: repeat(${Math.min(3, visiblePlayers().length)}, minmax(0, 1fr)); container-type: inline-size;`}>
+	<div class="grid content-center gap-6" style={`grid-template-columns: repeat(${Math.min(3, visiblePlayers().length)}, minmax(0, 1fr)); container-type: size;`}>
 		{#each visiblePlayers() as player}
 			<div
-				class="rounded-2xl border border-white/60 bg-black/60 px-8 py-6 text-center"
-				class:shadow-[0_0_50px_rgba(250,204,21,0.9)]={player.isCurrent}
+				class={`rounded-2xl border px-8 py-8 text-center transition-colors duration-300 ${
+					isDarkTheme ? 'border-white/60 bg-black/60' : 'border-slate-300 bg-white/80 shadow-md'
+				} ${
+					player.isCurrent
+						? isDarkTheme
+							? 'shadow-[0_0_50px_rgba(250,204,21,0.9)]'
+							: 'bg-amber-50/95 ring-4 ring-amber-400 shadow-[0_0_45px_rgba(245,158,11,0.9)]'
+						: ''
+				}`}
 			>
 				<div class="text-4xl font-bold truncate">
                     {player.name}
                 </div>
 				<div class="mt-2 font-black tabular-nums leading-none"
-                    style="font-size: 15cqw; text-align: center; white-space: nowrap;"
+					style="font-size: clamp(5rem, min(15cqw, 20cqh), 14rem); text-align: center; white-space: nowrap;"
                 >
                     {player.life}
                 </div>
@@ -247,13 +301,33 @@
 	</div>
 
     {#if errorDetail}
-		<div class="mt-4 mb-2 text-base text-red-300">{errorDetail}</div>
+		<div class="mt-4 mb-2 text-base" class:text-red-300={isDarkTheme} class:text-red-700={!isDarkTheme}>{errorDetail}</div>
 	{/if}
 
-    {#if endpoint}
-    <div class="absolute bottom-2 mt-4 mb-2 text-sm opacity-80 truncate">
-            Endpoint URL:
-            <a href={endpoint} target="_blank" rel="noopener noreferrer" class="text-blue-300">{endpoint}</a>
-        </div>
-	{/if}
+	<div class="mt-2 flex items-center justify-between gap-4 text-sm">
+		<div class="min-w-0 truncate" class:opacity-80={isDarkTheme} class:opacity-70={!isDarkTheme}>
+			{#if endpoint}
+				Endpoint URL:
+				<a
+					href={endpoint}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="underline decoration-1"
+					class:text-blue-300={isDarkTheme}
+					class:text-blue-700={!isDarkTheme}
+				>{endpoint}</a>
+			{/if}
+		</div>
+		<button
+			type="button"
+			on:click={() => (isDarkTheme = !isDarkTheme)}
+			class={`inline-flex h-10 w-10 items-center justify-center rounded-full border text-xl transition-colors duration-200 ${
+				isDarkTheme ? 'border-white/60 bg-black/60' : 'border-slate-400 bg-white/90'
+			}`}
+			title={isDarkTheme ? 'Passer au thème clair' : 'Passer au thème sombre'}
+			aria-label={isDarkTheme ? 'Passer au thème clair' : 'Passer au thème sombre'}
+		>
+			{isDarkTheme ? '☀️' : '🌙'}
+		</button>
+	</div>
 </div>

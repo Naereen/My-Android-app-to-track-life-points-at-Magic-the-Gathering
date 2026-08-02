@@ -48,7 +48,10 @@
 <svelte:window bind:innerHeight contextmenu="return false" />
 
 <!-- outer full-width container avoids visible body background at the sides -->
-<div class="w-full max-h-screen font-sans flex justify-center overflow-hidden">
+<div
+	class="w-full max-h-screen font-sans flex justify-center overflow-hidden"
+	style="background-color: var(--stream-layout-bg, transparent); color: var(--stream-layout-fg, inherit);"
+>
 	<div class="mx-auto max-w-[1000px] flex justify-center w-full" style="height: {innerHeight}px;">
 		<slot />
 	</div>
