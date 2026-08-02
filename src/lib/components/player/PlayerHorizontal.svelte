@@ -534,7 +534,7 @@
 									>
 										<span
 											class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center leading-none"
-											class:text-xxl={$appSettings.playerCount === 2}
+											class:text-9xl={$appSettings.playerCount === 2}
 											class:text-8xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
 											class:text-6xl={$appSettings.playerCount >= 5}
 											class:-rotate-180={orientation === 'left'}
