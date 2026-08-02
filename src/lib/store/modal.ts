@@ -16,12 +16,20 @@ const initialRandomizerModalState: RandomizerModalState = { isOpen: false, resul
 
 export const randomizerModalData = writable<RandomizerModalState>(initialRandomizerModalState);
 
+const rollPlanarDie = () => {
+	const roll = Math.floor(Math.random() * 6) + 1;
+	if (roll <= 4) return 0;
+	if (roll === 5) return 1;
+	return 2;
+};
+
 export const generateRandomNumber = (type: string) => {
 	vibrate(20);
 	const dieTypes: { [key: string]: number | null } = {
 		d2: 2,
 		d4: 4,
 		d6: 6,
+		dplanar: 6,
 		d8: 8,
 		d10: 10,
 		d12: 12,
@@ -30,7 +38,7 @@ export const generateRandomNumber = (type: string) => {
 	};
 
 	const max = dieTypes[type] || 0;
-	const result = max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
+	const result = type === 'dplanar' ? rollPlanarDie() : max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
 	if (type === 'custom') {
 		randomizerModalData.set({ isOpen: true, result, type, playerId: null, playerName: null, backgroundImage: null });
 	} else {

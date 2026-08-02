@@ -13,6 +13,13 @@
 	let iconSize = '6rem';
 	let rollingMs = 0;
 
+	const rollPlanarFace = () => {
+		const roll = Math.floor(Math.random() * 6) + 1;
+		if (roll <= 4) return 0;
+		if (roll === 5) return 1;
+		return 2;
+	};
+
 	function getPrefix(type?: string) {
 		if (!type || type === '') return null;
 		const map: Record<string, string> = {
@@ -49,6 +56,29 @@
 	async function startRollAnimation() {
 		abort = false;
 		rolling = true;
+		if ($randomizerModalData.type === 'dplanar') {
+			const final = $randomizerModalData.result;
+			const rounds = Math.floor(Math.random() * 5 + 5);
+			const totalMs = 1000;
+			rollingMs = totalMs;
+			const step = Math.max(50, Math.floor(totalMs / rounds));
+
+			for (let i = 0; i < rounds; i++) {
+				if (abort) {
+					rollingMs = 0;
+					return;
+				}
+				displayResult = rollPlanarFace();
+				vibrate(10);
+				await new Promise((r) => setTimeout(r, step));
+			}
+
+			if (!abort) displayResult = final;
+			rolling = false;
+			rollingMs = 0;
+			return;
+		}
+
 		const max = getMaxSides($randomizerModalData.type);
 		const final = $randomizerModalData.result;
 		const rounds = Math.floor(Math.random() * 5 + 5); // Number of times the face changes during the animation
@@ -138,6 +168,27 @@
 							</div>
 							<div class="text-5xl text-white mt-6 relative -bottom-2">
 								{ $randomizerModalData.result}
+							</div>
+						</div>
+					{:else if $randomizerModalData.type === 'dplanar'}
+						<div class="h-[132px] w-[120px] flex flex-col items-center justify-center gap-2">
+							<div class="h-[96px] w-[96px] flex items-center justify-center">
+								{#if displayResult === 1}
+									<i class="mi mi-planeswalk mi-4x text-white" style="font-size: {iconSize};"></i>
+								{:else if displayResult === 2}
+									<i class="mi mi-chaos mi-4x text-white" style="font-size: {iconSize};"></i>
+								{:else}
+									<span class="inline-block h-[1px] w-[1px]"></span>
+								{/if}
+							</div>
+							<div class="text-white text-sm text-center">
+								{#if displayResult === 1}
+									{ $_('planar_result_planeswalk') }
+								{:else if displayResult === 2}
+									{ $_('planar_result_chaos') }
+								{:else}
+									{ $_('planar_result_blank') }
+								{/if}
 							</div>
 						</div>
 					{:else}

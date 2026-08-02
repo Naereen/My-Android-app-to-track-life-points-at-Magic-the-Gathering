@@ -3,6 +3,7 @@
 	import Deight from '$lib/assets/icons/Deight.svelte';
 	import Dfour from '$lib/assets/icons/Dfour.svelte';
 	import Dsix from '$lib/assets/icons/Dsix.svelte';
+	import Dplanar from '$lib/assets/icons/Dplanar.svelte';
 	import Dten from '$lib/assets/icons/Dten.svelte';
 	import Dtwelve from '$lib/assets/icons/Dtwelve.svelte';
 	import Dtwenty from '$lib/assets/icons/Dtwenty.svelte';
@@ -69,11 +70,13 @@
 			</button>
 			<span class="text-white text-center text-3xl">{$_('dice_misc')}</span>
 			<span class="text-gray-400 text-center text-base mt-2 w-80">{$_('long_click_random_player')}</span>
+			<span class="text-gray-400 text-center text-base mt-2 w-80">
+			</span>
 		</div>
 
 		<div class="w-full flex justify-center">
 			<div class="grid grid-rows-4 grid-cols-6 gap-y-8 gap-x-4">
-				<div class="col-span-2 col-start-2">
+				<div class="col-span-2">
 					<DiceCard
 						on:click={() => {
 							generateRandomNumber('d2');
@@ -105,6 +108,14 @@
 							</div>
 							<div class="text-white text-xl mb-2 mt-2">{$_('roll')}</div>
 						</div></DiceCard
+					>
+				</div>
+				<div class="col-span-2">
+					<DiceCard
+						on:click={() => {
+							generateRandomNumber('dplanar');
+						}}
+						text="{$_('roll-planar-die')}"><Dplanar size="4rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
