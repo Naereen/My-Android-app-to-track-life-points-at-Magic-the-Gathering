@@ -359,12 +359,12 @@
 	};
 
 	const languages = [
-		{ code: 'en', label: 'English' },
-		{ code: 'fr', label: 'Français' },
-		{ code: 'es', label: 'Español' },
-		{ code: 'de', label: 'Deutsch' },
-		{ code: 'it', label: 'Italiano' },
-		{ code: 'pt', label: 'Português' }
+		{ code: 'en', label: 'English', emoji: '🇬🇧' },
+		{ code: 'fr', label: 'Français', emoji: '🇫🇷' },
+		{ code: 'es', label: 'Español', emoji: '🇪🇸' },
+		{ code: 'de', label: 'Deutsch', emoji: '🇩🇪' },
+		{ code: 'it', label: 'Italiano', emoji: '🇮🇹' },
+		{ code: 'pt', label: 'Português', emoji: '🇵🇹' }
 	];
 
 	const handleChangeLocale = (code: string) => {
@@ -529,7 +529,7 @@
 				<div class="text-2xl font-bold">{$_('main_checkboxes_settings')}</div>
 			</div>
 		</div>
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -543,7 +543,7 @@
 				<span class="ml-2 text-lg font-semibold">{$_('allow_negative_life_global') || 'Allow negative life (global)'}</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -557,7 +557,7 @@
 				<span class="ml-2 text-lg font-semibold">{$_('prevent_screen_sleep') || 'Prevent screen sleep'}</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -571,7 +571,7 @@
 				<span class="ml-2 text-lg font-semibold">{$_('haptic_feedback') || 'Enable haptic feedback'}</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -586,7 +586,7 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -608,7 +608,7 @@
 			</div>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -622,7 +622,7 @@
 				<span class="ml-2 text-lg font-semibold">{$_('show_next_player_button') || 'Show next-player button'}</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -638,7 +638,7 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -653,7 +653,7 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -668,7 +668,7 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -682,7 +682,7 @@
 				<span class="ml-2 text-lg font-semibold">{$_('show_emblem_menu_button') || 'Show emblem menu button'}</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -704,9 +704,9 @@
 			</div>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				class="flex gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
 			>
 				<input
@@ -719,9 +719,9 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				class="flex gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
 			>
 				<input
@@ -734,9 +734,9 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				class="flex gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
 			>
 				<input
@@ -750,9 +750,9 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				class="flex gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
 			>
 				<input
@@ -765,9 +765,9 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				class="flex gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
 			>
 				<input
@@ -780,7 +780,7 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
@@ -803,9 +803,9 @@
 			</div>
 		</div>
 
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex text-left justify-start mt-0 mb-0">
 			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				class="flex gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
 			>
 				<div class="ml-2">
@@ -824,9 +824,9 @@
 		</div>
 
 		{#if $appSettings.globalGameTimerEnabled}
-			<div class="w-full flex justify-center mt-0 mb-0">
+			<div class="w-full flex justify-end mt-0 mb-0">
 				<label
-					class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+					class="flex gap-2 text-sm px-4 py-2 rounded-full"
 					style="min-width: 12rem;"
 				>
 					<span class="ml-2 text-lg font-semibold">{$_('global_game_timer_duration') || 'Global timer duration (minutes)'}</span>
@@ -844,9 +844,9 @@
 		{/if}
 
 		<!-- Turn timer settings -->
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex text-left justify-start mt-0 mb-0">
 			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				class="flex gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
 			>
 				<div class="ml-2">
@@ -865,9 +865,9 @@
 		</div>
 
 		{#if $appSettings.turnTimerEnabled}
-			<div class="w-full flex justify-center mt-0 mb-0">
+			<div class="w-full flex justify-end mt-0 mb-0">
 				<label
-					class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+					class="flex gap-2 text-sm px-4 py-2 rounded-full"
 					style="min-width: 12rem;"
 				>
 					<span class="ml-2 text-lg font-semibold">{$_('turn_timer_duration') || 'Turn duration (minutes)'}</span>
@@ -883,9 +883,9 @@
 				</label>
 			</div>
 
-			<div class="w-full flex justify-center mt-0 mb-0">
+			<div class="w-full flex justify-start mt-0 mb-0">
 				<label
-					class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+					class="flex gap-2 text-sm px-4 py-2 rounded-full"
 					style="min-width: 12rem;"
 				>
 					<input
@@ -919,7 +919,8 @@
 				<span class="ml-2 text-lg font-semibold">{$_('stream_mode_enable') || 'Enable stream mode'}</span>
 			</label>
 		</div>
-		<div class="w-full flex justify-center mt-0 mb-0 px-8">
+		{#if $appSettings.isStreamMode}
+		<div class="w-full flex justify-start mt-0 mb-0 px-8">
 			<div style="min-width: 12rem; max-width: 32rem;" class="w-full">
 				<div class="text-sm text-gray-400 mb-1">{$_('stream_mode_help') || 'Use the local relay URL, e.g. http://192.168.1.113:8787'}</div>
 				<input
@@ -968,6 +969,7 @@
 				</div>
 			</div>
 		</div>
+		{/if}
 
 		<!-- Language selection -->
 		<div class="w-full flex justify-center mt-6 mb-4">
@@ -976,12 +978,12 @@
 				<div class="grid grid-cols-3 gap-2 justify-center w-full">
 					{#each languages as lang}
 						<button
-							class="px-3 py-1 rounded-full"
+							class="px-3 py-1 rounded-full text-xl"
 							class:bg-blue-500={$appSettings.locale === lang.code}
 							class:text-white={$appSettings.locale === lang.code}
 							on:click={() => handleChangeLocale(lang.code)}
 						>
-							{lang.label}
+							{lang.emoji} {lang.label}
 						</button>
 					{/each}
 				</div>
