@@ -184,6 +184,48 @@ const defaultPlayers: App.Player.Data[] = [
 		isFirst: false,
 		highlighted: false,
 		isDead: false
+	},
+	{
+		id: 7,
+		lifeTotal: get(appSettings).startingLifeTotal,
+		playerName: 'Player 7',
+		color: 'white',
+		backgroundImage: null,
+		backgroundArtist: null,
+		backgroundSet: null,
+		tempLifeDiff: 0,
+		poison: 0,
+		statusEffects: {},
+		vanguard: null,
+		vanguardChoices: [],
+		treacheryRole: null,
+		treacheryCard: null,
+		treacherySeen: false,
+		allowNegativeLife: false,
+		isFirst: false,
+		highlighted: false,
+		isDead: false
+	},
+	{
+		id: 8,
+		lifeTotal: get(appSettings).startingLifeTotal,
+		playerName: 'Player 8',
+		color: 'white',
+		backgroundImage: null,
+		backgroundArtist: null,
+		backgroundSet: null,
+		tempLifeDiff: 0,
+		poison: 0,
+		statusEffects: {},
+		vanguard: null,
+		vanguardChoices: [],
+		treacheryRole: null,
+		treacheryCard: null,
+		treacherySeen: false,
+		allowNegativeLife: false,
+		isFirst: false,
+		highlighted: false,
+		isDead: false
 	}
 ];
 

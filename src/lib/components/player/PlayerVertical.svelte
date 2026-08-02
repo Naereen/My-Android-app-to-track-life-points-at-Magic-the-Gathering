@@ -36,10 +36,10 @@
 	import { colorToBg } from '$lib/components/colorToBg';
 	import Minimap from './Minimap.svelte';
 	import LifeChangeHistory from './LifeChangeHistory.svelte';
-	const doNotShowMinimap: boolean = false; // XXX: for testing purposes, to hide the minimap in the player component
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
 
+	export let doNotShowMinimap: boolean = false; // for testing purposes, to hide the minimap in the player component
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
 	export let layout: 'two-by-two' | 'one-two-one' | '' = '';
@@ -356,11 +356,13 @@
 							class="py-1 px-2 rounded-lg mt-1 text-xl pointer-events-auto shadow-lg"
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 							><div class="flex">
-								{#if doNotShowMinimap}
+								<!--
+								{#if !doNotShowMinimap}
 									<div class="flex justify-center items-center mr-1">
 										<CommanderDamage playerIndex={index} color="white" />
 									</div>
 								{/if}
+								-->
 								<span
 									class="beleren mt-1"
 									style="font-size: x-large; color: white;"
@@ -472,7 +474,7 @@
 		<div
 			class="bg-black/40 text-white text-xs rounded-full px-1 py-0 flex gap-0.5 items-center pointer-events-auto"
 		>
-			{#if numberOfPlayers >= 3}
+			{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
 				<div class="mr-2">
 					<Minimap playerIndex={index} orientation={orientation} layout={layout} />
 				</div>

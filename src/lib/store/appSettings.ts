@@ -4,9 +4,9 @@ import { locale as i18nLocale } from 'svelte-i18n';
 
 interface AppSettings {
 	// default settings values
-	// number of players in the game (2, 3, 4, 5 or 6, default is 4)
+	// number of players in the game (from 2 to 8, default is 4)
 	playerCount: number;
-	// default starting life total for players (20 for 2-players games, 30 for Two-Headed Giant games, 40 for 4/5/6-players games)
+	// default starting life total for players (20 for 2-players games, 40 otherwise)
 	startingLifeTotal: number;
 	customStartingLifeTotal: number;
 	customRandomNumber: number;
@@ -68,9 +68,9 @@ interface AppSettings {
 
 export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	// default settings values
-	// number of players in the game (2, 3, 4, 5 or 6, default is 4)
+	// number of players in the game (from 2 to 8, default is 4)
 	playerCount: 4,
-	// default starting life total for players (20 for 2-players games, 30 for Two-Headed Giant games, 40 for 4/5/6-players games)
+	// default starting life total for players (20 for 2-players games, 40 otherwise)
 	startingLifeTotal: 40,
 	customStartingLifeTotal: 60,
 	customRandomNumber: 0,

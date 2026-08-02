@@ -6,7 +6,7 @@ import { players } from './player';
 import { turnTimer } from './turnTimer';
 import { addGameHistoryEntry } from './gameHistory';
 
-const MAX_STREAM_PLAYERS = 6;
+const MAX_STREAM_PLAYERS = 8;
 
 export interface StreamGameState {
 	playerCount: number;
@@ -20,12 +20,16 @@ export interface StreamGameState {
 	namePlayer4: string;
 	namePlayer5: string;
 	namePlayer6: string;
+	namePlayer7: string;
+	namePlayer8: string;
 	lifePlayer1: number;
 	lifePlayer2: number;
 	lifePlayer3: number;
 	lifePlayer4: number;
 	lifePlayer5: number;
 	lifePlayer6: number;
+	lifePlayer7: number;
+	lifePlayer8: number;
 }
 
 export const appState = persist('appState', {
@@ -243,12 +247,16 @@ export const gameState = derived([players, appSettings, appState], ([$players, $
 		namePlayer4: names[3] ?? '',
 		namePlayer5: names[4] ?? '',
 		namePlayer6: names[5] ?? '',
+		namePlayer7: names[6] ?? '',
+		namePlayer8: names[7] ?? '',
 		lifePlayer1: lifeTotals[0] ?? 0,
 		lifePlayer2: lifeTotals[1] ?? 0,
 		lifePlayer3: lifeTotals[2] ?? 0,
 		lifePlayer4: lifeTotals[3] ?? 0,
 		lifePlayer5: lifeTotals[4] ?? 0,
-		lifePlayer6: lifeTotals[5] ?? 0
+		lifePlayer6: lifeTotals[5] ?? 0,
+		lifePlayer7: lifeTotals[6] ?? 0,
+		lifePlayer8: lifeTotals[7] ?? 0
 	} satisfies StreamGameState;
 });
 

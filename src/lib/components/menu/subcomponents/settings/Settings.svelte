@@ -397,8 +397,21 @@
 		<!-- Player Count -->
 		<div class="w-3/4">
 			<div><span style="font-size: 1.5rem;" class="font-bold">{$_('players')}</span></div>
-			<div class="flex flex-row justify-between mt-3">
-				{#each [2, 3, 4, 5, 6] as playerCount}
+			<div class="grid grid-cols-4 justify-items-center justify-center mt-3 gap-2">
+				{#each [2, 3, 4, 5] as playerCount}
+					{#key $appSettings.playerCount}
+						<div>
+							<CircularButton
+								on:click={() => setNewPlayerCount(playerCount)}
+								number={playerCount}
+								highlight={$appSettings.playerCount === playerCount}
+							/>
+						</div>
+					{/key}
+				{/each}
+			</div>
+			<div class="grid grid-cols-3 justify-items-center justify-center mt-2">
+				{#each [6, 7, 8] as playerCount}
 					{#key $appSettings.playerCount}
 						<div>
 							<CircularButton

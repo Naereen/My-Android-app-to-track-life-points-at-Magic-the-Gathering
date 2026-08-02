@@ -36,10 +36,10 @@
 	import { colorToBg } from '$lib/components/colorToBg';
 	import Minimap from './Minimap.svelte';
 	import LifeChangeHistory from './LifeChangeHistory.svelte';
-	const doNotShowMinimap: boolean = false; // XXX: for testing purposes, to hide the minimap in the player component
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
 
+	export let doNotShowMinimap: boolean = false; // for testing purposes, to hide the minimap in the player component
 	export let orientation: App.Player.Orientation = 'up';
 	export let id: number;
 	export let layout: 'two-by-two' | 'one-two-one' | '' = '';
@@ -408,13 +408,15 @@
 							style="background-color: {isDead ? 'black' : 'rgb(36, 36, 36, 0.9)'}"
 						>
 							<div class="flex items-center">
-								{#if doNotShowMinimap}
+								<!--
+								{#if !doNotShowMinimap }
 									<div class="flex justify-center items-center mb-3 rotate-90">
 										<div class="flex justify-center items-center mr-1">
 											<CommanderDamage playerIndex={index} color="white" />
 										</div>
 									</div>
 								{/if}
+								-->
 								<span
 									class="beleren mr-1"
 									style="font-size: x-large; color: white;"
@@ -598,7 +600,7 @@
 						class:flex-row={orientation === 'left'}
 						class:flex-row-reverse={orientation === 'left'}
 					>
-						{#if numberOfPlayers >= 3}
+						{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
 							<div class="mr-2">
 								<Minimap playerIndex={index} orientation={orientation} layout={layout} />
 							</div>

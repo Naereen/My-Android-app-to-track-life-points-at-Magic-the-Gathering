@@ -2,14 +2,23 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { StreamGameState } from '$lib/store/appState';
 
-	const MAX_STREAM_PLAYERS = 6;
+	const MAX_STREAM_PLAYERS = 8;
 
 	const initialState: StreamGameState = {
 		playerCount: 2,
 		currentTurn: 0,
 		updatedAt: Date.now(),
-		names: ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6'],
-		lifeTotals: [20, 20, 0, 0, 0, 0],
+		names: [
+			'Player 1',
+			'Player 2',
+			'Player 3',
+			'Player 4',
+			'Player 5',
+			'Player 6',
+			'Player 7',
+			'Player 8'
+		],
+		lifeTotals: [20, 20, 0, 0, 0, 0, 0, 0],
         // Flat properties for backward compatibility with older payload formats. TODO: remove in a future version.
 		namePlayer1: 'Player 1',
 		namePlayer2: 'Player 2',
@@ -17,12 +26,16 @@
 		namePlayer4: 'Player 4',
 		namePlayer5: 'Player 5',
 		namePlayer6: 'Player 6',
+		namePlayer7: 'Player 7',
+		namePlayer8: 'Player 8',
 		lifePlayer1: 20,
 		lifePlayer2: 20,
 		lifePlayer3: 0,
 		lifePlayer4: 0,
 		lifePlayer5: 0,
-		lifePlayer6: 0
+		lifePlayer6: 0,
+		lifePlayer7: 0,
+		lifePlayer8: 0
 	};
 
 	let state: StreamGameState = initialState;
@@ -95,7 +108,7 @@
         }
 
 		const candidate = payload as Partial<StreamGameState> & Record<string, unknown>;
-		const playerCount = Math.max(2, Math.min(6, Number(candidate.playerCount ?? state.playerCount ?? 2)));
+		const playerCount = Math.max(2, Math.min(8, Number(candidate.playerCount ?? state.playerCount ?? 2)));
 
 		const namesFromArray = Array.isArray(candidate.names) ? candidate.names.map((name) => String(name ?? '')) : [];
 		const livesFromArray = Array.isArray(candidate.lifeTotals)
@@ -131,12 +144,16 @@
 			namePlayer4: names[3],
 			namePlayer5: names[4],
 			namePlayer6: names[5],
+			namePlayer7: names[6],
+			namePlayer8: names[7],
 			lifePlayer1: lifeTotals[0],
 			lifePlayer2: lifeTotals[1],
 			lifePlayer3: lifeTotals[2],
 			lifePlayer4: lifeTotals[3],
 			lifePlayer5: lifeTotals[4],
-			lifePlayer6: lifeTotals[5]
+			lifePlayer6: lifeTotals[5],
+			lifePlayer7: lifeTotals[6],
+			lifePlayer8: lifeTotals[7]
 		};
 	};
 
@@ -215,7 +232,7 @@
 	};
 
 	$: visiblePlayers = () => {
-		const count = Math.max(2, Math.min(6, state.playerCount || 2));
+		const count = Math.max(2, Math.min(8, state.playerCount || 2));
 		return Array.from({ length: count }, (_, index) => ({
 			name: state.names[index] ?? `Player ${index + 1}`,
 			life: state.lifeTotals[index] ?? 0,
