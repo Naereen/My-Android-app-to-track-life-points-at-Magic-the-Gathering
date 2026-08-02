@@ -283,8 +283,12 @@
 
 	$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
 	$: timerElapsed = Math.max(0, ($turnTimer.total || 0) - ($turnTimer.remaining || 0));
-	$: timerMinutes = Math.floor(timerElapsed / 60);
-	$: timerSeconds = timerElapsed % 60;
+	$: isTimerOvertime = ($turnTimer.remaining || 0) < 0;
+	$: overtimeElapsed = isTimerOvertime ? Math.abs($turnTimer.remaining || 0) : 0;
+	$: timerDisplayElapsed = isTimerOvertime ? overtimeElapsed : timerElapsed;
+	$: timerMinutes = Math.floor(timerDisplayElapsed / 60);
+	$: timerSeconds = timerDisplayElapsed % 60;
+	$: timerPrefix = isTimerOvertime ? '+' : '';
 
 	// circumference for the timer circle (radius = 18 from the SVG)
 	$: timerCircumference = 2 * Math.PI * 18;
@@ -353,7 +357,7 @@
 										stroke-linecap="round"
 									/>
 								</svg>
-								<div class="absolute text-xs">{timerMinutes}:{String(timerSeconds).padStart(2, '0')}</div>
+								<div class="absolute text-xs">{timerPrefix}{String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}</div>
 							</div>
 						</div>
 					{/if}
@@ -474,18 +478,18 @@
 									/>
 								</div>
 							{/if}
-							{#if $appSettings.showLifeChangeHistory && orientation === 'right'}
-								<div
+							<div
 									class="h-16 w-24 -translate-x-2 translate-y-50 flex justify-start items-center pointer-events-none pl-2"
 									class:h-8={$appSettings.playerCount >= 5}
 								>
+								{#if $appSettings.showLifeChangeHistory && orientation === 'right'}
 									<LifeChangeHistory
 										score={$players[index].lifeTotal}
 										maxLines={6}
 										resetToken={$lifeChangeHistoryResetKey}
 									/>
-								</div>
-							{/if}
+								{/if}
+							</div>
 							{#if isDead}
 								<div
 									class="z-10 text-black"
