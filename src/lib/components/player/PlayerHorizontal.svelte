@@ -462,39 +462,53 @@
 							</div>
 						</button>
 					</div>
-					<div
-						class="w-1/3 flex justify-center items-center vert"
-					>
-						<div class="relative flex items-center justify-center">
-							{#if orientation === 'left'}
+					<div class="w-1/3 flex justify-center items-center vert">
+						<div class="relative flex items-center justify-center w-full h-full">
 							<div
-								class="inset-y-0 left-0 h-16 w-24 rotate-180 translate-x-2 flex justify-start items-center pointer-events-none pl-2"
+								class="absolute h-16 w-24 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white pointer-events-none"
+								style="text-shadow: 0 0 20px black;"
+								class:rotate-180={orientation === 'left'}
 								class:h-8={$appSettings.playerCount >= 5}
-								class:-translate-y-8={$appSettings.playerCount <= 4}
-								class:-translate-y-3={$appSettings.playerCount > 4}
-							>
-								{#if $appSettings.showLifeChangeHistory }
-									<LifeChangeHistory
-										score={$players[index].lifeTotal}
-										maxLines={6}
-										resetToken={$lifeChangeHistoryResetKey}
-									/>
-								{/if}
+								class:top-0={orientation === 'left'}
+								class:top-[0%]={orientation === 'right'}
+								class:translate-x-[0%]={orientation === 'left'}
+								class:-translate-x-[25%]={orientation === 'right'}
+								class:left-[50%]={orientation === 'left'}
+								class:-left-[50%]={orientation === 'right'}
+								class:translate-y-[75%]={orientation === 'left'}
+								class:-translate-y-[175%]={orientation === 'right'}
+								>
+								{$players[index].tempLifeDiff < 0 ? `${$players[index].tempLifeDiff}` : ''}
 							</div>
+							{#if orientation === 'left'}
+								<div
+									class="absolute left-0 top-0 translate-x-1/2 h-16 w-24 rotate-180 translate-y-0 flex justify-start items-center pointer-events-none pl-2"
+									class:h-8={$appSettings.playerCount >= 5}
+									class:-translate-y-8={$appSettings.playerCount <= 4}
+									class:-translate-y-3={$appSettings.playerCount > 4}
+								>
+									{#if $appSettings.showLifeChangeHistory }
+										<LifeChangeHistory
+											score={$players[index].lifeTotal}
+											maxLines={6}
+											resetToken={$lifeChangeHistoryResetKey}
+										/>
+									{/if}
+								</div>
 							{/if}
-							{#if orientation === 'right' }
-							<div
-									class="inset-y-0 right-0 h-16 w-24 -translate-x-2 -translate-y-2 flex justify-start items-center pointer-events-none pl-2"
+							{#if orientation === 'right'}
+								<div
+									class="absolute right-0 top-1/2 -translate-y-1/2 h-16 w-24 -translate-x-2 -translate-y-2 flex justify-start items-center pointer-events-none pl-2"
 									class:h-8={$appSettings.playerCount >= 5}
 								>
-								{#if $appSettings.showLifeChangeHistory }
-									<LifeChangeHistory
-										score={$players[index].lifeTotal}
-										maxLines={6}
-										resetToken={$lifeChangeHistoryResetKey}
-									/>
-								{/if}
-							</div>
+									{#if $appSettings.showLifeChangeHistory }
+										<LifeChangeHistory
+											score={$players[index].lifeTotal}
+											maxLines={6}
+											resetToken={$lifeChangeHistoryResetKey}
+										/>
+									{/if}
+								</div>
 							{/if}
 							{#if isDead}
 								<div
@@ -503,68 +517,73 @@
 									class:-rotate-90={orientation === 'left'}
 									class:-translate-x-0={orientation === 'right'}
 									class:translate-x-0={orientation === 'left'}
-									style="width: {$appSettings.playerCount >= 5
-										? '2.5rem'
-										: '3.25rem'}; height: {$appSettings.playerCount >= 5
-										? '2.5rem'
-										: '3.25rem'}; opacity: 1;"
+									style="width: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; height: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; opacity: 1;"
 								>
 									<Skull />
 									<br />
 								</div>
 							{/if}
-							{#if !editing}
-								<button
-									on:dblclick={startEdit}
-									on:contextmenu|preventDefault={openPromptSetLife}
-									class="bg-transparent border-none p-0 m-0 pointer-events-auto"
-								>
-									<span
-										class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center leading-none"
-										class:text-9xl={$appSettings.playerCount === 2}
-										class:text-7xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
-										class:text-5xl={$appSettings.playerCount >= 5}
-										class:-rotate-180={orientation === 'left'}
-										class:opacity-25={isDead}
-										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
+							<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+								{#if !editing}
+									<button
+										on:dblclick={startEdit}
+										on:contextmenu|preventDefault={openPromptSetLife}
+										class="bg-transparent border-none p-0 m-0 pointer-events-auto"
 									>
-								</button>
-							{:else}
-								<div class="pointer-events-auto">
-									<input
-										id={`life-input-${id}`}
-										type="number"
-										bind:value={editValue}
-										on:keydown={(e) => {
-											if (e.key === 'Enter') saveEdit();
-											if (e.key === 'Escape') cancelEdit();
-										}}
-										class="max-w-16 max-h-14 center text-center rounded-md px-2 py-1 text-3xl text-black"
-										class:-rotate-180={orientation === 'left'}
-										placeholder={$_('enter_life_total_placeholder')}
-									/>
-									<div class="flex gap-2 mt-1 justify-center">
-										<button on:click={saveEdit}
-											class="px-2 py-1 bg-green-600 text-white rounded"
+										<span
+											class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center leading-none"
+											class:text-9xl={$appSettings.playerCount === 2}
+											class:text-7xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
+											class:text-5xl={$appSettings.playerCount >= 5}
 											class:-rotate-180={orientation === 'left'}
-											>{$_('set_life_total_save')}</button
+											class:opacity-25={isDead}
+											style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
 										>
-										<button on:click={cancelEdit}
-											class="px-2 py-1 bg-gray-600 text-white rounded"
+									</button>
+								{:else}
+									<div class="pointer-events-auto">
+										<input
+											id={`life-input-${id}`}
+											type="number"
+											bind:value={editValue}
+											on:keydown={(e) => {
+												if (e.key === 'Enter') saveEdit();
+												if (e.key === 'Escape') cancelEdit();
+											}}
+											class="max-w-16 max-h-14 center text-center rounded-md px-2 py-1 text-3xl text-black"
 											class:-rotate-180={orientation === 'left'}
-											>{$_('set_life_total_cancel')}</button
-										>
+											placeholder={$_('enter_life_total_placeholder')}
+										/>
+										<div class="flex gap-2 mt-1 justify-center">
+											<button on:click={saveEdit}
+												class="px-2 py-1 bg-green-600 text-white rounded"
+												class:-rotate-180={orientation === 'left'}
+												>{$_('set_life_total_save')}</button
+											>
+											<button on:click={cancelEdit}
+												class="px-2 py-1 bg-gray-600 text-white rounded"
+												class:-rotate-180={orientation === 'left'}
+												>{$_('set_life_total_cancel')}</button
+											>
+										</div>
 									</div>
-								</div>
-							{/if}
+								{/if}
+							</div>
+							<div
+								class="absolute top-1/2 right-1/2 h-16 w-24 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white pointer-events-none"
+								style="text-shadow: 0 0 20px black;"
+								class:rotate-180={orientation === 'left'}
+								class:h-8={$appSettings.playerCount >= 5}
+								class:-translate-y-[175%]={orientation === 'left'}
+								class:translate-y-[75%]={orientation === 'right'}
+								class:translate-x-[100%]={orientation === 'left'}
+								class:-translate-x-[0%]={orientation === 'right'}
+								>
+								<!-- FIXME: remove this {orientation} DEBUG: comment -->
+								<!-- {orientation} -->
+								{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}
+							</div>
 						</div>
-						<span
-							class="h-16 text-center text-2xl text-shadow-xl/100 text-shadow-black text-white"
-							style="text-shadow: 0 0 20px black;"
-							class:rotate-180={orientation === 'left'}
-							class:h-8={$appSettings.playerCount >= 5}
-							>{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}</span
-						>
 					</div>
 
 					<div class="grow w-1/3 vert"></div>
