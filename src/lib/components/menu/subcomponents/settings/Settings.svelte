@@ -24,8 +24,11 @@
 	import {
 	    setTurnTimerEnabled,
 	    setTurnTimerDuration,
-	    setTurnTimerSound
+	    setTurnTimerSound,
+		setGlobalGameTimerEnabled,
+		setGlobalGameTimerDuration
 	} from '$lib/store/appSettings';
+	import { globalGameTimer } from '$lib/store/globalGameTimer';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import CircularButton from '../../../shared/circularButton/CircularButton.svelte';
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
@@ -252,6 +255,37 @@
 	const handleTurnTimerSoundChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setTurnTimerSound(!!target.checked);
+	};
+
+	const handleGlobalGameTimerEnabledChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setGlobalGameTimerEnabled(!!target.checked);
+		if (target.checked) {
+			globalGameTimer.resetForNewGame();
+		}
+	};
+
+	const handleGlobalGameTimerDurationChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		// input is minutes; enforce integer between 1 and 300
+		let minutes = Math.round(Number(target.value) || 1);
+		minutes = Math.max(1, Math.min(300, minutes));
+
+		if (typeof document !== 'undefined') {
+			const ae = document.activeElement as HTMLElement | null;
+			if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable)) {
+				ae.blur();
+			}
+			const nav = navigator as any;
+			if (nav.virtualKeyboard && typeof nav.virtualKeyboard.hide === 'function') {
+				try {
+					nav.virtualKeyboard.hide();
+				} catch {}
+			}
+		}
+
+		setGlobalGameTimerDuration(minutes * 60);
+		globalGameTimer.applyDuration(minutes * 60);
 	};
 
 	const handleStreamModeChange = (e: Event) => {
@@ -567,6 +601,27 @@
 			</label>
 		</div>
 
+		<!-- Main optional buttons -->
+		<div class="w-full flex justify-center mt-2 mb-0">
+			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
+				<div class="text-2xl font-bold">{$_('main_optional_buttons_settings_title') || 'Main Optional Buttons'}</div>
+			</div>
+		</div>
+
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.showNextPlayerButton}
+					on:change={handleShowNextButtonChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('show_next_player_button') || 'Show next-player button'}</span>
+			</label>
+		</div>
 		<div class="w-full flex justify-center mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
@@ -580,20 +635,6 @@
 					disabled={!$appSettings.showNextPlayerButton}
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('enable_current_player_glow') || 'Enable current player glow'}</span>
-			</label>
-		</div>
-		<div class="w-full flex justify-center mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showNextPlayerButton}
-					on:change={handleShowNextButtonChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_next_player_button') || 'Show next-player button'}</span>
 			</label>
 		</div>
 
@@ -640,6 +681,27 @@
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('show_emblem_menu_button') || 'Show emblem menu button'}</span>
 			</label>
+		</div>
+		<div class="w-full flex justify-center mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.showGameHistoryMenu}
+					on:change={handleShowGameHistoryMenuChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('show_game_history_menu_button') || 'Show game history menu button'}</span>
+			</label>
+		</div>
+
+		<!-- EDH variants settings -->
+		<div class="w-full flex justify-center mt-2 mb-0">
+			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
+				<div class="text-2xl font-bold">{$_('edh_variants_settings_title') || 'EDH Variants (experimental)'}</div>
+			</div>
 		</div>
 
 		<div class="w-full flex justify-center mt-0 mb-0">
@@ -734,20 +796,52 @@
 			</label>
 		</div>
 
+		<!-- Timers settings -->
+		<div class="w-full flex justify-center mt-2 mb-0">
+			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
+				<div class="text-2xl font-bold">{$_('timers_settings_title') || 'Timers'}</div>
+			</div>
+		</div>
+
 		<div class="w-full flex justify-center mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
 			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showGameHistoryMenu}
-					on:change={handleShowGameHistoryMenuChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_game_history_menu_button') || 'Show game history menu button'}</span>
+				<div class="ml-2">
+					<div class="text-lg font-semibold">
+						<input
+							type="checkbox"
+							checked={$appSettings.globalGameTimerEnabled}
+							on:change={handleGlobalGameTimerEnabledChange}
+							class="h-5 w-5"
+						/>
+						{$_('global_game_timer_enabled') || 'Enable global game timer'}
+					</div>
+					<div class="text-sm text-gray-400">{$_('global_game_timer_enabled_help') || 'When enabled, a game-wide countdown appears in the center menu bar.'}</div>
+				</div>
 			</label>
 		</div>
+
+		{#if $appSettings.globalGameTimerEnabled}
+			<div class="w-full flex justify-center mt-0 mb-0">
+				<label
+					class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+					style="min-width: 12rem;"
+				>
+					<span class="ml-2 text-lg font-semibold">{$_('global_game_timer_duration') || 'Global timer duration (minutes)'}</span>
+					<input
+						type="number"
+						min="1"
+						max="300"
+						step="1"
+						value={Math.round($appSettings.globalGameTimerDuration / 60)}
+						on:change={handleGlobalGameTimerDurationChange}
+						class="bg-gray-600 w-24 h-8 rounded text-center text-xl ml-3"
+					/>
+				</label>
+			</div>
+		{/if}
 
 		<!-- Turn timer settings -->
 		<div class="w-full flex justify-center mt-0 mb-0">
@@ -808,7 +902,7 @@
 		<!-- Stream mode settings (LAN relay) -->
 		<div class="w-full flex justify-center mt-2 mb-0">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">{$_('stream_mode_title') || 'Stream Mode (LAN relay)'}</div>
+				<div class="text-2xl font-bold">{$_('stream_mode_title') || 'Experimental Stream Mode (LAN relay)'}</div>
 			</div>
 		</div>
 		<div class="w-full flex justify-center mt-0 mb-0">
@@ -827,12 +921,12 @@
 		</div>
 		<div class="w-full flex justify-center mt-0 mb-0 px-8">
 			<div style="min-width: 12rem; max-width: 32rem;" class="w-full">
-				<div class="text-sm text-gray-400 mb-1">{$_('stream_mode_help') || 'Use the local relay URL, e.g. http://192.168.1.42:8787'}</div>
+				<div class="text-sm text-gray-400 mb-1">{$_('stream_mode_help') || 'Use the local relay URL, e.g. http://192.168.1.113:8787'}</div>
 				<input
 					type="url"
 					value={$appSettings.remoteServerUrl}
 					on:change={handleStreamRemoteServerUrlChange}
-					placeholder={$_('stream_mode_server_url_placeholder') || 'http://192.168.1.42:8787'}
+					placeholder={$_('stream_mode_server_url_placeholder') || 'http://192.168.1.113:8787'}
 					class="w-full bg-gray-700 text-white rounded px-3 py-2 outline-none border border-gray-500"
 				/>
 				<div class="text-sm mt-1">{$_('stream_mode_server_url') || 'Relay server URL'}</div>

@@ -8,6 +8,7 @@ import { vibrate } from '$lib/utils/haptics';
 import { playGameplaySound } from '$lib/utils/gameplaySound';
 import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
 import { resetResources } from './resources';
+import { globalGameTimer } from './globalGameTimer';
 import { searchVanguardCards, type ScryfallEmblemCard } from '$lib/utils/scryfall';
 import {
 	fetchTreacheryCardBySlug,
@@ -980,6 +981,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 
 	// reset current turn and turn count
 	setCurrentTurn(0, false);
+	globalGameTimer.resetForNewGame();
 	appState.update((data) => ({
 		...data,
 		currentTurn: -1,

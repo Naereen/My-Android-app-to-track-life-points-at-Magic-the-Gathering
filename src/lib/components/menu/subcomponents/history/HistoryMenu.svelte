@@ -299,19 +299,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-	.history-icon-shell :global(svg) {
-		width: 1.75rem;
-		height: 1.75rem;
-	}
-
-	.history-icon-shell--keyrune :global(span) {
-		font-size: 2.25rem !important;
-	}
-
-	.history-icon-shell--keyrune {
-		width: 2.5rem;
-		height: 2.5rem;
-	}
-</style>

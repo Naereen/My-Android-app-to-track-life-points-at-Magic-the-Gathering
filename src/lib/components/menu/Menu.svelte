@@ -16,6 +16,7 @@
 	import { vibrate } from '$lib/utils/haptics';
 	import { _ } from 'svelte-i18n';
     import { onMount, onDestroy } from 'svelte';
+	import { globalGameTimer } from '$lib/store/globalGameTimer';
 
 	// Animation state for turn counter badge
 	let prevTurnCount = 0;
@@ -27,6 +28,9 @@
 
 	let randomPlayerTimeout: ReturnType<typeof setTimeout> | null = null;
 	let randomPlayerTriggered = false;
+	let timerGlowTimeout: ReturnType<typeof setTimeout> | null = null;
+	let previousMinutePulseId = 0;
+	let timerGlowClass = '';
 
 	const handleTurnDown = () => {
 		vibrate(20);
@@ -91,13 +95,42 @@
 		nextTurn();
 	};
 
+	const handleGlobalGameTimerClick = () => {
+		vibrate(20);
+		globalGameTimer.togglePause();
+	};
+
 	onMount(() => {
 		prevTurnCount = $appState.turnCount || 0;
 	});
 
 	onDestroy(() => {
 		if (animateTimeout) clearTimeout(animateTimeout);
+		if (timerGlowTimeout) clearTimeout(timerGlowTimeout);
 	});
+
+	const formatGlobalTimer = (seconds: number): string => {
+		const isNegative = seconds < 0;
+		const absSeconds = Math.abs(seconds);
+		const hours = Math.floor(absSeconds / 3600);
+		const minutes = Math.floor((absSeconds % 3600) / 60);
+		const remainingSeconds = absSeconds % 60;
+		const core =
+			hours > 0
+				? `${hours}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`
+				: `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
+		return `${isNegative ? '-' : ''}${core}`;
+	};
+
+	$: if ($globalGameTimer.minutePulseId !== previousMinutePulseId) {
+		previousMinutePulseId = $globalGameTimer.minutePulseId;
+		timerGlowClass = $globalGameTimer.minutePulseKind === 'negative' ? 'global-timer-glow-negative' : 'global-timer-glow-positive';
+		if (timerGlowTimeout) clearTimeout(timerGlowTimeout);
+		timerGlowTimeout = setTimeout(() => {
+			timerGlowClass = '';
+			timerGlowTimeout = null;
+		}, 2800);
+	}
 
 // Watch for changes to the turn count and trigger animation when it changes
 $: if ($appState.turnCount !== prevTurnCount) {
@@ -130,6 +163,21 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				highlight
 			/>
 		</div>
+		{#if $appSettings.globalGameTimerEnabled}
+			<div class="flex justify-center items-center flex-grow">
+				<button
+					type="button"
+					on:click={handleGlobalGameTimerClick}
+					class={`global-game-timer-box ${timerGlowClass}`}
+					title={$globalGameTimer.running ? 'Pause timer' : 'Resume timer'}
+				>
+					<span class="global-game-timer-text">{formatGlobalTimer($globalGameTimer.remaining)}</span>
+					{#if !$globalGameTimer.running}
+						<span class="global-game-timer-overlay" aria-hidden="true">⏯️</span>
+					{/if}
+				</button>
+			</div>
+		{/if}
 		{#if $appSettings.showEmblemMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button

@@ -56,9 +56,13 @@ interface AppSettings {
 	turnTimerDuration: number;
 	// play a short sound when timer reaches zero
 	turnTimerSound: boolean;
+	// global game timer shown in the central bar
+	globalGameTimerEnabled: boolean;
+	// default global game timer duration in seconds (depends on player count)
+	globalGameTimerDuration: number;
 	// stream mode (controller sends game updates to LAN relay)
 	isStreamMode: boolean;
-	// relay base URL, e.g. http://192.168.1.42:8787
+	// relay base URL, e.g. http://192.168.1.113:8787
 	remoteServerUrl: string;
 }
 
@@ -116,18 +120,38 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	turnTimerDuration: 120,
 	// play a short sound when timer reaches zero
 	turnTimerSound: false,
+	// global game timer shown in the central bar
+	globalGameTimerEnabled: true,
+	// default global game timer duration for 4 players: 90 minutes
+	globalGameTimerDuration: 5400,
 	// stream mode (controller sends game updates to LAN relay)
 	isStreamMode: false,
-	// relay base URL, e.g. http://192.168.1.42:8787
+	// relay base URL, e.g. http://192.168.1.113:8787
 	remoteServerUrl: ''
 });
+
+export const getDefaultGlobalGameTimerDuration = (playerCount: number): number => {
+	return playerCount === 2 ? 3000 : 5400;
+};
+
+export const getDefaultStartingLifeTotal = (playerCount: number): number => {
+	if (playerCount === 2) return 20;
+	if (playerCount === 3) return 30;
+	return 40;
+};
 
 export const setPlayerCount = (playerCount: number) => {
 	appSettings.update((data) => ({
 		...data,
 		playerCount,
+		startingLifeTotal: getDefaultStartingLifeTotal(playerCount),
 		// Default behavior by format size: ON for 2 players, OFF otherwise.
-		showLifeChangeHistory: playerCount === 2
+		showLifeChangeHistory: playerCount === 2,
+		// Keep custom value, but auto-adjust when the value is still the format default.
+		globalGameTimerDuration:
+			data.globalGameTimerDuration === getDefaultGlobalGameTimerDuration(data.playerCount)
+				? getDefaultGlobalGameTimerDuration(playerCount)
+				: data.globalGameTimerDuration
 	}));
 };
 
@@ -246,6 +270,14 @@ export const setTurnTimerSound = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, turnTimerSound: enabled }));
 };
 
+export const setGlobalGameTimerEnabled = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, globalGameTimerEnabled: enabled }));
+};
+
+export const setGlobalGameTimerDuration = (seconds: number) => {
+	appSettings.update((data) => ({ ...data, globalGameTimerDuration: seconds }));
+};
+
 export const setIsStreamMode = (isStreamMode: boolean) => {
 	appSettings.update((data) => ({ ...data, isStreamMode }));
 };
@@ -257,6 +289,17 @@ export const setRemoteServerUrl = (remoteServerUrl: string) => {
 export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {
 	appSettings.update((data) => ({ ...data, fourPlayerLayout: layout }));
 };
+
+// Backward compatibility for localStorage payloads that predate global timer options.
+appSettings.update((data) => {
+	const withDefaults = {
+		...data,
+		globalGameTimerEnabled: data.globalGameTimerEnabled ?? true,
+		globalGameTimerDuration:
+			data.globalGameTimerDuration ?? getDefaultGlobalGameTimerDuration(data.playerCount ?? 4)
+	};
+	return withDefaults;
+});
 
 export const setSixPlayerLayout = (layout: 'one' | 'two') => {
 	appSettings.update((data) => ({ ...data, sixPlayerLayout: layout }));
