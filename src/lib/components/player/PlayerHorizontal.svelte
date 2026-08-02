@@ -20,7 +20,7 @@
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
 	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
-	import { _ } from 'svelte-i18n';
+	import { _, number } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
     import { turnTimer } from '$lib/store/turnTimer';
@@ -466,21 +466,25 @@
 						class="w-1/3 flex justify-center items-center vert"
 					>
 						<div class="relative flex items-center justify-center">
-							{#if $appSettings.showLifeChangeHistory && orientation === 'left'}
-								<div
-									class="h-16 w-24 rotate-180 -translate-y-8 translate-x-2 flex justify-start items-center pointer-events-none pl-2"
+							<div
+									class="h-16 w-24 rotate-180 translate-x-2 flex justify-start items-center pointer-events-none pl-2"
 									class:h-8={$appSettings.playerCount >= 5}
+									class:-translate-y-8={numberOfPlayers <= 4}
+									class:-translate-y-0={numberOfPlayers > 4}
 								>
+								{#if $appSettings.showLifeChangeHistory && orientation === 'left'}
 									<LifeChangeHistory
 										score={$players[index].lifeTotal}
 										maxLines={6}
 										resetToken={$lifeChangeHistoryResetKey}
 									/>
-								</div>
-							{/if}
+								{/if}
+							</div>
 							<div
-									class="h-16 w-24 -translate-x-2 translate-y-50 flex justify-start items-center pointer-events-none pl-2"
+									class="h-16 w-24 -translate-x-2 translate-y-45 flex justify-start items-center pointer-events-none pl-2"
 									class:h-8={$appSettings.playerCount >= 5}
+									class:translate-y-45={numberOfPlayers <= 4}
+									class:translate-y-40={numberOfPlayers > 4}
 								>
 								{#if $appSettings.showLifeChangeHistory && orientation === 'right'}
 									<LifeChangeHistory

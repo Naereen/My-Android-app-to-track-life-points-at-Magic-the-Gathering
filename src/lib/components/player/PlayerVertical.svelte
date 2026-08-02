@@ -399,7 +399,7 @@
 							<div class="absolute left-0 top-1/2 translate-x-12 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2">
 								<LifeChangeHistory
 									score={$players[index].lifeTotal}
-									maxLines={12}
+									maxLines={numberOfPlayers >= 3 ? 6 : 12}
 									resetToken={$lifeChangeHistoryResetKey}
 								/>
 							</div>

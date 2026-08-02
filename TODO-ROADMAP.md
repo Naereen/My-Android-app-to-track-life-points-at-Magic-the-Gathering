@@ -94,9 +94,9 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] On mobile (on my tablet) right now, when doing a very short touch (click) on the +1/-1 buttons, it sometimes adds/subtracts 2 points at once instead of 1 point at a time.
 - [x] It seems it's like a riddle to solve: if I fix that, the web-desktop view doesn't work, and the opposite holds also.
 
-### The "and also shuffle players' positions" option, in the "Restart the Game" panel, is totally bugged!
+### The "and also shuffle players' positions" option, in the "Restart the Game" panel, was totally bugged!
 
-- [ ] When clicking on "Restart the Game" button, with the "and also shuffle players' positions" option enabled, the players' positions are not shuffled at all, instead random new players outside of the interval [1...nbPlayers] seem to appear! This is a serious bug, as it makes this option completely useless. This bug is present in all modes (2-player, 3-player, 4-player, 5-player, 6-player).
+- [x] When clicking on "Restart the Game" button, with the "and also shuffle players' positions" option enabled, the players' positions are not shuffled at all, instead random new players outside of the interval [1...nbPlayers] seem to appear! This is a serious bug, as it makes this option completely useless. This bug is present in all modes (2-player, 3-player, 4-player, 5-player, 6-player). It seems to be fixed!
 
 ### The active player "glowing effect"
 

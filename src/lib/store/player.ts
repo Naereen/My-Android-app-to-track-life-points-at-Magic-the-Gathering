@@ -23,134 +23,31 @@ const playerBaseName = get(_)('player') || 'Player';
 
 const generateRandomPlayerName = () => {
 	// List of planeswalker names from Magic: The Gathering, to use as random player names. Source: https://mtg.wiki/Planeswalkers and https://yawgatog.com/resources/magic-rules/#R2053j
-	const popularPlaneswalkerNames : Record<string, string[]> = {
-		'A' : [
-			'Ajani',
-			'Aminatou',
-			'Angrath',
-			'Arlinn',
-			'Ashiok',
-		],
-		'B': [
-			'Bahamut',
-			'Basri',
-			'Bolas',
-		],
-		'C': [
-			'Calix',
-			'Chandra',
-			'Comet',
-		],
-		'D': [
-			'Dack',
-			'Dakkon',
-			'Daretti',
-			'Davriel',
-			'Dihada',
-			'Domri',
-			'Dovin',
-		],
-		'E': [
-			'Ellywick',
-			'Elminster',
-			'Elspeth',
-			'Estrid',
-		],
-		'F': [
-			'Freyalise',
-		],
-		'G': [
-			'Garruk',
-			'Gideon',
-			'Grist',
-			'Guff',
-		],
-		'H': [
-			'Huatli',
-		],
-		'J': [
-			'Jace',
-			'Jared',
-			'Jaya',
-			'Jeska',
-		],
-		'K': [
-			'Kaito',
-			'Karn',
-			'Kasmina',
-			'Kaya',
-			'Kiora',
-			'Koth',
-		],
-		'L': [
-			'Liliana',
-			'Lolth',
-			'Lukka',
-		],
-		'M': [
-			'Minsc',
-			'Mordenkainen',
-		],
-		'N': [
-			'Nahiri',
-			'Narset',
-			'Niko',
-			'Nissa',
-			'Nixilis',
-		],
-		'O': [
-			'Oko',
-		],
-		'Q': [
-			'Quintorius',
-		],
-		'R': [
-			'Ral',
-			'Rowan',
-		],
-		'S': [
-			'Saheeli',
-			'Samut',
-			'Sarkhan',
-			'Serra',
-			'Sivitri',
-			'Sorin',
-			'Szat',
-		],
-		'T': [
-			'Tamiyo',
-			'Tasha',
-			'Teferi',
-			'Teyo',
-			'Tezzeret',
-			'Tibalt',
-			'Tyvar',
-		],
-		'U': [
-			'Ugin',
-			'Urza',
-		],
-		'V': [
-			'Venser',
-			'Vivien',
-			'Vraska',
-			'Vronos',
-		],
-		'W': [
-			'Will',
-			'Windgrace',
-			'Wrenn',
-		],
-		'X': [
-			'Xenagos',
-		],
-		'Y': [
-			'Yanggu',
-			'Yanling',
-		],
-		'Z': [
-			'Zariel',
-		],
+	const popularPlaneswalkerNames: Record<string, string[]> = {
+		A: ['Ajani', 'Aminatou', 'Angrath', 'Arlinn', 'Ashiok'],
+		B: ['Bahamut', 'Basri', 'Bolas'],
+		C: ['Calix', 'Chandra', 'Comet'],
+		D: ['Dack', 'Dakkon', 'Daretti', 'Davriel', 'Dihada', 'Domri', 'Dovin'],
+		E: ['Ellywick', 'Elminster', 'Elspeth', 'Estrid'],
+		F: ['Freyalise'],
+		G: ['Garruk', 'Gideon', 'Grist', 'Guff'],
+		H: ['Huatli'],
+		J: ['Jace', 'Jared', 'Jaya', 'Jeska'],
+		K: ['Kaito', 'Karn', 'Kasmina', 'Kaya', 'Kiora', 'Koth'],
+		L: ['Liliana', 'Lolth', 'Lukka'],
+		M: ['Minsc', 'Mordenkainen'],
+		N: ['Nahiri', 'Narset', 'Niko', 'Nissa', 'Nixilis'],
+		O: ['Oko'],
+		Q: ['Quintorius'],
+		R: ['Ral', 'Rowan'],
+		S: ['Saheeli', 'Samut', 'Sarkhan', 'Serra', 'Sivitri', 'Sorin', 'Szat'],
+		T: ['Tamiyo', 'Tasha', 'Teferi', 'Teyo', 'Tezzeret', 'Tibalt', 'Tyvar'],
+		U: ['Ugin', 'Urza'],
+		V: ['Venser', 'Vivien', 'Vraska', 'Vronos'],
+		W: ['Will', 'Windgrace', 'Wrenn'],
+		X: ['Xenagos'],
+		Y: ['Yanggu', 'Yanling'],
+		Z: ['Zariel']
 	};
 
 	const allNames = Object.values(popularPlaneswalkerNames).flat();
@@ -158,7 +55,7 @@ const generateRandomPlayerName = () => {
 	return `${randomName}`;
 	// const randomNumber = Math.ceil(Math.random() * 100);
 	// return `${randomName} #${randomNumber}`;
-}
+};
 
 const defaultPlayers: App.Player.Data[] = [
 	{
@@ -298,7 +195,15 @@ const getInitialPlayers = (): App.Player.Data[] => {
 			if (!raw) {
 				// choose between all the colors for backgrounds
 				const first_choices = ['white', 'blue', 'black', 'red', 'green'];
-				const second_choices = [ 'mud', 'metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen' ];
+				const second_choices = [
+					'mud',
+					'metalicgray',
+					'gold',
+					'purple',
+					'pink',
+					'orange',
+					'lightgreen'
+				];
 				return defaultPlayers.map((p) => ({
 					...p,
 					playerName: generateRandomPlayerName(),
@@ -327,7 +232,11 @@ const isEliminated = (player: App.Player.Data) => {
 	const globalAllowNegative = get(appSettings).allowNegativeLife || false;
 	const allowNegative = globalAllowNegative || !!player.allowNegativeLife;
 	const maxCommanderDamage = Math.max(0, ...(player.statusEffects?.commanderDamage ?? []));
-	return (!allowNegative && player.lifeTotal <= 0) || player.statusEffects?.ko === true || maxCommanderDamage >= 21;
+	return (
+		(!allowNegative && player.lifeTotal <= 0) ||
+		player.statusEffects?.ko === true ||
+		maxCommanderDamage >= 21
+	);
 };
 
 const alivePlayersCount = (list: App.Player.Data[]) => {
@@ -335,7 +244,10 @@ const alivePlayersCount = (list: App.Player.Data[]) => {
 	return list.slice(0, count).filter((player) => !isEliminated(player)).length;
 };
 
-const playEliminationSoundsIfNeeded = (beforePlayers: App.Player.Data[], afterPlayers: App.Player.Data[]) => {
+const playEliminationSoundsIfNeeded = (
+	beforePlayers: App.Player.Data[],
+	afterPlayers: App.Player.Data[]
+) => {
 	const beforeById = new Map(beforePlayers.map((player) => [player.id, player]));
 	const trackedAfterPlayers = afterPlayers.slice(0, get(appSettings).playerCount);
 
@@ -430,7 +342,11 @@ export const setPlayerVanguardChoices = (playerId: number, choices: ScryfallEmbl
 	});
 };
 
-export const setPlayerTreacheryCard = (playerId: number, role: TreacheryRole | null, card: TreacheryCard | null) => {
+export const setPlayerTreacheryCard = (
+	playerId: number,
+	role: TreacheryRole | null,
+	card: TreacheryCard | null
+) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (player.id === playerId) {
@@ -490,7 +406,10 @@ export const assignRandomVanguardsForGame = async () => {
 	const shuffled = shuffleCards(pool);
 	if (shuffled.length < needed) return;
 
-	const selectedByPlayer: Record<number, { selected: ScryfallEmblemCard | null; choices: ScryfallEmblemCard[] }> = {};
+	const selectedByPlayer: Record<
+		number,
+		{ selected: ScryfallEmblemCard | null; choices: ScryfallEmblemCard[] }
+	> = {};
 
 	for (let playerIndex = 0; playerIndex < totalPlayers; playerIndex++) {
 		const start = playerIndex * choicesPerPlayer;
@@ -738,7 +657,12 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 	}
 };
 
-export const setPlayerStatusNumeric = (playerId: number, key: string, value: number, mergeKey?: string) => {
+export const setPlayerStatusNumeric = (
+	playerId: number,
+	key: string,
+	value: number,
+	mergeKey?: string
+) => {
 	const beforePlayers = get(players);
 	const targetBefore = beforePlayers.find((player) => player.id === playerId);
 	const previous = Number(targetBefore?.statusEffects?.[key] ?? 0);
@@ -917,10 +841,17 @@ const fetchScryfallImageForName = async (name: string) => {
 		} else if (data.image_uris && data.image_uris.normal) {
 			imageUrl = data.image_uris.normal;
 		} else if (data.card_faces && data.card_faces[0] && data.card_faces[0].image_uris) {
-			imageUrl = data.card_faces[0].image_uris.art_crop || data.card_faces[0].image_uris.large || data.card_faces[0].image_uris.normal || null;
+			imageUrl =
+				data.card_faces[0].image_uris.art_crop ||
+				data.card_faces[0].image_uris.large ||
+				data.card_faces[0].image_uris.normal ||
+				null;
 		}
 
-		const artist = data.artist ?? (data.card_faces && data.card_faces[0] && data.card_faces[0].artist_name) ?? null;
+		const artist =
+			data.artist ??
+			(data.card_faces && data.card_faces[0] && data.card_faces[0].artist_name) ??
+			null;
 		const set_name = data.set_name ?? null;
 
 		if (!imageUrl) return null;
@@ -970,7 +901,6 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	const isTwoPlayerMode = playerCount === 2;
 
 	if (!alreadyConfirmed) {
-
 		const confirmOptions: {
 			checkboxLabel: string[];
 			checkboxDefaultValue: boolean[];
@@ -980,25 +910,25 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 		} = {
 			checkboxLabel: [
 				get(_)('reset_player_profiles_checkbox') || 'Also reset player profiles (colors)',
-				get(_)('reset_player_profiles_checkbox_plus_randomize_seats') || 'Also randomize player seats?',
-				get(_)('reset_player_profiles_checkbox_plus_clear_profile') || 'Also clear player profiles (name and background)?',
+				get(_)('reset_player_profiles_checkbox_plus_randomize_seats') ||
+					'Also randomize player seats?',
+				get(_)('reset_player_profiles_checkbox_plus_clear_profile') ||
+					'Also clear player profiles (name and background)?'
 			],
-			checkboxDefaultValue: [
-				false,
-				false,
-				false,
-			]
+			checkboxDefaultValue: [false, false, false]
 		};
 
 		if (isTwoPlayerMode) {
 			const currentPlayers = get(players);
-			const player1Name = currentPlayers[0]?.playerName || (get(_)('player') ? `${get(_)('player')} 1` : 'Player 1');
-			const player2Name = currentPlayers[1]?.playerName || (get(_)('player') ? `${get(_)('player')} 2` : 'Player 2');
+			const player1Name =
+				currentPlayers[0]?.playerName || (get(_)('player') ? `${get(_)('player')} 1` : 'Player 1');
+			const player2Name =
+				currentPlayers[1]?.playerName || (get(_)('player') ? `${get(_)('player')} 2` : 'Player 2');
 			confirmOptions.radioGroupLabel = get(_)('reset_game_who_starts') || 'Who should start?';
 			confirmOptions.radioOptions = [
 				(get(_)('reset_game_player1_starts') || '{player} starts').replace('{player}', player1Name),
 				(get(_)('reset_game_player2_starts') || '{player} starts').replace('{player}', player2Name),
-				get(_)('reset_game_random_start') || 'Random',
+				get(_)('reset_game_random_start') || 'Random'
 			];
 			confirmOptions.radioDefaultValue = 2;
 		}
@@ -1050,7 +980,12 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 
 	// reset current turn and turn count
 	setCurrentTurn(0, false);
-	appState.update((data) => ({ ...data, currentTurn: -1, turnCount: 0, startingPlayerIndex: null }));
+	appState.update((data) => ({
+		...data,
+		currentTurn: -1,
+		turnCount: 0,
+		startingPlayerIndex: null
+	}));
 	vibrate(30);
 
 	// reset the lifeChangeHistoryResetKey to trigger any dependent components to reset their history
@@ -1084,7 +1019,15 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 			if (resetProfiles) {
 				// The .color is randomly chosen among two lists of options as when generating default players
 				const first_choices = ['white', 'blue', 'black', 'red', 'green'];
-				const second_choices = [ 'mud', 'metalicgray', 'gold', 'purple', 'pink', 'orange', 'lightgreen' ];
+				const second_choices = [
+					'mud',
+					'metalicgray',
+					'gold',
+					'purple',
+					'pink',
+					'orange',
+					'lightgreen'
+				];
 				const color = `${first_choices[Math.floor(Math.random() * first_choices.length)]},${second_choices[Math.floor(Math.random() * second_choices.length)]}`;
 
 				updatedPlayer.color = color;
@@ -1095,7 +1038,9 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 			if (clearProfiles) {
 				updatedPlayer.color = 'white';
 				updatedPlayer.backgroundImage = null;
-				updatedPlayer.playerName = get(_)('player') ? `${get(_)('player')} ${player.id}` : `Player ${player.id}`;
+				updatedPlayer.playerName = get(_)('player')
+					? `${get(_)('player')} ${player.id}`
+					: `Player ${player.id}`;
 			}
 
 			return updatedPlayer;
@@ -1111,11 +1056,14 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 			const inactivePlayers = currentPlayers.slice(activeCount);
 			return [...shuffle(activePlayers), ...inactivePlayers];
 		});
-		// Reset the player.id for each player?
+		// Seat-based components and handlers use 1-based player ids.
+		// After shuffling, reassign ids to match the new seat positions.
 		players.update((currentPlayers) => {
 			return currentPlayers.map((player, index) => {
-				player.id = index;
-				return player;
+				return {
+					...player,
+					id: index + 1
+				};
 			});
 		});
 	}
@@ -1319,7 +1267,7 @@ export const setPlayerName = (playerId: number, playerName: string) => {
 export const reorderPlayers = (fromIndex: number, toIndex: number) => {
 	players.update((currentPlayers) => {
 		//
-		let targetIndex = (fromIndex < toIndex) ? toIndex - 1 : toIndex;
+		let targetIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
 		//
 		const n = currentPlayers.length;
 		if (fromIndex < 0 || fromIndex >= n) return currentPlayers;
@@ -1482,7 +1430,7 @@ export const spinToSelectRandomPlayer = () => {
 					return currentPlayers.map((player, index) => {
 						return {
 							...player,
-							highlighted: false,
+							highlighted: false
 						};
 					});
 				});
