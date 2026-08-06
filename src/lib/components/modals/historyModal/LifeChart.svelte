@@ -19,12 +19,13 @@
 		color: string;
 		path: string;
 		points: ChartPoint[];
+		visibleMarkerIndices: Set<number>;
 		markerKind: number;
 		dashArray: string;
 	};
 
 	const viewBoxWidth = 1000;
-	const viewBoxHeight = 500;
+	const viewBoxHeight = 900;
 	const padding = {
 		top: 0,
 		right: 36,
@@ -100,6 +101,29 @@
 			.join(' ');
 	};
 
+	const getVisibleMarkerIndices = (points: ChartPoint[]) => {
+		const visible = new Set<number>();
+		if (points.length === 0) return visible;
+
+		for (let index = 0; index < points.length; index++) {
+			if (index === 0 || index === points.length - 1) {
+				visible.add(index);
+				continue;
+			}
+
+			const previous = points[index - 1];
+			const current = points[index];
+			const next = points[index + 1];
+
+			const hasSameLifeAsNeighbors = previous.life === current.life && current.life === next.life;
+			if (!hasSameLifeAsNeighbors) {
+				visible.add(index);
+			}
+		}
+
+		return visible;
+	};
+
 	const markerPolygonPoints = (kind: number, size: number) => {
 		switch (kind % 8) {
 			case 2:
@@ -148,6 +172,7 @@
 				color: player.color,
 				points,
 				path: linePathFromPoints(points),
+				visibleMarkerIndices: getVisibleMarkerIndices(points),
 				markerKind: index % 8,
 				dashArray: dashPatterns[index % dashPatterns.length]
 			};
@@ -214,9 +239,9 @@
 					y1={y}
 					x2={viewBoxWidth - padding.right}
 					y2={y}
-					stroke="#374151"
-					stroke-width="1"
-					stroke-dasharray="4 8"
+					stroke={tick === 0 ? '#d1d5db' : '#374151'}
+					stroke-width={tick === 0 ? 3 : 1}
+					stroke-dasharray={tick === 0 ? undefined : '4 8'}
 				/>
 				<text x={padding.left - 14} y={y + 5} fill="#9ca3af" font-size="14" text-anchor="end">
 					{tick}
@@ -253,7 +278,7 @@
 				x={viewBoxWidth - padding.right}
 				y={viewBoxHeight - 18}
 				fill="#9ca3af"
-				font-size="14"
+				font-size="30"
 				text-anchor="end"
 			>
 				{formatElapsed(lastTimestamp - firstTimestamp)}
@@ -272,76 +297,78 @@
 					filter="url(#chart-glow)"
 				/>
 				{#each entry.points as point, pointIndex (`${entry.id}-${point.timestamp}-${pointIndex}`)}
-					<g transform={`translate(${point.x} ${point.y})`}>
-						{#if entry.markerKind === 0}
-							<circle r="4.6" fill={entry.color} stroke={markerStroke} stroke-width="1.4" />
-						{:else if entry.markerKind === 1}
-							<rect
-								x="-4.25"
-								y="-4.25"
-								width="8.5"
-								height="8.5"
-								fill={entry.color}
-								stroke={markerStroke}
-								stroke-width="1.4"
-								rx="1.5"
-							/>
-						{:else if entry.markerKind === 2}
-							<polygon
-								points={markerPolygonPoints(entry.markerKind, 5)}
-								fill={entry.color}
-								stroke={markerStroke}
-								stroke-width="1.4"
-							/>
-						{:else if entry.markerKind === 3}
-							<polygon
-								points={markerPolygonPoints(entry.markerKind, 5)}
-								fill={entry.color}
-								stroke={markerStroke}
-								stroke-width="1.4"
-							/>
-						{:else if entry.markerKind === 4}
-							<polygon
-								points={markerPolygonPoints(entry.markerKind, 5)}
-								fill={entry.color}
-								stroke={markerStroke}
-								stroke-width="1.4"
-							/>
-						{:else if entry.markerKind === 5}
-							<polygon
-								points={markerPolygonPoints(entry.markerKind, 5)}
-								fill={entry.color}
-								stroke={markerStroke}
-								stroke-width="1.4"
-							/>
-						{:else if entry.markerKind === 6}
-							<polygon
-								points={markerPolygonPoints(entry.markerKind, 5)}
-								fill={entry.color}
-								stroke={markerStroke}
-								stroke-width="1.4"
-							/>
-						{:else}
-							<polygon
-								points={markerPolygonPoints(entry.markerKind, 5)}
-								fill={entry.color}
-								stroke={markerStroke}
-								stroke-width="1.4"
-							/>
-						{/if}
-					</g>
+					{#if entry.visibleMarkerIndices.has(pointIndex)}
+						<g transform={`translate(${point.x} ${point.y})`}>
+							{#if entry.markerKind === 0}
+								<circle r="4.6" fill={entry.color} stroke={markerStroke} stroke-width="1.4" />
+							{:else if entry.markerKind === 1}
+								<rect
+									x="-4.25"
+									y="-4.25"
+									width="8.5"
+									height="8.5"
+									fill={entry.color}
+									stroke={markerStroke}
+									stroke-width="1.4"
+									rx="1.5"
+								/>
+							{:else if entry.markerKind === 2}
+								<polygon
+									points={markerPolygonPoints(entry.markerKind, 5)}
+									fill={entry.color}
+									stroke={markerStroke}
+									stroke-width="1.4"
+								/>
+							{:else if entry.markerKind === 3}
+								<polygon
+									points={markerPolygonPoints(entry.markerKind, 5)}
+									fill={entry.color}
+									stroke={markerStroke}
+									stroke-width="1.4"
+								/>
+							{:else if entry.markerKind === 4}
+								<polygon
+									points={markerPolygonPoints(entry.markerKind, 5)}
+									fill={entry.color}
+									stroke={markerStroke}
+									stroke-width="1.4"
+								/>
+							{:else if entry.markerKind === 5}
+								<polygon
+									points={markerPolygonPoints(entry.markerKind, 5)}
+									fill={entry.color}
+									stroke={markerStroke}
+									stroke-width="1.4"
+								/>
+							{:else if entry.markerKind === 6}
+								<polygon
+									points={markerPolygonPoints(entry.markerKind, 5)}
+									fill={entry.color}
+									stroke={markerStroke}
+									stroke-width="1.4"
+								/>
+							{:else}
+								<polygon
+									points={markerPolygonPoints(entry.markerKind, 5)}
+									fill={entry.color}
+									stroke={markerStroke}
+									stroke-width="1.4"
+								/>
+							{/if}
+						</g>
+					{/if}
 				{/each}
 			{/each}
 
 			{#each latestPoints as entry (entry.id)}
 				<text
-					x={entry.point.x + 10}
+					x={entry.point.x - 70}
 					y={entry.point.y - 10}
 					fill={entry.color}
-					font-size="13"
+					font-size="25"
 					font-weight="600"
 				>
-					{entry.name}: {entry.point.life}
+					{entry.name} : {entry.point.life}
 				</text>
 			{/each}
 		</svg>

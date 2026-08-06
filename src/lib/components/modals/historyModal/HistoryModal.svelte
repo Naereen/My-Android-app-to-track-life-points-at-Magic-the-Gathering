@@ -142,7 +142,9 @@
 										{/if}
 									</g>
 								</svg>
-								<span>{player.name}</span>
+									<span class="font-medium" style={`color: ${player.color};`}
+										>{player.name} ({player.life})</span
+									>
 							</div>
 						{/each}
 					</div>
