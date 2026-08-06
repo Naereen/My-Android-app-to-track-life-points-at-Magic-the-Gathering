@@ -2,6 +2,7 @@ import { get, writable } from 'svelte/store';
 import { _ } from 'svelte-i18n';
 import { appSettings } from './appSettings';
 import { addGameHistoryEntry } from './gameHistory';
+import { appState } from './appState';
 import { players } from './player';
 import { vibrate } from '../utils/haptics';
 import { persist } from './persist';
@@ -228,6 +229,16 @@ export const openHistoryModal = () => {
 
 export const closeHistoryModal = () => {
 	historyModalData.set(initialHistoryModalState);
+	appState.update((state) => {
+		if (state.isMenuOpen && state.activeMenu === 'history') {
+			return {
+				...state,
+				isMenuOpen: false,
+				activeMenu: ''
+			};
+		}
+		return state;
+	});
 };
 
 // Confirm modal store: holds a message and a resolver function for promise-based API
