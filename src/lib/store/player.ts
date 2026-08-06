@@ -292,6 +292,19 @@ const isEliminated = (player: App.Player.Data) => {
 	);
 };
 
+const canUseNegativeLife = (player: App.Player.Data, nextLifeTotal?: number) => {
+	const globalAllowNegative = get(appSettings).allowNegativeLife || false;
+	const allowNegative = globalAllowNegative || !!player.allowNegativeLife;
+	if (allowNegative) return true;
+
+	// Keep counting below zero when the player is already at 0 or crosses it.
+	if (player.lifeTotal <= 0) return true;
+	if (typeof nextLifeTotal === 'number' && nextLifeTotal <= 0) return true;
+	if (isEliminated(player)) return true;
+
+	return false;
+};
+
 const alivePlayersCount = (list: App.Player.Data[]) => {
 	const count = get(appSettings).playerCount;
 	return list.slice(0, count).filter((player) => !isEliminated(player)).length;
@@ -1254,9 +1267,7 @@ export const setPlayerLifeAbsolute = (playerId: number, value: number) => {
 	const player = currentPlayers.find((p) => p.id === playerId);
 	if (!player) return;
 
-	const globalAllow = get(appSettings).allowNegativeLife || false;
-	const allowNegative = globalAllow || !!player.allowNegativeLife;
-	const minAllowed = allowNegative ? -999 : 0;
+	const minAllowed = canUseNegativeLife(player, Math.trunc(value)) ? -999 : 0;
 
 	const newLifeTotal = Math.max(minAllowed, Math.min(999, Math.trunc(value)));
 	const diff = newLifeTotal - player.lifeTotal;
@@ -1332,9 +1343,7 @@ export const manageLifeTotal = (
 
 				// Ensure the life total is within acceptable bounds
 				// allow negative life totals when enabled globally or per-player
-				const globalAllow = get(appSettings).allowNegativeLife || false;
-				const allowNegative = globalAllow || !!player.allowNegativeLife;
-				const minAllowed = allowNegative ? -9999 : 0;
+				const minAllowed = canUseNegativeLife(player, newLifeTotal) ? -9999 : 0;
 				newLifeTotal = Math.max(minAllowed, Math.min(9999, newLifeTotal));
 
 				return {

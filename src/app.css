@@ -257,13 +257,15 @@
 		opacity: 0.7;
 	}
 
-	/* état mort : sombre clairement le panneau sans masquer totalement le fond */
+	/* état mort : voile gris clair au-dessus du fond sans masquer le contenu */
 	.bg-rotated-overlay.dead, .bg-rotated-horizontal-overlay.dead {
-		/* keep a strong overlay layer while preserving background details */
-		z-index: 4000;
-		background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.55));
-		opacity: 0.65;
-		mix-blend-mode: multiply;
+		/* light gray veil over the artwork while keeping life/UI readable */
+		z-index: 12;
+		background:
+			radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0.02) 75%),
+			linear-gradient(160deg, rgba(240, 240, 240, 0.44) 0%, rgba(213, 213, 213, 0.38) 100%);
+		opacity: 0.92;
+		mix-blend-mode: screen;
 	}
 
 	/* Assurer que le contenu reste au-dessus du background */

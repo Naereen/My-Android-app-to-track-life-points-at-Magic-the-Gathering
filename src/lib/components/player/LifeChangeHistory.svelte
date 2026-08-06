@@ -106,8 +106,10 @@
 			{/if}
 		{/each}
 
-		<div class="history-row current-row">
-			<span class="current-score">{currentScore}</span>
-		</div>
+		{#if historyEntries[0].delta !== 0}
+			<div class="history-row current-row">
+				<span class="current-score">{currentScore}</span>
+			</div>
+		{/if}
 	</div>
 {/if}
