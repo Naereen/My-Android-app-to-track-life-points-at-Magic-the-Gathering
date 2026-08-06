@@ -470,7 +470,7 @@
 	<!-- Status effects bar -->
 	<div class="absolute z-20 left-0 right-0 bottom-2 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
 		<div
-			class="bg-black/40 text-white text-xs rounded-full px-1 py-0 flex gap-0.5 items-center pointer-events-auto"
+			class="text-white text-xs rounded-full px-1 py-0 flex gap-0.5 items-center pointer-events-auto"
 		>
 			{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
 				<div class="mr-2">

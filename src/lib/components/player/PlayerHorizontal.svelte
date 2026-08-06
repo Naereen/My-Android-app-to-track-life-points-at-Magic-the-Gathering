@@ -594,7 +594,7 @@
 					class:hidden={$appState.isMenuOpen}
 				>
 					<div
-						class="bg-black/40 text-white text-xs rounded-full px-0 py-0 flex gap-0.5 items-center pointer-events-auto"
+						class="text-white text-xs rounded-full px-0 py-0 flex gap-0.5 items-center pointer-events-auto"
 						class:flex-row={orientation === 'left'}
 						class:flex-row-reverse={orientation === 'left'}
 					>

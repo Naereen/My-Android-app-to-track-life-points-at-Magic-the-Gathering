@@ -50,5 +50,5 @@
 	title={$_('day_night') ?? 'Day / Night'}
 	class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center gap-1"
 >
-	<span class="text-lg leading-none">{$appState.dayNightPhase === 'day' ? '☀️' : '🌕'}</span>
+	<span class="text-lg leading-none">{$appState.dayNightPhase === 'day' ? '☀️' : '🌙'}</span>
 </button>
