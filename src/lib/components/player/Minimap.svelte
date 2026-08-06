@@ -125,12 +125,43 @@
         }
 
         // Custom convention requested for the 6-player layout.
-        if (numberOfPlayers === 6) {
+        if (numberOfPlayers === 6 && layout === 'two-by-two') {
             if (playerIndex === 1) return '0deg';
             if (playerIndex === 2) return '0deg';
             if (playerIndex === 3) return '180deg';
             if (playerIndex === 4) return '180deg';
             if (playerIndex === 5) return '180deg';
+            return '0deg';
+        }
+        if (numberOfPlayers === 6 && layout === 'one-two-one') {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '0deg';
+            if (playerIndex === 4) return '180deg';
+            if (playerIndex === 5) return '180deg';
+            return '0deg';
+        }
+
+        // Custom convention requested for the 7-player layout.
+        if (numberOfPlayers === 7) {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '0deg';
+            if (playerIndex === 4) return '180deg';
+            if (playerIndex === 5) return '180deg';
+            if (playerIndex === 6) return '180deg';
+            return '0deg';
+        }
+
+        // Custom convention requested for the 8-player layout.
+        if (numberOfPlayers === 8) {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '0deg';
+            if (playerIndex === 4) return '180deg';
+            if (playerIndex === 5) return '180deg';
+            if (playerIndex === 6) return '180deg';
+            if (playerIndex === 7) return '180deg';
             return '0deg';
         }
 
