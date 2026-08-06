@@ -8,9 +8,44 @@
 	$: innerHeight = 0;
 
 	import { onMount } from 'svelte';
+
+	const isMobileWeb = () => {
+		const isCoarsePointer = window.matchMedia?.('(pointer: coarse)').matches ?? false;
+		const mobileUa = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+		return isCoarsePointer || mobileUa;
+	};
+
+	const requestFullscreen = async () => {
+		const element = document.documentElement;
+		if (!element.requestFullscreen || document.fullscreenElement) return;
+
+		try {
+			await element.requestFullscreen();
+		} catch {
+			// Some mobile browsers require a user gesture before entering fullscreen.
+		}
+	};
+
+	const enableMobileFullscreenByDefault = async () => {
+		if (Capacitor.isNativePlatform()) return;
+		if (!isMobileWeb()) return;
+
+		await requestFullscreen();
+
+		if (document.fullscreenElement) return;
+
+		const onFirstInteraction = () => {
+			void requestFullscreen();
+		};
+
+		window.addEventListener('touchstart', onFirstInteraction, { once: true, passive: true });
+		window.addEventListener('pointerdown', onFirstInteraction, { once: true, passive: true });
+	};
+
 	onMount(async () => {
 		const mod = await import('../setupStatusBar');
 		mod.setupStatusBar?.().catch(console.warn);
+		await enableMobileFullscreenByDefault();
 	});
 
 	const applyNativeContext = async () => {
