@@ -1067,6 +1067,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	}
 
 	const startingLifeTotal = get(appSettings).startingLifeTotal;
+	const shouldKeepGlobalTimerRunning =
+		isTwoPlayerMode && get(appSettings).globalGameTimerEnabled && startingPlayerChoice !== 2;
 	removeFirstPlace();
 	resetResources();
 	clearGameHistory();
@@ -1079,7 +1081,9 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 
 	// reset current turn and turn count
 	setCurrentTurn(0, false);
-	globalGameTimer.resetForNewGame();
+	if (!shouldKeepGlobalTimerRunning) {
+		globalGameTimer.resetForNewGame();
+	}
 	appState.update((data) => ({
 		...data,
 		currentTurn: -1,
