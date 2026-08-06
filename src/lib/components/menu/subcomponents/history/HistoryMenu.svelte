@@ -268,6 +268,16 @@
 			<span class="text-white text-center text-3xl">{$_('game_history')}</span>
 		</div>
 
+		<div class="mb-4 flex flex-wrap justify-center gap-3">
+			<button
+				on:click={showLifeChart}
+				disabled={$lifeHistory.length === 0}
+				class="px-3 py-1 rounded-full border border-fuchsia-500/50 text-fuchsia-200 text-xl bg-fuchsia-950/30 hover:bg-fuchsia-950/50 disabled:opacity-40 disabled:cursor-not-allowed"
+			>
+				{$_('history_life_chart_open_button') || 'Open life chart'}
+			</button>
+		</div>
+
 		<div class="w-full px-4 pb-5 text-white">
 			{#if $gameHistory.length === 0}
 				<div class="text-center text-gray-300">
@@ -304,13 +314,6 @@
 			{/if}
 
 			<div class="mt-4 flex flex-wrap justify-center gap-3">
-				<button
-					on:click={showLifeChart}
-					disabled={$lifeHistory.length === 0}
-					class="px-3 py-1 rounded-full border border-fuchsia-500/50 text-fuchsia-200 text-xs bg-fuchsia-950/30 hover:bg-fuchsia-950/50 disabled:opacity-40 disabled:cursor-not-allowed"
-				>
-					{$_('history_life_chart_open_button') || 'Open life chart'}
-				</button>
 				<button
 					on:click={clearGameHistory}
 					disabled={$gameHistory.length === 0}

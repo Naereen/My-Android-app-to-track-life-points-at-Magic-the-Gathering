@@ -149,6 +149,7 @@
 	"history_life_chart_empty": "No life snapshots recorded yet.",
 	"history_life_chart_legend": "Legend",
 	"history_life_chart_snapshot_count": "snapshots captured",
+	"history_life_chart_started_on": "Started",
 	"history_game_restarted": "Game restarted",
 	"history_state_on": "ON",
 	"history_state_off": "OFF",

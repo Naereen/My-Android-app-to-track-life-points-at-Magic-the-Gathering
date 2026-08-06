@@ -150,6 +150,7 @@
 	"history_life_chart_empty": "Aucun instantané de points de vie enregistré.",
 	"history_life_chart_legend": "Légende",
 	"history_life_chart_snapshot_count": "instantanés capturés",
+	"history_life_chart_started_on": "Début",
 	"history_game_restarted": "Partie redémarrée",
 	"history_state_on": "ACTIF",
 	"history_state_off": "INACTIF",
