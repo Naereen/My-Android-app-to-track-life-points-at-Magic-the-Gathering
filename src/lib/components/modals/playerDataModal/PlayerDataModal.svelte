@@ -1153,7 +1153,7 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left text-base"><CommandTax /> {String($_('command_tax'))}</span
+									<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))}</span
 									>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) > 0}
 										<button
