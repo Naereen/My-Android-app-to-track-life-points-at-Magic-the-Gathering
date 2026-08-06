@@ -58,6 +58,17 @@
 		return `${seconds}s`;
 	};
 
+	const formatFiveMinuteTickLabel = (milliseconds: number) => {
+		const totalMinutes = Math.floor(milliseconds / 60000);
+		if (totalMinutes < 60) {
+			return `${totalMinutes}m`;
+		}
+
+		const hours = Math.floor(totalMinutes / 60);
+		const remainingMinutes = totalMinutes % 60;
+		return `${hours}h${remainingMinutes > 0 ? ` ${remainingMinutes}m` : ''}`;
+	};
+
 	const minLife = snapshots.length
 		? Math.min(0, ...snapshots.flatMap((snapshot) => snapshot.players.map((player) => player.life)))
 		: 0;
@@ -73,10 +84,16 @@
 	const firstTimestamp = snapshots[0]?.timestamp ?? 0;
 	const lastTimestamp = snapshots[snapshots.length - 1]?.timestamp ?? firstTimestamp;
 	const durationMs = Math.max(1, lastTimestamp - firstTimestamp);
+	const xTickIntervalMs = 5 * 60 * 1000;
 	const yTicks = Array.from(
 		{ length: Math.floor((yMax - yMin) / 10) + 1 },
 		(_, index) => yMin + index * 10
 	);
+	const xTicksMs = Array.from(
+		{ length: Math.floor(durationMs / xTickIntervalMs) },
+		(_, index) => (index + 1) * xTickIntervalMs
+	).filter((value) => value < durationMs);
+	const xTicksMsWithoutLast = xTicksMs.slice(0, -1);
 
 	const xForTimestamp = (timestamp: number) => {
 		if (snapshots.length <= 1) return padding.left;
@@ -264,6 +281,21 @@
 				stroke="#6b7280"
 				stroke-width="1.5"
 			/>
+
+			{#each xTicksMsWithoutLast as tickMs (tickMs)}
+				{@const tickX = padding.left + (tickMs / durationMs) * innerWidth}
+				<line
+					x1={tickX}
+					y1={viewBoxHeight - padding.bottom}
+					x2={tickX}
+					y2={viewBoxHeight - padding.bottom - 10}
+					stroke="#6b7280"
+					stroke-width="1.2"
+				/>
+				<text x={tickX} y={viewBoxHeight - 26} fill="#9ca3af" font-size="12" text-anchor="middle">
+					{formatFiveMinuteTickLabel(tickMs)}
+				</text>
+			{/each}
 
 			<text
 				x={padding.left}
