@@ -28,40 +28,56 @@ import {
 
 const playerBaseName = get(_)('player') || 'Player';
 
-const generateRandomPlayerName = () => {
-	// List of planeswalker names from Magic: The Gathering, to use as random player names. Source: https://mtg.wiki/Planeswalkers and https://yawgatog.com/resources/magic-rules/#R2053j
-	const popularPlaneswalkerNames: Record<string, string[]> = {
-		A: ['Ajani', 'Aminatou', 'Angrath', 'Arlinn', 'Ashiok'],
-		B: ['Bahamut', 'Basri', 'Bolas'],
-		C: ['Calix', 'Chandra', 'Comet'],
-		D: ['Dack', 'Dakkon', 'Daretti', 'Davriel', 'Dihada', 'Domri', 'Dovin'],
-		E: ['Ellywick', 'Elminster', 'Elspeth', 'Estrid'],
-		F: ['Freyalise'],
-		G: ['Garruk', 'Gideon', 'Grist', 'Guff'],
-		H: ['Huatli'],
-		J: ['Jace', 'Jared', 'Jaya', 'Jeska'],
-		K: ['Kaito', 'Karn', 'Kasmina', 'Kaya', 'Kiora', 'Koth'],
-		L: ['Liliana', 'Lolth', 'Lukka'],
-		M: ['Minsc', 'Mordenkainen'],
-		N: ['Nahiri', 'Narset', 'Niko', 'Nissa', 'Nixilis'],
-		O: ['Oko'],
-		Q: ['Quintorius'],
-		R: ['Ral', 'Rowan'],
-		S: ['Saheeli', 'Samut', 'Sarkhan', 'Serra', 'Sivitri', 'Sorin', 'Szat'],
-		T: ['Tamiyo', 'Tasha', 'Teferi', 'Teyo', 'Tezzeret', 'Tibalt', 'Tyvar'],
-		U: ['Ugin', 'Urza'],
-		V: ['Venser', 'Vivien', 'Vraska', 'Vronos'],
-		W: ['Will', 'Windgrace', 'Wrenn'],
-		X: ['Xenagos'],
-		Y: ['Yanggu', 'Yanling'],
-		Z: ['Zariel']
-	};
+// List of planeswalker names from Magic: The Gathering, to use as random player names.
+// Source: https://mtg.wiki/Planeswalkers and https://yawgatog.com/resources/magic-rules/#R2053j
+const popularPlaneswalkerNames: Record<string, string[]> = {
+	A: ['Ajani', 'Aminatou', 'Angrath', 'Arlinn', 'Ashiok'],
+	B: ['Bahamut', 'Basri', 'Bolas'],
+	C: ['Calix', 'Chandra', 'Comet'],
+	D: ['Dack', 'Dakkon', 'Daretti', 'Davriel', 'Dihada', 'Domri', 'Dovin'],
+	E: ['Ellywick', 'Elminster', 'Elspeth', 'Estrid'],
+	F: ['Freyalise'],
+	G: ['Garruk', 'Gideon', 'Grist', 'Guff'],
+	H: ['Huatli'],
+	J: ['Jace', 'Jared', 'Jaya', 'Jeska'],
+	K: ['Kaito', 'Karn', 'Kasmina', 'Kaya', 'Kiora', 'Koth'],
+	L: ['Liliana', 'Lolth', 'Lukka'],
+	M: ['Minsc', 'Mordenkainen'],
+	N: ['Nahiri', 'Narset', 'Niko', 'Nissa', 'Nixilis'],
+	O: ['Oko'],
+	Q: ['Quintorius'],
+	R: ['Ral', 'Rowan'],
+	S: ['Saheeli', 'Samut', 'Sarkhan', 'Serra', 'Sivitri', 'Sorin', 'Szat'],
+	T: ['Tamiyo', 'Tasha', 'Teferi', 'Teyo', 'Tezzeret', 'Tibalt', 'Tyvar'],
+	U: ['Ugin', 'Urza'],
+	V: ['Venser', 'Vivien', 'Vraska', 'Vronos'],
+	W: ['Will', 'Windgrace', 'Wrenn'],
+	X: ['Xenagos'],
+	Y: ['Yanggu', 'Yanling'],
+	Z: ['Zariel']
+};
 
-	const allNames = Object.values(popularPlaneswalkerNames).flat();
-	const randomName = allNames[Math.floor(Math.random() * allNames.length)];
-	return `${randomName}`;
-	// const randomNumber = Math.ceil(Math.random() * 100);
-	// return `${randomName} #${randomNumber}`;
+const allPlaneswalkerNames = Object.values(popularPlaneswalkerNames).flat();
+
+const generateUniqueRandomPlayerNames = (count: number): string[] => {
+	if (count <= 0) {
+		return [];
+	}
+
+	const shuffledBaseNames = shuffle([...allPlaneswalkerNames]);
+	if (count <= shuffledBaseNames.length) {
+		return shuffledBaseNames.slice(0, count);
+	}
+
+	// Safety fallback: keep names distinct even if count exceeds the known list.
+	const uniqueNames = [...shuffledBaseNames];
+	for (let i = shuffledBaseNames.length; i < count; i++) {
+		const baseName = allPlaneswalkerNames[i % allPlaneswalkerNames.length];
+		const cycle = Math.floor(i / allPlaneswalkerNames.length) + 1;
+		uniqueNames.push(`${baseName} ${cycle}`);
+	}
+
+	return uniqueNames;
 };
 
 const defaultPlayers: App.Player.Data[] = [
@@ -253,9 +269,10 @@ const getInitialPlayers = (): App.Player.Data[] => {
 					'orange',
 					'lightgreen'
 				];
+				const randomNames = generateUniqueRandomPlayerNames(defaultPlayers.length);
 				return defaultPlayers.map((p) => ({
 					...p,
-					playerName: generateRandomPlayerName(),
+					playerName: randomNames[p.id - 1] || `${playerBaseName} ${p.id}`,
 					color: `${first_choices[Math.floor(Math.random() * first_choices.length)]},${second_choices[Math.floor(Math.random() * second_choices.length)]}`
 				}));
 			}
