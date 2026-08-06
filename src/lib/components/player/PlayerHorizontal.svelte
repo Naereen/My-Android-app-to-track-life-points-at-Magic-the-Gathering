@@ -304,7 +304,7 @@
 <svelte:window bind:innerWidth />
 
 <div
-	class="relative flex w-full rounded-3xl flex-grow h-6"
+	class="relative isolate flex w-full rounded-3xl flex-grow h-6"
 	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
 	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
 	class:bg-rotated-horizontal={!!$players[index].backgroundImage}

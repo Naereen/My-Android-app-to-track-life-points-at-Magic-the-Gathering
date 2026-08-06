@@ -32,8 +32,10 @@
 		/* On utilise les constantes fournies par le moteur de rendu de l'appareil */
 		padding-top: env(safe-area-inset-top, var(--safe-area-inset-top, 0px));
 		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 64px));
-		/* Assurez-vous que votre application ne dépasse pas */
-		box-sizing: content-box;
+		/* Inclure les safe areas dans la hauteur calculée évite de tronquer l'UI native. */
+		box-sizing: border-box;
+		min-height: 100vh;
+		min-height: 100dvh;
 	}
 
 	/* Si rien ne marche, on ajoute une marge de sécurité standard pour Android uniquement quand on détecte que l'app est lancée via Capacitor */
@@ -68,10 +70,7 @@
 	}
 
 	body {
-		@apply bg-black;
-		/* FIXME find the correct value to make the Capacitor native app work fine! */
-		/* min-height: 100%; */
-		max-height: 100%;
+		@apply bg-white;
 	}
 
 	div .rotation-180 {
@@ -259,8 +258,8 @@
 
 	/* état mort : voile gris clair au-dessus du fond sans masquer le contenu */
 	.bg-rotated-overlay.dead, .bg-rotated-horizontal-overlay.dead {
-		/* light gray veil over the artwork while keeping life/UI readable */
-		z-index: 12;
+		/* Always render above the dead player's panel content. */
+		z-index: 90;
 		background:
 			radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0.02) 75%),
 			linear-gradient(160deg, rgba(240, 240, 240, 0.44) 0%, rgba(213, 213, 213, 0.38) 100%);
