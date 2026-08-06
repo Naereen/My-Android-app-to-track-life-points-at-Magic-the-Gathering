@@ -7,6 +7,12 @@ import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
 import { playGameplaySound } from '$lib/utils/gameplaySound';
 import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
+import {
+	clearLifeHistory,
+	lifeHistory,
+	recordImmediateSnapshot,
+	recordSnapshot
+} from './lifeHistory';
 import { resetResources } from './resources';
 import { globalGameTimer } from './globalGameTimer';
 import { searchVanguardCards, type ScryfallEmblemCard } from '$lib/utils/scryfall';
@@ -270,6 +276,10 @@ const getInitialPlayers = (): App.Player.Data[] => {
 
 export const players: Writable<App.Player.Data[]> = persist('players', getInitialPlayers());
 export const lifeChangeHistoryResetKey = writable(0);
+
+if (get(lifeHistory).length === 0) {
+	recordImmediateSnapshot(get(players));
+}
 
 const isEliminated = (player: App.Player.Data) => {
 	const globalAllowNegative = get(appSettings).allowNegativeLife || false;
@@ -895,6 +905,8 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 			to: oldLifeTotal - delta
 		}
 	});
+
+	recordSnapshot(get(players));
 };
 
 const extractScryfallImagePayload = (data: any) => {
@@ -1072,6 +1084,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	removeFirstPlace();
 	resetResources();
 	clearGameHistory();
+	clearLifeHistory();
 	addGameHistoryEntry({
 		playerId: 0,
 		playerName: '',
@@ -1181,6 +1194,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	} else {
 		spinToSelectFirstPlayer();
 	}
+
+	recordImmediateSnapshot(get(players));
 };
 
 /**
@@ -1229,6 +1244,7 @@ export const setPlayerLifeTotal = (playerId: number, amount: number) => {
 				to: oldLifeTotal + amount
 			}
 		});
+		recordSnapshot(get(players));
 	}
 };
 
@@ -1279,6 +1295,8 @@ export const setPlayerLifeAbsolute = (playerId: number, value: number) => {
 		} else {
 			setTempLifeDiff(playerId, 'subtract', Math.abs(diff));
 		}
+
+		recordSnapshot(get(players));
 	}
 };
 
@@ -1350,6 +1368,7 @@ export const manageLifeTotal = (
 				to: targetAfter.lifeTotal
 			}
 		});
+		recordSnapshot(get(players));
 	}
 };
 

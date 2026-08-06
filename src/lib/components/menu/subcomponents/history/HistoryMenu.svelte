@@ -20,6 +20,8 @@
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { appSettings } from '$lib/store/appSettings';
 	import { clearGameHistory, gameHistory, type GameHistoryEntry } from '$lib/store/gameHistory';
+	import { flushPendingSnapshot, lifeHistory } from '$lib/store/lifeHistory';
+	import { openHistoryModal } from '$lib/store/modal';
 	import { _ } from 'svelte-i18n';
 
 	$: innerHeight = 0;
@@ -115,7 +117,8 @@
 		const toValue = entry.payload.to ?? 0;
 
 		if (entry.kind === 'positiveLife' || entry.kind === 'negativeLife') {
-			const delta = typeof fromValue === 'number' && typeof toValue === 'number' ? toValue - fromValue : 0;
+			const delta =
+				typeof fromValue === 'number' && typeof toValue === 'number' ? toValue - fromValue : 0;
 			return `${entry.playerName} · ${$_('life')} : ${delta > 0 ? '+' : ''}${delta} (${fromValue} → ${toValue})`;
 		}
 
@@ -136,7 +139,7 @@
 				typeof entry.payload.lifeDelta === 'number' && entry.payload.lifeDelta !== 0
 					? ` · ${$_('life')} ${entry.payload.lifeDelta > 0 ? '+' : ''}${entry.payload.lifeDelta}`
 					: '';
-			return `${entry.playerName} · ${$_('commander_damage')} (${$_('history_from_player')} #${entry.payload.fromPlayerId ?? '-' }) : ${fromValue} → ${toValue}${lifePart}`;
+			return `${entry.playerName} · ${$_('commander_damage')} (${$_('history_from_player')} #${entry.payload.fromPlayerId ?? '-'}) : ${fromValue} → ${toValue}${lifePart}`;
 		}
 
 		if (entry.kind === 'resourceChange') {
@@ -237,6 +240,11 @@
 	const iconClassName = (entry: GameHistoryEntry) => iconForEntry(entry).className;
 	const isKeyruneIcon = (entry: GameHistoryEntry) =>
 		entry.kind === 'statusBoolean' || entry.kind === 'statusNumeric';
+
+	const showLifeChart = () => {
+		flushPendingSnapshot();
+		openHistoryModal();
+	};
 </script>
 
 <svelte:window bind:innerHeight />
@@ -262,17 +270,25 @@
 
 		<div class="w-full px-4 pb-5 text-white">
 			{#if $gameHistory.length === 0}
-				<div class="text-center text-gray-300">{$_('game_history_empty') || 'No changes recorded yet.'}</div>
+				<div class="text-center text-gray-300">
+					{$_('game_history_empty') || 'No changes recorded yet.'}
+				</div>
 			{:else}
 				<ul class="space-y-1.5 space-y-reverse flex flex-col-reverse">
 					{#each $gameHistory as entry (entry.id)}
 						<li class="bg-gray-900/95 border border-gray-800 rounded-lg px-2.5 py-2 text-sm">
 							<div class="flex gap-2">
-								<div class={`history-icon-shell ${isKeyruneIcon(entry) ? 'history-icon-shell--keyrune' : ''} mt-auto mb-auto w-9 h-9 shrink-0 flex items-center justify-center select-none ${iconClassName(entry)}`}>
+								<div
+									class={`history-icon-shell ${isKeyruneIcon(entry) ? 'history-icon-shell--keyrune' : ''} mt-auto mb-auto w-9 h-9 shrink-0 flex items-center justify-center select-none ${iconClassName(entry)}`}
+								>
 									{#if iconComponent(entry)}
 										<svelte:component this={iconComponent(entry)} />
 									{:else if iconImageSrc(entry)}
-										<img srcset={iconImageSrc(entry)} alt="resource icon" class="h-7 w-7 object-contain" />
+										<img
+											srcset={iconImageSrc(entry)}
+											alt="resource icon"
+											class="h-7 w-7 object-contain"
+										/>
 									{:else}
 										<span class="text-4xl leading-none">{iconGlyph(entry)}</span>
 									{/if}
@@ -287,7 +303,14 @@
 				</ul>
 			{/if}
 
-			<div class="mt-4 flex justify-center">
+			<div class="mt-4 flex flex-wrap justify-center gap-3">
+				<button
+					on:click={showLifeChart}
+					disabled={$lifeHistory.length === 0}
+					class="px-3 py-1 rounded-full border border-fuchsia-500/50 text-fuchsia-200 text-xs bg-fuchsia-950/30 hover:bg-fuchsia-950/50 disabled:opacity-40 disabled:cursor-not-allowed"
+				>
+					{$_('history_life_chart_open_button') || 'Open life chart'}
+				</button>
 				<button
 					on:click={clearGameHistory}
 					disabled={$gameHistory.length === 0}

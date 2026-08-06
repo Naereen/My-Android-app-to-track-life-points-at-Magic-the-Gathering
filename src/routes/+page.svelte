@@ -11,12 +11,18 @@
 	import SixPlayerLayoutTwo from '$lib/layouts/SixPlayerLayoutTwo.svelte';
 	import SevenPlayerLayout from '$lib/layouts/SevenPlayerLayout.svelte';
 	import EightPlayerLayout from '$lib/layouts/EightPlayerLayout.svelte';
-	import { playerModalData, randomizerModalData, confirmModalData } from '$lib/store/modal';
+	import {
+		playerModalData,
+		randomizerModalData,
+		confirmModalData,
+		historyModalData
+	} from '$lib/store/modal';
 	import { emblemModalOpen, emblemState } from '$lib/store/emblem';
 	import RandomizerModal from '$lib/components/modals/randomizerModal/RandomizerModal.svelte';
 	import PlayerDataModal from '$lib/components/modals/playerDataModal/PlayerDataModal.svelte';
 	import ConfirmModal from '$lib/components/modals/confirmModal/ConfirmModal.svelte';
 	import EmblemModal from '$lib/components/modals/emblemModal/EmblemModal.svelte';
+	import HistoryModal from '$lib/components/modals/historyModal/HistoryModal.svelte';
 
 	$: innerWidth = 0;
 	import { onMount, onDestroy } from 'svelte';
@@ -153,5 +159,8 @@
 	{/if}
 	{#if $emblemModalOpen && $emblemState.selected}
 		<EmblemModal />
+	{/if}
+	{#if $historyModalData.isOpen}
+		<HistoryModal />
 	{/if}
 </div>

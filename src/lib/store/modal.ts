@@ -15,13 +15,39 @@ type RandomizerModalState = {
 	backgroundImage?: string | string[] | null;
 };
 
-type ReplayableRandomizerType = 'd2' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'dplanar' | 'custom';
+type ReplayableRandomizerType =
+	| 'd2'
+	| 'd4'
+	| 'd6'
+	| 'd8'
+	| 'd10'
+	| 'd12'
+	| 'd20'
+	| 'dplanar'
+	| 'custom';
 
-const initialRandomizerModalState: RandomizerModalState = { isOpen: false, result: 0, type: '', playerId: null, playerName: null, backgroundImage: null };
+const initialRandomizerModalState: RandomizerModalState = {
+	isOpen: false,
+	result: 0,
+	type: '',
+	playerId: null,
+	playerName: null,
+	backgroundImage: null
+};
 
 export const randomizerModalData = writable<RandomizerModalState>(initialRandomizerModalState);
 
-const replayableRandomizerTypes: ReplayableRandomizerType[] = ['d2', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20', 'dplanar', 'custom'];
+const replayableRandomizerTypes: ReplayableRandomizerType[] = [
+	'd2',
+	'd4',
+	'd6',
+	'd8',
+	'd10',
+	'd12',
+	'd20',
+	'dplanar',
+	'custom'
+];
 
 const isReplayableRandomizerType = (type: string): type is ReplayableRandomizerType => {
 	return replayableRandomizerTypes.includes(type as ReplayableRandomizerType);
@@ -31,7 +57,10 @@ const isPersistedReplayableRandomizerType = (value: unknown): value is Replayabl
 	return typeof value === 'string' && isReplayableRandomizerType(value);
 };
 
-export const lastReplayableRandomizerType = persist<ReplayableRandomizerType | null>('lastReplayableRandomizerType', null);
+export const lastReplayableRandomizerType = persist<ReplayableRandomizerType | null>(
+	'lastReplayableRandomizerType',
+	null
+);
 
 const restoredLastType = get(lastReplayableRandomizerType);
 if (restoredLastType !== null && !isPersistedReplayableRandomizerType(restoredLastType)) {
@@ -60,7 +89,8 @@ export const generateRandomNumber = (type: string) => {
 	};
 
 	const max = dieTypes[type] || 0;
-	const result = type === 'dplanar' ? rollPlanarDie() : max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
+	const result =
+		type === 'dplanar' ? rollPlanarDie() : max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
 
 	if (max > 0 && isReplayableRandomizerType(type)) {
 		lastReplayableRandomizerType.set(type);
@@ -89,9 +119,23 @@ export const generateRandomNumber = (type: string) => {
 	}
 
 	if (type === 'custom') {
-		randomizerModalData.set({ isOpen: true, result, type, playerId: null, playerName: null, backgroundImage: null });
+		randomizerModalData.set({
+			isOpen: true,
+			result,
+			type,
+			playerId: null,
+			playerName: null,
+			backgroundImage: null
+		});
 	} else {
-		randomizerModalData.set({ isOpen: true, result, type, playerId: null, playerName: null, backgroundImage: null });
+		randomizerModalData.set({
+			isOpen: true,
+			result,
+			type,
+			playerId: null,
+			playerName: null,
+			backgroundImage: null
+		});
 	}
 
 	return result;
@@ -114,7 +158,8 @@ export const selectRandomPlayer = (randomIndex: number | null = null) => {
 
 	if (activePlayers.length === 0) return;
 
-	const index = randomIndex !== null ? randomIndex : Math.floor(Math.random() * activePlayers.length);
+	const index =
+		randomIndex !== null ? randomIndex : Math.floor(Math.random() * activePlayers.length);
 	const selectedPlayer = activePlayers[index];
 
 	randomizerModalData.set({
@@ -133,7 +178,7 @@ export const selectRandomOpponent = (activePlayerId: number) => {
 	const playerCount = get(appSettings).playerCount;
 
 	// Get only active players (up to playerCount), excluding the active player
-	const activePlayers = currentPlayers.slice(0, playerCount).filter(p => p.id !== activePlayerId);
+	const activePlayers = currentPlayers.slice(0, playerCount).filter((p) => p.id !== activePlayerId);
 
 	if (activePlayers.length === 0) return;
 
@@ -154,11 +199,18 @@ export const resetRandomizer = () => {
 	randomizerModalData.set(initialRandomizerModalState);
 };
 
-const initialPlayerModalData = { isOpen: false, playerId: 0, mode: 'status_effects' as 'background' | 'commander' | 'status_effects' };
+const initialPlayerModalData = {
+	isOpen: false,
+	playerId: 0,
+	mode: 'status_effects' as 'background' | 'commander' | 'status_effects'
+};
 
 export const playerModalData = writable(initialPlayerModalData);
 
-export const openPlayerModal = (playerId: number, mode: 'background' | 'commander' | 'status_effects' = 'status_effects') => {
+export const openPlayerModal = (
+	playerId: number,
+	mode: 'background' | 'commander' | 'status_effects' = 'status_effects'
+) => {
 	playerModalData.set({ isOpen: true, playerId, mode });
 };
 
@@ -166,11 +218,29 @@ export const resetPlayerModalData = () => {
 	playerModalData.set(initialPlayerModalData);
 };
 
+const initialHistoryModalState = { isOpen: false };
+
+export const historyModalData = writable(initialHistoryModalState);
+
+export const openHistoryModal = () => {
+	historyModalData.set({ isOpen: true });
+};
+
+export const closeHistoryModal = () => {
+	historyModalData.set(initialHistoryModalState);
+};
+
 // Confirm modal store: holds a message and a resolver function for promise-based API
 type ConfirmModalState = {
 	isOpen: boolean;
 	message: string;
-	resolve: ((value: boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[]; radioValue?: number }) => void) | null;
+	resolve:
+		| ((
+				value:
+					| boolean
+					| { confirmed: boolean; checkboxValue?: boolean | boolean[]; radioValue?: number }
+		  ) => void)
+		| null;
 	checkboxLabel?: string | string[];
 	checkboxDefaultValue?: boolean | boolean[];
 	radioGroupLabel?: string;
@@ -192,7 +262,9 @@ export const showConfirm = (
 		radioDefaultValue?: number;
 	}
 ) => {
-	return new Promise<boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[]; radioValue?: number }>((resolve) => {
+	return new Promise<
+		boolean | { confirmed: boolean; checkboxValue?: boolean | boolean[]; radioValue?: number }
+	>((resolve) => {
 		confirmModalData.set({
 			isOpen: true,
 			message,
@@ -206,7 +278,11 @@ export const showConfirm = (
 	});
 };
 
-export const respondConfirm = (value: boolean, checkboxValue?: boolean | boolean[], radioValue?: number) => {
+export const respondConfirm = (
+	value: boolean,
+	checkboxValue?: boolean | boolean[],
+	radioValue?: number
+) => {
 	const current = get(confirmModalData);
 	if (current && current.resolve) {
 		try {
