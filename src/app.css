@@ -263,6 +263,7 @@
 		background:
 			radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0.02) 75%),
 			linear-gradient(160deg, rgba(240, 240, 240, 0.44) 0%, rgba(213, 213, 213, 0.38) 100%);
+		/* background-color: rgba(255, 0, 0, 0.65) !important; */
 		opacity: 0.92;
 		mix-blend-mode: screen;
 	}
@@ -409,17 +410,16 @@
 	}
 
 	.global-game-timer-overlay {
-		position: absolute;
 		inset: 0;
 		display: flex;
 		align-items: center;
 		justify-content: left;
 		font-size: 1rem;
 		background: rgba(9, 11, 20, 0.20);
+		color: #a0a0a0;
 		border-radius: 0.65rem;
 		text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
 		pointer-events: none;
-		;
 	}
 
 	.global-timer-glow-positive {

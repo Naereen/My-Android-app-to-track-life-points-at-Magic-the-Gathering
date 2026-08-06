@@ -366,7 +366,6 @@
 						class="minus w-full h-1/2 flex justify-center {orientation === 'left'
 							? 'items-end rounded-b-3xl'
 							: 'items-start rounded-t-3xl'} active:bg-player-light select-none"
-						class:holding={holdingType === 'subtract'}
 						on:mouseleave={handleCancelHold}
 						on:touchcancel={handleCancelHold}
 					>
@@ -384,7 +383,6 @@
 						class="plus w-full h-1/2 flex justify-center {orientation === 'left'
 							? 'items-start rounded-t-3xl'
 							: 'items-end rounded-b-3xl'} active:bg-player-light select-none"
-						class:holding={holdingType === 'add'}
 						on:mouseleave={handleCancelHold}
 						on:touchcancel={handleCancelHold}
 					>
@@ -845,14 +843,14 @@
 												class="status-rotate-wrapper"
 												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 											>
-												<CommanderDamage playerIndex={i} color="white" />
+												<!-- <CommanderDamage playerIndex={i} color="white" /> -->
 											</div>
 										{:else}
 											<div
 												class="status-rotate-wrapper"
 												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 											>
-												<CommanderDamage playerIndex={i} color="white" />
+												<!-- <CommanderDamage playerIndex={i} color="white" /> -->
 											</div>
 											<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
 										{/if}

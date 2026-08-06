@@ -325,7 +325,6 @@
 					on:contextmenu|preventDefault
 					draggable="false"
 					class="minus w-1/2 flex justify-start items-center active:bg-player-light rounded-l-2xl select-none"
-					class:holding={holdingType === 'subtract'}
 					on:mouseleave={handleCancelHold}
 					on:touchcancel={handleCancelHold}
 				>
@@ -339,7 +338,6 @@
 					on:contextmenu|preventDefault
 					draggable="false"
 					class="plus w-1/2 flex justify-end items-center active:bg-player-light rounded-r-3xl select-none"
-					class:holding={holdingType === 'add'}
 					on:mouseleave={handleCancelHold}
 					on:touchcancel={handleCancelHold}
 				>
@@ -569,7 +567,7 @@
 							class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
 							on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
 						>
-							<CommanderDamage playerIndex={i} color="white" />
+							<!-- <CommanderDamage playerIndex={i} color="white" /> -->
 							<span>{dmg}</span>
 						</div>
 					{/if}

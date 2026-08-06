@@ -185,9 +185,13 @@ $: if ($appState.turnCount !== prevTurnCount) {
 					class={`global-game-timer-box ${timerGlowClass}`}
 					title={$globalGameTimer.running ? 'Pause timer' : 'Resume timer'}
 				>
-					<span class="global-game-timer-text">{formatGlobalTimer($globalGameTimer.remaining)}</span>
-					{#if !$globalGameTimer.running}
-						<span class="global-game-timer-overlay" aria-hidden="true">⏯️</span>
+					{#if $globalGameTimer.running}
+						<span class="global-game-timer-text">{formatGlobalTimer($globalGameTimer.remaining)}</span>
+					{:else}
+						<span class="global-game-timer-overlay" aria-hidden="true">
+							⏯️
+							{formatGlobalTimer($globalGameTimer.remaining)}
+						</span>
 					{/if}
 				</button>
 			</div>
