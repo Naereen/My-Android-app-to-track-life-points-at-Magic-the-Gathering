@@ -5,22 +5,108 @@
     import { openPlayerModal } from '$lib/store/modal';
     import { colorToBg } from '$lib/components/colorToBg';
 
-    // import MinimapTwoPlayer from './MinimapTwoPlayer.svelte';
-    // import MinimapThreePlayer from './MinimapThreePlayer.svelte';
-    // import MinimapFourPlayerTwoByTwo from './MinimapFourPlayerTwoByTwo.svelte';
-    // import MinimapFourPlayerOneTwoOne from './MinimapFourPlayerOneTwoOne.svelte';
-    // import MinimapFivePlayer from './MinimapFivePlayer.svelte';
-    // import MinimapSixPlayerTwo from './MinimapSixPlayerTwo.svelte';
-    // import MinimapSixPlayerOne from './MinimapSixPlayerOne.svelte';
-
     export let playerIndex: number;
     export let layout: 'two-by-two' | 'one-two-one' | '' = '';
     export let orientation: App.Player.Orientation = 'up';
 
     $: numberOfPlayers = $appSettings.playerCount;
-    $: meString = String($_( 'me' ));  // the "me" string is used in the minimap to indicate the current player, so we need to reactively update it when the locale changes
+    $: meString = String($_('me')); // Keep translated "me" label reactive on locale changes.
 
-    $: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
+    type MinimapRows = number[][];
+    type SeatOrientation = App.Player.Orientation;
+
+    const getMinimapRows = (
+        playerCount: number,
+        currentLayout: 'two-by-two' | 'one-two-one' | ''
+    ): MinimapRows => {
+        switch (playerCount) {
+            case 2:
+                return [[1], [0]];
+            case 3:
+                return [[1, 2], [0]];
+            case 4:
+                return currentLayout === 'two-by-two' ? [[1, 2], [0, 3]] : [[2], [1, 3], [0]];
+            case 5:
+                return [[2, 3], [1, 4], [0]];
+            case 6:
+                return currentLayout === 'one-two-one'
+                    ? [[3], [2, 4], [1, 5], [0]]
+                    : [[2, 3], [1, 4], [0, 5]];
+            case 7:
+                return [[3, 4], [2, 5], [1, 6], [0]];
+            case 8:
+                return [[4], [3, 5], [2, 6], [1, 7], [0]];
+            default:
+                return [];
+        }
+    };
+
+    $: minimapRows = getMinimapRows(numberOfPlayers, layout);
+
+    const getSeatOrientations = (
+        playerCount: number,
+        currentLayout: 'two-by-two' | 'one-two-one' | ''
+    ): SeatOrientation[] => {
+        switch (playerCount) {
+            case 2:
+                return ['up', 'down'];
+            case 3:
+                return ['up', 'right', 'left'];
+            case 4:
+                return currentLayout === 'two-by-two'
+                    ? ['right', 'right', 'left', 'left']
+                    : ['up', 'right', 'down', 'left'];
+            case 5:
+                return ['up', 'right', 'right', 'left', 'left'];
+            case 6:
+                return currentLayout === 'one-two-one'
+                    ? ['up', 'right', 'right', 'down', 'left', 'left']
+                    : ['right', 'right', 'right', 'left', 'left', 'left'];
+            case 7:
+                return ['up', 'right', 'right', 'right', 'left', 'left', 'left'];
+            case 8:
+                return ['up', 'right', 'right', 'right', 'down', 'left', 'left', 'left'];
+            default:
+                return [];
+        }
+    };
+
+    const orientationToDegrees = (seatOrientation: SeatOrientation): string => {
+        if (seatOrientation === 'left') return '-90deg';
+        if (seatOrientation === 'right') return '90deg';
+        if (seatOrientation === 'down') return '180deg';
+        return '0deg';
+    };
+
+    $: seatOrientations = getSeatOrientations(numberOfPlayers, layout);
+
+    $: getTileRotation = (targetIndex: number): string => {
+        // Keep seat #1 unrotated as requested, rotate all others according to board layout.
+        if (targetIndex === 0) return '0deg';
+        const seatOrientation = seatOrientations[targetIndex] ?? 'up';
+        return orientationToDegrees(seatOrientation);
+    };
+
+    $: getViewerRotation = (): string => {
+        // Custom convention requested for the 3-player layout.
+        // Player 1 => normal, player 2 => left, player 3 => right.
+        if (numberOfPlayers === 3) {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '180deg';
+            return '0deg';
+        }
+
+        // Fallback for other layouts: keep previous seat-based behavior.
+        return getTileRotation(playerIndex);
+    };
+
+    $: getEffectiveRotation = (targetIndex: number): string =>
+        numberOfPlayers === 3 ? getViewerRotation() : getTileRotation(targetIndex);
+
+    $: rowWidthClass =
+        (orientation === 'left' || orientation === 'right')
+            ? 'min-w-[2.0rem]'
+            : 'min-w-[5.0rem]';
 
     $: getBgStyle = (j: number) => {
         const p = $players[j];
@@ -32,63 +118,55 @@
         if (bg && typeof bg === 'string') return `background-image: url('${bg}'); background-size: cover; background-position: center;`;
         return '';
     };
+
+    $: getCommanderDamage = (targetIndex: number) =>
+        $players[playerIndex]?.statusEffects?.commanderDamage?.[targetIndex] ?? 0;
+
+    $: shouldShowMe = (targetIndex: number) =>
+        targetIndex === playerIndex &&
+        ($players[targetIndex]?.statusEffects?.commanderDamage?.[targetIndex] ?? -1) <= 0;
 </script>
 
-<!-- FIXME: update the layout of the minimap of each players, to show like in the main app -->
 <div
-    class="items-center gap-0 pointer-events-auto flex items-center justify-center"
->
-    {#each Array(numberOfPlayers) as _, j}
-        <div
-        class:w-11={orientation === 'up' || orientation === 'down'}
-        class:h-8={(orientation === 'up' || orientation === 'down') || (numberOfPlayers >= 5)}
-        class:w-9={orientation === 'left' || orientation === 'right'}
-        class:h-9={(orientation === 'left' || orientation === 'right') && numberOfPlayers <= 4}
-        class="max-w-13 max-h-11 rounded-md overflow-hidden relative border border-black/60 flex items-center justify-center"
-        style={orientation === 'left' ? getBgStyle(numberOfPlayers - 1 - j) : getBgStyle(j)}
-        style:transform={`rotate(${bgRotation})`}
-        title={orientation === 'left' ? $players[numberOfPlayers - 1 - j]?.playerName : $players[j]?.playerName}
-        on:click={() => openPlayerModal(playerIndex + 1, 'commander')}
-        role="button"
-        >
-            <div class="text-white text-base text-center"
-                class:rotation-270={orientation === 'left' || orientation === 'right'}
-                class:-rotation-90={orientation === 'up'}
-            >
-                {#if (orientation === 'left' ? numberOfPlayers - 1 - j : j) === playerIndex && ($players[orientation === 'left' ? numberOfPlayers - 1 - j : j]?.statusEffects?.commanderDamage?.[orientation === 'left' ? numberOfPlayers - 1 - j : j] ?? -1) <= 0}
-                    {meString}
-                {:else}
-                    {$players[playerIndex]?.statusEffects?.commanderDamage?.[orientation === 'left' ? numberOfPlayers - 1 - j : j] ?? 0}
-                {/if}
-            </div>
-        </div>
-    {/each}
-</div>
-
-<!-- Include all the different Minimap layouts, for different player counts and layouts -->
-<div
-    on:click={() => openPlayerModal(playerIndex + 1, 'commander')}
+    class={`pointer-events-auto rounded-md border border-black/70 bg-black/50 p-0.5 ${rowWidthClass}`}
     role="button"
     tabindex="0"
-    >
-    {#if numberOfPlayers === 2}
-        <!-- XXX: It's logical to not include the minimap if there is only two players: Commander damage is not a thing in any Dual format! -->
-        <!-- <MinimapTwoPlayer {playerIndex} {orientation} /> -->
-    {:else if numberOfPlayers === 3}
-        <!-- <MinimapThreePlayer {playerIndex} {orientation} /> -->
-    {:else if numberOfPlayers === 4}
-        {#if layout === 'two-by-two'}
-            <!-- <MinimapFourPlayerTwoByTwo {playerIndex} {orientation} /> -->
-        {:else}
-            <!-- <MinimapFourPlayerOneTwoOne {playerIndex} {orientation} /> -->
-        {/if}
-    {:else if numberOfPlayers === 5}
-        <!-- <MinimapFivePlayer {playerIndex} {orientation} /> -->
-    {:else if numberOfPlayers === 6}
-        {#if layout === 'one-two-one'}
-            <!-- <MinimapSixPlayerOne {playerIndex} {orientation} /> -->
-        {:else}
-            <!-- <MinimapSixPlayerTwo {playerIndex} {orientation} /> -->
-        {/if}
-    {/if}
+    on:click={() => openPlayerModal(playerIndex + 1, 'commander')}
+    on:keydown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openPlayerModal(playerIndex + 1, 'commander');
+        }
+    }}
+>
+    <div class="flex flex-col gap-0.5">
+        {#each minimapRows as row}
+            <div class="flex gap-0.5" class:justify-center={row.length === 1}>
+                {#each row as targetIndex}
+                    <div
+                        class="h-6 min-h-6 max-h-12 min-w-0 rounded-sm overflow-hidden border border-black/60 relative flex items-center justify-center"
+                        class:w-full={row.length === 1}
+                        class:h-full={row.length === 1}
+                        class:flex-1={row.length > 1}
+                        title={$players[targetIndex]?.playerName}
+                    >
+                        <div
+                            class="absolute inset-0"
+                            style={`transform: rotate(${getEffectiveRotation(targetIndex)}); ${getBgStyle(targetIndex)}`}
+                        ></div>
+                        <div
+                            class="relative z-10 text-white text-[10px] leading-none text-center font-semibold px-0.5"
+                            style={`transform: rotate(${getEffectiveRotation(targetIndex)});`}
+                        >
+                            {#if shouldShowMe(targetIndex)}
+                                {meString}
+                            {:else}
+                                {getCommanderDamage(targetIndex)}
+                            {/if}
+                        </div>
+                    </div>
+                {/each}
+            </div>
+        {/each}
+    </div>
 </div>
