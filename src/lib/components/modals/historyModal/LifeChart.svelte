@@ -19,19 +19,23 @@
 		color: string;
 		path: string;
 		points: ChartPoint[];
+		markerKind: number;
+		dashArray: string;
 	};
 
 	const viewBoxWidth = 1000;
 	const viewBoxHeight = 500;
 	const padding = {
-		top: 28,
-		right: 28,
-		bottom: 54,
-		left: 68
+		top: 0,
+		right: 36,
+		bottom: 0,
+		left: 20
 	};
 
 	let pathElements: SVGPathElement[] = [];
 	const lastAnimatedPathByIndex = new Map<number, string>();
+	const markerStroke = '#e5e7eb';
+	const dashPatterns = ['0', '8 6', '3 5', '10 4 2 4', '2 4', '14 5', '6 3 1 3', '12 3 3 3'];
 
 	const innerWidth = viewBoxWidth - padding.left - padding.right;
 	const innerHeight = viewBoxHeight - padding.top - padding.bottom;
@@ -96,6 +100,25 @@
 			.join(' ');
 	};
 
+	const markerPolygonPoints = (kind: number, size: number) => {
+		switch (kind % 8) {
+			case 2:
+				return `0,-${size} ${size},0 0,${size} -${size},0`;
+			case 3:
+				return `0,-${size} ${size},${size} -${size},${size}`;
+			case 4:
+				return `${-size},-${size / 2} ${size},-${size / 2} ${size},${size / 2} ${-size},${size / 2}`;
+			case 5:
+				return `0,-${size} ${size},-${size / 4} ${size / 2},${size} -${size / 2},${size} -${size},-${size / 4}`;
+			case 6:
+				return `0,-${size} ${size},-${size / 3} ${size},${size / 3} 0,${size} -${size},${size / 3} -${size},-${size / 3}`;
+			case 7:
+				return `0,-${size} ${size},0 ${size / 2},${size} -${size / 2},${size} -${size},0`;
+			default:
+				return '';
+		}
+	};
+
 	const playersById = new Map<number, PlayerState>();
 	for (const snapshot of snapshots) {
 		for (const player of snapshot.players) {
@@ -105,7 +128,7 @@
 
 	const series: PlayerSeries[] = Array.from(playersById.values())
 		.sort((left, right) => left.id - right.id)
-		.map((player) => {
+		.map((player, index) => {
 			const points = snapshots
 				.map((snapshot) => {
 					const state = snapshot.players.find((entry) => entry.id === player.id);
@@ -124,7 +147,9 @@
 				name: player.name,
 				color: player.color,
 				points,
-				path: linePathFromPoints(points)
+				path: linePathFromPoints(points),
+				markerKind: index % 8,
+				dashArray: dashPatterns[index % dashPatterns.length]
 			};
 		});
 
@@ -241,21 +266,74 @@
 					fill="none"
 					stroke={entry.color}
 					stroke-width="3"
+					stroke-dasharray={entry.dashArray}
 					stroke-linecap="round"
 					stroke-linejoin="round"
 					filter="url(#chart-glow)"
 				/>
+				{#each entry.points as point, pointIndex (`${entry.id}-${point.timestamp}-${pointIndex}`)}
+					<g transform={`translate(${point.x} ${point.y})`}>
+						{#if entry.markerKind === 0}
+							<circle r="4.6" fill={entry.color} stroke={markerStroke} stroke-width="1.4" />
+						{:else if entry.markerKind === 1}
+							<rect
+								x="-4.25"
+								y="-4.25"
+								width="8.5"
+								height="8.5"
+								fill={entry.color}
+								stroke={markerStroke}
+								stroke-width="1.4"
+								rx="1.5"
+							/>
+						{:else if entry.markerKind === 2}
+							<polygon
+								points={markerPolygonPoints(entry.markerKind, 5)}
+								fill={entry.color}
+								stroke={markerStroke}
+								stroke-width="1.4"
+							/>
+						{:else if entry.markerKind === 3}
+							<polygon
+								points={markerPolygonPoints(entry.markerKind, 5)}
+								fill={entry.color}
+								stroke={markerStroke}
+								stroke-width="1.4"
+							/>
+						{:else if entry.markerKind === 4}
+							<polygon
+								points={markerPolygonPoints(entry.markerKind, 5)}
+								fill={entry.color}
+								stroke={markerStroke}
+								stroke-width="1.4"
+							/>
+						{:else if entry.markerKind === 5}
+							<polygon
+								points={markerPolygonPoints(entry.markerKind, 5)}
+								fill={entry.color}
+								stroke={markerStroke}
+								stroke-width="1.4"
+							/>
+						{:else if entry.markerKind === 6}
+							<polygon
+								points={markerPolygonPoints(entry.markerKind, 5)}
+								fill={entry.color}
+								stroke={markerStroke}
+								stroke-width="1.4"
+							/>
+						{:else}
+							<polygon
+								points={markerPolygonPoints(entry.markerKind, 5)}
+								fill={entry.color}
+								stroke={markerStroke}
+								stroke-width="1.4"
+							/>
+						{/if}
+					</g>
+				{/each}
 			{/each}
 
 			{#each latestPoints as entry (entry.id)}
-				<circle
-					cx={entry.point.x}
-					cy={entry.point.y}
-					r="5.5"
-					fill={entry.color}
-					stroke="#111827"
-					stroke-width="2"
-				/>
 				<text
 					x={entry.point.x + 10}
 					y={entry.point.y - 10}

@@ -6,24 +6,64 @@
 	import { _ } from 'svelte-i18n';
 
 	$: latestSnapshot = $lifeHistory[$lifeHistory.length - 1];
-	$: legendEntries = latestSnapshot?.players ?? [];
+	$: legendEntries = [...(latestSnapshot?.players ?? [])].sort((left, right) => left.id - right.id);
 	$: chartTitle = String($_('history_life_chart_title') || 'Life total history');
 	$: emptyState = String($_('history_life_chart_empty') || 'No life snapshots recorded yet.');
 	$: closeLabel = String($_('close') || 'Close');
 	$: snapshotCountSuffix = String($_('history_life_chart_snapshot_count') || 'snapshots captured');
+	$: startedOnLabel = String($_('history_life_chart_started_on') || 'Started');
+
+	const legendMarkerStroke = '#e5e7eb';
+
+	const markerPolygonPoints = (kind: number, size: number) => {
+		switch (kind % 8) {
+			case 2:
+				return `0,-${size} ${size},0 0,${size} -${size},0`;
+			case 3:
+				return `0,-${size} ${size},${size} -${size},${size}`;
+			case 4:
+				return `${-size},-${size / 2} ${size},-${size / 2} ${size},${size / 2} ${-size},${size / 2}`;
+			case 5:
+				return `0,-${size} ${size},-${size / 4} ${size / 2},${size} -${size / 2},${size} -${size},-${size / 4}`;
+			case 6:
+				return `0,-${size} ${size},-${size / 3} ${size},${size / 3} 0,${size} -${size},${size / 3} -${size},-${size / 3}`;
+			case 7:
+				return `0,-${size} ${size},0 ${size / 2},${size} -${size / 2},${size} -${size},0`;
+			default:
+				return '';
+		}
+	};
+
+	const formatStartDate = (timestamp: number | undefined, locale: string) => {
+		if (!timestamp) return '';
+		try {
+			return new Intl.DateTimeFormat(locale || undefined, {
+				dateStyle: 'medium',
+				timeStyle: 'short'
+			}).format(new Date(timestamp));
+		} catch {
+			return new Date(timestamp).toLocaleString();
+		}
+	};
+
+	$: startDateText = formatStartDate($lifeHistory[0]?.timestamp, $appSettings.locale);
 </script>
 
 <div
 	class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 backdrop-blur-sm sm:p-6"
 	role="presentation"
-	on:click={closeHistoryModal}
 >
+	<button
+		type="button"
+		class="absolute inset-0 h-full w-full cursor-default bg-transparent"
+		on:click={closeHistoryModal}
+		aria-label={closeLabel}
+	></button>
 	<div
-		class="relative flex max-h-[92vh] w-[95%] max-w-5xl flex-col overflow-hidden rounded-2xl bg-gray-800 shadow-2xl"
+		class="relative z-10 flex max-h-[92vh] w-[95%] max-w-5xl flex-col overflow-hidden rounded-2xl bg-gray-800 shadow-2xl"
 		role="dialog"
 		aria-modal="true"
 		aria-label={chartTitle}
-		on:click|stopPropagation
 	>
 		<button
 			type="button"
@@ -38,7 +78,11 @@
 			<h2 class="pr-14 text-2xl font-semibold text-white">{chartTitle}</h2>
 			<p class="mt-2 text-sm text-gray-400">
 				{#if $lifeHistory.length > 1}
-					{$lifeHistory.length} {snapshotCountSuffix}
+					{$lifeHistory.length}
+					{snapshotCountSuffix}
+					{#if startDateText}
+						· {startedOnLabel} {startDateText}
+					{/if}
 				{:else}
 					{emptyState}
 				{/if}
@@ -46,7 +90,7 @@
 		</div>
 
 		<div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
-			<div class="h-[28rem] w-full sm:h-[34rem]">
+			<div class="w-full max-w-full">
 				<LifeChart
 					snapshots={$lifeHistory}
 					defaultStartingLife={$appSettings.startingLifeTotal}
@@ -60,12 +104,44 @@
 						{$_('history_life_chart_legend') || 'Legend'}
 					</div>
 					<div class="flex flex-wrap gap-3">
-						{#each legendEntries as player (player.id)}
+						{#each legendEntries as player, index (player.id)}
 							<div
 								class="flex items-center gap-2 rounded-full bg-gray-900/70 px-3 py-1.5 text-sm text-gray-100"
 							>
-								<span class="h-3 w-3 rounded-full" style={`background-color: ${player.color};`}
-								></span>
+								<svg
+									viewBox="0 0 16 16"
+									class="h-4 w-4 shrink-0 overflow-visible"
+									aria-hidden="true"
+								>
+									<g transform="translate(8 8)">
+										{#if index % 8 === 0}
+											<circle
+												r="4.6"
+												fill={player.color}
+												stroke={legendMarkerStroke}
+												stroke-width="1.4"
+											/>
+										{:else if index % 8 === 1}
+											<rect
+												x="-4.25"
+												y="-4.25"
+												width="8.5"
+												height="8.5"
+												fill={player.color}
+												stroke={legendMarkerStroke}
+												stroke-width="1.4"
+												rx="1.5"
+											/>
+										{:else}
+											<polygon
+												points={markerPolygonPoints(index, 5)}
+												fill={player.color}
+												stroke={legendMarkerStroke}
+												stroke-width="1.4"
+											/>
+										{/if}
+									</g>
+								</svg>
 								<span>{player.name}</span>
 							</div>
 						{/each}

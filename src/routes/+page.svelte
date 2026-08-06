@@ -58,6 +58,18 @@
 		});
 	};
 
+	const lockPortraitOrientation = async () => {
+		if (typeof window === 'undefined') return;
+		const orientationApi = window.screen?.orientation;
+		if (!orientationApi?.lock) return;
+
+		try {
+			await orientationApi.lock('portrait-primary');
+		} catch {
+			// Some browsers/WebViews only allow this in installed or fullscreen contexts.
+		}
+	};
+
 	const postStreamUpdate = async (remoteServerUrl: string, payload: StreamGameState) => {
 		const endpoint = getStreamEndpoint(remoteServerUrl);
 
@@ -88,6 +100,7 @@
 
 	onMount(() => {
 		initWakeLock();
+		void lockPortraitOrientation();
 		// subscribe to appSettings.preventScreenSleep and apply
 		unsubscribeAppSettings = appSettings.subscribe((s) => {
 			setKeepAwake(!!(s as any).preventScreenSleep);
