@@ -459,6 +459,56 @@
 	const POISON_MAX = 10;
 	const RING_BEARER_MAX = 4;
 	const SPEED_MAX = 4;
+
+	// Commander damage long-press behavior: apply +/-10 every 2s while holding.
+	const COMMANDER_LONG_PRESS_MS = 1000;
+	let commanderLongPressTimeout: ReturnType<typeof setTimeout> | null = null;
+	let commanderLongPressInterval: ReturnType<typeof setInterval> | null = null;
+	let commanderLongPressConsumedClick = false;
+
+	const getCommanderDamageValue = (playerId: number, fromPlayerId: number): number => {
+		return (($players[playerId - 1]?.statusEffects?.commanderDamage ?? [])[fromPlayerId - 1] ?? 0) as number;
+	};
+
+	const setCommanderDamageDelta = (playerId: number, fromPlayerId: number, delta: number) => {
+		const current = getCommanderDamageValue(playerId, fromPlayerId);
+		setCommanderDamage(playerId, fromPlayerId, Math.max(0, current + delta));
+	};
+
+	const startCommanderLongPress = (playerId: number, fromPlayerId: number, delta: number) => {
+		stopCommanderLongPress();
+		commanderLongPressTimeout = setTimeout(() => {
+			commanderLongPressConsumedClick = true;
+			setCommanderDamageDelta(playerId, fromPlayerId, delta);
+			commanderLongPressInterval = setInterval(() => {
+				setCommanderDamageDelta(playerId, fromPlayerId, delta);
+			}, COMMANDER_LONG_PRESS_MS);
+		}, COMMANDER_LONG_PRESS_MS);
+	};
+
+	const stopCommanderLongPress = () => {
+		if (commanderLongPressTimeout) {
+			clearTimeout(commanderLongPressTimeout);
+			commanderLongPressTimeout = null;
+		}
+		if (commanderLongPressInterval) {
+			clearInterval(commanderLongPressInterval);
+			commanderLongPressInterval = null;
+		}
+		if (commanderLongPressConsumedClick) {
+			setTimeout(() => {
+				commanderLongPressConsumedClick = false;
+			}, 0);
+		}
+	};
+
+	const handleCommanderStepClick = (playerId: number, fromPlayerId: number, step: number) => {
+		if (commanderLongPressConsumedClick) {
+			commanderLongPressConsumedClick = false;
+			return;
+		}
+		setCommanderDamageDelta(playerId, fromPlayerId, step);
+	};
 </script>
 
 <div
@@ -479,12 +529,12 @@
 			<div class="flex flex-col justify-center items-center sticky top-0 bg-[#d8e5f7] z-10 pb-4">
 				<h2 class="text-2xl font-semibold my-2 relative w-full text-center">
 					{$_('customize_player')}
-					{$playerModalData.playerId}
-					{#if $appSettings.playerCount !== 2}
+					#{$playerModalData.playerId}
+					<!-- {#if $appSettings.playerCount !== 2}
 						<span class="inline-flex items-center" title="Commander Damage">
 							<CommanderDamage playerIndex={$playerModalData.playerId - 1} />
 						</span>
-					{/if}
+					{/if} -->
 					<button
 						on:click={resetPlayerModalData}
 						on:contextmenu|preventDefault
@@ -1233,15 +1283,23 @@
 											[])[i] ?? 0}
 									{@const fromPlayerName = $players[i]?.playerName ?? `Player ${fromPlayerId}`}
 									<div class="flex items-center gap-2">
+										<span class="text-left text-sm">
+											#{fromPlayerId}
+										</span>
 										<span class="beleren w-full text-left ml-4">
-											<CommanderDamage playerIndex={fromPlayerId - 1} />
+											<!-- <CommanderDamage playerIndex={fromPlayerId - 1} /> -->
 											{fromPlayerName}
 										</span>
 										{#if dmg > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
+												on:pointerdown={() =>
+													startCommanderLongPress($playerModalData.playerId, fromPlayerId, -10)}
+												on:pointerup={stopCommanderLongPress}
+												on:pointerleave={stopCommanderLongPress}
+												on:pointercancel={stopCommanderLongPress}
 												on:click={() =>
-													setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg - 1)}>-</button
+													handleCommanderStepClick($playerModalData.playerId, fromPlayerId, -1)}>-</button
 											>
 										{/if}
 										{#if editingCommanderFrom === fromPlayerId}
@@ -1267,8 +1325,13 @@
 										{/if}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded mr-10"
+											on:pointerdown={() =>
+												startCommanderLongPress($playerModalData.playerId, fromPlayerId, 10)}
+											on:pointerup={stopCommanderLongPress}
+											on:pointerleave={stopCommanderLongPress}
+											on:pointercancel={stopCommanderLongPress}
 											on:click={() =>
-												setCommanderDamage($playerModalData.playerId, fromPlayerId, dmg + 1)}
+												handleCommanderStepClick($playerModalData.playerId, fromPlayerId, 1)}
 											>+</button
 										>
 									</div>
