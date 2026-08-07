@@ -25,6 +25,8 @@
     import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
+		getCommandTaxBySourceForPlayer,
+		getCommandTaxTotalForPlayer,
 		getCommanderDamageTotalsForPlayer,
 		getMaxCommanderDamageSingleSource,
 		lifeChangeHistoryResetKey,
@@ -122,7 +124,11 @@
 	$: ticketCount = status.ticket ?? 0;
 	$: visibleAcornCount = $appSettings.enableAcornMode ? acornCount : 0;
 	$: visibleTicketCount = $appSettings.enableTicketMode ? ticketCount : 0;
-	$: commandTaxCount = status.commandTax ?? 0;
+	$: commandTaxBySource = getCommandTaxBySourceForPlayer($players[index]);
+	$: commandTaxCount = getCommandTaxTotalForPlayer($players[index]);
+	$: commandTaxDisplay = status.partnerMode
+		? `${commandTaxBySource[0]}/${commandTaxBySource[1]}`
+		: `${commandTaxCount}`;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: commanderDamageArray = getCommanderDamageTotalsForPlayer($players[index], $appSettings.playerCount);
@@ -570,7 +576,7 @@
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<CommandTax />
-					<span class="leading-none">{commandTaxCount}</span>
+					<span class="leading-none">{commandTaxDisplay}</span>
 				</div>
 			{/if}
 				{#if ringBearerCount > 0}

@@ -93,6 +93,8 @@
 	"acorn": "Ghianda",
 	"ticket": "Biglietti",
 	"command_tax": "Tassa del comandante",
+	"partner_mode_label": "Modalità partner (Comandante)",
+	"partner_mode_help": "Attiva due fonti di danno del comandante per questo giocatore",
 	"tooltip_status_monarch": "Il giocatore è Monarca",
 	"tooltip_status_initiative": "Il giocatore ha l'iniziativa",
 	"tooltip_status_ascend": "Effetto Ascesa attivo",

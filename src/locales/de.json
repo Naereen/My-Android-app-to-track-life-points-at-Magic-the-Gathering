@@ -91,6 +91,8 @@
 	"acorn": "Eichel",
 	"ticket": "Tickets",
 	"command_tax": "Kommandantensteuer",
+	"partner_mode_label": "Partner-Modus (Commander)",
+	"partner_mode_help": "Zwei Quellen für Kommandantenschaden bei diesem Spieler aktivieren",
 	"tooltip_status_monarch": "Spieler ist Monarch",
 	"tooltip_status_initiative": "Spieler hat Initiative",
 	"tooltip_status_ascend": "Aufstiegs-Effekt aktiv",

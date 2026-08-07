@@ -4,10 +4,14 @@
 	import { playerModalData, resetPlayerModalData } from '$lib/store/modal';
 	import {
 		COMMANDER_DAMAGE_SOURCE_SLOTS,
+		getCommandTaxBySourceForPlayer,
 		getCommanderDamageSourceValue,
+		isPartnerModeEnabledForPlayer,
 		players,
 		setPlayerColor,
 		setPlayerAllowNegative,
+		setPlayerPartnerMode,
+		setPlayerCommandTax,
 		setPlayerStatusBoolean,
 		setPlayerStatusNumeric,
 		setPlayerPoison,
@@ -508,13 +512,16 @@
 
 	const saveEditCommander = () => {
 		if (editingCommanderFrom === null) return;
+		const sourceCount = getCommanderSourceCountForPlayer(editingCommanderFrom);
 		const primary = parseInt(editingCommanderValuePrimary, 10);
 		const secondary = parseInt(editingCommanderValueSecondary, 10);
 		if (!Number.isNaN(primary)) {
 			setCommanderDamage($playerModalData.playerId, editingCommanderFrom, primary, 0);
 		}
-		if (!Number.isNaN(secondary)) {
+		if (sourceCount > 1 && !Number.isNaN(secondary)) {
 			setCommanderDamage($playerModalData.playerId, editingCommanderFrom, secondary, 1);
+		} else {
+			setCommanderDamage($playerModalData.playerId, editingCommanderFrom, 0, 1);
 		}
 		editingCommanderFrom = null;
 	};
@@ -569,6 +576,17 @@
 		sourceIndex = 0
 	): number => {
 		return getCommanderDamageSourceValue($players[playerId - 1], fromPlayerId, sourceIndex, $appSettings.playerCount);
+	};
+
+	const getCommanderSourceCountForPlayer = (playerId: number): number => {
+		return isPartnerModeEnabledForPlayer(playerId) ? COMMANDER_DAMAGE_SOURCE_SLOTS : 1;
+	};
+
+	const getCommandTaxSourceValue = (playerId: number, sourceIndex = 0): number => {
+		const targetPlayer = $players[playerId - 1];
+		const pair = getCommandTaxBySourceForPlayer(targetPlayer);
+		const slot = sourceIndex === 1 ? 1 : 0;
+		return pair[slot] ?? 0;
 	};
 
 	const setCommanderDamageDelta = (
@@ -646,6 +664,17 @@
 		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0);
 	};
 
+	const incrementCommanderFromMinimapByHalf = (targetIndex: number, side: 'left' | 'right') => {
+		const fromPlayerId = targetIndex + 1;
+		if (getCommanderSourceCountForPlayer(fromPlayerId) <= 1) {
+			setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0);
+			return;
+		}
+
+		const sourceIndex = side === 'right' ? 1 : 0;
+		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, sourceIndex);
+	};
+
 	onMount(() => {
 		window.addEventListener('popstate', handleBackNavigation);
 		pushModalHistoryEntry();
@@ -661,7 +690,7 @@
 </script>
 
 <div
-	class="bg-black/70 fixed inset-0 flex justify-center items-center min-h-dvh flex-col"
+	class="bg-black/70 fixed inset-0 flex justify-center items-center flex-col"
 	on:click={closePlayerModal}
 	role="button"
 	on:keydown={() => null}
@@ -675,7 +704,7 @@
 		on:keydown={() => null}
 		tabindex="0"
 	>
-		<div class="flex flex-col justify-center w-full">
+		<div class="flex flex-col justify-center w-[75vw]">
 			<div class="flex flex-col justify-center items-center sticky top-0 bg-[#d8e5f7] z-10 pb-0">
 				<h2 class="text-2xl font-semibold my-2 relative w-full text-center">
 					<!--
@@ -720,7 +749,7 @@
 						</button>
 					</div>
 				</div>
-				<div class="mt-4 flex flex-col justify-center items-center w-full px-6 sm:px-10">
+				<div class="mt-4 flex flex-col justify-center items-center w-[75vw] px-6 sm:px-10">
 						<div class="w-full flex justify-center gap-4 mb-3">
 							<button
 								class="px-3 py-1 rounded-full border"
@@ -957,8 +986,8 @@
 
 					{#if mode === 'status_effects'}
 						<!-- Status effects controls -->
-						<div class="mt-1 w-full flex flex-col items-center text-center">
-							<div class="grid grid-cols-2 gap-1 m-1 justify-left w-[105%]">
+						<div class="mt-1 w-full flex flex-col items-center text-center text-normal">
+							<div class="grid grid-cols-2 gap-1 m-1 justify-left w-[75vw]">
 								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
@@ -1048,36 +1077,92 @@
 									<DayNight />
 									{String($_('day_night'))}
 								</label>
+								<label class="flex items-center gap-1"
+									title={$_('partner_mode_help') ?? 'Activer deux sources de dégâts de commandant pour ce joueur'}
+								>
+									<input
+										type="checkbox"
+										checked={$players[$playerModalData.playerId - 1].statusEffects?.partnerMode ?? false}
+										on:change={() =>
+											setPlayerPartnerMode(
+												$playerModalData.playerId,
+												!($players[$playerModalData.playerId - 1].statusEffects?.partnerMode ?? false)
+											)}
+									/>
+									<span>{$_('partner_mode_label') ?? 'Mode partenaire (Commandant)'}</span>
+								</label>
 							</div>
 
 							<div class="w-full grid grid-cols-1 items-center text-center border-t pt-4">
-								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))}</span
-									>
-									{#if ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) > 0}
+								{#if $players[$playerModalData.playerId - 1].statusEffects?.partnerMode}
+									<div class="flex items-center gap-2">
+										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} 1</span>
+										{#if getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
+											<button
+												class="px-2 py-1 bg-gray-200 rounded"
+												on:click={() =>
+													setPlayerCommandTax(
+														$playerModalData.playerId,
+														Math.max(0, getCommandTaxSourceValue($playerModalData.playerId, 0) - 1),
+														0
+													)}>-</button>
+										{/if}
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
 											on:click={() =>
-												setPlayerStatusNumeric(
+												setPlayerCommandTax(
 													$playerModalData.playerId,
-													'commandTax',
-													Math.max(
-														0,
-														($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) -
-															1
-													)
-												)}>-</button>
-									{/if}
-									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'commandTax',
-												($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) + 1
-											)}>+</button>
-								</div>
+													getCommandTaxSourceValue($playerModalData.playerId, 0) + 1,
+													0
+												)}>+</button>
+									</div>
+									<div class="flex items-center gap-2">
+										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} 2</span>
+										{#if getCommandTaxSourceValue($playerModalData.playerId, 1) > 0}
+											<button
+												class="px-2 py-1 bg-gray-200 rounded"
+												on:click={() =>
+													setPlayerCommandTax(
+														$playerModalData.playerId,
+														Math.max(0, getCommandTaxSourceValue($playerModalData.playerId, 1) - 1),
+														1
+													)}>-</button>
+										{/if}
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{getCommandTaxSourceValue($playerModalData.playerId, 1)}</span>
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerCommandTax(
+													$playerModalData.playerId,
+													getCommandTaxSourceValue($playerModalData.playerId, 1) + 1,
+													1
+												)}>+</button>
+									</div>
+								{:else}
+									<div class="flex items-center gap-2">
+										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))}</span>
+										{#if getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
+											<button
+												class="px-2 py-1 bg-gray-200 rounded"
+												on:click={() =>
+													setPlayerCommandTax(
+														$playerModalData.playerId,
+														Math.max(0, getCommandTaxSourceValue($playerModalData.playerId, 0) - 1),
+														0
+													)}>-</button>
+										{/if}
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span>
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerCommandTax(
+													$playerModalData.playerId,
+													getCommandTaxSourceValue($playerModalData.playerId, 0) + 1,
+													0
+												)}>+</button>
+									</div>
+								{/if}
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><PoisonIcon /> {String($_('poison'))}</span>
 									{#if ($players[$playerModalData.playerId - 1].poison ?? 0) > 0}
@@ -1430,9 +1515,8 @@
 
 					{#if mode === 'commander' && $appSettings.playerCount > 2}
 						<!-- Commander Damage Section (now its own tab) -->
-						<div class="mt-1 w-full flex flex-col items-center justify-center text-center border-t pt-1 pb-1">
-							<!-- <div class="text-sm text-gray-500 mb-5">{damageFromPlayerLabel}</div> -->
-							<div class="flex w-full items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
+						<div class="mt-1 w-[75vw] flex flex-col items-center justify-center text-center border-t pt-1 pb-1">
+							<div class="flex w-[75vw] items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
 								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}); transform-origin: center;`}>
 									<Minimap
 										playerIndex={$playerModalData.playerId - 1}
@@ -1440,9 +1524,10 @@
 										orientation={getSeatOrientations($appSettings.playerCount, commanderMinimapLayout)[$playerModalData.playerId - 1]}
 										layout={commanderMinimapLayout}
 										backgroundClass="bg-transparent"
-										commanderDamageIndicator="sum-with-max"
+										commanderDamageIndicator="sum"
 										rootClickable={false}
 										onSeatClick={incrementCommanderFromMinimap}
+										onSeatSplitClick={incrementCommanderFromMinimapByHalf}
 										onSeatLongPress={startCommanderEditFromMinimap}
 										seatLongPressMs={COMMANDER_LONG_PRESS_MS}
 									/>
@@ -1452,13 +1537,17 @@
 								{@const editingFrom = editingCommanderFrom}
 								{@const editingFromName = $players[editingCommanderFrom - 1]?.playerName ?? `Player ${editingCommanderFrom}`}
 								<div class="relative mt-12 mb-2 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
-									<div class="mb-3 text-sm font-semibold text-center">
+									<div class="mb-3 text-xl font-semibold text-center">
 										{editingFromName} → {$players[$playerModalData.playerId - 1]?.playerName ?? `Player ${$playerModalData.playerId}`}
+										<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+										<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-500 text-white text-sm rounded">{setLifeTotalCancel}</button>
 									</div>
 									<div class="flex flex-col items-center justify-center gap-2">
-										{#each Array.from({ length: COMMANDER_DAMAGE_SOURCE_SLOTS }) as sourceMarker, sourceIndex}
+										{#each Array.from({ length: getCommanderSourceCountForPlayer(editingFrom) }) as sourceMarker, sourceIndex}
 											<div class="flex flex-wrap items-center justify-center gap-2">
-												<span class="w-20 text-sm font-semibold text-right">Commander {sourceIndex + 1}</span>
+												{#if getCommanderSourceCountForPlayer(editingFrom) >= 2}
+												<span class="w-30 text-sm font-semibold text-right">Commander {sourceIndex + 1}</span>
+												{/if}
 												<button
 													class="px-2 py-1 bg-gray-200 rounded"
 													on:pointerdown={() =>
@@ -1508,12 +1597,10 @@
 												>
 											</div>
 										{/each}
-										<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-										<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-500 text-white text-sm rounded">{setLifeTotalCancel}</button>
 									</div>
 								</div>
 							{/if}
-							<div class="mt-8 text-sm text-gray-500 mb-1" style="white-space: pre-wrap;">{String($_('commander_damage_help'))}</div>
+							<!-- <div class="mt-2 text-sm text-gray-500 mb-1" style="white-space: pre-wrap;">{String($_('commander_damage_help'))}</div> -->
 						</div>
 					{/if}
 				</div>

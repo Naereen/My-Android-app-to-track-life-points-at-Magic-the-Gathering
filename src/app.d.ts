@@ -88,8 +88,10 @@ declare global {
 					acorn?: number;
 					ticket?: number;
 					commandTax?: number;
+					commandTaxBySource?: number[];
 					commanderDamage?: number[];
 					commanderDamageBySource?: number[][];
+					partnerMode?: boolean;
 					ringBearer?: number;
 					startYourEngineSpeed?: number;
 					// allow indexing for custom/unknown status keys

@@ -25,6 +25,8 @@
     import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
+		getCommandTaxBySourceForPlayer,
+		getCommandTaxTotalForPlayer,
 		getCommanderDamageTotalsForPlayer,
 		getMaxCommanderDamageSingleSource,
 		lifeChangeHistoryResetKey,
@@ -170,7 +172,11 @@
 	$: ticketCount = status.ticket ?? 0;
 	$: visibleAcornCount = $appSettings.enableAcornMode ? acornCount : 0;
 	$: visibleTicketCount = $appSettings.enableTicketMode ? ticketCount : 0;
-	$: commandTaxCount = status.commandTax ?? 0;
+	$: commandTaxBySource = getCommandTaxBySourceForPlayer($players[index]);
+	$: commandTaxCount = getCommandTaxTotalForPlayer($players[index]);
+	$: commandTaxDisplay = status.partnerMode
+		? `${commandTaxBySource[0]}/${commandTaxBySource[1]}`
+		: `${commandTaxCount}`;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: commanderDamageArray = getCommanderDamageTotalsForPlayer($players[index], $appSettings.playerCount);
@@ -757,7 +763,7 @@
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{commandTaxCount}</span>
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{commandTaxDisplay}</span>
 								<div
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"

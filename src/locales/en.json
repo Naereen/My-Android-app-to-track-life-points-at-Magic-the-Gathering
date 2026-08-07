@@ -89,6 +89,8 @@
 	"experience": "Experience",
 	"rad": "Rad",
 	"command_tax": "Command Tax",
+	"partner_mode_label": "Partner mode (Commander)",
+	"partner_mode_help": "Enable two commander damage sources for this player",
 	"acorn": "Acorn",
 	"ticket": "Tickets",
 	"tooltip_status_monarch": "Player has the Monarch",

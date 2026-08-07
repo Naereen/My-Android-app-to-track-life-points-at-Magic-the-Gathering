@@ -91,6 +91,8 @@
 	"acorn": "Bellota",
 	"ticket": "Tickets",
 	"command_tax": "Impuesto de comandante",
+	"partner_mode_label": "Modo compañero (Comandante)",
+	"partner_mode_help": "Activar dos fuentes de daño de comandante para este jugador",
 	"tooltip_status_monarch": "El jugador es Monarca",
 	"tooltip_status_initiative": "El jugador tiene iniciativa",
 	"tooltip_status_ascend": "Efecto Ascender activo",

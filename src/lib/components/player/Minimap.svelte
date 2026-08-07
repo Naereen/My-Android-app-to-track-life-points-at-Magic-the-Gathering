@@ -203,10 +203,11 @@
 	export let backgroundClass = 'bg-black/70';
 	export let rootClickable = true;
 	export let onSeatClick: ((targetIndex: number) => void) | null = null;
+	export let onSeatSplitClick: ((targetIndex: number, side: 'left' | 'right') => void) | null = null;
 	export let onSeatLongPress: ((targetIndex: number) => void) | null = null;
 	export let seatLongPressMs = 1000;
     export let fromPlayerDataModal = false;
-	export let commanderDamageIndicator: 'total' | 'sum' | 'max' | 'sum-with-max' = 'total';
+	export let commanderDamageIndicator: 'total' | 'sum' | 'max' | 'sum-with-max' = 'sum';
 
 	$: numberOfPlayers = $appSettings.playerCount;
 	$: meString = String($_('me')); // Keep translated "me" label reactive on locale changes.
@@ -607,19 +608,36 @@
 		return [pair[0] ?? 0, pair[1] ?? 0];
 	};
 
+	$: isPartnerSourcePlayer = (targetIndex: number): boolean =>
+		!!$players[targetIndex]?.statusEffects?.partnerMode;
+
+	$: getEffectiveCommanderDamageIndicator = (targetIndex: number): 'total' | 'sum' | 'max' | 'sum-with-max' => {
+		if (
+			commanderDamageIndicator === 'sum' &&
+			fromPlayerDataModal &&
+			isPartnerSourcePlayer(targetIndex)
+		) {
+			return 'sum';
+			// return 'sum-with-max';
+		}
+
+		return commanderDamageIndicator;
+	};
+
 	$: getCommanderDamageDisplay = (targetIndex: number): string => {
 		const [sourceA, sourceB] = getCommanderDamagePair(targetIndex);
 		const total = sourceA + sourceB;
+		const effectiveIndicator = getEffectiveCommanderDamageIndicator(targetIndex);
 
-		if (commanderDamageIndicator === 'sum') {
+		if (effectiveIndicator === 'sum') {
 			return sourceB > 0 ? `${sourceA} + ${sourceB}` : `${sourceA}`;
 		}
 
-		if (commanderDamageIndicator === 'sum-with-max') {
+		if (effectiveIndicator === 'sum-with-max') {
 			return `${sourceA} + ${sourceB}`;
 		}
 
-		if (commanderDamageIndicator === 'max') {
+		if (effectiveIndicator === 'max') {
 			return `${Math.max(sourceA, sourceB)}`;
 		}
 
@@ -652,6 +670,18 @@
 			seatLongPressConsumedClick = false;
 			return;
 		}
+		if (onSeatSplitClick) {
+			event.stopPropagation();
+			const target = event.currentTarget as HTMLElement | null;
+			if (!target) {
+				onSeatSplitClick(targetIndex, 'left');
+				return;
+			}
+			const rect = target.getBoundingClientRect();
+			const side: 'left' | 'right' = event.clientX - rect.left < rect.width / 2 ? 'left' : 'right';
+			onSeatSplitClick(targetIndex, side);
+			return;
+		}
 		if (!onSeatClick) return;
 		event.stopPropagation();
 		onSeatClick(targetIndex);
@@ -677,11 +707,15 @@
 	};
 
 	const handleSeatKeydown = (event: KeyboardEvent, targetIndex: number) => {
-		if (!onSeatClick) return;
+		if (!onSeatClick && !onSeatSplitClick) return;
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
 			event.stopPropagation();
-			onSeatClick(targetIndex);
+			if (onSeatClick) {
+				onSeatClick(targetIndex);
+			} else if (onSeatSplitClick) {
+				onSeatSplitClick(targetIndex, 'left');
+			}
 		}
 	};
 </script>
@@ -705,7 +739,7 @@
 				type="button"
 				class={`relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-sm border border-black/80 ${backgroundClass}`}
 				style={`grid-row: ${tile.rowStart} / ${tile.rowEnd}; grid-column: ${tile.colStart} / ${tile.colEnd};`}
-				title={`${$players[tile.targetIndex]?.playerName ?? ''} (${getCommanderDamageDisplay(tile.targetIndex)}${commanderDamageIndicator === 'sum-with-max' ? `, ${getCommanderDamageMaxDisplay(tile.targetIndex)}` : ''})`}
+				title={`${$players[tile.targetIndex]?.playerName ?? ''} (${getCommanderDamageDisplay(tile.targetIndex)}${getEffectiveCommanderDamageIndicator(tile.targetIndex) === 'sum-with-max' ? `, ${getCommanderDamageMaxDisplay(tile.targetIndex)}` : ''})`}
 				on:pointerdown={() => startSeatLongPress(tile.targetIndex)}
 				on:pointerup={stopSeatLongPress}
 				on:pointerleave={stopSeatLongPress}
@@ -717,6 +751,14 @@
 					class={getTileBackgroundLayerClass(tile.targetIndex)}
 					style={`${getBgStyle(tile.targetIndex)} transform: rotate(${getTileBackgroundRotation(tile.targetIndex, fromPlayerDataModal)}); transform-origin: center;`}
 				></div>
+				{#if fromPlayerDataModal && isPartnerSourcePlayer(tile.targetIndex)}
+					<span
+						class="absolute right-0.5 top-0.5 z-20 rounded bg-black/70 px-0.5 py-0 text-[0.38rem] font-bold uppercase tracking-wide text-amber-200"
+						title={$_('partner_mode_label') ?? 'Partner mode'}
+					>
+						P
+					</span>
+				{/if}
 				<div
 					class="relative z-10 text-white text-[0.85rem] leading-none text-center font-semibold px-0.5"
 					style={`transform: rotate(${getTileTextRotation(tile.targetIndex)}); transform-origin: center;`}
@@ -726,7 +768,7 @@
                             {meString}
                         </span>
 					{:else}
-						{#if commanderDamageIndicator === 'sum-with-max'}
+						{#if getEffectiveCommanderDamageIndicator(tile.targetIndex) === 'sum-with-max'}
 							<div class="flex flex-col items-center leading-none">
 								<span>{getCommanderDamageDisplay(tile.targetIndex)}</span>
 								<span class="text-[0.50rem] opacity-80 mt-[1px]">{getCommanderDamageMaxDisplay(tile.targetIndex)}</span>

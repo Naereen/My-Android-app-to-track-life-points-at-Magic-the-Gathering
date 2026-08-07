@@ -91,6 +91,8 @@
 	"acorn": "Bolota",
 	"ticket": "Ingressos",
 	"command_tax": "Taxa de Comando",
+	"partner_mode_label": "Modo parceiro (Comandante)",
+	"partner_mode_help": "Ativar duas fontes de dano de comandante para este jogador",
 	"tooltip_status_monarch": "Jogador tem o Monarca",
 	"tooltip_status_initiative": "Jogador tem Iniciativa",
 	"tooltip_status_ascend": "Jogador tem Ascender",

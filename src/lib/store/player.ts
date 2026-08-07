@@ -296,6 +296,7 @@ export const players: Writable<App.Player.Data[]> = persist('players', getInitia
 export const lifeChangeHistoryResetKey = writable(0);
 
 export const COMMANDER_DAMAGE_SOURCE_SLOTS = 2;
+export const COMMANDER_TAX_SOURCE_SLOTS = 2;
 
 const clampCommanderDamageAmount = (value: number) => {
 	if (!Number.isFinite(value)) return 0;
@@ -303,6 +304,16 @@ const clampCommanderDamageAmount = (value: number) => {
 };
 
 const normalizeCommanderDamagePair = (value: unknown): number[] => {
+	if (!Array.isArray(value)) {
+		return [0, 0];
+	}
+
+	const first = clampCommanderDamageAmount(Number(value[0] ?? 0));
+	const second = clampCommanderDamageAmount(Number(value[1] ?? 0));
+	return [first, second];
+};
+
+const normalizeCommandTaxPair = (value: unknown): [number, number] => {
 	if (!Array.isArray(value)) {
 		return [0, 0];
 	}
@@ -371,6 +382,138 @@ export const getMaxCommanderDamageSingleSource = (
 		maxDamage = Math.max(maxDamage, pair[0] ?? 0, pair[1] ?? 0);
 	}
 	return maxDamage;
+};
+
+export const getCommandTaxBySourceForPlayer = (
+	player: App.Player.Data | undefined
+): [number, number] => {
+	const bySource = player?.statusEffects?.commandTaxBySource;
+	if (Array.isArray(bySource)) {
+		return normalizeCommandTaxPair(bySource);
+	}
+
+	const legacy = clampCommanderDamageAmount(Number(player?.statusEffects?.commandTax ?? 0));
+	return [legacy, 0];
+};
+
+export const getCommandTaxTotalForPlayer = (player: App.Player.Data | undefined): number => {
+	const [first, second] = getCommandTaxBySourceForPlayer(player);
+	return first + second;
+};
+
+export const setPlayerCommandTax = (
+	playerId: number,
+	amount: number,
+	sourceIndex = 0,
+	mergeKey?: string
+) => {
+	const beforePlayers = get(players);
+	const targetBefore = beforePlayers.find((player) => player.id === playerId);
+	if (!targetBefore) return;
+
+	const sourceSlot = sourceIndex === 1 ? 1 : 0;
+	const snapshot = getPlayerSnapshot(playerId);
+	const oldPair = getCommandTaxBySourceForPlayer(targetBefore);
+	const oldValue = oldPair[sourceSlot] ?? 0;
+	const oldTotal = oldPair[0] + oldPair[1];
+	const nextValue = clampCommanderDamageAmount(amount);
+	if (oldValue === nextValue) return;
+
+	const newPair: [number, number] = [oldPair[0], oldPair[1]];
+	newPair[sourceSlot] = nextValue;
+	const newTotal = newPair[0] + newPair[1];
+
+	const autoMergeKey =
+		mergeKey ??
+		(Math.abs(nextValue - oldValue) === 1
+			? `status:${playerId}:commandTax:${sourceSlot}:${nextValue > oldValue ? 'add' : 'subtract'}`
+			: undefined);
+
+	players.update((currentPlayers) => {
+		return currentPlayers.map((player) => {
+			if (player.id !== playerId) return player;
+
+			const statusEffects = player.statusEffects ? { ...player.statusEffects } : {};
+			statusEffects.commandTaxBySource = [newPair[0], newPair[1]];
+			statusEffects.commandTax = newTotal;
+
+			return {
+				...player,
+				statusEffects
+			};
+		});
+	});
+
+	if (snapshot) {
+		addGameHistoryEntry({
+			playerId: snapshot.id,
+			playerName: snapshot.playerName,
+			kind: 'statusNumeric',
+			mergeKey: autoMergeKey,
+			payload: {
+				key: 'commandTax',
+				sourceIndex: sourceSlot + 1,
+				from: oldTotal,
+				to: newTotal,
+				fromSource: oldValue,
+				toSource: nextValue
+			}
+		});
+	}
+};
+
+export const isPartnerModeEnabledForPlayer = (playerId: number): boolean => {
+	const player = get(players).find((p) => p.id === playerId);
+	return !!player?.statusEffects?.partnerMode;
+};
+
+export const setPlayerPartnerMode = (playerId: number, enabled: boolean) => {
+	const normalized = !!enabled;
+
+	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
+		const playerSlots = Math.max(2, Math.min(8, currentPlayers.length));
+
+		return currentPlayers.map((player) => {
+			const baseStatusEffects = player.statusEffects ? { ...player.statusEffects } : {};
+
+			if (player.id === playerId) {
+				baseStatusEffects.partnerMode = normalized;
+				return {
+					...player,
+					statusEffects: baseStatusEffects
+				};
+			}
+
+			if (normalized) {
+				return player;
+			}
+
+			const bySource = getCommanderDamageBySourceForPlayer(player, playerSlots).map((pair) =>
+				pair.slice(0, COMMANDER_DAMAGE_SOURCE_SLOTS)
+			);
+			const sourcePair = bySource[playerId - 1] ?? [0, 0];
+			const secondaryDamage = sourcePair[1] ?? 0;
+
+			if (secondaryDamage <= 0) {
+				return player;
+			}
+
+			bySource[playerId - 1] = [sourcePair[0] ?? 0, 0];
+			const commanderDamage = bySource.map((pair) => pair[0] + pair[1]);
+
+			return {
+				...player,
+				lifeTotal: player.lifeTotal + secondaryDamage,
+				statusEffects: {
+					...baseStatusEffects,
+					commanderDamage,
+					commanderDamageBySource: bySource
+				}
+			};
+		});
+	});
+
+	recordSnapshot(get(players));
 };
 
 if (get(lifeHistory).length === 0) {
@@ -760,6 +903,10 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 	const beforePlayers = get(players);
 	const targetBefore = beforePlayers.find((player) => player.id === playerId);
 	const previous = !!targetBefore?.statusEffects?.[key];
+	if (key === 'commandTax') {
+		setPlayerCommandTax(playerId, value, 0, mergeKey);
+		return;
+	}
 	const snapshot = getPlayerSnapshot(playerId);
 
 	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
@@ -812,6 +959,11 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 					};
 				}
 			}
+									if (!normalized) {
+										const [firstTax] = getCommandTaxBySourceForPlayer(player);
+										baseStatusEffects.commandTaxBySource = [firstTax, 0];
+										baseStatusEffects.commandTax = firstTax;
+									}
 
 			return player;
 		});
@@ -1247,7 +1399,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 				treacherySeen: false,
 				statusEffects: {
 					commanderDamage: [], // Reset commander damage totals (legacy compatibility)
-					commanderDamageBySource: [] // Reset partner commander damage sources
+					commanderDamageBySource: [], // Reset partner commander damage sources
+					partnerMode: false
 				}
 			};
 
