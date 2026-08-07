@@ -638,7 +638,7 @@
 >
 	<div
 		on:click|stopPropagation
-		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[85vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-8 overflow-auto"
+		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[85vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-4 overflow-auto"
 		style={modalPanelStyle}
 		role="button"
 		on:keydown={() => null}

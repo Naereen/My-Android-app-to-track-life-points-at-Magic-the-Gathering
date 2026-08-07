@@ -227,7 +227,7 @@
 				return [[1, 2], [0, 0]];
 			case 4:
 				return currentLayout === 'two-by-two'
-					? [[1, 2], [0, 3]]
+					? [[0, 3], [1, 2]]
 					: [[2, 2], [1, 3], [0, 0]];
 			case 5:
 				return [[2, 3], [1, 4], [0, 0]];
@@ -284,6 +284,10 @@
 		return matrix.map((row) => [...row].reverse());
 	};
 
+	const applySymetryByXAxis = (matrix: MinimapMatrix): MinimapMatrix => {
+		return [...matrix].reverse();
+	};
+
 	const rotateForViewer = (
 		matrix: MinimapMatrix,
 		viewerOrientation: SeatOrientation,
@@ -294,10 +298,18 @@
                 return rotate180(matrix);
             }
             else if (viewerOrientation === 'right') {
-                return rotateCounterClockwise(matrix);
+                if (layout === 'two-by-two') {
+                    return applySymetryByYAxis(rotateCounterClockwise(matrix));
+                } else {
+                    return rotateCounterClockwise(matrix);
+                }
             }
             else if (viewerOrientation === 'left') {
-                return rotateClockwise(matrix);
+                if (layout === 'two-by-two') {
+                    return applySymetryByYAxis(rotateClockwise(matrix));
+                } else {
+                    return rotateClockwise(matrix);
+                }
             }
             return matrix;
         }
@@ -306,10 +318,18 @@
                 return rotate180(matrix);
             }
             else if (viewerOrientation === 'right') {
-                return rotateCounterClockwise(applySymetryByYAxis(matrix));
+                if (layout === 'two-by-two') {
+                    return rotateClockwise(matrix);
+                } else {
+                    return applySymetryByYAxis(rotateClockwise(matrix));
+                }
             }
             else if (viewerOrientation === 'left') {
-                return  applySymetryByYAxis(rotateClockwise(matrix));
+                if (layout === 'two-by-two') {
+                    return applySymetryByYAxis(rotateCounterClockwise(matrix));
+                } else {
+                    return rotateCounterClockwise(matrix);
+                }
             }
             return matrix;
         }
@@ -368,9 +388,83 @@
 	$: minimapTiles = computeTilePlacements(minimapMatrix, numberOfPlayers);
 
 	const orientationToDegrees = (seatOrientation: SeatOrientation): string => {
-		if (seatOrientation === 'left') return '-90deg';
-		if (seatOrientation === 'right') return '90deg';
-		if (seatOrientation === 'down') return '180deg';
+		if (seatOrientation === 'left') {
+            return '-90deg';
+        }
+		else if (seatOrientation === 'right') {
+            return '90deg';
+        }
+        else if (seatOrientation === 'up') {
+            return '0deg';
+        }
+		else if (seatOrientation === 'down') {
+            if (numberOfPlayers === 4 && playerIndex !== 2 && layout === 'one-two-one') {
+                return '180deg';
+            } else {
+                return '0deg';
+            }
+        }
+		return '0deg';
+	};
+
+	const orientationToDegreesFromDataModal = (seatOrientation: SeatOrientation): string => {
+        if (numberOfPlayers === 4 && layout === 'one-two-one') {
+            if (playerIndex === 0) {
+                if (seatOrientation === 'down') { return '180deg'; }
+                else if (seatOrientation === 'up') { return '0deg'; }
+                else if (seatOrientation === 'left') { return '-90deg'; }
+                else if (seatOrientation === 'right') { return '90deg'; }
+                return '0deg';
+            } else if (playerIndex === 1) {
+                if (seatOrientation === 'down') { return '-90deg'; }
+                else if (seatOrientation === 'up') { return '-90deg'; }
+                else if (seatOrientation === 'left') { return '180deg'; }
+                else if (seatOrientation === 'right') { return '0deg'; }
+                return '0deg';
+            } else if (playerIndex === 2) {
+                if (seatOrientation === 'down') { return '0deg'; }
+                else if (seatOrientation === 'up') { return '180deg'; }
+                else if (seatOrientation === 'left') { return '90deg'; }
+                else if (seatOrientation === 'right') { return '-90deg'; }
+                return '0deg';
+            } else if (playerIndex === 3) {
+                if (seatOrientation === 'down') { return '-90deg'; }
+                else if (seatOrientation === 'up') { return '90deg'; }
+                else if (seatOrientation === 'left') { return '0deg'; }
+                else if (seatOrientation === 'right') { return '180deg'; }
+                return '0deg';
+            }
+        }
+
+        if (numberOfPlayers === 4 && layout === 'two-by-two') {
+            if (playerIndex === 0 || playerIndex === 1) {
+                if (seatOrientation === 'left') { return '180deg'; }
+                else if (seatOrientation === 'right') { return '0deg'; }
+                return '0deg';
+            } else if (playerIndex === 2 || playerIndex === 3) {
+                if (seatOrientation === 'left') { return '0deg'; }
+                else if (seatOrientation === 'right') { return '-180deg'; }
+                return '0deg';
+            }
+        }
+
+        // FIXME: remove/clean-up this old code
+		if (seatOrientation === 'left') {
+            return '0deg';
+        }
+		else if (seatOrientation === 'right') {
+            return '180deg';
+        }
+        else if (seatOrientation === 'up') {
+            return '90deg';
+        }
+		else if (seatOrientation === 'down') {
+            if (numberOfPlayers === 4 && playerIndex !== 2 && layout === 'one-two-one') {
+                return '-90deg';
+            } else {
+                return '0deg';
+            }
+        }
 		return '0deg';
 	};
 
@@ -392,26 +486,26 @@
 	};
 
 	$: minimapWidthRem = fromPlayerDataModal
-		? Math.max(5.0, minimapColCount * 1.6)
-		: Math.max(
-            (orientation === 'right' || orientation === 'left') ? 4 : 5.5,
-            minimapColCount * 1.0);
+		? Math.max((orientation === 'right' || orientation === 'left') ? 8.5 : 5.0, minimapColCount * 1.6)
+		: Math.max( (orientation === 'right' || orientation === 'left') ? 4 : 5.5, minimapColCount * 1.0);
 	$: minimapHeightRem = fromPlayerDataModal
-		? Math.max(5.0, minimapRowCount * 1.45)
-		: Math.max(
-            (orientation === 'right' || orientation === 'left') ? 5.5 : 4.5,
-            minimapRowCount * 1.25);
+		? Math.max((orientation === 'right' || orientation === 'left') ? 5.5 : 5.0, minimapRowCount * 1.45)
+		: Math.max( (orientation === 'right' || orientation === 'left') ? 5.5 : 4.5, minimapRowCount * 1.25);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: minimapGridStyle = `grid-template-rows: repeat(${minimapRowCount}, minmax(0, 1fr)); grid-template-columns: repeat(${minimapColCount}, minmax(0, 1fr));`;
 	$: minimapContainerClass = `pointer-events-auto overflow-hidden rounded-md border border-black/70 p-0.5 ${backgroundClass}`;
 
-	$: getTileBackgroundRotation = (targetIndex: number): string => {
+	$: getTileBackgroundRotation = (targetIndex: number, fromPlayerDataModal: boolean = false): string => {
 		const seatOrientation = seatOrientations[targetIndex] ?? 'up';
-		return orientationToDegrees(seatOrientation);
+        if (fromPlayerDataModal) {
+            return orientationToDegreesFromDataModal(seatOrientation);
+        } else {
+    		return orientationToDegrees(seatOrientation);
+        }
 	};
 
 	$: getTileBackgroundLayerClass = (targetIndex: number): string => {
-		const rotation = getTileBackgroundRotation(targetIndex);
+		const rotation = getTileBackgroundRotation(targetIndex, fromPlayerDataModal);
 		return rotation === '90deg' || rotation === '-90deg' ? 'absolute -inset-1/2' : 'absolute inset-0';
 	};
 
@@ -512,7 +606,7 @@
 			>
 				<div
 					class={getTileBackgroundLayerClass(tile.targetIndex)}
-					style={`${getBgStyle(tile.targetIndex)} transform: rotate(${getTileBackgroundRotation(tile.targetIndex)}); transform-origin: center;`}
+					style={`${getBgStyle(tile.targetIndex)} transform: rotate(${getTileBackgroundRotation(tile.targetIndex, fromPlayerDataModal)}); transform-origin: center;`}
 				></div>
 				<div
 					class="relative z-10 text-white text-[0.85rem] leading-none text-center font-semibold px-0.5"

@@ -172,7 +172,7 @@
 		background-image: var(--bg-image);
 
 		/* keep the full illustration card visible (no cropping) while fitting inside the enlarged pseudo-element */
-		background-size: var(--bg-size, cover);
+		background-size: var(--bg-size, contain);
 		background-position-x: var(--bg-positionx, center);
 		background-position-y: var(--bg-positiony, center);
 		background-repeat: var(--bg-repeat, no-repeat);
