@@ -273,14 +273,14 @@
             ? 'min-w-[2.5rem] min-h-[6.0rem]'
             : 'min-w-[5.0rem]';
 
-    $: getBgStyle = (j: number) => {
+    $: getBgStyle = (j: number, orientation: string) => {
         const p = $players[j];
         if (!p) return '';
         const bg = p.backgroundImage;
         if (!bg && p.color) return `background: ${colorToBg(p.color)};`;
-        if (Array.isArray(bg) && bg.length === 1) return `background-image: url('${bg[0]}'); background-size: cover; background-position: center;`;
-        if (Array.isArray(bg) && bg.length === 2) return `background-image: url('${bg[0]}'), url('${bg[1]}'); background-size: cover; background-position: center;`;
-        if (bg && typeof bg === 'string') return `background-image: url('${bg}'); background-size: cover; background-position: center;`;
+        if (Array.isArray(bg) && bg.length === 1) return `background-image: url('${bg[0]}'); background-size: ${(orientation === 'up' || orientation === 'down') ? "cover" : "contain"}; background-repeat: no-repeat; background-position: center;`;
+        if (Array.isArray(bg) && bg.length === 2) return `background-image: url('${bg[0]}'), url('${bg[1]}'); background-size: ${(orientation === 'up' || orientation === 'down') ? "cover" : "contain"}; background-repeat: no-repeat; background-position: center;`;
+        if (bg && typeof bg === 'string') return `background-image: url('${bg}'); background-size: ${(orientation === 'up' || orientation === 'down') ? "cover" : "contain"}; background-repeat: no-repeat; background-position: center;`;
         return '';
     };
 
@@ -311,17 +311,18 @@
             <div class="flex gap-0.5" class:justify-center={row.length === 1}>
                 {#each row as targetIndex}
                     <div
-                        class="h-6 rounded-sm overflow-hidden border border-black/60 relative flex items-center justify-center"
+                        class="rounded-sm overflow-hidden border border-black/60 relative flex items-center justify-center"
                         class:w-full={row.length === 1 && (orientation === 'up' || orientation === 'down')}
                         class:w-7={(row.length === 1 && (orientation === 'right' || orientation === 'left')) || row.length > 1}
-                        class:h-10={row.length === 1 && (orientation === 'up' || orientation === 'down')}
-                        class:h-full={row.length === 1 && (orientation === 'right' || orientation === 'left')}
+                        class:h-10={row.length > 1 && numberOfPlayers <= 4}
+                        class:h-9={row.length === 1 && (orientation === 'up' || orientation === 'down')}
+                        class:h-28={row.length === 1 && (orientation === 'right' || orientation === 'left')}
                         class:flex-1={row.length > 1}
                         title={$players[targetIndex]?.playerName}
                     >
                         <div
-                            class="absolute inset-0 h-full w-full"
-                            style={`${getBgStyle(targetIndex)} transform: ${getBackgroundTransform()}; transform-origin: center;`}
+                            class="absolute inset-0 w-full h-full"
+                            style={`${getBgStyle(targetIndex, orientation)} transform: ${getBackgroundTransform()}; transform-origin: center;`}
                         ></div>
                         <div
                             class="relative z-10 text-white text-[10px] leading-none text-center font-semibold px-0.5"
