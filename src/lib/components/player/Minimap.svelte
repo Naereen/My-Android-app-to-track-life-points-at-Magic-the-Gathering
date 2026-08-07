@@ -365,12 +365,6 @@
 	};
 
 	$: getViewerRotation = (): string => {
-        // FIXME: right now, I've disabled this function if the fromPlayerDataModal flag is enabled: all the cases return '0deg', ie. no rotation
-        // TODO: make the whole PlayerDataModal component rotate, instead of just the Minimap!
-        // if (fromPlayerDataModal) {
-        //     return '0deg';
-        // }
-
 		// Custom convention requested for the 3-player layout.
 		// Player 1 => normal, player 2 => left, player 3 => right.
 		if (numberOfPlayers === 3) {
@@ -450,10 +444,10 @@
 
 	$: minimapWidthRem = fromPlayerDataModal
 		? Math.max(5.0, minimapColCount * 1.6)
-		: Math.max(3.8, minimapColCount * 1.45);
+		: Math.max(5.25, minimapColCount * 1.45);
 	$: minimapHeightRem = fromPlayerDataModal
 		? Math.max(5.0, minimapRowCount * 1.45)
-		: Math.max(3.6, minimapRowCount * 1.3);
+		: Math.max(4.25, minimapRowCount * 1.45);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: minimapGridStyle = `grid-template-rows: repeat(${minimapRowCount}, minmax(0, 1fr)); grid-template-columns: repeat(${minimapColCount}, minmax(0, 1fr));`;
 	$: minimapContainerClass = `pointer-events-auto overflow-hidden rounded-md border border-black/70 p-0.5 ${backgroundClass}`;

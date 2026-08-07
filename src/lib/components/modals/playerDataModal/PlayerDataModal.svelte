@@ -1372,13 +1372,12 @@
 						</div>
 					{/if}
 
-					{#if mode === 'commander' && $appSettings.playerCount !== 2}
+					{#if mode === 'commander' && $appSettings.playerCount > 2}
 						<!-- Commander Damage Section (now its own tab) -->
 						<div class="mt-1 w-full flex flex-col items-center justify-center text-center border-t pt-2 pb-2">
 							<!-- <div class="text-sm text-gray-500 mb-5">{damageFromPlayerLabel}</div> -->
 							<div class="flex w-full items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
 								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}); transform-origin: center;`}>
-								<!-- FIXME: this orientation is wrong, for the text inside the Minimap portraits -->
 									<Minimap
 										playerIndex={$playerModalData.playerId - 1}
 										fromPlayerDataModal={true}
