@@ -25,6 +25,8 @@
     import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
+		getCommanderDamageTotalsForPlayer,
+		getMaxCommanderDamageSingleSource,
 		lifeChangeHistoryResetKey,
 		manageLifeTotal,
 		players,
@@ -123,7 +125,7 @@
 	$: commandTaxCount = status.commandTax ?? 0;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
-	$: commanderDamageArray = status.commanderDamage ?? [];
+	$: commanderDamageArray = getCommanderDamageTotalsForPlayer($players[index], $appSettings.playerCount);
 	$: commanderDamageVisibleCount = doNotShowMinimap
 		? commanderDamageArray.filter((dmg) => dmg > 0).length
 		: 0;
@@ -140,7 +142,7 @@
 			startYourEngineSpeedCount
 		].filter((count) => count > 0).length + commanderDamageVisibleCount;
 	$: shouldWrapStatusEffects = statusEffectItemCount > 10;
-	$: maxCommanderDamage = Math.max(0, ...commanderDamageArray);
+	$: maxCommanderDamage = getMaxCommanderDamageSingleSource($players[index], $appSettings.playerCount);
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (isLikelySyntheticMouseEvent()) {

@@ -156,7 +156,7 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	// optional paper variant: each player gets 3 random vanguards and keeps one
 	vanguardDraftThree: false,
 	// show game history menu button in the main menu
-	showGameHistoryMenu: false,
+	showGameHistoryMenu: true,
 	// Acorn and Ticket are hidden by default
 	enableAcornMode: false,
 	enableTicketMode: false,
@@ -200,8 +200,8 @@ export const setPlayerCount = (playerCount: number) => {
 		),
 		// Update the default probabilities for each players
 		startingPlayerProbabilities: getUniformStartingProbabilities(playerCount),
-		// Default behavior by format size: ON for 2 players, OFF otherwise.
-		showLifeChangeHistory: playerCount === 2,
+		// Default behavior by format size: ON up to 4 players, OFF otherwise.
+		showLifeChangeHistory: playerCount <= 4,
 		// Keep custom value, but auto-adjust when the value is still the format default.
 		globalGameTimerDuration:
 			data.globalGameTimerDuration === getDefaultGlobalGameTimerDuration(data.playerCount)
@@ -260,6 +260,12 @@ appSettings.update((data) => {
 		return {
 			...data,
 			showRandomizerButton: true
+		};
+	}
+	if (data.showGameHistoryMenu === undefined) {
+		return {
+			...data,
+			showGameHistoryMenu: true
 		};
 	}
 	return data;

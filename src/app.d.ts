@@ -89,10 +89,11 @@ declare global {
 					ticket?: number;
 					commandTax?: number;
 					commanderDamage?: number[];
+					commanderDamageBySource?: number[][];
 					ringBearer?: number;
 					startYourEngineSpeed?: number;
 					// allow indexing for custom/unknown status keys
-					[key: string]: boolean | number | number[] | undefined;
+					[key: string]: boolean | number | number[] | number[][] | undefined;
 				};
 				allowNegativeLife?: boolean;
 				highlighted: boolean;

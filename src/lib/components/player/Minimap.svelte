@@ -187,7 +187,11 @@
 </script>
 
 <script lang="ts">
-	import { players } from '$lib/store/player';
+	import {
+		getCommanderDamageBySourceForPlayer,
+		getCommanderDamageTotalFromPlayer,
+		players
+	} from '$lib/store/player';
 	import { appSettings } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
 	import { openPlayerModal } from '$lib/store/modal';
@@ -202,6 +206,7 @@
 	export let onSeatLongPress: ((targetIndex: number) => void) | null = null;
 	export let seatLongPressMs = 1000;
     export let fromPlayerDataModal = false;
+	export let commanderDamageIndicator: 'total' | 'sum' | 'max' | 'sum-with-max' = 'total';
 
 	$: numberOfPlayers = $appSettings.playerCount;
 	$: meString = String($_('me')); // Keep translated "me" label reactive on locale changes.
@@ -590,11 +595,49 @@
 	};
 
 	$: getCommanderDamage = (targetIndex: number) =>
-		$players[playerIndex]?.statusEffects?.commanderDamage?.[targetIndex] ?? 0;
+		getCommanderDamageTotalFromPlayer(
+			$players[playerIndex],
+			targetIndex + 1,
+			$appSettings.playerCount
+		);
+
+	$: getCommanderDamagePair = (targetIndex: number): [number, number] => {
+		const bySource = getCommanderDamageBySourceForPlayer($players[playerIndex], $appSettings.playerCount);
+		const pair = bySource[targetIndex] ?? [0, 0];
+		return [pair[0] ?? 0, pair[1] ?? 0];
+	};
+
+	$: getCommanderDamageDisplay = (targetIndex: number): string => {
+		const [sourceA, sourceB] = getCommanderDamagePair(targetIndex);
+		const total = sourceA + sourceB;
+
+		if (commanderDamageIndicator === 'sum') {
+			return sourceB > 0 ? `${sourceA} + ${sourceB}` : `${sourceA}`;
+		}
+
+		if (commanderDamageIndicator === 'sum-with-max') {
+			return `${sourceA} + ${sourceB}`;
+		}
+
+		if (commanderDamageIndicator === 'max') {
+			return `${Math.max(sourceA, sourceB)}`;
+		}
+
+		return `${total}`;
+	};
+
+	$: getCommanderDamageMaxDisplay = (targetIndex: number): string => {
+		const [sourceA, sourceB] = getCommanderDamagePair(targetIndex);
+		return `max=${Math.max(sourceA, sourceB)}`;
+	};
 
 	$: shouldShowMe = (targetIndex: number) =>
 		targetIndex === playerIndex &&
-		($players[targetIndex]?.statusEffects?.commanderDamage?.[targetIndex] ?? -1) <= 0;
+		getCommanderDamageTotalFromPlayer(
+			$players[targetIndex],
+			targetIndex + 1,
+			$appSettings.playerCount
+		) <= 0;
 
 	let seatLongPressTimeout: ReturnType<typeof setTimeout> | null = null;
 	let seatLongPressConsumedClick = false;
@@ -662,7 +705,7 @@
 				type="button"
 				class={`relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-sm border border-black/80 ${backgroundClass}`}
 				style={`grid-row: ${tile.rowStart} / ${tile.rowEnd}; grid-column: ${tile.colStart} / ${tile.colEnd};`}
-				title={$players[tile.targetIndex]?.playerName}
+				title={`${$players[tile.targetIndex]?.playerName ?? ''} (${getCommanderDamageDisplay(tile.targetIndex)}${commanderDamageIndicator === 'sum-with-max' ? `, ${getCommanderDamageMaxDisplay(tile.targetIndex)}` : ''})`}
 				on:pointerdown={() => startSeatLongPress(tile.targetIndex)}
 				on:pointerup={stopSeatLongPress}
 				on:pointerleave={stopSeatLongPress}
@@ -683,7 +726,14 @@
                             {meString}
                         </span>
 					{:else}
-						{getCommanderDamage(tile.targetIndex)}
+						{#if commanderDamageIndicator === 'sum-with-max'}
+							<div class="flex flex-col items-center leading-none">
+								<span>{getCommanderDamageDisplay(tile.targetIndex)}</span>
+								<span class="text-[0.50rem] opacity-80 mt-[1px]">{getCommanderDamageMaxDisplay(tile.targetIndex)}</span>
+							</div>
+						{:else}
+							{getCommanderDamageDisplay(tile.targetIndex)}
+						{/if}
 					{/if}
 				</div>
 			</button>

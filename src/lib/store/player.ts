@@ -295,6 +295,84 @@ const getInitialPlayers = (): App.Player.Data[] => {
 export const players: Writable<App.Player.Data[]> = persist('players', getInitialPlayers());
 export const lifeChangeHistoryResetKey = writable(0);
 
+export const COMMANDER_DAMAGE_SOURCE_SLOTS = 2;
+
+const clampCommanderDamageAmount = (value: number) => {
+	if (!Number.isFinite(value)) return 0;
+	return Math.max(0, Math.min(999, Math.round(value)));
+};
+
+const normalizeCommanderDamagePair = (value: unknown): number[] => {
+	if (!Array.isArray(value)) {
+		return [0, 0];
+	}
+
+	const first = clampCommanderDamageAmount(Number(value[0] ?? 0));
+	const second = clampCommanderDamageAmount(Number(value[1] ?? 0));
+	return [first, second];
+};
+
+export const getCommanderDamageBySourceForPlayer = (
+	player: App.Player.Data | undefined,
+	playerSlots = get(appSettings).playerCount
+): number[][] => {
+	const normalizedSlots = Math.max(2, Math.min(8, Math.floor(playerSlots || 4)));
+	const bySource = player?.statusEffects?.commanderDamageBySource;
+
+	if (Array.isArray(bySource)) {
+		return Array.from({ length: normalizedSlots }, (_, index) =>
+			normalizeCommanderDamagePair(bySource[index])
+		);
+	}
+
+	const legacy = Array.isArray(player?.statusEffects?.commanderDamage)
+		? player?.statusEffects?.commanderDamage
+		: [];
+	return Array.from({ length: normalizedSlots }, (_, index) => [
+		clampCommanderDamageAmount(Number(legacy[index] ?? 0)),
+		0
+	]);
+};
+
+export const getCommanderDamageTotalsForPlayer = (
+	player: App.Player.Data | undefined,
+	playerSlots = get(appSettings).playerCount
+): number[] => {
+	return getCommanderDamageBySourceForPlayer(player, playerSlots).map((pair) => pair[0] + pair[1]);
+};
+
+export const getCommanderDamageTotalFromPlayer = (
+	player: App.Player.Data | undefined,
+	fromPlayerId: number,
+	playerSlots = get(appSettings).playerCount
+): number => {
+	const totals = getCommanderDamageTotalsForPlayer(player, playerSlots);
+	return totals[fromPlayerId - 1] ?? 0;
+};
+
+export const getCommanderDamageSourceValue = (
+	player: App.Player.Data | undefined,
+	fromPlayerId: number,
+	sourceIndex: number,
+	playerSlots = get(appSettings).playerCount
+): number => {
+	const sourceSlot = sourceIndex === 1 ? 1 : 0;
+	const bySource = getCommanderDamageBySourceForPlayer(player, playerSlots);
+	return bySource[fromPlayerId - 1]?.[sourceSlot] ?? 0;
+};
+
+export const getMaxCommanderDamageSingleSource = (
+	player: App.Player.Data | undefined,
+	playerSlots = get(appSettings).playerCount
+): number => {
+	const bySource = getCommanderDamageBySourceForPlayer(player, playerSlots);
+	let maxDamage = 0;
+	for (const pair of bySource) {
+		maxDamage = Math.max(maxDamage, pair[0] ?? 0, pair[1] ?? 0);
+	}
+	return maxDamage;
+};
+
 if (get(lifeHistory).length === 0) {
 	recordImmediateSnapshot(get(players));
 }
@@ -302,7 +380,7 @@ if (get(lifeHistory).length === 0) {
 const isEliminated = (player: App.Player.Data) => {
 	const globalAllowNegative = get(appSettings).allowNegativeLife || false;
 	const allowNegative = globalAllowNegative || !!player.allowNegativeLife;
-	const maxCommanderDamage = Math.max(0, ...(player.statusEffects?.commanderDamage ?? []));
+	const maxCommanderDamage = getMaxCommanderDamageSingleSource(player);
 	return (
 		(!allowNegative && player.lifeTotal <= 0) ||
 		player.statusEffects?.ko === true ||
@@ -874,18 +952,24 @@ export const setPlayerPoison = (playerId: number, amount: number, mergeKey?: str
 	}
 };
 
-export const setCommanderDamage = (playerId: number, fromPlayerId: number, amount: number) => {
+export const setCommanderDamage = (
+	playerId: number,
+	fromPlayerId: number,
+	amount: number,
+	sourceIndex = 0
+) => {
 	// Read old value to compute delta so we can adjust life total accordingly
 	const currentPlayers = get(players);
 	const target = currentPlayers.find((p) => p.id === playerId);
 	if (!target) return;
+	const sourceSlot = sourceIndex === 1 ? 1 : 0;
 
 	const snapshot = {
 		id: target.id,
 		playerName: target.playerName
 	};
-	const oldCommanderDamage = (target?.statusEffects?.commanderDamage ?? [])[fromPlayerId - 1] ?? 0;
-	const newAmount = Math.max(0, Math.min(999, amount));
+	const oldCommanderDamage = getCommanderDamageSourceValue(target, fromPlayerId, sourceSlot);
+	const newAmount = clampCommanderDamageAmount(amount);
 	const delta = newAmount - oldCommanderDamage;
 	if (delta === 0) return;
 	const oldLifeTotal = target.lifeTotal;
@@ -894,18 +978,20 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 		return existingPlayers.map((player) => {
 			if (player.id !== playerId) return player;
 
-			const commanderDamage = [...(player.statusEffects?.commanderDamage ?? [])];
-			while (commanderDamage.length < fromPlayerId) {
-				commanderDamage.push(0);
-			}
-			commanderDamage[fromPlayerId - 1] = newAmount;
+			const playerSlots = Math.max(2, Math.min(8, existingPlayers.length));
+			const commanderDamageBySource = getCommanderDamageBySourceForPlayer(player, playerSlots).map((pair) =>
+				pair.slice(0, COMMANDER_DAMAGE_SOURCE_SLOTS)
+			);
+			commanderDamageBySource[fromPlayerId - 1][sourceSlot] = newAmount;
+			const commanderDamage = commanderDamageBySource.map((pair) => pair[0] + pair[1]);
 
 			return {
 				...player,
 				lifeTotal: player.lifeTotal - delta,
 				statusEffects: {
 					...player.statusEffects,
-					commanderDamage
+					commanderDamage,
+					commanderDamageBySource
 				}
 			};
 		});
@@ -921,6 +1007,7 @@ export const setCommanderDamage = (playerId: number, fromPlayerId: number, amoun
 		kind: 'commanderDamage',
 		payload: {
 			fromPlayerId,
+			sourceIndex: sourceSlot + 1,
 			from: oldCommanderDamage,
 			to: newAmount,
 			lifeDelta: -delta
@@ -1159,7 +1246,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 				treacheryCard: null,
 				treacherySeen: false,
 				statusEffects: {
-					commanderDamage: [] // Reset commander damage
+					commanderDamage: [], // Reset commander damage totals (legacy compatibility)
+					commanderDamageBySource: [] // Reset partner commander damage sources
 				}
 			};
 

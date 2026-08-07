@@ -1114,7 +1114,7 @@
 		<div class="w-full flex justify-start mt-0 mb-1 pl-12">
 			<button
 				on:click={handleResetStartingPlayerProbabilities}
-				class="px-3 py-1 rounded bg-gray-700 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+				class="px-3 py-1 rounded bg-blue-900 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
 				disabled={!$appSettings.useWeightedStartingPlayer}
 			>
 				{$_('starting_player_probabilities_reset') || 'Reset starting player probabilities'}

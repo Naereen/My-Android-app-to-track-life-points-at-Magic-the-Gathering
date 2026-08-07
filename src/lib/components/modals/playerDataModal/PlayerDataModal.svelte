@@ -3,6 +3,8 @@
 	import X from '$lib/assets/icons/X.svelte';
 	import { playerModalData, resetPlayerModalData } from '$lib/store/modal';
 	import {
+		COMMANDER_DAMAGE_SOURCE_SLOTS,
+		getCommanderDamageSourceValue,
 		players,
 		setPlayerColor,
 		setPlayerAllowNegative,
@@ -485,27 +487,34 @@
 
 	// Inline editor state for commander damage (replaces native prompt)
 	let editingCommanderFrom: number | null = null;
-	let editingCommanderValue = '';
+	let editingCommanderValuePrimary = '';
+	let editingCommanderValueSecondary = '';
 
 	// Inline editor state for numeric status effects (poison, energy, etc.)
 	let editingStat: string | null = null;
 	let editingStatValue = '';
 
-	const startEditCommander = async (playerId: number, fromPlayerId: number, current: number) => {
+	const startEditCommander = async (playerId: number, fromPlayerId: number) => {
 		vibrate(20);
 		editingCommanderFrom = fromPlayerId;
-		editingCommanderValue = String(current);
+		const targetPlayer = $players[playerId - 1];
+		editingCommanderValuePrimary = String(getCommanderDamageSourceValue(targetPlayer, fromPlayerId, 0));
+		editingCommanderValueSecondary = String(getCommanderDamageSourceValue(targetPlayer, fromPlayerId, 1));
 		await tick();
-		const el = document.getElementById(`commander-input-${fromPlayerId}`) as HTMLInputElement | null;
+		const el = document.getElementById(`commander-input-${fromPlayerId}-1`) as HTMLInputElement | null;
 		el?.focus();
 		el?.select();
 	};
 
 	const saveEditCommander = () => {
 		if (editingCommanderFrom === null) return;
-		const v = parseInt(editingCommanderValue, 10);
-		if (!Number.isNaN(v)) {
-			setCommanderDamage($playerModalData.playerId, editingCommanderFrom, v);
+		const primary = parseInt(editingCommanderValuePrimary, 10);
+		const secondary = parseInt(editingCommanderValueSecondary, 10);
+		if (!Number.isNaN(primary)) {
+			setCommanderDamage($playerModalData.playerId, editingCommanderFrom, primary, 0);
+		}
+		if (!Number.isNaN(secondary)) {
+			setCommanderDamage($playerModalData.playerId, editingCommanderFrom, secondary, 1);
 		}
 		editingCommanderFrom = null;
 	};
@@ -554,28 +563,46 @@
 	let commanderLongPressInterval: ReturnType<typeof setInterval> | null = null;
 	let commanderLongPressConsumedClick = false;
 
-	const getCommanderDamageValue = (playerId: number, fromPlayerId: number): number => {
-		return (($players[playerId - 1]?.statusEffects?.commanderDamage ?? [])[fromPlayerId - 1] ?? 0) as number;
+	const getCommanderDamageValue = (
+		playerId: number,
+		fromPlayerId: number,
+		sourceIndex = 0
+	): number => {
+		return getCommanderDamageSourceValue($players[playerId - 1], fromPlayerId, sourceIndex, $appSettings.playerCount);
 	};
 
-	const setCommanderDamageDelta = (playerId: number, fromPlayerId: number, delta: number) => {
-		const current = getCommanderDamageValue(playerId, fromPlayerId);
+	const setCommanderDamageDelta = (
+		playerId: number,
+		fromPlayerId: number,
+		delta: number,
+		sourceIndex = 0
+	) => {
+		const current = getCommanderDamageValue(playerId, fromPlayerId, sourceIndex);
 		const nextValue = Math.max(0, current + delta);
-		setCommanderDamage(playerId, fromPlayerId, nextValue);
+		setCommanderDamage(playerId, fromPlayerId, nextValue, sourceIndex);
 
 		// Keep inline editor value in sync when the input is visible.
 		if (editingCommanderFrom === fromPlayerId && playerId === $playerModalData.playerId) {
-			editingCommanderValue = String(nextValue);
+			if (sourceIndex === 1) {
+				editingCommanderValueSecondary = String(nextValue);
+			} else {
+				editingCommanderValuePrimary = String(nextValue);
+			}
 		}
 	};
 
-	const startCommanderLongPress = (playerId: number, fromPlayerId: number, delta: number) => {
+	const startCommanderLongPress = (
+		playerId: number,
+		fromPlayerId: number,
+		delta: number,
+		sourceIndex = 0
+	) => {
 		stopCommanderLongPress();
 		commanderLongPressTimeout = setTimeout(() => {
 			commanderLongPressConsumedClick = true;
-			setCommanderDamageDelta(playerId, fromPlayerId, delta);
+			setCommanderDamageDelta(playerId, fromPlayerId, delta, sourceIndex);
 			commanderLongPressInterval = setInterval(() => {
-				setCommanderDamageDelta(playerId, fromPlayerId, delta);
+				setCommanderDamageDelta(playerId, fromPlayerId, delta, sourceIndex);
 			}, COMMANDER_LONG_PRESS_MS);
 		}, COMMANDER_LONG_PRESS_MS);
 	};
@@ -596,23 +623,27 @@
 		}
 	};
 
-	const handleCommanderStepClick = (playerId: number, fromPlayerId: number, step: number) => {
+	const handleCommanderStepClick = (
+		playerId: number,
+		fromPlayerId: number,
+		step: number,
+		sourceIndex = 0
+	) => {
 		if (commanderLongPressConsumedClick) {
 			commanderLongPressConsumedClick = false;
 			return;
 		}
-		setCommanderDamageDelta(playerId, fromPlayerId, step);
+		setCommanderDamageDelta(playerId, fromPlayerId, step, sourceIndex);
 	};
 
 	const startCommanderEditFromMinimap = (targetIndex: number) => {
 		const fromPlayerId = targetIndex + 1;
-		const current = getCommanderDamageValue($playerModalData.playerId, fromPlayerId);
-		startEditCommander($playerModalData.playerId, fromPlayerId, current);
+		startEditCommander($playerModalData.playerId, fromPlayerId);
 	};
 
 	const incrementCommanderFromMinimap = (targetIndex: number) => {
 		const fromPlayerId = targetIndex + 1;
-		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1);
+		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0);
 	};
 
 	onMount(() => {
@@ -1409,6 +1440,7 @@
 										orientation={getSeatOrientations($appSettings.playerCount, commanderMinimapLayout)[$playerModalData.playerId - 1]}
 										layout={commanderMinimapLayout}
 										backgroundClass="bg-transparent"
+										commanderDamageIndicator="sum-with-max"
 										rootClickable={false}
 										onSeatClick={incrementCommanderFromMinimap}
 										onSeatLongPress={startCommanderEditFromMinimap}
@@ -1423,39 +1455,59 @@
 									<div class="mb-3 text-sm font-semibold text-center">
 										{editingFromName} → {$players[$playerModalData.playerId - 1]?.playerName ?? `Player ${$playerModalData.playerId}`}
 									</div>
-									<div class="flex flex-wrap items-center justify-center gap-2">
-										<button
-											class="px-2 py-1 bg-gray-200 rounded"
-											on:pointerdown={() =>
-												startCommanderLongPress($playerModalData.playerId, editingFrom, -10)}
-											on:pointerup={stopCommanderLongPress}
-											on:pointerleave={stopCommanderLongPress}
-											on:pointercancel={stopCommanderLongPress}
-											on:click={() =>
-												handleCommanderStepClick($playerModalData.playerId, editingFrom, -1)}>-</button
-										>
-										<input
-											id={`commander-input-${editingFrom}`}
-											type="number"
-											bind:value={editingCommanderValue}
-											on:keydown={(e) => {
-												if (e.key === 'Enter') saveEditCommander();
-												if (e.key === 'Escape') cancelEditCommander();
-											}}
-											class="w-24 text-center rounded-md px-2 py-1 border border-black/20"
-											placeholder={enterLifeTotalPlaceholder}
-											title={setCommanderDamageString}
-										/>
-										<button
-											class="px-2 py-1 bg-gray-200 rounded"
-											on:pointerdown={() =>
-												startCommanderLongPress($playerModalData.playerId, editingFrom, 10)}
-											on:pointerup={stopCommanderLongPress}
-											on:pointerleave={stopCommanderLongPress}
-											on:pointercancel={stopCommanderLongPress}
-											on:click={() =>
-												handleCommanderStepClick($playerModalData.playerId, editingFrom, 1)}>+</button
-										>
+									<div class="flex flex-col items-center justify-center gap-2">
+										{#each Array.from({ length: COMMANDER_DAMAGE_SOURCE_SLOTS }) as sourceMarker, sourceIndex}
+											<div class="flex flex-wrap items-center justify-center gap-2">
+												<span class="w-20 text-sm font-semibold text-right">Commander {sourceIndex + 1}</span>
+												<button
+													class="px-2 py-1 bg-gray-200 rounded"
+													on:pointerdown={() =>
+														startCommanderLongPress($playerModalData.playerId, editingFrom, -10, sourceIndex)}
+													on:pointerup={stopCommanderLongPress}
+													on:pointerleave={stopCommanderLongPress}
+													on:pointercancel={stopCommanderLongPress}
+													on:click={() =>
+														handleCommanderStepClick($playerModalData.playerId, editingFrom, -1, sourceIndex)}>-</button
+												>
+												{#if sourceIndex === 0}
+													<input
+														id={`commander-input-${editingFrom}-${sourceIndex + 1}`}
+														type="number"
+														bind:value={editingCommanderValuePrimary}
+														on:keydown={(e) => {
+															if (e.key === 'Enter') saveEditCommander();
+															if (e.key === 'Escape') cancelEditCommander();
+														}}
+														class="w-24 text-center rounded-md px-2 py-1 border border-black/20"
+														placeholder={enterLifeTotalPlaceholder}
+														title={setCommanderDamageString}
+													/>
+												{:else}
+													<input
+														id={`commander-input-${editingFrom}-${sourceIndex + 1}`}
+														type="number"
+														bind:value={editingCommanderValueSecondary}
+														on:keydown={(e) => {
+															if (e.key === 'Enter') saveEditCommander();
+															if (e.key === 'Escape') cancelEditCommander();
+														}}
+														class="w-24 text-center rounded-md px-2 py-1 border border-black/20"
+														placeholder={enterLifeTotalPlaceholder}
+														title={setCommanderDamageString}
+													/>
+												{/if}
+												<button
+													class="px-2 py-1 bg-gray-200 rounded"
+													on:pointerdown={() =>
+														startCommanderLongPress($playerModalData.playerId, editingFrom, 10, sourceIndex)}
+													on:pointerup={stopCommanderLongPress}
+													on:pointerleave={stopCommanderLongPress}
+													on:pointercancel={stopCommanderLongPress}
+													on:click={() =>
+														handleCommanderStepClick($playerModalData.playerId, editingFrom, 1, sourceIndex)}>+</button
+												>
+											</div>
+										{/each}
 										<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
 										<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-500 text-white text-sm rounded">{setLifeTotalCancel}</button>
 									</div>
