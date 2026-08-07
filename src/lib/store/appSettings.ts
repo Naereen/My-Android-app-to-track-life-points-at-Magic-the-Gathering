@@ -353,6 +353,13 @@ export const setUseWeightedStartingPlayer = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, useWeightedStartingPlayer: enabled }));
 };
 
+export const resetStartingPlayerProbabilities = () => {
+	appSettings.update((data) => ({
+		...data,
+		startingPlayerProbabilities: getUniformStartingProbabilities(data.playerCount)
+	}));
+};
+
 export const setStartingPlayerProbability = (playerIndex: number, probability: number) => {
 	appSettings.update((data) => {
 		if (playerIndex < 0 || playerIndex >= MAX_PLAYER_SLOTS) return data;

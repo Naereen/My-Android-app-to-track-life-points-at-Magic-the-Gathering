@@ -24,6 +24,7 @@
 		setEnableTicketMode,
 		setUseWeightedStartingPlayer,
 		setStartingPlayerProbability,
+		resetStartingPlayerProbabilities,
 		setAppLocale
 	} from '$lib/store/appSettings';
 	import {
@@ -182,6 +183,10 @@
 	const handleUseWeightedStartingPlayerChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setUseWeightedStartingPlayer(!!target.checked);
+	};
+
+	const handleResetStartingPlayerProbabilities = () => {
+		resetStartingPlayerProbabilities();
 	};
 
 	const getDisplayedPlayerName = (index: number) => {
@@ -1106,6 +1111,16 @@
 			</label>
 		</div>
 
+		<div class="w-full flex justify-start mt-0 mb-1 pl-12">
+			<button
+				on:click={handleResetStartingPlayerProbabilities}
+				class="px-3 py-1 rounded bg-gray-700 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+				disabled={!$appSettings.useWeightedStartingPlayer}
+			>
+				{$_('starting_player_probabilities_reset') || 'Reset starting player probabilities'}
+			</button>
+		</div>
+
 		{#if $appSettings.useWeightedStartingPlayer}
 			<div class="w-full px-6 mt-1 mb-2 text-left">
 				<div class="text-sm text-gray-300 mb-2">
@@ -1123,7 +1138,7 @@
 								min="0"
 								max="100"
 								step="1"
-								value={() => Math.round(($appSettings.startingPlayerProbabilities?.[index] ?? 0) * 100) / 100}
+								value={(() => Math.round(($appSettings.startingPlayerProbabilities?.[index] ?? 0) * 100) / 100)()}
 								on:change={(e) => handleStartingPlayerProbabilityInput(index, e)}
 								class="bg-gray-600 w-20 h-8 rounded text-center text-lg"
 							/>
