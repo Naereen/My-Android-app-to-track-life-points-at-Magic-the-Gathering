@@ -224,9 +224,9 @@
 			return '90deg';
 		}
 		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 1) return '90deg';
 			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
+			if (playerIndex === 3) return '90deg';
 			return '0deg';
 		}
 

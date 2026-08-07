@@ -74,32 +74,34 @@
 		);
 	};
 
-	const handleCustomLifeTotalKeyPress = (event: KeyboardEvent) => {
-		const { key } = event;
+	const clampCustomStartingLifeTotal = (value: number) => {
+		if (!Number.isFinite(value)) return 1;
+		return Math.max(1, Math.min(999, Math.round(value)));
+	};
 
-		const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Enter'];
+	const handleCustomLifeTotalInput = (event: Event) => {
+		const target = event.currentTarget as HTMLInputElement;
+		setCustomStartingLifeTotal(clampCustomStartingLifeTotal(Number(target.value)));
+	};
 
-		if (!allowedKeys.includes(key) && !/^\d$/.test(key)) {
+	const applyCustomStartingLifeTotal = () => {
+		setLifeTotal(clampCustomStartingLifeTotal($appSettings.customStartingLifeTotal));
+	};
+
+	const handleCustomLifeTotalKeydown = (event: KeyboardEvent) => {
+		if (event.key === 'Enter') {
 			event.preventDefault();
-		}
-
-		if ($appSettings.customStartingLifeTotal < 0) {
-			setCustomStartingLifeTotal(1);
-		} else if ($appSettings.customStartingLifeTotal > 999) {
-			setCustomStartingLifeTotal(999);
-		}
-
-		if (key === 'Enter') {
-			setLifeTotal($appSettings.customStartingLifeTotal);
+			applyCustomStartingLifeTotal();
 		}
 	};
 
 	const setLifeTotal = async (startingLifeTotal: number) => {
 		const confirm = await showConfirm($_('window_confirm_change_life_total'));
 		if (confirm) {
-			setStartingLifeTotal(startingLifeTotal);
-			if (!isCustomStartingLife()) {
-				setCustomStartingLifeTotal(60);
+			const nextLife = clampCustomStartingLifeTotal(startingLifeTotal);
+			setStartingLifeTotal(nextLife);
+			if (![20, 25, 30, 40].includes(nextLife)) {
+				setCustomStartingLifeTotal(nextLife);
 			}
 			toggleIsMenuOpen('');
 			resetLifeTotals(true);
@@ -568,37 +570,48 @@
 		<div class="mt-6 w-3/4">
 			<div><span style="font-size: 1.5rem;" class="font-bold">{$_('starting_life')}</span></div>
 			<div class="flex flex-row justify-between mt-3">
-				{#each [20, 25, 30, 40, 'custom'] as lifeTotal}
+				{#each [20, 25, 30, 40] as lifeTotal}
 					{#key $appSettings.startingLifeTotal}
-						{#if typeof lifeTotal === 'number'}
-							<div>
-								<CircularButton
-									on:click={() => setLifeTotal(lifeTotal)}
-									number={lifeTotal}
-									highlight={lifeTotal === 60
-										? isCustomStartingLife()
-										: $appSettings.startingLifeTotal === lifeTotal}
-								/>
-							</div>
-						{:else}
-							<div>
-								<CircularButton
-									number={$appSettings.customStartingLifeTotal}
-									customText
-									highlight={isCustomStartingLife()}
-								>
-									<input
-										bind:value={$appSettings.customStartingLifeTotal}
-										on:keypress={handleCustomLifeTotalKeyPress}
-										type="number"
-										class="bg-transparent w-8 h-8 overflow-hidden rounded-full text-center outline-none"
-										max="999"
-									/>
-								</CircularButton>
-							</div>
-						{/if}
+						<div>
+							<CircularButton
+								on:click={() => setLifeTotal(lifeTotal)}
+								number={lifeTotal}
+								highlight={$appSettings.startingLifeTotal === lifeTotal}
+							/>
+						</div>
 					{/key}
 				{/each}
+			</div>
+
+			<div class="mt-4 p-3 rounded-xl bg-[#2d2f30] border border-gray-600">
+				<div class="text-sm text-gray-300 mb-2">
+					{$_('starting_life_custom_label') || 'Custom starting life total'}
+				</div>
+				<div class="flex items-center gap-2">
+					<input
+						type="number"
+						min="1"
+						max="999"
+						step="1"
+						value={$appSettings.customStartingLifeTotal}
+						on:input={handleCustomLifeTotalInput}
+						on:keydown={handleCustomLifeTotalKeydown}
+						class="bg-gray-700 rounded-lg h-10 w-28 px-3 text-right text-white outline-none"
+					/>
+					<button
+						on:click={applyCustomStartingLifeTotal}
+						class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 h-10 rounded-lg"
+					>
+						{$_('starting_life_custom_apply') || 'Apply'}
+					</button>
+				</div>
+				<div class="text-xs text-gray-400 mt-2">
+					{#if isCustomStartingLife()}
+						{$_('starting_life_current_custom') || 'Current starting life: custom'} {$appSettings.startingLifeTotal}
+					{:else}
+						{$_('starting_life_current_preset') || 'Current starting life: preset'} {$appSettings.startingLifeTotal}
+					{/if}
+				</div>
 			</div>
 		</div>
 

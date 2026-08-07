@@ -111,7 +111,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
 - [x] The card search form is kinda broken, because it constantly tries to fill its content with the playerName. Fix this, by removing this default feature as soon as the <input> form is being edited!
 
 - [ ] FIXME: Fix the bug where, when selecting a card as background, the image is not properly aligned and doesn't cover the entire background area (the top of the illustration should be aligned with the top of the background area, not cropping the card image if needed). I don't know how LifeTap does it, but I want a clean result like it.
-  - [ ] Right now, my settings work fine on my smartphone and tablet, so I'll stop working on that aspect right now.
+  - [x] Right now, my settings work fine on my smartphone and tablet, so I'll stop working on that aspect right now.
   - [ ] This bug is almost fixed, but not for all the different modes (3-player, etc).
 
 #### All layouts display now weirdly the backgrounds, on screensizes different from the one of my smartphone
