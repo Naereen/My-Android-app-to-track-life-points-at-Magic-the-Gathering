@@ -289,12 +289,20 @@
 		viewerOrientation: SeatOrientation,
 		isCommanderModal: boolean
 	): MinimapMatrix => {
-		if (isCommanderModal) return matrix;
-
-		if (viewerOrientation === 'right') return applySymetryByYAxis(rotateClockwise(matrix));
-
-		if (viewerOrientation === 'left') return rotateCounterClockwise(matrix);
-		if (viewerOrientation === 'down') return rotate180(matrix);
+		if (isCommanderModal) {
+            if (viewerOrientation === 'down')
+                return rotate180(matrix);
+            return matrix;
+        }
+		else if (viewerOrientation === 'right') {
+            return applySymetryByYAxis(rotateClockwise(matrix));
+        }
+		else if (viewerOrientation === 'left') {
+            return rotateCounterClockwise(matrix);
+        }
+		else if (viewerOrientation === 'down') {
+            return rotate180(matrix);
+        }
 		return matrix;
 	};
 
@@ -359,87 +367,19 @@
 
 	$: seatOrientations = getSeatOrientations(numberOfPlayers, layout);
 
-	$: getTileRotation = (targetIndex: number): string => {
-		const seatOrientation = seatOrientations[targetIndex] ?? 'up';
-		return orientationToDegrees(seatOrientation);
+	const orientationToDegreesForTileText = (seatOrientation: SeatOrientation): string => {
+		if (seatOrientation === 'left') return '180deg';
+		if (seatOrientation === 'right') return '0deg';
+		if (seatOrientation === 'down') return '0deg';
+		return '0deg';
 	};
 
-	$: getViewerRotation = (): string => {
-		// Custom convention requested for the 3-player layout.
-		// Player 1 => normal, player 2 => left, player 3 => right.
-		if (numberOfPlayers === 3) {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
+	$: getTileTextRotation = (targetIndex: number): string => {
+		if (fromPlayerDataModal) {
 			return '0deg';
 		}
-
-		// Custom convention requested for the 4-player layout.
-		// Player 1 => normal, player 2 => left, player 3 => right, player 4 => upside down.
-		if (numberOfPlayers === 4 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '180deg';
-			if (playerIndex === 3) return '180deg';
-			return '0deg';
-		}
-		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 5-player layout.
-		if (numberOfPlayers === 5) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
-			if (playerIndex === 4) return '180deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 6-player layout.
-		if (numberOfPlayers === 6 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '0deg';
-			if (playerIndex === 5) return '0deg';
-			return '0deg';
-		}
-		if (numberOfPlayers === 6 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 7-player layout.
-		if (numberOfPlayers === 7) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			if (playerIndex === 6) return '180deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 8-player layout.
-		if (numberOfPlayers === 8) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			if (playerIndex === 6) return '180deg';
-			if (playerIndex === 7) return '180deg';
-			return '0deg';
-		}
-
-		// Fallback for other layouts: keep previous seat-based behavior.
-		return getTileRotation(playerIndex);
+		const viewerOrientation = orientation ?? seatOrientations[playerIndex] ?? 'up';
+		return orientationToDegreesForTileText(viewerOrientation);
 	};
 
 	$: minimapWidthRem = fromPlayerDataModal
@@ -567,7 +507,7 @@
 				></div>
 				<div
 					class="relative z-10 text-white text-[10px] leading-none text-center font-semibold px-0.5"
-					style={`transform: rotate(${getViewerRotation()});`}
+					style={`transform: rotate(${getTileTextRotation(tile.targetIndex)}); transform-origin: center;`}
 				>
 					{#if shouldShowMe(tile.targetIndex)}
 						<span class="text-[8px]">

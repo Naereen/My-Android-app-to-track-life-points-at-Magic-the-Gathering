@@ -41,5 +41,5 @@
 	>
 		<slot />
 	</button>
-	<p class="text-center text-sm mt-1" style="font-size: 1.1rem;">{text}</p>
+	<p class="text-center text-sm mt-1" style="font-size: 1.05rem;">{text}</p>
 </div>

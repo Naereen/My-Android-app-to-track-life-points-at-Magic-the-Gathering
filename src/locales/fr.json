@@ -111,7 +111,7 @@
 	"start_your_engine_speed": "Vitesse moteur",
 	"tooltip_status_start_your_engine_speed": "Allumez votre moteur ! Votre vitesse (0 - 4)",
 	"tooltip_commander_damage": "Dégâts totaux de commandant reçus de tous les joueurs",
-	"commander_damage_help": "Suivez les dégâts subis du commandant de chaque joueur.\nEn EDH, subir au moins 21 dégâts de combat d'un seul commandant entraîne la défaite.",
+	"commander_damage_help": "Suivez les dégâts subis du commandant de chaque joueur. En EDH, subir au moins 21 dégâts de combat d'un seul commandant entraîne la défaite.",
 	"damage_from_player": "Dégâts infligés par :",
 	"haptic_feedback": "Retour haptique (vibrations)",
 	"sound_effects": "Effets sonores",

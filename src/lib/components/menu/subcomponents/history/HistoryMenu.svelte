@@ -203,7 +203,8 @@
 		}
 
 		if (entry.kind === 'commanderDamage') {
-			return { component: CommanderDamage, className: 'text-amber-300' };
+			// return { component: CommanderDamage, className: 'text-amber-300' };
+			return { glyph: '⚔️', className: 'text-amber-300' };
 		}
 
 		if (entry.kind === 'turnChange') {
