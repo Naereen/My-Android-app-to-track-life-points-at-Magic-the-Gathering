@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { appSettings } from '$lib/store/appSettings';
-	import { gameState, type StreamGameState } from '$lib/store/appState';
-	import { derived } from 'svelte/store';
+	import { appState, gameState, toggleIsMenuOpen, type StreamGameState } from '$lib/store/appState';
+	import { derived, get } from 'svelte/store';
 	import TwoPlayerLayout from '$lib/layouts/TwoPlayerLayout.svelte';
 	import ThreePlayerLayout from '$lib/layouts/ThreePlayerLayout.svelte';
 	import ThreePlayerLayoutTwo from '$lib/layouts/ThreePlayerLayoutTwo.svelte';
@@ -35,9 +35,12 @@
 
 	let unsubscribeAppSettings: (() => void) | null = null;
 	let unsubscribeStreamSync: (() => void) | null = null;
+	let unsubscribeBackButtonMenuHandler: (() => void) | null = null;
 	let streamDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 	let streamSyncAbortController: AbortController | null = null;
 	let lastSentSignature = '';
+	let hasMenuHistoryEntry = false;
+	let isSyncingMenuHistory = false;
 
 	const streamSyncState = derived([appSettings, gameState], ([$appSettings, $gameState]) => ({
 		appSettings: $appSettings,
@@ -57,6 +60,38 @@
 			names: state.names,
 			lifeTotals: state.lifeTotals
 		});
+	};
+
+	const pushMenuHistoryEntry = () => {
+		if (typeof window === 'undefined' || hasMenuHistoryEntry) return;
+		try {
+			const currentState =
+				window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
+			window.history.pushState({ ...currentState, __mtgMenuOpen: true }, '', window.location.href);
+			hasMenuHistoryEntry = true;
+		} catch {
+			// ignore
+		}
+	};
+
+	const popMenuHistoryEntry = () => {
+		if (typeof window === 'undefined' || !hasMenuHistoryEntry) return;
+		isSyncingMenuHistory = true;
+		window.history.back();
+	};
+
+	const handleBackNavigation = () => {
+		if (!get(appState).isMenuOpen) {
+			if (isSyncingMenuHistory) {
+				hasMenuHistoryEntry = false;
+				isSyncingMenuHistory = false;
+			}
+			return;
+		}
+
+		isSyncingMenuHistory = true;
+		hasMenuHistoryEntry = false;
+		toggleIsMenuOpen('');
 	};
 
 	const lockPortraitOrientation = async () => {
@@ -102,9 +137,28 @@
 	onMount(() => {
 		initWakeLock();
 		void lockPortraitOrientation();
+		window.addEventListener('popstate', handleBackNavigation);
 		// subscribe to appSettings.preventScreenSleep and apply
 		unsubscribeAppSettings = appSettings.subscribe((s) => {
 			setKeepAwake(!!(s as any).preventScreenSleep);
+		});
+
+		unsubscribeBackButtonMenuHandler = appState.subscribe((state) => {
+			if (state.isMenuOpen) {
+				if (!isSyncingMenuHistory) {
+					pushMenuHistoryEntry();
+				}
+				return;
+			}
+
+			if (isSyncingMenuHistory) {
+				isSyncingMenuHistory = false;
+				return;
+			}
+
+			if (hasMenuHistoryEntry) {
+				popMenuHistoryEntry();
+			}
 		});
 
 		unsubscribeStreamSync = streamSyncState.subscribe(({ appSettings, gameState }) => {
@@ -128,6 +182,8 @@
 	onDestroy(() => {
 		unsubscribeAppSettings?.();
 		unsubscribeStreamSync?.();
+		unsubscribeBackButtonMenuHandler?.();
+		window.removeEventListener('popstate', handleBackNavigation);
 		if (streamDebounceTimer) {
 			clearTimeout(streamDebounceTimer);
 		}

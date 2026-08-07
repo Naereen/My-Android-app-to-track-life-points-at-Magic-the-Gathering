@@ -66,7 +66,42 @@ interface AppSettings {
 	isStreamMode: boolean;
 	// relay base URL, e.g. http://192.168.1.113:8787
 	remoteServerUrl: string;
+	// enable weighted random pick for selecting who starts the game
+	useWeightedStartingPlayer: boolean;
+	// per-seat starting chances in percent-like weights (seat 1..8)
+	startingPlayerProbabilities: number[];
 }
+
+const MAX_PLAYER_SLOTS = 8;
+
+const getUniformStartingProbabilities = (playerCount: number): number[] => {
+	const activeCount = Math.max(2, Math.min(MAX_PLAYER_SLOTS, Math.floor(playerCount || 4)));
+	const equalWeight = Number((100 / activeCount).toFixed(2));
+	return Array.from({ length: MAX_PLAYER_SLOTS }, (_, index) =>
+		index < activeCount ? equalWeight : 0
+	);
+};
+
+const sanitizeStartingPlayerProbabilities = (
+	probabilities: number[] | undefined,
+	playerCount: number
+): number[] => {
+	const fallback = getUniformStartingProbabilities(playerCount);
+	const source = Array.isArray(probabilities) ? probabilities : [];
+	const normalized = Array.from({ length: MAX_PLAYER_SLOTS }, (_, index) => {
+		const raw = source[index];
+		if (index >= playerCount && raw === undefined) return 0;
+		if (typeof raw !== 'number' || Number.isNaN(raw)) return fallback[index];
+		return Math.max(0, Math.min(100, raw));
+	});
+
+	const activeSum = normalized.slice(0, playerCount).reduce((sum, value) => sum + value, 0);
+	if (activeSum <= 0) {
+		return fallback;
+	}
+
+	return normalized;
+};
 
 export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	// default settings values
@@ -131,7 +166,10 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	// stream mode (controller sends game updates to LAN relay)
 	isStreamMode: false,
 	// relay base URL, e.g. http://192.168.1.113:8787
-	remoteServerUrl: 'http://192.168.1.113:8787'
+	remoteServerUrl: 'http://192.168.1.113:8787',
+	// weighted random start disabled by default
+	useWeightedStartingPlayer: false,
+	startingPlayerProbabilities: getUniformStartingProbabilities(4)
 });
 
 export const getDefaultGlobalGameTimerDuration = (playerCount: number): number => {
@@ -149,6 +187,10 @@ export const setPlayerCount = (playerCount: number) => {
 		...data,
 		playerCount,
 		startingLifeTotal: getDefaultStartingLifeTotal(playerCount),
+		startingPlayerProbabilities: sanitizeStartingPlayerProbabilities(
+			data.startingPlayerProbabilities,
+			playerCount
+		),
 		// Default behavior by format size: ON for 2 players, OFF otherwise.
 		showLifeChangeHistory: playerCount === 2,
 		// Keep custom value, but auto-adjust when the value is still the format default.
@@ -290,6 +332,25 @@ export const setRemoteServerUrl = (remoteServerUrl: string) => {
 	appSettings.update((data) => ({ ...data, remoteServerUrl: remoteServerUrl.trim() }));
 };
 
+export const setUseWeightedStartingPlayer = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, useWeightedStartingPlayer: enabled }));
+};
+
+export const setStartingPlayerProbability = (playerIndex: number, probability: number) => {
+	appSettings.update((data) => {
+		if (playerIndex < 0 || playerIndex >= MAX_PLAYER_SLOTS) return data;
+		const next = sanitizeStartingPlayerProbabilities(
+			data.startingPlayerProbabilities,
+			data.playerCount
+		);
+		next[playerIndex] = Math.max(0, Math.min(100, Number(probability) || 0));
+		return {
+			...data,
+			startingPlayerProbabilities: next
+		};
+	});
+};
+
 export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {
 	appSettings.update((data) => ({ ...data, fourPlayerLayout: layout }));
 };
@@ -305,7 +366,12 @@ appSettings.update((data) => {
 		threePlayerLayout: data.threePlayerLayout ?? 'classic',
 		globalGameTimerEnabled: data.globalGameTimerEnabled ?? true,
 		globalGameTimerDuration:
-			data.globalGameTimerDuration ?? getDefaultGlobalGameTimerDuration(data.playerCount ?? 4)
+			data.globalGameTimerDuration ?? getDefaultGlobalGameTimerDuration(data.playerCount ?? 4),
+		useWeightedStartingPlayer: data.useWeightedStartingPlayer ?? false,
+		startingPlayerProbabilities: sanitizeStartingPlayerProbabilities(
+			data.startingPlayerProbabilities,
+			data.playerCount ?? 4
+		)
 	};
 	return withDefaults;
 });

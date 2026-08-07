@@ -6,6 +6,7 @@ import { appState } from './appState';
 import { players } from './player';
 import { vibrate } from '../utils/haptics';
 import { persist } from './persist';
+import { pickWeightedIndex } from '$lib/utils/weightedRandom';
 
 type RandomizerModalState = {
 	isOpen: boolean;
@@ -153,6 +154,7 @@ export const selectRandomPlayer = (randomIndex: number | null = null) => {
 	vibrate(20);
 	const currentPlayers = get(players);
 	const playerCount = get(appSettings).playerCount;
+	const settings = get(appSettings);
 
 	// Get only active players (up to playerCount)
 	const activePlayers = currentPlayers.slice(0, playerCount);
@@ -160,7 +162,11 @@ export const selectRandomPlayer = (randomIndex: number | null = null) => {
 	if (activePlayers.length === 0) return;
 
 	const index =
-		randomIndex !== null ? randomIndex : Math.floor(Math.random() * activePlayers.length);
+		randomIndex !== null
+			? randomIndex
+			: settings.useWeightedStartingPlayer
+				? pickWeightedIndex(settings.startingPlayerProbabilities ?? [], activePlayers.length)
+				: Math.floor(Math.random() * activePlayers.length);
 	const selectedPlayer = activePlayers[index];
 
 	randomizerModalData.set({

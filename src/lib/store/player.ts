@@ -24,6 +24,7 @@ import {
 	type TreacheryCatalogEntry,
 	type TreacheryRole
 } from '$lib/utils/treachery';
+import { pickWeightedIndex } from '$lib/utils/weightedRandom';
 // import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -1495,6 +1496,15 @@ export const removeFirstPlace = () => {
 
 export const spinning = writable(false);
 
+const pickRandomSeatIndex = (totalPlayers: number): number => {
+	if (totalPlayers <= 0) return 0;
+	const settings = get(appSettings);
+	if (!settings.useWeightedStartingPlayer) {
+		return Math.floor(Math.random() * totalPlayers);
+	}
+	return pickWeightedIndex(settings.startingPlayerProbabilities ?? [], totalPlayers);
+};
+
 export const setFirstPlayer = (playerIndex: number) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player, index) => ({
@@ -1510,10 +1520,12 @@ export const setFirstPlayer = (playerIndex: number) => {
 export const spinToSelectFirstPlayer = () => {
 	const totalPlayers = get(appSettings).playerCount;
 	if (totalPlayers === 0) return;
+	const chosenIndex = pickRandomSeatIndex(totalPlayers);
 
 	spinning.set(true);
 	let currentIndex = 0;
-	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 4;
+	const extraRounds = Math.floor(Math.random() * 3) + 4;
+	let spinCount = extraRounds * totalPlayers + chosenIndex + 1;
 	let intervalTime = 25;
 	const finalPauseTime = 100;
 
@@ -1558,10 +1570,12 @@ export const spinToSelectFirstPlayer = () => {
 export const spinToSelectRandomPlayer = () => {
 	const totalPlayers = get(appSettings).playerCount;
 	if (totalPlayers === 0) return;
+	const chosenIndex = pickRandomSeatIndex(totalPlayers);
 
 	spinning.set(true);
 	let currentIndex = 0;
-	let spinCount = Math.floor(Math.random() * 10) + totalPlayers * 2;
+	const extraRounds = Math.floor(Math.random() * 2) + 2;
+	let spinCount = extraRounds * totalPlayers + chosenIndex + 1;
 	let intervalTime = 10;
 	const finalPauseTime = 100;
 

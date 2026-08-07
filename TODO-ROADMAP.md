@@ -426,9 +426,9 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 ## Customize the probabilities of whose player starts the game
 
-- [ ] Allow to customize the probabilities of each player starting the game (instead of uniform distribution)
-  - [ ] E.g. Player 1 has 50% chance to start, Player 2 has 25%, Player 3 has 15%, Player 4 has 10%
-  - [ ] Add a way to set these probabilities in the settings dialog
+- [x] Allow to customize the probabilities of each player starting the game (instead of uniform distribution)
+  - [x] E.g. Player 1 has 50% chance to start, Player 2 has 25%, Player 3 has 15%, Player 4 has 10%
+  - [x] Add a way to set these probabilities in the settings dialog
 
 ## Game history and undo functionality
 

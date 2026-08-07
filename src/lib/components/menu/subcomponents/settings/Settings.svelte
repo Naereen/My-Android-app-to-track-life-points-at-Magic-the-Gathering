@@ -20,6 +20,8 @@
 		setShowGameHistoryMenu,
 		setShowResourcesButton,
 		setShowRandomizerButton,
+		setUseWeightedStartingPlayer,
+		setStartingPlayerProbability,
 		setAppLocale
 	} from '$lib/store/appSettings';
 	import {
@@ -42,6 +44,7 @@
 		setSoundEffectsEnabled
 	} from '$lib/store/appSettings';
 	import { setEnableCurrentPlayerGlow, setShowNextPlayerButton } from '$lib/store/appSettings';
+	import { players } from '$lib/store/player';
 	import { _ } from 'svelte-i18n';
 
 	type RelayHealthStatus = 'idle' | 'testing' | 'ok' | 'ko';
@@ -150,6 +153,32 @@
 		const target = e.currentTarget as HTMLInputElement;
 		setShowLifeChangeHistory(!!target.checked);
 	};
+
+	const handleUseWeightedStartingPlayerChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setUseWeightedStartingPlayer(!!target.checked);
+	};
+
+	const getDisplayedPlayerName = (index: number) => {
+		const fallback = `Player ${index + 1}`;
+		return $players[index]?.playerName?.trim() || fallback;
+	};
+
+	const handleStartingPlayerProbabilityChange = (index: number, value: string) => {
+		let parsed = Number(value);
+		if (!Number.isFinite(parsed)) parsed = 0;
+		parsed = Math.max(0, Math.min(100, parsed));
+		setStartingPlayerProbability(index, parsed);
+	};
+
+	const handleStartingPlayerProbabilityInput = (index: number, event: Event) => {
+		const target = event.currentTarget as HTMLInputElement | null;
+		handleStartingPlayerProbabilityChange(index, target?.value ?? '0');
+	};
+
+	$: weightedStartSum = ($appSettings.startingPlayerProbabilities || [])
+		.slice(0, $appSettings.playerCount)
+		.reduce((sum, p) => sum + (Number.isFinite(Number(p)) ? Number(p) : 0), 0);
 
 	const handleEnableGlowChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
@@ -946,6 +975,70 @@
 					/>
 					<span class="ml-2 text-lg font-semibold">{$_('turn_timer_sound') || 'Play sound on timeout'}</span>
 				</label>
+			</div>
+		{/if}
+
+		<!-- Custom starting probabilities for various players -->
+		<div class="w-full flex justify-center mt-2 mb-0">
+			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
+				<div class="text-2xl font-bold">
+					{$_('starting_player_probabilities_title') || 'Starting Player Probabilities'}
+				</div>
+			</div>
+		</div>
+
+		<div class="w-full px-6 mt-1 mb-1 text-left">
+			<p class="text-sm text-gray-300">
+				{$_('starting_player_probabilities_caption') ||
+					'This experimental option lets you customize who is more likely to start the game.'}
+			</p>
+		</div>
+
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.useWeightedStartingPlayer}
+					on:change={handleUseWeightedStartingPlayerChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">
+					{$_('starting_player_probabilities_enable') || 'Enable custom probabilities for who starts'}
+				</span>
+			</label>
+		</div>
+
+		{#if $appSettings.useWeightedStartingPlayer}
+			<div class="w-full px-6 mt-1 mb-2 text-left">
+				<div class="text-sm text-gray-300 mb-2">
+					{$_('starting_player_probabilities_help') || 'Values are treated as weights. They do not need to sum exactly to 100.'}
+				</div>
+				{#each Array.from({ length: $appSettings.playerCount }) as slot, index}
+					<div class="flex items-center justify-between gap-3 mb-2 bg-gray-800/70 rounded-xl px-3 py-2">
+						<div class="text-base text-gray-100">
+							{$_('starting_player_probabilities_change_for') || 'Chance for'}
+							"{getDisplayedPlayerName(index)}"
+						</div>
+						<div class="flex items-center gap-2">
+							<input
+								type="number"
+								min="0"
+								max="100"
+								step="1"
+								value={Math.round(($appSettings.startingPlayerProbabilities?.[index] ?? 0) * 100) / 100}
+								on:change={(e) => handleStartingPlayerProbabilityInput(index, e)}
+								class="bg-gray-600 w-20 h-8 rounded text-center text-lg"
+							/>
+							<span class="text-gray-100 font-semibold">%</span>
+						</div>
+					</div>
+				{/each}
+				<div class="text-xs text-gray-400 mt-1">
+					{$_('starting_player_probabilities_sum') || 'Current total'}: {Math.round(weightedStartSum * 100) / 100}%
+				</div>
 			</div>
 		{/if}
 
