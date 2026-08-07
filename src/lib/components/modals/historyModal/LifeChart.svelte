@@ -207,6 +207,50 @@
 				entry.point !== null
 		);
 
+	const latestPointLabels = (() => {
+		if (latestPoints.length === 0) return [];
+
+		const labelMinGap = 30;
+		const minLabelY = padding.top + 24;
+		const maxLabelY = viewBoxHeight - padding.bottom - 22;
+
+		const sorted = latestPoints
+			.map((entry) => ({
+				...entry,
+				rawY: entry.point.y - 10,
+				displayY: entry.point.y - 10
+			}))
+			.sort((left, right) => left.rawY - right.rawY);
+
+		if (sorted.length > 0) {
+			sorted[0].displayY = clamp(sorted[0].rawY, minLabelY, maxLabelY);
+		}
+
+		for (let index = 1; index < sorted.length; index++) {
+			const previous = sorted[index - 1];
+			const current = sorted[index];
+			const targetY = Math.max(current.rawY, previous.displayY + labelMinGap);
+			current.displayY = clamp(targetY, minLabelY, maxLabelY);
+		}
+
+		for (let index = sorted.length - 2; index >= 0; index--) {
+			const next = sorted[index + 1];
+			const current = sorted[index];
+			if (current.displayY > next.displayY - labelMinGap) {
+				current.displayY = clamp(next.displayY - labelMinGap, minLabelY, maxLabelY);
+			}
+		}
+
+		const byId = new Map(sorted.map((entry) => [entry.id, entry]));
+		return latestPoints.map((entry) => {
+			const positioned = byId.get(entry.id);
+			return {
+				...entry,
+				displayY: positioned?.displayY ?? entry.point.y - 10
+			};
+		});
+	})();
+
 	afterUpdate(() => {
 		pathElements.forEach((element, index) => {
 			const path = series[index]?.path ?? '';
@@ -392,10 +436,10 @@
 				{/each}
 			{/each}
 
-			{#each latestPoints as entry (entry.id)}
+			{#each latestPointLabels as entry (entry.id)}
 				<text
 					x={entry.point.x - 70}
-					y={entry.point.y - 10}
+					y={entry.displayY}
 					fill={entry.color}
 					font-size="25"
 					font-weight="600"
