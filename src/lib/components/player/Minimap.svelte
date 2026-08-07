@@ -290,20 +290,29 @@
 		isCommanderModal: boolean
 	): MinimapMatrix => {
 		if (isCommanderModal) {
-            if (viewerOrientation === 'down')
+            if (viewerOrientation === 'down') {
                 return rotate180(matrix);
+            }
+            else if (viewerOrientation === 'right') {
+                return rotateCounterClockwise(matrix);
+            }
+            else if (viewerOrientation === 'left') {
+                return rotateClockwise(matrix);
+            }
             return matrix;
         }
-		else if (viewerOrientation === 'right') {
-            return applySymetryByYAxis(rotateClockwise(matrix));
+		else {
+            if (viewerOrientation === 'down') {
+                return rotate180(matrix);
+            }
+            else if (viewerOrientation === 'right') {
+                return rotateCounterClockwise(applySymetryByYAxis(matrix));
+            }
+            else if (viewerOrientation === 'left') {
+                return  applySymetryByYAxis(rotateClockwise(matrix));
+            }
+            return matrix;
         }
-		else if (viewerOrientation === 'left') {
-            return rotateCounterClockwise(matrix);
-        }
-		else if (viewerOrientation === 'down') {
-            return rotate180(matrix);
-        }
-		return matrix;
 	};
 
 	const getThreePlayerViewerMatrix = (viewerIndex: number): MinimapMatrix => {
