@@ -27,7 +27,7 @@
 	"starting_life_custom_apply": "Anwenden",
 	"starting_life_current_custom": "Aktuelle Anfangslebenspunkte: benutzerdefiniert",
 	"starting_life_current_preset": "Aktuelle Anfangslebenspunkte: Vorgabe",
-	"window_confirm_change_life_total": "Möchten Sie mit diesen Lebenspunkten fortfahren?",
+	"window_confirm_change_life_total": "Möchten Sie mit {lifeTotal} Lebenspunkten neu starten?",
 	"window_confirm_change_player_count": "Möchten Sie mit dieser Spieleranzahl fortfahren?",
 	"window_confirm_reset_game": "Möchten Sie das Spiel wirklich zurücksetzen?",
 	"reset_player_profiles_checkbox": "Spielerprofile auch zurücksetzen (Farben)",

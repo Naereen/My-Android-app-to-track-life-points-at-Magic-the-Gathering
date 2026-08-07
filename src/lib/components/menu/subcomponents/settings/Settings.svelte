@@ -100,7 +100,7 @@
 	};
 
 	const setLifeTotal = async (startingLifeTotal: number) => {
-		const confirm = await showConfirm($_('window_confirm_change_life_total'));
+		const confirm = await showConfirm( `${ $_('window_confirm_change_life_total').replace('{lifeTotal}', startingLifeTotal.toString() ) }`);
 		if (confirm) {
 			const nextLife = clampCustomStartingLifeTotal(startingLifeTotal);
 			setStartingLifeTotal(nextLife);
@@ -576,7 +576,7 @@
 		</div>
 
 		<!-- Starting Life Total -->
-		<div class="mt-6 w-3/4">
+		<div class="mt-6 w-2/3">
 			<div><span style="font-size: 1.5rem;" class="font-bold">{$_('starting_life')}</span></div>
 			<div class="flex flex-row justify-between mt-3">
 				{#each [20, 25, 30, 40, 'custom'] as lifeTotal}
@@ -598,6 +598,7 @@
 								>
 									?
 								</CircularButton>
+								<span style="font-size: 0.75rem;">{$_('starting_life_custom_label_short')}</span>
 							</div>
 						{/if}
 					{/key}
