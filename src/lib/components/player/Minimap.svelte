@@ -76,8 +76,15 @@
 	export const getBackgroundViewerRotationInCommanderDamage = (
 		playerIndex: number,
 		numberOfPlayers: number,
-		layout: 'two-by-two' | 'one-two-one' | ''
+		layout: 'two-by-two' | 'one-two-one' | '',
+        fromPlayerDataModal: boolean = false
 	): string => {
+        if (fromPlayerDataModal) {
+            // FIXME: right now, I've disabled this function if the fromPlayerDataModal flag is enabled: all the cases return '0deg', ie. no rotation
+            // TODO: make the whole PlayerDataModal component rotate, instead of just the Minimap!
+            return '0deg';
+        }
+
 		if (numberOfPlayers === 3) {
 			if (playerIndex === 1) return '-90deg';
 			if (playerIndex === 2) return '90deg';
@@ -199,117 +206,149 @@
 	$: numberOfPlayers = $appSettings.playerCount;
 	$: meString = String($_('me')); // Keep translated "me" label reactive on locale changes.
 
-	type MinimapRows = number[][];
+	type SeatOrientation = App.Player.Orientation;
+	type MinimapMatrix = number[][];
+	type MinimapTilePlacement = {
+		targetIndex: number;
+		rowStart: number;
+		rowEnd: number;
+		colStart: number;
+		colEnd: number;
+	};
 
-	const getMinimapRows = (
-		playerId: number,
+	const getCanonicalSeatMatrix = (
 		playerCount: number,
-		currentLayout: 'two-by-two' | 'one-two-one' | '',
-        fromPlayerDataModal: boolean = false,
-	): MinimapRows => {
+		currentLayout: 'two-by-two' | 'one-two-one' | ''
+	): MinimapMatrix => {
 		switch (playerCount) {
 			case 2:
-				return [[1], [0]];
+				return [[1, 1], [0, 0]];
 			case 3:
-				if (playerId === 0) return [[1, 2], [0]];
-				else if (playerId === 1) return [[1], [2, 0]];
-				else if (playerId === 2) return [[2], [1, 0]];
-				else return [];
+				return [[1, 2], [0, 0]];
 			case 4:
-                if (fromPlayerDataModal) {
-                    if (currentLayout === 'two-by-two') {
-                        if (playerId === 0)
-                            return [[2, 3], [1, 0]];
-                        else if (playerId === 1)
-                            return [[2, 3], [1, 0]];
-                        else if (playerId === 2)
-                            return [[2, 3], [1, 0]];
-                        else if (playerId === 3)
-                            return [[2, 3], [1, 0]];
-                        else return [];
-                    } else {
-                        if (playerId === 0) return [[2], [1, 3], [0]];
-                        else if (playerId === 1) return [[1], [2, 0], [3]];
-                        else if (playerId === 2) return [[0], [3, 1], [2]];
-                        else if (playerId === 3) return [[3], [2, 0], [1]];
-                        else return [];
-                    }
-                } else {
-                    if (currentLayout === 'two-by-two') {
-                        if (playerId === 0)
-                            return [[1, 0], [2, 3]];
-                        else if (playerId === 1)
-                            return [[1, 0], [2, 3]];
-                        else if (playerId === 2)
-                            return [[2, 3], [1, 0]];
-                        else if (playerId === 3)
-                            return [[2, 3], [1, 0]];
-                        else return [];
-                    } else {
-                        if (playerId === 0) return [[2], [1, 3], [0]];
-                        else if (playerId === 1) return [[1], [2, 0], [3]];
-                        else if (playerId === 2) return [[0], [3, 1], [2]];
-                        else if (playerId === 3) return [[3], [2, 0], [1]];
-                        else return [];
-                    }
-                }
+				return currentLayout === 'two-by-two'
+					? [[1, 2], [0, 3]]
+					: [[2, 2], [1, 3], [0, 0]];
 			case 5:
-                if (playerId === 0) return [[2, 3], [1, 4], [0]];
-                else if (playerId === 1) return [[1], [2, 0], [3, 4]];
-                else if (playerId === 2) return [[2], [1, 0], [3, 4]];
-                else if (playerId === 3) return [[3], [4, 0], [2, 1]];
-                else if (playerId === 4) return [[4], [3, 0], [2, 1]];
-                else return [];
+				return [[2, 3], [1, 4], [0, 0]];
 			case 6:
-				if (currentLayout === 'one-two-one') {
-                    if (playerId === 0) return [[3], [1, 4], [2, 5], [0]];
-                    else if (playerId === 1) return [[1], [2, 0], [3, 5], [4]];
-                    else if (playerId === 2) return [[2], [3, 1], [4, 0], [5]];
-                    else if (playerId === 3) return [[0], [5, 1], [4, 2], [3]];
-                    else if (playerId === 4) return [[4], [3, 5], [2, 0], [1]];
-                    else if (playerId === 5) return [[5], [4, 0], [3, 1], [2]];
-                    else return [];
-                } else {
-                    if (fromPlayerDataModal) {
-                        if (playerId <= 2) {
-                            return [[3, 4, 5], [2, 1, 0]];
-                        } else {
-                            return [[0, 1, 2], [5, 4, 3]];
-                        }
-                    } else {
-                        if (playerId <= 2) {
-                            return [[2, 1, 0], [3, 4, 5]];
-                        } else {
-                            return [[3, 4, 5], [2, 1, 0]];
-                        }
-                    }
-                }
+				return currentLayout === 'one-two-one'
+					? [[3, 3], [2, 4], [1, 5], [0, 0]]
+					: [[2, 3], [1, 4], [0, 5]];
 			case 7:
-                if (playerId === 0) return [[3, 4], [2, 5], [1, 6], [0]];
-                else if (playerId === 1) return [[1], [2, 0], [3, 6], [4, 5]];
-                else if (playerId === 2) return [[2], [3, 1], [4, 0], [5, 6]];
-                else if (playerId === 3) return [[3], [4, 2], [5, 1], [6, 0]];
-                else if (playerId === 4) return [[4], [5, 3], [6, 2], [0, 1]];
-                else if (playerId === 5) return [[5], [6, 4], [0, 3], [1, 2]];
-                else if (playerId === 6) return [[6], [0, 5], [1, 4], [2, 3]];
-                else return [];
-            case 8:
-                // TODO: finish this mode manually at first!
-                if (playerId === 0) return [[4], [3, 5], [2, 6], [1, 7], [0]];
-                else if (playerId === 1) return [[1], [2, 0], [3, 7], [4, 6], [5]];
-                else if (playerId === 2) return [[2], [3, 1], [4, 0], [5, 7], [6]];
-                else if (playerId === 3) return [[3], [4, 2], [5, 1], [6, 0], [7]];
-                else if (playerId === 4) return [[0], [7, 1], [6, 2], [5, 3], [4]];
-                else if (playerId === 5) return [[5], [6, 4], [7, 3], [0, 2], [1]];
-                else if (playerId === 6) return [[6], [7, 5], [0, 4], [1, 3], [2]];
-                else if (playerId === 7) return [[7], [0, 6], [1, 5], [2, 4], [3]];
-                else return [];
+				return [[3, 4], [2, 5], [1, 6], [0, 0]];
+			case 8:
+				return [[4, 4], [3, 5], [2, 6], [1, 7], [0, 0]];
 			default:
-				return [];
+				return [[0, 0]];
 		}
 	};
 
-	$: minimapRows = getMinimapRows(playerIndex, numberOfPlayers, layout, fromPlayerDataModal);
+	const rotateClockwise = (matrix: MinimapMatrix): MinimapMatrix => {
+		const rows = matrix.length;
+		const cols = matrix[0]?.length ?? 0;
+		const rotated: MinimapMatrix = Array.from({ length: cols }, () => Array(rows).fill(0));
+		for (let r = 0; r < rows; r += 1) {
+			for (let c = 0; c < cols; c += 1) {
+				rotated[c][rows - 1 - r] = matrix[r][c];
+			}
+		}
+		return rotated;
+	};
+
+	const rotateCounterClockwise = (matrix: MinimapMatrix): MinimapMatrix => {
+		const rows = matrix.length;
+		const cols = matrix[0]?.length ?? 0;
+		const rotated: MinimapMatrix = Array.from({ length: cols }, () => Array(rows).fill(0));
+		for (let r = 0; r < rows; r += 1) {
+			for (let c = 0; c < cols; c += 1) {
+				rotated[cols - 1 - c][r] = matrix[r][c];
+			}
+		}
+		return rotated;
+	};
+
+	const rotate180 = (matrix: MinimapMatrix): MinimapMatrix => {
+		const rows = matrix.length;
+		const cols = matrix[0]?.length ?? 0;
+		const rotated: MinimapMatrix = Array.from({ length: rows }, () => Array(cols).fill(0));
+		for (let r = 0; r < rows; r += 1) {
+			for (let c = 0; c < cols; c += 1) {
+				rotated[rows - 1 - r][cols - 1 - c] = matrix[r][c];
+			}
+		}
+		return rotated;
+	};
+
+	const applySymetryByYAxis = (matrix: MinimapMatrix): MinimapMatrix => {
+		return matrix.map((row) => [...row].reverse());
+	};
+
+	const rotateForViewer = (
+		matrix: MinimapMatrix,
+		viewerOrientation: SeatOrientation,
+		isCommanderModal: boolean
+	): MinimapMatrix => {
+		if (isCommanderModal) return matrix;
+
+		if (viewerOrientation === 'right') return applySymetryByYAxis(rotateClockwise(matrix));
+
+		if (viewerOrientation === 'left') return rotateCounterClockwise(matrix);
+		if (viewerOrientation === 'down') return rotate180(matrix);
+		return matrix;
+	};
+
+	const getThreePlayerViewerMatrix = (viewerIndex: number): MinimapMatrix => {
+		if (viewerIndex === 1) return [[1, 0], [2, 0]];
+		if (viewerIndex === 2) return [[2, 0], [1, 0]];
+		return [[1, 2], [0, 0]];
+	};
+
+	const computeTilePlacements = (
+		matrix: MinimapMatrix,
+		playerCount: number
+	): MinimapTilePlacement[] => {
+		const placements: MinimapTilePlacement[] = [];
+		for (let target = 0; target < playerCount; target += 1) {
+			let minRow = Number.POSITIVE_INFINITY;
+			let maxRow = Number.NEGATIVE_INFINITY;
+			let minCol = Number.POSITIVE_INFINITY;
+			let maxCol = Number.NEGATIVE_INFINITY;
+
+			for (let r = 0; r < matrix.length; r += 1) {
+				for (let c = 0; c < (matrix[r]?.length ?? 0); c += 1) {
+					if (matrix[r][c] !== target) continue;
+					minRow = Math.min(minRow, r);
+					maxRow = Math.max(maxRow, r);
+					minCol = Math.min(minCol, c);
+					maxCol = Math.max(maxCol, c);
+				}
+			}
+
+			if (!Number.isFinite(minRow) || !Number.isFinite(minCol)) continue;
+
+			placements.push({
+				targetIndex: target,
+				rowStart: minRow + 1,
+				rowEnd: maxRow + 2,
+				colStart: minCol + 1,
+				colEnd: maxCol + 2
+			});
+		}
+
+		return placements.sort((a, b) =>
+			a.rowStart === b.rowStart ? a.colStart - b.colStart : a.rowStart - b.rowStart
+		);
+	};
+
+	$: canonicalMatrix = getCanonicalSeatMatrix(numberOfPlayers, layout);
+	$: minimapMatrix =
+		numberOfPlayers === 3 && !fromPlayerDataModal
+			? getThreePlayerViewerMatrix(playerIndex)
+			: rotateForViewer(canonicalMatrix, orientation, fromPlayerDataModal);
+	$: minimapRowCount = minimapMatrix.length;
+	$: minimapColCount = minimapMatrix[0]?.length ?? 1;
+	$: minimapTiles = computeTilePlacements(minimapMatrix, numberOfPlayers);
 
 	const orientationToDegrees = (seatOrientation: SeatOrientation): string => {
 		if (seatOrientation === 'left') return '-90deg';
@@ -326,11 +365,17 @@
 	};
 
 	$: getViewerRotation = (): string => {
+        // FIXME: right now, I've disabled this function if the fromPlayerDataModal flag is enabled: all the cases return '0deg', ie. no rotation
+        // TODO: make the whole PlayerDataModal component rotate, instead of just the Minimap!
+        // if (fromPlayerDataModal) {
+        //     return '0deg';
+        // }
+
 		// Custom convention requested for the 3-player layout.
 		// Player 1 => normal, player 2 => left, player 3 => right.
 		if (numberOfPlayers === 3) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '180deg';
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '-90deg';
 			return '0deg';
 		}
 
@@ -403,24 +448,25 @@
 		return getTileRotation(playerIndex);
 	};
 
-	$: backgroundRotation = getBackgroundViewerRotation(playerIndex, numberOfPlayers, layout);
-	$: isQuarterTurn = backgroundRotation === '90deg' || backgroundRotation === '-90deg';
-	$: backgroundLayerClass = isQuarterTurn ? 'absolute -inset-1/2' : 'absolute inset-0';
-	$: isHorizontalOrientation = orientation === 'up' || orientation === 'down';
-	$: minimapWidthRem =
-		(orientation === 'left' || orientation === 'right')
-			? numberOfPlayers >= 3
-				? (fromPlayerDataModal ? 7.0 : 4.0)
-				: (fromPlayerDataModal ? 5.0 : 3.0)
-			: (fromPlayerDataModal ? 5.0 : 5.0);
-	$: minimapHeightRem = isHorizontalOrientation
-		? numberOfPlayers <= 3
-			? Math.max(4.1, minimapRows.length * 1.75)
-			: Math.max(3.5, minimapRows.length * 1.3)
-		: Math.max(5.5, minimapRows.length * 1.15);
+	$: minimapWidthRem = fromPlayerDataModal
+		? Math.max(5.0, minimapColCount * 1.6)
+		: Math.max(3.8, minimapColCount * 1.45);
+	$: minimapHeightRem = fromPlayerDataModal
+		? Math.max(5.0, minimapRowCount * 1.45)
+		: Math.max(3.6, minimapRowCount * 1.3);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
-	$: rowsStyle = `grid-template-rows: repeat(${minimapRows.length}, minmax(0, 1fr));`;
+	$: minimapGridStyle = `grid-template-rows: repeat(${minimapRowCount}, minmax(0, 1fr)); grid-template-columns: repeat(${minimapColCount}, minmax(0, 1fr));`;
 	$: minimapContainerClass = `pointer-events-auto overflow-hidden rounded-md border border-black/70 p-0.5 ${backgroundClass}`;
+
+	$: getTileBackgroundRotation = (targetIndex: number): string => {
+		const seatOrientation = seatOrientations[targetIndex] ?? 'up';
+		return orientationToDegrees(seatOrientation);
+	};
+
+	$: getTileBackgroundLayerClass = (targetIndex: number): string => {
+		const rotation = getTileBackgroundRotation(targetIndex);
+		return rotation === '90deg' || rotation === '-90deg' ? 'absolute -inset-1/2' : 'absolute inset-0';
+	};
 
 	$: getBgStyle = (j: number) => {
 		const p = $players[j];
@@ -503,41 +549,37 @@
 		}
 	}}
 >
-	<div class="grid h-full w-full gap-0.5" style={rowsStyle}>
-		{#each minimapRows as row}
-			<div
-				class="grid min-h-0 w-full gap-0.5"
-				style={`grid-template-columns: repeat(${row.length}, minmax(0, 1fr));`}
+	<div class="grid h-full w-full gap-0.5" style={minimapGridStyle}>
+		{#each minimapTiles as tile}
+			<button
+				type="button"
+				class={`relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-sm border border-black/80 ${backgroundClass}`}
+				style={`grid-row: ${tile.rowStart} / ${tile.rowEnd}; grid-column: ${tile.colStart} / ${tile.colEnd};`}
+				title={$players[tile.targetIndex]?.playerName}
+				on:pointerdown={() => startSeatLongPress(tile.targetIndex)}
+				on:pointerup={stopSeatLongPress}
+				on:pointerleave={stopSeatLongPress}
+				on:pointercancel={stopSeatLongPress}
+				on:click={(event) => handleSeatClick(event, tile.targetIndex)}
+				on:keydown={(event) => handleSeatKeydown(event, tile.targetIndex)}
 			>
-				{#each row as targetIndex}
-					<button
-						type="button"
-						class={`relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-sm border border-black/80 ${backgroundClass}`}
-						title={$players[targetIndex]?.playerName}
-						on:pointerdown={() => startSeatLongPress(targetIndex)}
-						on:pointerup={stopSeatLongPress}
-						on:pointerleave={stopSeatLongPress}
-						on:pointercancel={stopSeatLongPress}
-						on:click={(event) => handleSeatClick(event, targetIndex)}
-						on:keydown={(event) => handleSeatKeydown(event, targetIndex)}
-					>
-						<div
-							class={backgroundLayerClass}
-							style={`${getBgStyle(targetIndex)} transform: rotate(${backgroundRotation}); transform-origin: center;`}
-						></div>
-						<div
-							class="relative z-10 text-white text-[10px] leading-none text-center font-semibold px-0.5"
-							style={`transform: rotate(${getViewerRotation()});`}
-						>
-							{#if shouldShowMe(targetIndex)}
-								{meString}
-							{:else}
-								{getCommanderDamage(targetIndex)}
-							{/if}
-						</div>
-					</button>
-				{/each}
-			</div>
+				<div
+					class={getTileBackgroundLayerClass(tile.targetIndex)}
+					style={`${getBgStyle(tile.targetIndex)} transform: rotate(${getTileBackgroundRotation(tile.targetIndex)}); transform-origin: center;`}
+				></div>
+				<div
+					class="relative z-10 text-white text-[10px] leading-none text-center font-semibold px-0.5"
+					style={`transform: rotate(${getViewerRotation()});`}
+				>
+					{#if shouldShowMe(tile.targetIndex)}
+						<span class="text-[8px]">
+                            {meString}
+                        </span>
+					{:else}
+						{getCommanderDamage(tile.targetIndex)}
+					{/if}
+				</div>
+			</button>
 		{/each}
 	</div>
 </div>
