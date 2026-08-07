@@ -53,13 +53,18 @@
 					else return [];
 				} else {
 					if (playerId === 0) return [[2], [1, 3], [0]];
-					else if (playerId === 1) return [[2], [1, 3], [0]];
+					else if (playerId === 1) return [[1], [2, 0], [3]];
 					else if (playerId === 2) return [[0], [1, 3], [2]];
-					else if (playerId === 3) return [[2], [1, 3], [0]];
+					else if (playerId === 3) return [[3], [2, 0], [1]];
 					else return [];
 				}
 			case 5:
-				return [[2, 3], [1, 4], [0]];
+                if (playerId === 0) return [[2, 3], [1, 4], [0]];
+                else if (playerId === 1) return [[1], [2, 0], [3, 4]];
+                else if (playerId === 2) return [[2], [3, 4], [1, 0]];
+                else if (playerId === 3) return [[3], [4, 0], [1, 2]];
+                else if (playerId === 4) return [[4], [0, 1], [2, 3]];
+                else return [];
 			case 6:
 				return currentLayout === 'one-two-one'
 					? [[3], [2, 4], [1, 5], [0]]
@@ -282,7 +287,19 @@
 	$: backgroundRotation = getBackgroundViewerRotation();
 	$: isQuarterTurn = backgroundRotation === '90deg' || backgroundRotation === '-90deg';
 	$: backgroundLayerClass = isQuarterTurn ? 'absolute -inset-1/2' : 'absolute inset-0';
-	$: minimapStyle = `width: ${orientation === 'left' || orientation === 'right' ? '3rem' : '5rem'}; height: ${Math.max(2, minimapRows.length * 1.125)}rem;`;
+	$: isHorizontalOrientation = orientation === 'up' || orientation === 'down';
+	$: minimapWidthRem =
+		(orientation === 'left' || orientation === 'right')
+			? numberOfPlayers >= 3
+				? 4.0
+				: 3.0
+			: 5.0;
+	$: minimapHeightRem = isHorizontalOrientation
+		? numberOfPlayers <= 3
+			? Math.max(4.1, minimapRows.length * 1.75)
+			: Math.max(2.8, minimapRows.length * 1.3)
+		: Math.max(5.0, minimapRows.length * 1.15);
+	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: rowsStyle = `grid-template-rows: repeat(${minimapRows.length}, minmax(0, 1fr));`;
 
 	$: getBgStyle = (j: number) => {

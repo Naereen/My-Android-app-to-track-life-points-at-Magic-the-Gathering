@@ -16,6 +16,8 @@ interface AppSettings {
 	preventScreenSleep: boolean;
 	// layout for 4-players games: 'matrix' (2x2) or 'stacked' (1/2/1)
 	fourPlayerLayout: 'matrix' | 'stacked';
+	// layout for 3-players games: 'classic' (2 on top, 1 bottom) or 'inverted' (1 top, 2 bottom)
+	threePlayerLayout: 'classic' | 'inverted';
 	// layout for 6-players games: 'one' ("3 x 2") or 'two' ("|::|")
 	sixPlayerLayout: 'one' | 'two';
 	// whether to enable haptic feedback (vibration) for certain actions like incrementing/decrementing life totals (default is true)
@@ -80,6 +82,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	preventScreenSleep: true,
 	// layout for 4-players games: 'matrix' (2x2) or 'stacked' (1/2/1)
 	fourPlayerLayout: 'matrix',
+	// layout for 3-players games: 'classic' (2 on top, 1 bottom) or 'inverted' (1 top, 2 bottom)
+	threePlayerLayout: 'classic',
 	// layout for 6-players games: 'one' ("3 x 2") or 'two' ("|::|")
 	sixPlayerLayout: 'one',
 	// whether to enable haptic feedback (vibration) for certain actions like incrementing/decrementing life totals (default is true)
@@ -290,10 +294,15 @@ export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {
 	appSettings.update((data) => ({ ...data, fourPlayerLayout: layout }));
 };
 
+export const setThreePlayerLayout = (layout: 'classic' | 'inverted') => {
+	appSettings.update((data) => ({ ...data, threePlayerLayout: layout }));
+};
+
 // Backward compatibility for localStorage payloads that predate global timer options.
 appSettings.update((data) => {
 	const withDefaults = {
 		...data,
+		threePlayerLayout: data.threePlayerLayout ?? 'classic',
 		globalGameTimerEnabled: data.globalGameTimerEnabled ?? true,
 		globalGameTimerDuration:
 			data.globalGameTimerDuration ?? getDefaultGlobalGameTimerDuration(data.playerCount ?? 4)

@@ -16,11 +16,13 @@ declare global {
 
 		namespace Settings {
 			type PlayerCount = 2 | 3 | 4 | 5 | 6 | 7 | 8;
+			type ThreePlayerLayout = 'classic' | 'inverted';
 			type FourPlayerLayout = 'matrix' | 'stacked';
 			type SixPlayerLayout = 'one' | 'two';
 
 			type Data = {
 				playerCount: PlayerCount;
+				threePlayerLayout: ThreePlayerLayout;
 				fourPlayerLayout: FourPlayerLayout;
 				sixPlayerLayout: SixPlayerLayout;
 

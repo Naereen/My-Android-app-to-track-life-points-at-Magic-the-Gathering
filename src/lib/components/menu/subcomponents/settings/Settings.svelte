@@ -6,6 +6,7 @@
 		setCustomStartingLifeTotal,
 		setPlayerCount,
 		setStartingLifeTotal,
+		setThreePlayerLayout,
 		setFourPlayerLayout,
 		setSixPlayerLayout,
 		setShowEmblemMenu,
@@ -423,6 +424,42 @@
 					{/key}
 				{/each}
 			</div>
+			{#if $appSettings.playerCount === 3}
+				<div class="mt-4">
+					<div class="text-lg mb-2">{$_('choose_3players_layout')}</div>
+					<div class="flex gap-3 justify-center">
+						<button
+							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+							class:border-blue-400={$appSettings.threePlayerLayout === 'classic'}
+							on:click={() => setThreePlayerLayout('classic')}
+						>
+							<div class="w-full h-full flex flex-col gap-1">
+								<div class="flex gap-1 h-1/2">
+									<div class="bg-gray-700 w-1/2" />
+									<div class="bg-gray-700 w-1/2" />
+								</div>
+								<div class="bg-gray-700 h-1/2 w-1/2 mx-auto" />
+							</div>
+							<div class="mt-1 text-sm">2 / 1</div>
+						</button>
+						<button
+							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+							class:border-blue-400={$appSettings.threePlayerLayout === 'inverted'}
+							on:click={() => setThreePlayerLayout('inverted')}
+						>
+							<div class="w-full h-full flex flex-col gap-1">
+								<div class="bg-gray-700 h-1/2 w-1/2 mx-auto" />
+								<div class="flex gap-1 h-1/2">
+									<div class="bg-gray-700 w-1/2" />
+									<div class="bg-gray-700 w-1/2" />
+								</div>
+							</div>
+							<div class="mt-1 text-sm">1 / 2</div>
+						</button>
+					</div>
+				</div>
+			{/if}
+
 			{#if $appSettings.playerCount === 4}
 				<div class="mt-4">
 					<div class="text-lg mb-2">{$_('choose_4players_layout')}</div>

@@ -4,6 +4,7 @@
 	import { derived } from 'svelte/store';
 	import TwoPlayerLayout from '$lib/layouts/TwoPlayerLayout.svelte';
 	import ThreePlayerLayout from '$lib/layouts/ThreePlayerLayout.svelte';
+	import ThreePlayerLayoutTwo from '$lib/layouts/ThreePlayerLayoutTwo.svelte';
 	import FourPlayerLayoutOne from '$lib/layouts/FourPlayerLayoutOne.svelte';
 	import FourPlayerLayoutTwo from '$lib/layouts/FourPlayerLayoutTwo.svelte';
 	import FivePlayerLayout from '$lib/layouts/FivePlayerLayout.svelte';
@@ -141,7 +142,11 @@
 	{#if $appSettings.playerCount === 2}
 		<TwoPlayerLayout />
 	{:else if $appSettings.playerCount === 3}
-		<ThreePlayerLayout />
+		{#if $appSettings.threePlayerLayout === 'inverted'}
+			<ThreePlayerLayoutTwo />
+		{:else}
+			<ThreePlayerLayout />
+		{/if}
 	{:else if $appSettings.playerCount === 4}
 		{#if $appSettings.fourPlayerLayout === 'stacked'}
 			<FourPlayerLayoutTwo />
