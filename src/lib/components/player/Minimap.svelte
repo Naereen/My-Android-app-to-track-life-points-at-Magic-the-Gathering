@@ -5,21 +5,21 @@
 		layout: 'two-by-two' | 'one-two-one' | ''
 	): string => {
 		if (numberOfPlayers === 3) {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
+			if (playerIndex === 1) return '180deg';
+			if (playerIndex === 2) return '180deg';
 			return '0deg';
 		}
 
 		if (numberOfPlayers === 4 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
-			if (playerIndex === 3) return '-90deg';
-			return '90deg';
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '180deg';
+			if (playerIndex === 3) return '180deg';
+			return '0deg';
 		}
 		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 1) return '180deg';
 			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '90deg';
+			if (playerIndex === 3) return '180deg';
 			return '0deg';
 		}
 
@@ -34,9 +34,9 @@
 		if (numberOfPlayers === 6 && layout === 'two-by-two') {
 			if (playerIndex === 1) return '0deg';
 			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
+			if (playerIndex === 3) return '0deg';
+			if (playerIndex === 4) return '0deg';
+			if (playerIndex === 5) return '0deg';
 			return '0deg';
 		}
 		if (numberOfPlayers === 6 && layout === 'one-two-one') {
@@ -85,10 +85,10 @@
 		}
 
 		if (numberOfPlayers === 4 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 1) return '90deg';
 			if (playerIndex === 2) return '90deg';
 			if (playerIndex === 3) return '90deg';
-			return '-90deg';
+			return '90deg';
 		}
 		if (numberOfPlayers === 4 && layout === 'one-two-one') {
 			if (playerIndex === 1) return '-90deg';
@@ -106,12 +106,12 @@
 		}
 
 		if (numberOfPlayers === 6 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			return '0deg';
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '90deg';
+			if (playerIndex === 3) return '-90deg';
+			if (playerIndex === 4) return '-90deg';
+			if (playerIndex === 5) return '-90deg';
+			return '90deg';
 		}
 		if (numberOfPlayers === 6 && layout === 'one-two-one') {
 			if (playerIndex === 1) return '0deg';
@@ -204,7 +204,8 @@
 	const getMinimapRows = (
 		playerId: number,
 		playerCount: number,
-		currentLayout: 'two-by-two' | 'one-two-one' | ''
+		currentLayout: 'two-by-two' | 'one-two-one' | '',
+        orientation: App.Player.Orientation = 'up',
 	): MinimapRows => {
 		switch (playerCount) {
 			case 2:
@@ -215,23 +216,43 @@
 				else if (playerId === 2) return [[2], [1, 0]];
 				else return [];
 			case 4:
-				if (currentLayout === 'two-by-two') {
-					if (playerId === 0)
-						return [[1, 0], [2, 3]];
-					else if (playerId === 1)
-						return [[1, 0], [2, 3]];
-					else if (playerId === 2)
-						return [[2, 3], [1, 0]];
-					else if (playerId === 3)
-						return [[2, 3], [1, 0]];
-					else return [];
-				} else {
-					if (playerId === 0) return [[2], [1, 3], [0]];
-					else if (playerId === 1) return [[1], [2, 0], [3]];
-					else if (playerId === 2) return [[0], [3, 1], [2]];
-					else if (playerId === 3) return [[3], [2, 0], [1]];
-					else return [];
-				}
+                if (fromPlayerDataModal) {
+                    if (currentLayout === 'two-by-two') {
+                        if (playerId === 0)
+                            return [[2, 3], [1, 0]];
+                        else if (playerId === 1)
+                            return [[2, 3], [1, 0]];
+                        else if (playerId === 2)
+                            return [[2, 3], [1, 0]];
+                        else if (playerId === 3)
+                            return [[2, 3], [1, 0]];
+                        else return [];
+                    } else {
+                        if (playerId === 0) return [[2], [1, 3], [0]];
+                        else if (playerId === 1) return [[1], [2, 0], [3]];
+                        else if (playerId === 2) return [[0], [3, 1], [2]];
+                        else if (playerId === 3) return [[3], [2, 0], [1]];
+                        else return [];
+                    }
+                } else {
+                    if (currentLayout === 'two-by-two') {
+                        if (playerId === 0)
+                            return [[1, 0], [2, 3]];
+                        else if (playerId === 1)
+                            return [[1, 0], [2, 3]];
+                        else if (playerId === 2)
+                            return [[2, 3], [1, 0]];
+                        else if (playerId === 3)
+                            return [[2, 3], [1, 0]];
+                        else return [];
+                    } else {
+                        if (playerId === 0) return [[2], [1, 3], [0]];
+                        else if (playerId === 1) return [[1], [2, 0], [3]];
+                        else if (playerId === 2) return [[0], [3, 1], [2]];
+                        else if (playerId === 3) return [[3], [2, 0], [1]];
+                        else return [];
+                    }
+                }
 			case 5:
                 if (playerId === 0) return [[2, 3], [1, 4], [0]];
                 else if (playerId === 1) return [[1], [2, 0], [3, 4]];
@@ -249,10 +270,18 @@
                     else if (playerId === 5) return [[5], [4, 0], [3, 1], [2]];
                     else return [];
                 } else {
-                    if (playerId <= 2) {
-                        return [[2, 1, 0], [3, 4, 5]];
+                    if (fromPlayerDataModal) {
+                        if (playerId <= 2) {
+                            return [[3, 4, 5], [2, 1, 0]];
+                        } else {
+                            return [[2, 1, 0], [3, 4, 5]];
+                        }
                     } else {
-                        return [[3, 4, 5], [2, 1, 0]];
+                        if (playerId <= 2) {
+                            return [[2, 1, 0], [3, 4, 5]];
+                        } else {
+                            return [[3, 4, 5], [2, 1, 0]];
+                        }
                     }
                 }
 			case 7:
@@ -280,7 +309,7 @@
 		}
 	};
 
-	$: minimapRows = getMinimapRows(playerIndex, numberOfPlayers, layout);
+	$: minimapRows = getMinimapRows(playerIndex, numberOfPlayers, layout, orientation);
 
 	const orientationToDegrees = (seatOrientation: SeatOrientation): string => {
 		if (seatOrientation === 'left') return '-90deg';
@@ -292,8 +321,6 @@
 	$: seatOrientations = getSeatOrientations(numberOfPlayers, layout);
 
 	$: getTileRotation = (targetIndex: number): string => {
-		// Keep seat #1 unrotated as requested, rotate all others according to board layout.
-		// if (targetIndex === 0) return '0deg';
 		const seatOrientation = seatOrientations[targetIndex] ?? 'up';
 		return orientationToDegrees(seatOrientation);
 	};
@@ -316,7 +343,7 @@
 			return '0deg';
 		}
 		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 1) return '180deg';
 			if (playerIndex === 2) return '0deg';
 			if (playerIndex === 3) return '180deg';
 			return '0deg';
@@ -335,9 +362,9 @@
 		if (numberOfPlayers === 6 && layout === 'two-by-two') {
 			if (playerIndex === 1) return '0deg';
 			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
+			if (playerIndex === 3) return '0deg';
+			if (playerIndex === 4) return '0deg';
+			if (playerIndex === 5) return '0deg';
 			return '0deg';
 		}
 		if (numberOfPlayers === 6 && layout === 'one-two-one') {

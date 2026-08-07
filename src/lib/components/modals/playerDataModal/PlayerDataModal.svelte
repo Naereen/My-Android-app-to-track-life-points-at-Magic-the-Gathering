@@ -130,11 +130,12 @@
 	};
 
 	// Translation for damage from player label
-	$: damageFromPlayerLabel = String($_('damage_from_player'));
+	// $: damageFromPlayerLabel = String($_('damage_from_player'));
 	$: enterLifeTotalPlaceholder = String($_('enter_life_total_placeholder'));
 	$: setLifeTotalSave = String($_('set_life_total_save'));
 	$: setLifeTotalCancel = String($_('set_life_total_cancel'));
 	$: setCommanderDamageString = String($_('set_commander_damage'));
+
 	let commanderMinimapLayout: '' | 'two-by-two' | 'one-two-one' = '';
 	$: commanderMinimapLayout =
 		$appSettings.playerCount === 4
@@ -146,25 +147,23 @@
 					? 'one-two-one'
 					: 'two-by-two'
 				: '';
-	let commanderMinimapScale = 5.5;
-	let commanderMinimapHeightRem = 30;
+	let commanderMinimapScale = 3.5;
+	let commanderMinimapHeightRem = 24;
 	$: commanderMinimapScale =
-		$appSettings.playerCount <= 4
-			? 5.0
-			: $appSettings.playerCount === 5
-				? 4.5
-				: $appSettings.playerCount === 6
-					? 3.5
-					: 3.0;
+		$appSettings.playerCount <= 2 ? 5.5
+		: $appSettings.playerCount === 3 ? 3.5
+		: $appSettings.playerCount === 4 ? 3.0
+		: $appSettings.playerCount === 5 ? 3.75
+		: $appSettings.playerCount === 6 ? 2.0
+		: 1.75;
 	let commanderMinimapRotation = '0deg';
 	$: commanderMinimapHeightRem =
-		$appSettings.playerCount <= 4
-			? 24
-			: $appSettings.playerCount === 5
-				? 20
-				: $appSettings.playerCount === 6
-					? 16
-					: 12;
+		$appSettings.playerCount <= 2 ? 24
+		: $appSettings.playerCount === 3 ? 22
+		: $appSettings.playerCount === 4 ? 20
+		: $appSettings.playerCount === 5 ? 18
+		: $appSettings.playerCount === 6 ? 16
+		: 14;
 	$: commanderMinimapRotation = getBackgroundViewerRotationInCommanderDamage(
 		($playerModalData?.playerId ?? 1) - 1,
 		$appSettings.playerCount,
