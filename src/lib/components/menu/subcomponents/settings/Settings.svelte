@@ -1081,17 +1081,10 @@
 		<!-- Custom starting probabilities for various players -->
 		<div class="w-full flex justify-center mt-2 mb-0">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">
+				<span class="text-2xl font-bold">
 					{$_('starting_player_probabilities_title') || 'Starting Player Probabilities'}
-				</div>
+				</span>
 			</div>
-		</div>
-
-		<div class="w-full px-6 mt-1 mb-1 text-left">
-			<p class="text-sm text-gray-300">
-				{$_('starting_player_probabilities_caption') ||
-					'This experimental option lets you customize who is more likely to start the game.'}
-			</p>
 		</div>
 
 		<div class="w-full flex justify-start mt-0 mb-0">
@@ -1111,21 +1104,32 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-start mt-0 mb-1 pl-12">
-			<button
-				on:click={handleResetStartingPlayerProbabilities}
-				class="px-3 py-1 rounded bg-blue-900 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-				disabled={!$appSettings.useWeightedStartingPlayer}
-			>
-				{$_('starting_player_probabilities_reset') || 'Reset starting player probabilities'}
-			</button>
-		</div>
-
 		{#if $appSettings.useWeightedStartingPlayer}
 			<div class="w-full px-6 mt-1 mb-2 text-left">
 				<div class="text-sm text-gray-300 mb-2">
-					{$_('starting_player_probabilities_help') || 'Values are treated as weights. They do not need to sum exactly to 100.'}
+					<p>
+						{$_('starting_player_probabilities_caption') ||
+						'This experimental option lets you customize who is more likely to start the game.'}
+					</p>
 				</div>
+			</div>
+			<div class="w-full flex justify-start mt-0 mb-1 pl-12">
+				<button
+					on:click={handleResetStartingPlayerProbabilities}
+					class="px-3 py-1 rounded bg-blue-900 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+					disabled={!$appSettings.useWeightedStartingPlayer}
+				>
+					{$_('starting_player_probabilities_reset') || 'Reset starting player probabilities'}
+				</button>
+			</div>
+			<div class="w-full px-6 mt-1 mb-2 text-left">
+				<div class="text-sm text-gray-300 mb-2">
+					<p>
+						{$_('starting_player_probabilities_help') || 'Values are treated as weights. They do not need to sum exactly to 100.'}
+					</p>
+				</div>
+			</div>
+			<div class="w-full px-6 mt-1 mb-2 text-left">
 				{#each Array.from({ length: $appSettings.playerCount }) as slot, index}
 					<div class="flex items-center justify-between gap-3 mb-2 bg-gray-800/70 rounded-xl px-3 py-2">
 						<div class="text-base text-gray-100">

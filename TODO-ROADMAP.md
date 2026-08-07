@@ -32,6 +32,12 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep e
   - [x] What I want is more subtle and more interesting: I want the face of the dice to change during the animation, showing different faces of the dice, and not only the maximum face. I also want to completely remove the number being displayed below the face of the dice, as it is not very useful and it can be confusing, especially for D20 dice, where the maximum face is 20, but the result can be 1, which is very different from 20. So I want to show only the face of the dice during the animation, and not the number below it.
   - [x] J'aimerais que le texte qui affiche la face du dé soit mis dans une couleur bien flashy (e.g. doré) quand l'animation de rotation du dé se termine. Pourquoi ? J'aimerais que cela montre bien la fin de l'animation.
 
+- [x] Improve the Randomizer menu: make the long-click hint more compact, simplify the custom number panel, and clean up the surrounding labels.
+
+- [x] Tighten the Settings menu layout and make the labels a bit more compact.
+
+- [x] Refine the minimap rotations and tile placement for commander-damage views in the PlayerDataModal, especially for 3-, 4-, 6-, 7-, and 8-player layouts.
+
 - [x] In the different menus (Randomizer, ManaStorm, etc.), the status effects should NOT be displayed for the player 1 (the one in the bottom).
 
 - [x] Add the Beleren2016-bold font for the player' names.
@@ -185,6 +191,8 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
   - [x] Move the localisation of the boolean/numerical status effects to this new section at the bottom of each player panel, or in the player's name (before/after), depending on whether the boolean information is unique among players (Monarch, Initiative) or not (Ascend, etc)
   - [x] After, make this section visually appealing, make it prettier (nicer icons, better layout, etc.)
+
+- [ ] WIP: finalize the EDH partner mechanic for multiplayer, including the correct commander-damage view rotations and markers.
 
 - [x] Add support for the poison counter: you can die to them!
 

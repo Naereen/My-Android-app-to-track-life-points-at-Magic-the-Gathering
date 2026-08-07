@@ -69,9 +69,8 @@
 				<Arrow />
 			</button>
 			<span class="text-white text-center text-3xl">{$_('dice_misc')}</span>
-			<span class="text-gray-400 text-center text-base mt-2 w-80">{$_('long_click_random_player')}</span>
-			<span class="text-gray-400 text-center text-base mt-2 w-80">
-			</span>
+			<span class="text-gray-400 text-center text-sm mt-2 w-80">{$_('long_click_random_player')}</span>
+			<!-- <span class="text-gray-400 text-center text-base mt-2 w-80"></span> -->
 		</div>
 
 		<div class="w-full flex justify-center">
@@ -90,8 +89,9 @@
 							generateRandomNumber('custom');
 						}}
 						text={$_('custom_number')}
-						><div class="px-2 rounded flex flex-col -z-index-20">
-							<div class="relative">
+						><div class="px-2 rounded flex flex-col items-start gap-1">
+							<div class="w-full">
+								<p class="ml-1 mr-1 text-white text-sm">{$_('set_dice')}</p>
 								<input
 									on:click|stopPropagation
 									bind:value={$appSettings.customRandomNumber}
@@ -99,14 +99,13 @@
 									name="customNumber"
 									id="customNumber"
 									autocomplete="off"
-									class="w-20 bg-black rounded-xl grow h-[36px] text-right px-2 text-white text-lg outline-none"
+									class="w-12 bg-black rounded-xl grow h-[36px] text-right px-2 text-white text-lg outline-none"
 									on:keyup={(e) => handleCustomRandomizerKeyPress(e)}
 									max="999"
 									min="0"
 								/>
-								<p class="absolute top-2 left-2 text-white text-sm -z-index-20">{$_('set_dice')}</p>
 							</div>
-							<div class="text-white text-xl mb-2 mt-2">{$_('roll')}</div>
+							<p class="text-white text-base mb-1 mt-0">{$_('roll')}</p>
 						</div></DiceCard
 					>
 				</div>
