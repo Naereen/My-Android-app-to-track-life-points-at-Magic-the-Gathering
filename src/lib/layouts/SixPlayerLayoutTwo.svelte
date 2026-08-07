@@ -23,7 +23,7 @@
 
 	{#if !$appState.isMenuOpen}
 	<div
-		class="pt-2 flex gap-2 pt-2 bg-black sticky top-0"
+		class="pt-1 flex gap-2 bg-black sticky top-0"
 		class:h-[24%]={!$appState.isMenuOpen}
 		class:pt-2={$appState.isMenuOpen}
 	>
@@ -46,7 +46,7 @@
 
 	{#if !$appState.isMenuOpen}
 	<div
-		class="pt-2 flex gap-2 pt-2 bg-black sticky top-0 mb-2"
+		class="pt-1 flex gap-2 bg-black sticky top-0 mb-2"
 		class:h-[24%]={!$appState.isMenuOpen}
 		class:pt-2={$appState.isMenuOpen}
 	>

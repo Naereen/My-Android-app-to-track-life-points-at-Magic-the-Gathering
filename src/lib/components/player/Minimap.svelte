@@ -298,14 +298,14 @@
                 return rotate180(matrix);
             }
             else if (viewerOrientation === 'right') {
-                if (layout === 'two-by-two') {
+                if (layout === 'two-by-two' && numberOfPlayers <= 5) {
                     return applySymetryByYAxis(rotateCounterClockwise(matrix));
                 } else {
                     return rotateCounterClockwise(matrix);
                 }
             }
             else if (viewerOrientation === 'left') {
-                if (layout === 'two-by-two') {
+                if (layout === 'two-by-two' && numberOfPlayers <= 5) {
                     return applySymetryByYAxis(rotateClockwise(matrix));
                 } else {
                     return rotateClockwise(matrix);
@@ -318,14 +318,14 @@
                 return rotate180(matrix);
             }
             else if (viewerOrientation === 'right') {
-                if (layout === 'two-by-two') {
+                if (layout === 'two-by-two' && numberOfPlayers <= 5) {
                     return rotateClockwise(matrix);
                 } else {
                     return applySymetryByYAxis(rotateClockwise(matrix));
                 }
             }
             else if (viewerOrientation === 'left') {
-                if (layout === 'two-by-two') {
+                if (layout === 'two-by-two' && numberOfPlayers <= 5) {
                     return applySymetryByYAxis(rotateCounterClockwise(matrix));
                 } else {
                     return rotateCounterClockwise(matrix);
@@ -400,8 +400,10 @@
 		else if (seatOrientation === 'down') {
             if (numberOfPlayers === 4 && playerIndex !== 2 && layout === 'one-two-one') {
                 return '180deg';
-            } else {
+            } else if (numberOfPlayers === 6 && playerIndex === 3 && layout === 'one-two-one') {
                 return '0deg';
+            } else {
+                return '180deg';
             }
         }
 		return '0deg';
@@ -448,25 +450,89 @@
             }
         }
 
-        // FIXME: remove/clean-up this old code
-		if (seatOrientation === 'left') {
-            return '0deg';
-        }
-		else if (seatOrientation === 'right') {
-            return '180deg';
-        }
-        else if (seatOrientation === 'up') {
-            return '90deg';
-        }
-		else if (seatOrientation === 'down') {
-            if (numberOfPlayers === 4 && playerIndex !== 2 && layout === 'one-two-one') {
-                return '-90deg';
-            } else {
+        if (numberOfPlayers === 3) {
+            if (playerIndex === 1 || playerIndex === 2) {
+                if (seatOrientation === 'left') { return '0deg'; }
+                else if (seatOrientation === 'right') { return '180deg'; }
+                return '90deg';
+            } else if (playerIndex === 0) {
+                if (seatOrientation === 'left') { return '0deg'; }
+                else if (seatOrientation === 'right') { return '-180deg'; }
                 return '0deg';
             }
         }
-		return '0deg';
-	};
+
+        // TODO: layout inversé pour 3 joueurs, à traiter !
+
+        if (numberOfPlayers === 5) {
+            if (playerIndex === 1 || playerIndex === 2) {
+                if (seatOrientation === 'left') { return '180deg'; }
+                else if (seatOrientation === 'right') { return '0deg'; }
+                return '-90deg';
+            } else if (playerIndex === 3 || playerIndex === 4) {
+                if (seatOrientation === 'left') { return '0deg'; }
+                else if (seatOrientation === 'right') { return '180deg'; }
+                return '90deg';
+            } else if (playerIndex === 0) {
+                if (seatOrientation === 'up') { return '0deg'; }
+                else if (seatOrientation === 'down') { return '-180deg'; }
+                return '0deg';
+            }
+        }
+
+        if (numberOfPlayers === 6 && layout === 'two-by-two') {
+            if (playerIndex === 0 || playerIndex === 1 || playerIndex === 2) {
+                if (seatOrientation === 'left') { return '180deg'; }
+                else if (seatOrientation === 'right') { return '0deg'; }
+                return '-90deg';
+            } else if (playerIndex === 3 || playerIndex === 4 || playerIndex === 5) {
+                if (seatOrientation === 'left') { return '0deg'; }
+                else if (seatOrientation === 'right') { return '180deg'; }
+                return '90deg';
+            }
+        }
+
+        if (numberOfPlayers === 6 && layout === 'one-two-one') {
+            if (playerIndex === 0) {
+                if (seatOrientation === 'up') { return '0deg'; }
+                else if (seatOrientation === 'down' ) { return '180deg'; }
+                else if (seatOrientation === 'left') { return '-90deg'; }
+                else if (seatOrientation === 'right') { return '90deg'; }
+                return '0deg';
+            } else if (playerIndex === 1 || playerIndex === 2) {
+                if (seatOrientation === 'left') { return '180deg'; }
+                else if (seatOrientation === 'right') { return '0deg'; }
+                else if (seatOrientation === 'up') { return '0deg'; }  // XXX: wrong angle by choice
+                else if (seatOrientation === 'down') { return '0deg'; }  // XXX: wrong angle by choice
+                return '-90deg';
+            } else if (playerIndex === 3) {
+                if (seatOrientation === 'left') { return '180deg'; }
+                else if (seatOrientation === 'right') { return '0deg'; }
+                return '90deg';
+            } else if (playerIndex === 4 || playerIndex === 5) {
+                if (seatOrientation === 'left') { return '0deg'; }
+                else if (seatOrientation === 'right') { return '180deg'; }
+                else if (seatOrientation === 'up') { return '0deg'; }  // XXX: wrong angle by choice
+                else if (seatOrientation === 'down') { return '0deg'; }  // XXX: wrong angle by choice
+                return '90deg';
+            }
+        }
+
+        // XXX: maybe we should clean-up this old code
+		if (seatOrientation === 'left') {
+            return '-90deg';
+        }
+		else if (seatOrientation === 'right') {
+            return '90deg';
+        }
+        else if (seatOrientation === 'up') {
+            return '0deg';
+        }
+		else if (seatOrientation === 'down') {
+            return '180deg';
+        }
+        return '0deg';
+};
 
 	$: seatOrientations = getSeatOrientations(numberOfPlayers, layout);
 

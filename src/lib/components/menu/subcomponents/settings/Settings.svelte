@@ -508,7 +508,7 @@
 									<div class="bg-gray-700 w-1/2" />
 								</div>
 							</div>
-							<div class="mt-1 text-sm">1 / 2</div>
+							<div class="mt-1 text-sm">1 / 2 (exp.)</div>
 						</button>
 					</div>
 				</div>
@@ -659,20 +659,7 @@
 				<div class="text-2xl font-bold">{$_('main_checkboxes_settings')}</div>
 			</div>
 		</div>
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.allowNegativeLife}
-					on:change={handleGlobalAllowChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('allow_negative_life_global') || 'Allow negative life (global)'}</span>
-			</label>
-		</div>
+
 		<div class="w-full flex justify-start mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
@@ -713,42 +700,6 @@
 					class="h-5 w-5"
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('sound_effects') || 'Sound effects'}</span>
-			</label>
-		</div>
-
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.enableAcornMode}
-					on:change={handleEnableAcornModeChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold inline-flex items-center gap-2">
-					<Acorn />
-					{$_('enable_acorn_mode') || 'Enable Acorn mode?'}
-				</span>
-			</label>
-		</div>
-
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.enableTicketMode}
-					on:change={handleEnableTicketModeChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold inline-flex items-center gap-2">
-					<Ticket />
-					{$_('enable_ticket_mode') || 'Enable Ticket mode?'}
-				</span>
 			</label>
 		</div>
 
@@ -1065,6 +1016,63 @@
 			</div>
 		{/if}
 
+		<!-- All the main checkboxes -->
+		<div class="w-full flex justify-center mt-6 mb-2">
+			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
+				<div class="text-2xl font-bold">{$_('main_checkboxes_settings')}</div>
+			</div>
+		</div>
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.allowNegativeLife}
+					on:change={handleGlobalAllowChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold">{$_('allow_negative_life_global') || 'Allow negative life (global)'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.enableAcornMode}
+					on:change={handleEnableAcornModeChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold inline-flex items-center gap-2">
+					<Acorn />
+					{$_('enable_acorn_mode') || 'Enable Acorn mode?'}
+				</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.enableTicketMode}
+					on:change={handleEnableTicketModeChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold inline-flex items-center gap-2">
+					<Ticket />
+					{$_('enable_ticket_mode') || 'Enable Ticket mode?'}
+				</span>
+			</label>
+		</div>
+
 		<!-- Custom starting probabilities for various players -->
 		<div class="w-full flex justify-center mt-2 mb-0">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
@@ -1115,7 +1123,7 @@
 								min="0"
 								max="100"
 								step="1"
-								value={Math.round(($appSettings.startingPlayerProbabilities?.[index] ?? 0) * 100) / 100}
+								value={() => Math.round(($appSettings.startingPlayerProbabilities?.[index] ?? 0) * 100) / 100}
 								on:change={(e) => handleStartingPlayerProbabilityInput(index, e)}
 								class="bg-gray-600 w-20 h-8 rounded text-center text-lg"
 							/>

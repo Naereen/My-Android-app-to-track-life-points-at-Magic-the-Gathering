@@ -198,6 +198,8 @@ export const setPlayerCount = (playerCount: number) => {
 			data.startingPlayerProbabilities,
 			playerCount
 		),
+		// Update the default probabilities for each players
+		startingPlayerProbabilities: getUniformStartingProbabilities(playerCount),
 		// Default behavior by format size: ON for 2 players, OFF otherwise.
 		showLifeChangeHistory: playerCount === 2,
 		// Keep custom value, but auto-adjust when the value is still the format default.

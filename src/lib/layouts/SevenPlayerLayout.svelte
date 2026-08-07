@@ -49,6 +49,7 @@
 		<Menu />
 	</div>
 
+	{#if !$appState.isMenuOpen}
 	<div
 		class="pt-2 flex gap-2 bg-black sticky top-0"
 		class:h-[24%]={!$appState.isMenuOpen}
@@ -65,6 +66,7 @@
 			</DraggablePlayerSlot>
 		</div>
 	</div>
+	{/if}
 
 	<div
 		class="flex flex-col gap-2 bg-black sticky bottom-0"
