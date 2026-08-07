@@ -167,8 +167,23 @@
 	$: commanderMinimapRotation = getBackgroundViewerRotationInCommanderDamage(
 		($playerModalData?.playerId ?? 1) - 1,
 		$appSettings.playerCount,
-		commanderMinimapLayout
+		commanderMinimapLayout,
+		true
 	);
+
+	const orientationToModalRotation = (seatOrientation: App.Player.Orientation): string => {
+		if (seatOrientation === 'left') return '-90deg';
+		if (seatOrientation === 'right') return '90deg';
+		if (seatOrientation === 'down') return '180deg';
+		return '0deg';
+	};
+
+	$: modalSeatOrientations = getSeatOrientations($appSettings.playerCount, commanderMinimapLayout);
+	$: modalPlayerOrientation =
+		modalSeatOrientations[($playerModalData?.playerId ?? 1) - 1] ?? 'up';
+	$: modalRotation = orientationToModalRotation(modalPlayerOrientation);
+	$: isQuarterTurnModal = modalRotation === '90deg' || modalRotation === '-90deg';
+	$: modalPanelStyle = `transform: rotate(${modalRotation}); transform-origin: center center; width: ${isQuarterTurnModal ? 'min(90vh, 48rem)' : '91.666667%'}; max-width: ${isQuarterTurnModal ? '90vh' : '48rem'}; max-height: ${isQuarterTurnModal ? '90vw' : '90vh'};`;
 
 	import { searchCards, randomCards } from '$lib/utils/scryfall';
 	import { searchGifs } from '$lib/utils/klipy';
@@ -624,6 +639,7 @@
 	<div
 		on:click|stopPropagation
 		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[90vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-8 overflow-auto"
+		style={modalPanelStyle}
 		role="button"
 		on:keydown={() => null}
 		tabindex="0"
