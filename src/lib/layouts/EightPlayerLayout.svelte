@@ -55,7 +55,7 @@
 	</div>
 
 	{#if !$appState.isMenuOpen}
-	<div class="flex gap-2 bg-black sticky top-0 pb-2" class:h-[18%]={!$appState.isMenuOpen}>
+	<div class="flex gap-2 bg-black sticky top-0 pb-2" class:h-[20%]={!$appState.isMenuOpen}>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={2}>
 				<PlayerHorizontal doNotShowMinimap={false} orientation="right" layout="one-two-one" id={2} />

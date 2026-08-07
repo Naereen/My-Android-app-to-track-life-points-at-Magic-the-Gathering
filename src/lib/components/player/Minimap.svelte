@@ -444,10 +444,14 @@
 
 	$: minimapWidthRem = fromPlayerDataModal
 		? Math.max(5.0, minimapColCount * 1.6)
-		: Math.max(5.25, minimapColCount * 1.45);
+		: Math.max(
+            (orientation === 'right' || orientation === 'left') ? 4 : 5.5,
+            minimapColCount * 1.0);
 	$: minimapHeightRem = fromPlayerDataModal
 		? Math.max(5.0, minimapRowCount * 1.45)
-		: Math.max(4.25, minimapRowCount * 1.45);
+		: Math.max(
+            (orientation === 'right' || orientation === 'left') ? 5.5 : 4.5,
+            minimapRowCount * 1.25);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: minimapGridStyle = `grid-template-rows: repeat(${minimapRowCount}, minmax(0, 1fr)); grid-template-columns: repeat(${minimapColCount}, minmax(0, 1fr));`;
 	$: minimapContainerClass = `pointer-events-auto overflow-hidden rounded-md border border-black/70 p-0.5 ${backgroundClass}`;

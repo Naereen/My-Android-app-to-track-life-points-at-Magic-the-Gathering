@@ -67,33 +67,32 @@
 		maxCommanderDamage >= 21;
 	$: bg = colorToBg($players[index].color ?? 'white');
 
-	$: bgRotation = '0deg';
-	$: bgPositionX = (orientation === 'up') ? 'center' : ((orientation === 'down') ? 'center' : 'center');
-	$: bgPositionY = (orientation === 'up') ? 'top' : ((orientation === 'down') ? 'top' : 'center');
-
-	$: bgWidth = (layout === 'two-by-two') ? '100%' : '100%';
-	// $: bgWidth = '50%';
-	$: bgHeight = (numberOfPlayers <= 4) ? (orientation === 'up' ? '100%' : '100%') : '100%';
-
-	$: bgTop = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '50%');
-	$: bgLeft = (numberOfPlayers <= 4) ? (orientation === 'up' ? '50%' : '50%') : (orientation === 'up' ? '50%' : '50%');
-
-	// $: bgSize = 'contain';
-	$: bgSize = 'cover';
+	const verticalBackgroundFrame = {
+		rotation: '0deg',
+		positionX: 'center',
+		positionY: 'center',
+		width: '100%',
+		height: '100%',
+		top: '50%',
+		left: '50%',
+		bottom: '50%',
+		right: '50%',
+		size: 'cover',  // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
+	};
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
 		const bgValue = $players[index].backgroundImage;
 		// default no-image behavior
 		if (!bgValue) {
-			return `--bg-image: none; --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+			return `--bg-image: none; --bg-rotation: ${verticalBackgroundFrame.rotation}; --bg-positionx: ${verticalBackgroundFrame.positionX}; --bg-positiony: ${verticalBackgroundFrame.positionY}; --bg-width: ${verticalBackgroundFrame.width}; --bg-height: ${verticalBackgroundFrame.height}; --bg-top: ${verticalBackgroundFrame.top}; --bg-left: ${verticalBackgroundFrame.left}; --bg-size: ${verticalBackgroundFrame.size};`;
 		}
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
-			const bgSize = (numberOfPlayers === 2) ? 'auto 100%' : 'auto 105%';
+			const bgSize = 'cover';
 			const bgLeft = (numberOfPlayers <= 3) ? '100%' : '100%';
 			const bgRight = (numberOfPlayers <= 3) ? '25%' : '25%';
 			const posLeft = (numberOfPlayers === 3) ? '-200%' :
@@ -102,11 +101,11 @@
 			const posRight = (numberOfPlayers === 3) ? '200%' :
 							(numberOfPlayers === 2) ? '100%' :
 							'0%';
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: 50%; --bg-left: ${bgLeft}; --bg-right: ${bgRight}; --pos-left: ${posLeft}; --pos-right: ${posRight}; --bg-width: 100%; --bg-height: 100%; --bg-size: ${bgSize}`;
+			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${verticalBackgroundFrame.rotation}; --bg-top: ${verticalBackgroundFrame.top}; --bg-left: ${bgLeft}; --bg-right: ${bgRight}; --pos-left: ${posLeft}; --pos-right: ${posRight}; --bg-width: ${verticalBackgroundFrame.width}; --bg-height: ${verticalBackgroundFrame.height}; --bg-size: ${bgSize}`;
 		}
 
 		// single string image
-		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+		return `--bg-image: url('${bgValue}'); --bg-rotation: ${verticalBackgroundFrame.rotation}; --bg-positionx: ${verticalBackgroundFrame.positionX}; --bg-positiony: ${verticalBackgroundFrame.positionY}; --bg-width: ${verticalBackgroundFrame.width}; --bg-height: ${verticalBackgroundFrame.height}; --bg-top: ${verticalBackgroundFrame.top}; --bg-left: ${verticalBackgroundFrame.left}; --bg-size: ${verticalBackgroundFrame.size};`;
 	})();
 
 	$: status = $players[index].statusEffects ?? {};

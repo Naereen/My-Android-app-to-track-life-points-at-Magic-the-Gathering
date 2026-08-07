@@ -65,39 +65,81 @@
 		$players[index].isDead === true ||
 		maxCommanderDamage >= 21;
 	$: bg = colorToBg($players[index].color ?? 'white');
-	$: bgRotation = orientation === 'left' ? '-90deg' : orientation === 'right' ? '90deg' : '0deg';
-	$: bgPositionX = orientation === 'left' ? 'left' : orientation === 'right' ? 'right' : 'center';
-	$: bgPositionY = orientation === 'left' ? 'center' : orientation === 'right' ? 'center' : 'center';
-	// FIXME: the bgWidth/bgHeight/bgSize logic is really hacky and doesn't work well in all cases, need to rethink how background images are handled in general
-	// It works fine for 2-player, but for 3+ players it gets really inconsistent and depends on the specific image used, some trial and error is needed to find the right settings for each image
 
-	$: bgWidth = (!isMobile) ? '200%'
-		: (layout === 'two-by-two') ?
-		(numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))))
-		: (numberOfPlayers === 6 ? '160%' : (numberOfPlayers === 3 ? '230%' : (numberOfPlayers === 4 ? '200%' : (numberOfPlayers === 5 ? '210%' : '150%'))));
-	// $: bgWidth = '105%';
+	type BackgroundFrame = {
+		rotation: string;
+		positionX: string;
+		positionY: string;
+		width: string;
+		height: string;
+		top: string;
+		left: string;
+		bottom: string;
+		right: string;
+		size: string;
+		splitTop: string;
+		splitBottom: string;
+	};
 
-	$: bgHeight = (!isMobile) ? '400%'
-		: (layout === 'two-by-two') ?
-		(numberOfPlayers === 6 ? '125%' : (numberOfPlayers === 3 ? '100%' : (numberOfPlayers === 4 ? '85%' : '125%')))
-		: (numberOfPlayers === 6 ? '130%' : (numberOfPlayers === 3 ? '100%' : (numberOfPlayers === 4 ? '125%' : (numberOfPlayers === 5 ? '115%' : '125%'))));
-	// $: bgHeight = '105%';
+	const getHorizontalBackgroundFrame = (
+		playerCount: number,
+		mobile: boolean,
+		seatOrientation: App.Player.Orientation
+	): BackgroundFrame => {
+		const isCompactTable = playerCount >= 5;
+		const isDuel = playerCount <= 2;
+		const isCrowdedSideSeat =
+			(playerCount === 6 || playerCount === 7 || playerCount === 8) &&
+			(seatOrientation === 'left' || seatOrientation === 'right');
+		const isVeryCrowdedSideSeat =
+			(playerCount === 8) && (seatOrientation === 'left' || seatOrientation === 'right');
+		const width = !mobile
+			? '200%'
+			: isDuel
+				? '160%'
+				: isVeryCrowdedSideSeat
+					? '220%'
+				: isCrowdedSideSeat
+					? '210%'
+				: isCompactTable
+					? '175%'
+					: '210%';
+		const height = !mobile
+			? '260%'
+			: isDuel
+				? '160%'
+				: isVeryCrowdedSideSeat
+					? '200%'
+				: isCrowdedSideSeat
+					? '185%'
+				: isCompactTable
+					? '145%'
+					: '125%';
 
-	$: bgTop = (numberOfPlayers === 4) ? (layout === 'one-two-one' ? (orientation === 'left' ? '50%' : '50%') : (orientation === 'left' ? '50%' : '50%')) : (numberOfPlayers === 6 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : '50%'));
-	// $: bgTop = '50%';
+		return {
+			rotation: seatOrientation === 'left' ? '-90deg' : seatOrientation === 'right' ? '90deg' : '0deg',
+			positionX: 'center',
+			positionY: 'center',
+			width,
+			height,
+			top: '50%',
+			bottom: '50%',
+			left: '50%',
+			right: '50%',
+			size: 'contain',  // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
+			splitTop: '25%',
+			splitBottom: '75%',
+		};
+	};
 
-	$: bgLeft = (numberOfPlayers === 3 || (numberOfPlayers === 6)) ? (orientation === 'left' ? (layout === 'two-by-two' ? '70%' : '57.5%') : (layout === 'two-by-two' ? '20%' : '42.5%')) : (numberOfPlayers === 5 ? (orientation === 'left' ? '50%' : '50%') : (numberOfPlayers === 4 ? (orientation === 'left' ? (layout === 'two-by-two' ? '50%' : '50%') : (layout === 'two-by-two' ? '50%' : '50%')) : '50%'));
-	// $: bgLeft = '50%';
-
-	$: bgSize = (!isMobile) ? 'contain' : 'contain';
-	// $: bgSize = 'cover';
+	$: horizontalBackgroundFrame = getHorizontalBackgroundFrame(numberOfPlayers, isMobile, orientation);
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
 		const bgValue = $players[index].backgroundImage;
 		// default no-image behavior
 		if (!bgValue) {
-			return `--bg-rotation: ${bgRotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+			return `--bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-size: ${horizontalBackgroundFrame.size};`;
 		}
 		// support array of images (e.g. partners / double commanders)
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
@@ -105,24 +147,13 @@
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
-			 // TODO: find a way to compute these values in a safe and robust manner
-			const bgTop = (numberOfPlayers === 4) ? (layout === 'two-by-two' ? '80%' : '95%')
-						: (numberOfPlayers === 3) ? '76%'
-						: (numberOfPlayers === 5) ? '93%'
-						: (numberOfPlayers === 6) ? (layout === 'one-two-one') ? '105%' : '93%'
-						: '80%';
 			const bgBottom = '100%';
-			const bgSize = (numberOfPlayers === 4) ? (layout === 'two-by-two' ? 'auto 65%' : 'auto 70%')
-						: (numberOfPlayers === 3) ? 'auto 55%'
-						: (numberOfPlayers === 5) ? 'auto 70%'
-						: (numberOfPlayers === 6) ? 'auto 105%'
-						: 'auto 100%';
 
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${bgRotation}; --bg-top: ${bgTop}; --bg-bottom: ${bgBottom}; --bg-left: 50%; --bg-right: 50%; --bg-left-top: 26%; --pos-bottom: 35%; --bg-width: 105%; --bg-height: ${bgHeight}; --bg-size: ${bgSize};`;
+			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-bottom: ${bgBottom}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-right: ${horizontalBackgroundFrame.left}; --bg-left-top: ${horizontalBackgroundFrame.splitTop}; --pos-bottom: ${horizontalBackgroundFrame.splitBottom}; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-size: ${horizontalBackgroundFrame.size};`;
 		}
 
 		// single string image
-		return `--bg-image: url('${bgValue}'); --bg-rotation: ${bgRotation}; --bg-positionx: ${bgPositionX}; --bg-positiony: ${bgPositionY}; --bg-width: ${bgWidth}; --bg-height: ${bgHeight}; --bg-top: ${bgTop}; --bg-left: ${bgLeft}; --bg-size: ${bgSize};`;
+		return `--bg-image: url('${bgValue}'); --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-positionx: ${horizontalBackgroundFrame.positionX}; --bg-positiony: ${horizontalBackgroundFrame.positionY}; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-size: ${horizontalBackgroundFrame.size};`;
 	})();
 
 	$: status = $players[index].statusEffects ?? {};
