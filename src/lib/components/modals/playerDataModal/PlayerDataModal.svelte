@@ -154,8 +154,8 @@
 		: $appSettings.playerCount === 3 ? 3.5
 		: $appSettings.playerCount === 4 ? 3.0
 		: $appSettings.playerCount === 5 ? 3.75
-		: $appSettings.playerCount === 6 ? 2.0
-		: 1.75;
+		: $appSettings.playerCount === 6 ? 3.25
+		: 2.25;
 	let commanderMinimapRotation = '0deg';
 	$: commanderMinimapHeightRem =
 		$appSettings.playerCount <= 2 ? 24
@@ -1437,7 +1437,7 @@
 									</div>
 								</div>
 							{/if}
-							<div class="mt-12 text-sm text-gray-500 mb-2">{String($_('commander_damage_help'))}</div>
+							<div class="mt-12 text-sm text-gray-500 mb-2" style="white-space: pre-wrap;">{String($_('commander_damage_help'))}</div>
 						</div>
 					{/if}
 				</div>

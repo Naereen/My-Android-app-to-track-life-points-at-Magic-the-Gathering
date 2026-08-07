@@ -138,7 +138,7 @@
 			ringBearerCount,
 			startYourEngineSpeedCount
 		].filter((count) => count > 0).length + commanderDamageVisibleCount;
-	$: shouldWrapStatusEffects = statusEffectItemCount > 5;
+	$: shouldWrapStatusEffects = statusEffectItemCount > 10;
 	$: maxCommanderDamage = Math.max(0, ...commanderDamageArray);
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
@@ -502,82 +502,91 @@
 			{#if poisonCount > 0}
 				<div
 					title={$_('tooltip_status_poison')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-					<PoisonIcon /> <span>{poisonCount}</span>
+					<PoisonIcon />
+					<span class="leading-none">{poisonCount}</span>
 				</div>
 			{/if}
 			{#if energyCount > 0}
 				<div
 					title={$_('tooltip_status_energy')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-					<Energy /> <span>{energyCount}</span>
+					<Energy />
+					<span class="leading-none">{energyCount}</span>
 				</div>
 			{/if}
 			{#if experienceCount > 0}
 				<div
 					title={$_('tooltip_status_experience')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-					<Experience /> <span>{experienceCount}</span>
+					<Experience />
+					<span class="leading-none">{experienceCount}</span>
 				</div>
 			{/if}
 			{#if radCount > 0}
 				<div
 					title={$_('tooltip_status_rad')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-					<Rad /> <span>{radCount}</span>
+					<Rad />
+					<span class="leading-none">{radCount}</span>
 				</div>
 			{/if}
 			{#if acornCount > 0}
 				<div
 					title={$_('tooltip_status_acorn')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-					<Acorn /> <span>{acornCount}</span>
+					<Acorn />
+					<span class="leading-none">{acornCount}</span>
 				</div>
 			{/if}
 			{#if ticketCount > 0}
 				<div
 					title={$_('tooltip_status_tickets')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-					<Ticket /> <span>{ticketCount}</span>
+					<Ticket />
+					<span class="leading-none">{ticketCount}</span>
 				</div>
 			{/if}
 			{#if commandTaxCount > 0}
 				<div
 					title={$_('tooltip_status_command_tax')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-					<CommandTax /> <span>{commandTaxCount}</span>
+					<CommandTax />
+					<span class="leading-none">{commandTaxCount}</span>
 				</div>
 			{/if}
 				{#if ringBearerCount > 0}
 				<div
 					title={$_('tooltip_status_ring_bearer')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-						<TheRingerBearer isMax={ringBearerCount === 4} /> <span>{ringBearerCount}</span>
+						<TheRingerBearer isMax={ringBearerCount === 4} />
+						<span class="leading-none">{ringBearerCount}</span>
 				</div>
 			{/if}
 			{#if startYourEngineSpeedCount > 0}
 				<div
 					title={$_('tooltip_status_start_your_engine_speed')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
-						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} /> <span>{startYourEngineSpeedCount}</span>
+						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
+						<span class="leading-none">{startYourEngineSpeedCount}</span>
 				</div>
 			{/if}
 			{#if doNotShowMinimap}

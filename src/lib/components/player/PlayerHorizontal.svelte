@@ -629,226 +629,136 @@
 						{#if poisonCount > 0}
 							<div
 								title={$_('tooltip_status_poison')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
-								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{poisonCount}</span>
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<PoisonIcon />
-									</div>
-								{:else}
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<PoisonIcon />
-									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{poisonCount}</span>
-								{/if}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{poisonCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<PoisonIcon />
+								</div>
 							</div>
 						{/if}
 						{#if energyCount > 0}
 							<div
 								title={$_('tooltip_status_energy')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
-								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{energyCount}</span>
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<Energy />
-									</div>
-								{:else}
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<Energy />
-									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{energyCount}</span>
-								{/if}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{energyCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Energy />
+								</div>
 							</div>
 						{/if}
 						{#if experienceCount > 0}
 							<div
 								title={$_('tooltip_status_experience')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
-								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{experienceCount}</span>
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<Experience />
-									</div>
-								{:else}
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<Experience />
-									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{experienceCount}</span>
-								{/if}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{experienceCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Experience />
+								</div>
 							</div>
 						{/if}
 						{#if radCount > 0}
 							<div
 								title={$_('tooltip_status_rad')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
-								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{radCount}</span>
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<Rad />
-									</div>
-								{:else}
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<Rad />
-									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{radCount}</span>
-								{/if}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{radCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Rad />
+								</div>
 							</div>
 						{/if}
 					{#if acornCount > 0}
 						<div
 							title={$_('tooltip_status_acorn')}
-							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 							on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 						>
-							{#if isRightFacingPlayer}
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{acornCount}</span>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<Acorn />
-								</div>
-							{:else}
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<Acorn />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{acornCount}</span>
-							{/if}
+							<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{acornCount}</span>
+							<div
+								class="status-rotate-wrapper"
+								style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+							>
+								<Acorn />
+							</div>
 						</div>
 					{/if}
 					{#if ticketCount > 0}
 						<div
 							title={$_('tooltip_status_tickets')}
-							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 							on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 						>
-							{#if isRightFacingPlayer}
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ticketCount}</span>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<Ticket />
-								</div>
-							{:else}
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<Ticket />
-								</div>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ticketCount}</span>
-							{/if}
+							<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{ticketCount}</span>
+							<div
+								class="status-rotate-wrapper"
+								style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+							>
+								<Ticket />
+							</div>
 						</div>
 					{/if}
 						{#if commandTaxCount > 0}
 							<div
 								title={$_('tooltip_status_command_tax')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
-								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{commandTaxCount}</span>
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<CommandTax />
-									</div>
-								{:else}
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<CommandTax />
-									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{commandTaxCount}</span>
-								{/if}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{commandTaxCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<CommandTax />
+								</div>
 							</div>
 						{/if}
 						{#if ringBearerCount > 0}
 							<div
 								title={$_('tooltip_status_ring_bearer')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
-								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ringBearerCount}</span>
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<TheRingerBearer isMax={ringBearerCount === 4} />
-									</div>
-								{:else}
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<TheRingerBearer isMax={ringBearerCount === 4} />
-									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{ringBearerCount}</span>
-								{/if}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{ringBearerCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<TheRingerBearer isMax={ringBearerCount === 4} />
+								</div>
 							</div>
 						{/if}
 						{#if startYourEngineSpeedCount > 0}
 							<div
 								title={$_('tooltip_status_start_your_engine_speed')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 							>
-								{#if isRightFacingPlayer}
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{startYourEngineSpeedCount}</span>
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
-									</div>
-								{:else}
-									<div
-										class="status-rotate-wrapper"
-										style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-									>
-										<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
-									</div>
-									<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{startYourEngineSpeedCount}</span>
-								{/if}
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{startYourEngineSpeedCount}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
+								</div>
 							</div>
 						{/if}
 						{#if doNotShowMinimap}
