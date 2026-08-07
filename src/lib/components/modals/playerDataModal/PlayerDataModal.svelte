@@ -546,7 +546,13 @@
 
 	const setCommanderDamageDelta = (playerId: number, fromPlayerId: number, delta: number) => {
 		const current = getCommanderDamageValue(playerId, fromPlayerId);
-		setCommanderDamage(playerId, fromPlayerId, Math.max(0, current + delta));
+		const nextValue = Math.max(0, current + delta);
+		setCommanderDamage(playerId, fromPlayerId, nextValue);
+
+		// Keep inline editor value in sync when the input is visible.
+		if (editingCommanderFrom === fromPlayerId && playerId === $playerModalData.playerId) {
+			editingCommanderValue = String(nextValue);
+		}
 	};
 
 	const startCommanderLongPress = (playerId: number, fromPlayerId: number, delta: number) => {
@@ -1372,9 +1378,9 @@
 						<!-- Commander Damage Section (now its own tab) -->
 						<div class="mt-2 w-full flex flex-col items-center justify-center text-center border-t pt-4 pb-6">
 							<!-- <div class="text-sm text-gray-500 mb-5">{damageFromPlayerLabel}</div> -->
-							<div class="flex w-full items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(0deg);`}>
-								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}) rotate(${commanderMinimapRotation}); transform-origin: center;`}>
-								<!-- FIXME: this orientation is wrong -->
+							<div class="flex w-full items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
+								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}) rotate(0deg); transform-origin: center;`}>
+								<!-- FIXME: this orientation is wrong, for the text inside the Minimap portraits -->
 									<Minimap
 										playerIndex={$playerModalData.playerId - 1}
 										orientation={getSeatOrientations($appSettings.playerCount, commanderMinimapLayout)[$playerModalData.playerId - 1]}
@@ -1391,7 +1397,9 @@
 								{@const editingFrom = editingCommanderFrom}
 								{@const editingFromName = $players[editingCommanderFrom - 1]?.playerName ?? `Player ${editingCommanderFrom}`}
 								<div class="mt-2 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
-									<div class="mb-3 text-sm font-semibold text-left">{editingFromName}</div>
+									<div class="mb-3 text-sm font-semibold text-center">
+										{editingFromName} → {$players[$playerModalData.playerId - 1]?.playerName ?? `Player ${$playerModalData.playerId}`}
+									</div>
 									<div class="flex flex-wrap items-center justify-center gap-2">
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1430,7 +1438,7 @@
 									</div>
 								</div>
 							{/if}
-							<div class="mt-8 text-sm text-gray-600 mb-2">{String($_('commander_damage_help'))}</div>
+							<div class="mt-8 text-sm text-gray-500 mb-2">{String($_('commander_damage_help'))}</div>
 						</div>
 					{/if}
 				</div>

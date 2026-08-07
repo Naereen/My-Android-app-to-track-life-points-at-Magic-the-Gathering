@@ -616,8 +616,7 @@
 						class:flex-wrap={shouldWrapStatusEffects}
 						class:gap-y-0={shouldWrapStatusEffects}
 						class:justify-center={shouldWrapStatusEffects}
-						class:max-w-[14rem]={(orientation === 'up' || orientation === 'down') && shouldWrapStatusEffects}
-						class:max-h-[28rem]={(orientation === 'right' || orientation === 'left') && shouldWrapStatusEffects}
+						class:max-h-[28rem]={shouldWrapStatusEffects}
 					>
 						{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
 							<div

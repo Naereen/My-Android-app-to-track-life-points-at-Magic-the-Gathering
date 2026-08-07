@@ -79,8 +79,8 @@
 		layout: 'two-by-two' | 'one-two-one' | ''
 	): string => {
 		if (numberOfPlayers === 3) {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
+			if (playerIndex === 1) return '-90deg';
+			if (playerIndex === 2) return '90deg';
 			return '0deg';
 		}
 
