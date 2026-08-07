@@ -584,13 +584,13 @@
 
 					<div class="grow w-1/3 vert"></div>
 				</div>
-				<!-- Status effects bar -->
+				<!-- Minimap & Status effects bar -->
 				<div
 					class="absolute z-20 top-0 bottom-0 flex justify-center pointer-events-none"
 					class:vert-left={orientation === 'left'}
 					class:vert-right={orientation === 'right'}
-					class:left-2={orientation === 'right'}
-					class:right-2={orientation === 'left'}
+					class:left-1={orientation === 'right'}
+					class:right-1={orientation === 'left'}
 					class:hidden={$appState.isMenuOpen}
 				>
 					<div
@@ -599,7 +599,10 @@
 						class:flex-row-reverse={orientation === 'left'}
 					>
 						{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
-							<div class="mr-2">
+							<div
+								class:mr-1={orientation === 'right'}
+								class:ml-1={orientation === 'left'}
+							>
 								<Minimap playerIndex={index} orientation={orientation} layout={layout} />
 							</div>
 						{/if}

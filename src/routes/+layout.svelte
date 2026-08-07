@@ -20,7 +20,7 @@
 		if (!element.requestFullscreen || document.fullscreenElement) return;
 
 		try {
-			await element.requestFullscreen();
+			// await element.requestFullscreen();
 		} catch {
 			// Some mobile browsers require a user gesture before entering fullscreen.
 		}

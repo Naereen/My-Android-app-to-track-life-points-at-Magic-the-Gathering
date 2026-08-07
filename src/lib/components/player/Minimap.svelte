@@ -1,7 +1,7 @@
 <script lang="ts">
     import { players } from '$lib/store/player';
     import { appSettings } from '$lib/store/appSettings';
-    import { _ } from 'svelte-i18n';
+    import { _, number } from 'svelte-i18n';
     import { openPlayerModal } from '$lib/store/modal';
     import { colorToBg } from '$lib/components/colorToBg';
 
@@ -29,7 +29,19 @@
                 else if (playerId === 2) return [[2], [1, 0]];
                 else return [];
             case 4:
-                return currentLayout === 'two-by-two' ? [[1, 2], [0, 3]] : [[2], [1, 3], [0]];
+                if (currentLayout === 'two-by-two') {
+                    if (playerId === 0) return [[1, 0], [2, 3]];
+                    else if (playerId === 1) return [[1, 0], [2, 3]];
+                    else if (playerId === 2) return [[2, 3], [1, 0]];
+                    else if (playerId === 3) return [[2, 3], [1, 0]];
+                    else return [];
+                } else {
+                    if (playerId === 0) return [[2], [1, 3], [0]];
+                    else if (playerId === 1) return [[2], [1, 3], [0]];
+                    else if (playerId === 2) return [[0], [1, 3], [2]];
+                    else if (playerId === 3) return [[2], [1, 3], [0]];
+                    else return [];
+                }
             case 5:
                 return [[2, 3], [1, 4], [0]];
             case 6:
@@ -86,7 +98,7 @@
 
     $: getTileRotation = (targetIndex: number): string => {
         // Keep seat #1 unrotated as requested, rotate all others according to board layout.
-        if (targetIndex === 0) return '0deg';
+        // if (targetIndex === 0) return '0deg';
         const seatOrientation = seatOrientations[targetIndex] ?? 'up';
         return orientationToDegrees(seatOrientation);
     };
@@ -169,9 +181,96 @@
         return getTileRotation(playerIndex);
     };
 
+    $: getBackgroundViewerRotation = (): string => {
+        // Custom convention requested for the 3-player layout.
+        // Player 1 => normal, player 2 => left, player 3 => right.
+        if (numberOfPlayers === 3) {
+            if (playerIndex === 1) return '90deg';
+            if (playerIndex === 2) return '-90deg';
+            return '0deg';
+        }
+
+        // Custom convention requested for the 4-player layout.
+        // Player 1 => normal, player 2 => left, player 3 => right, player 4 => upside down.
+        if (numberOfPlayers === 4 && layout === 'two-by-two') {
+            if (playerIndex === 1) return '90deg';
+            if (playerIndex === 2) return '-90deg';
+            if (playerIndex === 3) return '-90deg';
+            return '90deg';
+        }
+        if (numberOfPlayers === 4 && layout === 'one-two-one') {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '180deg';
+            return '0deg';
+        }
+
+        // Custom convention requested for the 5-player layout.
+        if (numberOfPlayers === 5) {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '180deg';
+            if (playerIndex === 4) return '180deg';
+            return '0deg';
+        }
+
+        // Custom convention requested for the 6-player layout.
+        if (numberOfPlayers === 6 && layout === 'two-by-two') {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '180deg';
+            if (playerIndex === 4) return '180deg';
+            if (playerIndex === 5) return '180deg';
+            return '0deg';
+        }
+        if (numberOfPlayers === 6 && layout === 'one-two-one') {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '0deg';
+            if (playerIndex === 4) return '180deg';
+            if (playerIndex === 5) return '180deg';
+            return '0deg';
+        }
+
+        // Custom convention requested for the 7-player layout.
+        if (numberOfPlayers === 7) {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '0deg';
+            if (playerIndex === 4) return '180deg';
+            if (playerIndex === 5) return '180deg';
+            if (playerIndex === 6) return '180deg';
+            return '0deg';
+        }
+
+        // Custom convention requested for the 8-player layout.
+        if (numberOfPlayers === 8) {
+            if (playerIndex === 1) return '0deg';
+            if (playerIndex === 2) return '0deg';
+            if (playerIndex === 3) return '0deg';
+            if (playerIndex === 4) return '180deg';
+            if (playerIndex === 5) return '180deg';
+            if (playerIndex === 6) return '180deg';
+            if (playerIndex === 7) return '180deg';
+            return '0deg';
+        }
+
+        // Fallback for other layouts: keep previous seat-based behavior.
+        return getTileRotation(playerIndex);
+    };
+
+    $: getBackgroundTransform = (): string => {
+        const rotation = getBackgroundViewerRotation();
+        // Quarter turns on rectangular tiles need a small upscale to avoid uncovered corners.
+        if (rotation === '90deg' || rotation === '-90deg') {
+            return `rotate(${rotation}) scale(1.45)`;
+        }
+        return `rotate(${rotation})`;
+    };
+
     $: rowWidthClass =
         (orientation === 'left' || orientation === 'right')
-            ? 'min-w-[2.0rem]'
+            ? 'min-w-[2.5rem] min-h-[6.0rem]'
             : 'min-w-[5.0rem]';
 
     $: getBgStyle = (j: number) => {
@@ -194,7 +293,9 @@
 </script>
 
 <div
-    class={`pointer-events-auto rounded-md border border-black/70 bg-black/50 p-0.5 ${rowWidthClass} max-h-14 max-w-14 overflow-hidden`}
+    class={`pointer-events-auto rounded-md border border-black/70 bg-black/50 p-0.5 ${rowWidthClass} max-w-16 overflow-hidden`}
+    class:max-h-24={numberOfPlayers >= 3 && (orientation === 'up' || orientation === 'down')}
+    class:max-h-16={numberOfPlayers >= 3 && (orientation === 'left' || orientation === 'right')}
     role="button"
     tabindex="0"
     on:click={() => openPlayerModal(playerIndex + 1, 'commander')}
@@ -210,20 +311,21 @@
             <div class="flex gap-0.5" class:justify-center={row.length === 1}>
                 {#each row as targetIndex}
                     <div
-                        class="h-6 min-h-6 max-h-12 min-w-0 max-w-12 rounded-sm overflow-hidden border border-black/60 relative flex items-center justify-center"
-                        class:w-full={row.length === 1}
-                        class:w-6={row.length > 1}
-                        class:h-full={row.length === 1}
+                        class="h-6 rounded-sm overflow-hidden border border-black/60 relative flex items-center justify-center"
+                        class:w-full={row.length === 1 && (orientation === 'up' || orientation === 'down')}
+                        class:w-7={(row.length === 1 && (orientation === 'right' || orientation === 'left')) || row.length > 1}
+                        class:h-10={row.length === 1 && (orientation === 'up' || orientation === 'down')}
+                        class:h-full={row.length === 1 && (orientation === 'right' || orientation === 'left')}
                         class:flex-1={row.length > 1}
                         title={$players[targetIndex]?.playerName}
                     >
                         <div
-                            class="absolute inset-0"
-                            style={`transform: rotate(${getViewerRotation(targetIndex)}); ${getBgStyle(targetIndex)}`}
+                            class="absolute inset-0 h-full w-full"
+                            style={`${getBgStyle(targetIndex)} transform: ${getBackgroundTransform()}; transform-origin: center;`}
                         ></div>
                         <div
                             class="relative z-10 text-white text-[10px] leading-none text-center font-semibold px-0.5"
-                            style={`transform: rotate(${getViewerRotation(targetIndex)});`}
+                            style={`transform: rotate(${getViewerRotation()});`}
                         >
                             {#if shouldShowMe(targetIndex)}
                                 {meString}
