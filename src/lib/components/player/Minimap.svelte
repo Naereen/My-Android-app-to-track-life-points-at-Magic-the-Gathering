@@ -5,21 +5,21 @@
 		layout: 'two-by-two' | 'one-two-one' | ''
 	): string => {
 		if (numberOfPlayers === 3) {
-			if (playerIndex === 1) return '180deg';
-			if (playerIndex === 2) return '180deg';
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '-90deg';
 			return '0deg';
 		}
 
 		if (numberOfPlayers === 4 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '180deg';
-			if (playerIndex === 3) return '180deg';
-			return '0deg';
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '-90deg';
+			if (playerIndex === 3) return '-90deg';
+			return '90deg';
 		}
 		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '180deg';
+			if (playerIndex === 1) return '90deg';
 			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
+			if (playerIndex === 3) return '-90deg';
 			return '0deg';
 		}
 
@@ -205,7 +205,7 @@
 		playerId: number,
 		playerCount: number,
 		currentLayout: 'two-by-two' | 'one-two-one' | '',
-        orientation: App.Player.Orientation = 'up',
+        fromPlayerDataModal: boolean = false,
 	): MinimapRows => {
 		switch (playerCount) {
 			case 2:
@@ -274,7 +274,7 @@
                         if (playerId <= 2) {
                             return [[3, 4, 5], [2, 1, 0]];
                         } else {
-                            return [[2, 1, 0], [3, 4, 5]];
+                            return [[0, 1, 2], [5, 4, 3]];
                         }
                     } else {
                         if (playerId <= 2) {
@@ -309,7 +309,7 @@
 		}
 	};
 
-	$: minimapRows = getMinimapRows(playerIndex, numberOfPlayers, layout, orientation);
+	$: minimapRows = getMinimapRows(playerIndex, numberOfPlayers, layout, fromPlayerDataModal);
 
 	const orientationToDegrees = (seatOrientation: SeatOrientation): string => {
 		if (seatOrientation === 'left') return '-90deg';
@@ -343,7 +343,7 @@
 			return '0deg';
 		}
 		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '180deg';
+			if (playerIndex === 1) return '0deg';
 			if (playerIndex === 2) return '0deg';
 			if (playerIndex === 3) return '180deg';
 			return '0deg';
