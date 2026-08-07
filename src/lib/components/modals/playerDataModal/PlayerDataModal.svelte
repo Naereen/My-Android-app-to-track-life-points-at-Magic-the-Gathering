@@ -630,7 +630,7 @@
 </script>
 
 <div
-	class="bg-black/70 fixed inset-0 flex justify-center items-start"
+	class="bg-black/70 fixed inset-0 flex justify-center items-center min-h-dvh flex-col"
 	on:click={closePlayerModal}
 	role="button"
 	on:keydown={() => null}
@@ -638,17 +638,19 @@
 >
 	<div
 		on:click|stopPropagation
-		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[90vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-8 overflow-auto"
+		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[85vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-8 overflow-auto"
 		style={modalPanelStyle}
 		role="button"
 		on:keydown={() => null}
 		tabindex="0"
 	>
 		<div class="flex flex-col justify-center w-full">
-			<div class="flex flex-col justify-center items-center sticky top-0 bg-[#d8e5f7] z-10 pb-4">
+			<div class="flex flex-col justify-center items-center sticky top-0 bg-[#d8e5f7] z-10 pb-0">
 				<h2 class="text-2xl font-semibold my-2 relative w-full text-center">
-					{$_('customize_player')}
-					#{$playerModalData.playerId}
+					<!--
+						{$_('customize_player')}
+						#{$playerModalData.playerId}
+					-->
 					<!-- {#if $appSettings.playerCount !== 2}
 						<span class="inline-flex items-center" title="Commander Damage">
 							<CommanderDamage playerIndex={$playerModalData.playerId - 1} />
@@ -658,12 +660,15 @@
 						on:click={closePlayerModal}
 						on:contextmenu|preventDefault
 						draggable="false"
-						class="absolute -right-0 top-0"
+						class="absolute right-0 -top-2"
 					>
 						<X />
 					</button>
 				</h2>
 				<div class="relative">
+					<span class="font-bold">
+						#{$playerModalData.playerId}
+					</span>
 					<input
 						type="text"
 						class="beleren py-2 px-3 rounded-lg outline outline-1 outline-black text-black font-semibold bg-[#f1f6fe]"
@@ -1452,7 +1457,7 @@
 									</div>
 								</div>
 							{/if}
-							<div class="mt-12 text-sm text-gray-500 mb-2" style="white-space: pre-wrap;">{String($_('commander_damage_help'))}</div>
+							<div class="mt-8 text-sm text-gray-500 mb-1" style="white-space: pre-wrap;">{String($_('commander_damage_help'))}</div>
 						</div>
 					{/if}
 				</div>

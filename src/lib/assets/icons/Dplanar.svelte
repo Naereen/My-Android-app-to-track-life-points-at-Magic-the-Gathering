@@ -4,7 +4,7 @@
 </script>
 
 <i
-	class="mi mi-planeswalk mi-5x text-white"
+	class="mi mi-planeswalk mi-3x text-white"
 	class:dice-final={finalGlow}
 	style="font-size: {size};"
 ></i>

@@ -173,17 +173,18 @@
 						</div>
 					{:else if $randomizerModalData.type === 'dplanar'}
 						<div class="h-[132px] w-[120px] flex flex-col items-center justify-center gap-2">
-							<div class="h-[96px] w-[96px] flex items-center justify-center">
+							<div
+								class="h-[96px] w-[96px] rounded-2xl border border-white/20 bg-black/35 flex items-center justify-center"
+								class:dice-rolling={rolling}
+								class:dice-final={!rolling && displayResult > 0}
+								style="--dice-rolling-duration: {rollingMs}ms;"
+							>
 								{#if displayResult === 1}
-									<Dplanar size={iconSize} finalGlow={!rolling} />
+									<Dplanar size={iconSize} />
 								{:else if displayResult === 2}
-									<i
-										class="mi mi-chaos mi-4x text-white"
-										class:dice-final={!rolling}
-										style="font-size: {iconSize};"
-									></i>
+									<i class="mi mi-chaos mi-3x text-white" style="font-size: {iconSize};"></i>
 								{:else}
-									<span class="inline-block h-[1px] w-[1px]"></span>
+									<span class="text-white text-5xl leading-none">-</span>
 								{/if}
 							</div>
 							<div class="text-white text-sm text-center">

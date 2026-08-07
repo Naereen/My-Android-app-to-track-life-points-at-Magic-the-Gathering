@@ -506,11 +506,11 @@
 					style={`${getBgStyle(tile.targetIndex)} transform: rotate(${getTileBackgroundRotation(tile.targetIndex)}); transform-origin: center;`}
 				></div>
 				<div
-					class="relative z-10 text-white text-[10px] leading-none text-center font-semibold px-0.5"
+					class="relative z-10 text-white text-[0.85rem] leading-none text-center font-semibold px-0.5"
 					style={`transform: rotate(${getTileTextRotation(tile.targetIndex)}); transform-origin: center;`}
 				>
 					{#if shouldShowMe(tile.targetIndex)}
-						<span class="text-[8px]">
+						<span class="text-[0.60rem]">
                             {meString}
                         </span>
 					{:else}
