@@ -277,6 +277,8 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
 
 - [x] Improve the spacing of the mana/storm count : reduce the size of the mana symbols?
 
+## Rotate the "player configuration" menu for orientation not "up" (three other cases)
+
 - [ ] TODO: When clicking on the "player configuration" menu, rotate it -90deg/90deg/180deg depending on the player position, so that the menu is always readable (not upside down or left/right). I expect this feature to be hard to implement... I don't want to try right now.
 
 ---

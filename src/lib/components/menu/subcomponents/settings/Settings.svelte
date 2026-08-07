@@ -95,6 +95,10 @@
 		}
 	};
 
+	const openCustomStartingLifeEditor = () => {
+		showCustomStartingLifeEditor = true;
+	};
+
 	const setLifeTotal = async (startingLifeTotal: number) => {
 		const confirm = await showConfirm($_('window_confirm_change_life_total'));
 		if (confirm) {
@@ -118,6 +122,11 @@
 	};
 
 	$: innerHeight = 0;
+	let showCustomStartingLifeEditor = false;
+
+	$: if (isCustomStartingLife()) {
+		showCustomStartingLifeEditor = true;
+	}
 
 	const handleScrollKeydown = (event: KeyboardEvent) => {
 		const target = event.currentTarget as HTMLElement;
@@ -570,49 +579,63 @@
 		<div class="mt-6 w-3/4">
 			<div><span style="font-size: 1.5rem;" class="font-bold">{$_('starting_life')}</span></div>
 			<div class="flex flex-row justify-between mt-3">
-				{#each [20, 25, 30, 40] as lifeTotal}
+				{#each [20, 25, 30, 40, 'custom'] as lifeTotal}
 					{#key $appSettings.startingLifeTotal}
-						<div>
-							<CircularButton
-								on:click={() => setLifeTotal(lifeTotal)}
-								number={lifeTotal}
-								highlight={$appSettings.startingLifeTotal === lifeTotal}
-							/>
-						</div>
+						{#if typeof lifeTotal === 'number'}
+							<div>
+								<CircularButton
+									on:click={() => setLifeTotal(lifeTotal)}
+									number={lifeTotal}
+									highlight={$appSettings.startingLifeTotal === lifeTotal}
+								/>
+							</div>
+						{:else}
+							<div>
+								<CircularButton
+									customText
+									highlight={showCustomStartingLifeEditor || isCustomStartingLife()}
+									on:click={openCustomStartingLifeEditor}
+								>
+									?
+								</CircularButton>
+							</div>
+						{/if}
 					{/key}
 				{/each}
 			</div>
 
-			<div class="mt-4 p-3 rounded-xl bg-[#2d2f30] border border-gray-600">
-				<div class="text-sm text-gray-300 mb-2">
-					{$_('starting_life_custom_label') || 'Custom starting life total'}
+			{#if showCustomStartingLifeEditor || isCustomStartingLife()}
+				<div class="mt-4 p-3 rounded-xl bg-[#2d2f30] border border-gray-600">
+					<div class="text-sm text-gray-300 mb-2">
+						{$_('starting_life_custom_label') || 'Custom starting life total'}
+					</div>
+					<div class="flex items-center gap-2">
+						<input
+							type="number"
+							min="1"
+							max="999"
+							step="1"
+							value={$appSettings.customStartingLifeTotal}
+							on:input={handleCustomLifeTotalInput}
+							on:keydown={handleCustomLifeTotalKeydown}
+							class="bg-gray-700 rounded-lg h-10 w-28 px-3 text-right text-white outline-none"
+						/>
+						<button
+							on:click={applyCustomStartingLifeTotal}
+							class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 h-10 rounded-lg"
+						>
+							{$_('starting_life_custom_apply') || 'Apply'}
+						</button>
+					</div>
+					<div class="text-xs text-gray-400 mt-2">
+						{#if isCustomStartingLife()}
+							{$_('starting_life_current_custom') || 'Current starting life: custom'} {$appSettings.startingLifeTotal}
+						{:else}
+							{$_('starting_life_current_preset') || 'Current starting life: preset'} {$appSettings.startingLifeTotal}
+						{/if}
+					</div>
 				</div>
-				<div class="flex items-center gap-2">
-					<input
-						type="number"
-						min="1"
-						max="999"
-						step="1"
-						value={$appSettings.customStartingLifeTotal}
-						on:input={handleCustomLifeTotalInput}
-						on:keydown={handleCustomLifeTotalKeydown}
-						class="bg-gray-700 rounded-lg h-10 w-28 px-3 text-right text-white outline-none"
-					/>
-					<button
-						on:click={applyCustomStartingLifeTotal}
-						class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 h-10 rounded-lg"
-					>
-						{$_('starting_life_custom_apply') || 'Apply'}
-					</button>
-				</div>
-				<div class="text-xs text-gray-400 mt-2">
-					{#if isCustomStartingLife()}
-						{$_('starting_life_current_custom') || 'Current starting life: custom'} {$appSettings.startingLifeTotal}
-					{:else}
-						{$_('starting_life_current_preset') || 'Current starting life: preset'} {$appSettings.startingLifeTotal}
-					{/if}
-				</div>
-			</div>
+			{/if}
 		</div>
 
 		<!-- All the main checkboxes -->
