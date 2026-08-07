@@ -444,7 +444,8 @@
 										class:text-8xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
 										class:text-6xl={$appSettings.playerCount === 5}
 										class:text-5xl={$appSettings.playerCount >= 6}
-										class:-translate-y-5={$appSettings.playerCount === 6}
+										class:-translate-y-5={ $appSettings.playerCount === 6 || $appSettings.playerCount === 5 }
+										class:-translate-y-4={ $appSettings.playerCount === 4 }
 										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
 									>
 								</button>

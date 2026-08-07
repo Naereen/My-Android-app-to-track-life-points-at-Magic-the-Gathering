@@ -28,7 +28,7 @@
 	"starting_life_current_custom": "Current starting life: custom",
 	"starting_life_current_preset": "Current starting life: preset",
 	"window_confirm_change_life_total": "Do you want to restart with {lifeTotal} life?",
-	"window_confirm_change_player_count": "Are you sure you want to continue with this number of players?",
+	"window_confirm_change_player_count": "Do you want to restart with {playerCount} players?",
 	"window_confirm_reset_game": "Are you sure you want to reset the game?",
 	"reset_player_profiles_checkbox": "Also reset player profiles (colors)",
 	"reset_player_profiles_checkbox_plus_randomize_seats": "Also randomize player seats?",

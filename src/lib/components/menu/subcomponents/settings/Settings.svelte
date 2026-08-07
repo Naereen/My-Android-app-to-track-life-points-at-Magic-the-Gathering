@@ -113,7 +113,7 @@
 	};
 
 	const setNewPlayerCount = async (playerCount: number) => {
-		const confirm = await showConfirm($_('window_confirm_change_player_count'));
+		const confirm = await showConfirm($_('window_confirm_change_player_count').replace('{playerCount}', playerCount.toString()));
 		if (confirm) {
 			setPlayerCount(playerCount);
 			toggleIsMenuOpen('');

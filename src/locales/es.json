@@ -28,7 +28,7 @@
 	"starting_life_current_custom": "Vida inicial actual: personalizada",
 	"starting_life_current_preset": "Vida inicial actual: predefinida",
 	"window_confirm_change_life_total": "¿Quieres reiniciar con {lifeTotal} puntos de vida?",
-	"window_confirm_change_player_count": "¿Estás seguro de que quieres continuar con este número de jugadores?",
+	"window_confirm_change_player_count": "¿Quieres reiniciar con {playerCount} jugadores?",
 	"window_confirm_reset_game": "¿Estás seguro de que quieres reiniciar la partida?",
 	"reset_player_profiles_checkbox": "Restablecer también los perfiles de los jugadores (colores)",
 	"reset_player_profiles_checkbox_plus_randomize_seats": "¿También mezclar las posiciones de los jugadores?",
