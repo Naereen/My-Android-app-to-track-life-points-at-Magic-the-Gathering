@@ -26,7 +26,7 @@
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
-	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
+	import Minimap, { getBackgroundViewerRotation } from '$lib/components/player/Minimap.svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
@@ -96,6 +96,41 @@
 	$: setLifeTotalSave = String($_('set_life_total_save'));
 	$: setLifeTotalCancel = String($_('set_life_total_cancel'));
 	$: setCommanderDamageString = String($_('set_commander_damage'));
+	let commanderMinimapLayout: '' | 'two-by-two' | 'one-two-one' = '';
+	$: commanderMinimapLayout =
+		$appSettings.playerCount === 4
+			? $appSettings.fourPlayerLayout === 'matrix'
+				? 'two-by-two'
+				: 'one-two-one'
+			: $appSettings.playerCount === 6
+				? $appSettings.sixPlayerLayout === 'two'
+					? 'one-two-one'
+					: 'two-by-two'
+				: '';
+	let commanderMinimapScale = 5.0;
+	let commanderMinimapHeightRem = 30;
+	$: commanderMinimapScale =
+		$appSettings.playerCount <= 4
+			? 4.5
+			: $appSettings.playerCount === 5
+				? 3.5
+				: $appSettings.playerCount === 6
+					? 3.0
+					: 2.5;
+	let commanderMinimapRotation = '0deg';
+	$: commanderMinimapHeightRem =
+		$appSettings.playerCount <= 4
+			? 24
+			: $appSettings.playerCount === 5
+				? 20
+				: $appSettings.playerCount === 6
+					? 16
+					: 12;
+	$: commanderMinimapRotation = getBackgroundViewerRotation(
+		($playerModalData?.playerId ?? 1) - 1,
+		$appSettings.playerCount,
+		commanderMinimapLayout
+	);
 
 	import { searchCards, randomCards } from '$lib/utils/scryfall';
 	import { searchGifs } from '$lib/utils/klipy';
@@ -508,6 +543,17 @@
 			return;
 		}
 		setCommanderDamageDelta(playerId, fromPlayerId, step);
+	};
+
+	const startCommanderEditFromMinimap = (targetIndex: number) => {
+		const fromPlayerId = targetIndex + 1;
+		const current = getCommanderDamageValue($playerModalData.playerId, fromPlayerId);
+		startEditCommander($playerModalData.playerId, fromPlayerId, current);
+	};
+
+	const incrementCommanderFromMinimap = (targetIndex: number) => {
+		const fromPlayerId = targetIndex + 1;
+		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1);
 	};
 </script>
 
@@ -1272,71 +1318,66 @@
 
 					{#if mode === 'commander' && $appSettings.playerCount !== 2}
 						<!-- Commander Damage Section (now its own tab) -->
-						<div class="mt-2 w-full flex flex-col items-center text-center border-t pt-4">
-							<div class="text-sm text-gray-600 mb-3">{String($_('commander_damage_help'))}</div>
-							<div class="w-full text-left ml-4">{damageFromPlayerLabel}</div>
-							<div class="grid grid-cols-1 gap-2 w-full">
-								{#each Array($appSettings.playerCount) as _, i}
-									{@const fromPlayerId = i + 1}
-									{@const dmg =
-										($players[$playerModalData.playerId - 1].statusEffects?.commanderDamage ??
-											[])[i] ?? 0}
-									{@const fromPlayerName = $players[i]?.playerName ?? `Player ${fromPlayerId}`}
-									<div class="flex items-center gap-2">
-										<span class="text-left text-sm">
-											#{fromPlayerId}
-										</span>
-										<span class="beleren w-full text-left ml-4">
-											<!-- <CommanderDamage playerIndex={fromPlayerId - 1} /> -->
-											{fromPlayerName}
-										</span>
-										{#if dmg > 0}
-											<button
-												class="px-2 py-1 bg-gray-200 rounded"
-												on:pointerdown={() =>
-													startCommanderLongPress($playerModalData.playerId, fromPlayerId, -10)}
-												on:pointerup={stopCommanderLongPress}
-												on:pointerleave={stopCommanderLongPress}
-												on:pointercancel={stopCommanderLongPress}
-												on:click={() =>
-													handleCommanderStepClick($playerModalData.playerId, fromPlayerId, -1)}>-</button
-											>
-										{/if}
-										{#if editingCommanderFrom === fromPlayerId}
-											<div class="pointer-events-auto flex items-center gap-2">
-												<input
-													id={`commander-input-${fromPlayerId}`}
-													type="number"
-													bind:value={editingCommanderValue}
-													on:keydown={(e) => {
-														if (e.key === 'Enter') saveEditCommander();
-														if (e.key === 'Escape') cancelEditCommander();
-													}}
-													class="w-20 text-center rounded-md px-1 py-0.5"
-													placeholder={enterLifeTotalPlaceholder}
-												/>
-												<div class="flex gap-2">
-													<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-													<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
-												</div>
-											</div>
-										{:else}
-											<span class="px-3 py-1 bg-gray-100 rounded min-w-[3rem] text-center" on:dblclick={() => startEditCommander($playerModalData.playerId, fromPlayerId, dmg)} title={setCommanderDamageString} >{dmg}</span>
-										{/if}
+						<div class="mt-2 w-full flex flex-col items-center justify-center text-center border-t pt-4 pb-6">
+							<div class="flex w-full items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(180deg);`}>
+								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}) rotate(${commanderMinimapRotation}); transform-origin: center;`}>
+									<Minimap
+										playerIndex={$playerModalData.playerId - 1}
+										orientation="up"
+										layout={commanderMinimapLayout}
+										backgroundClass="bg-transparent"
+										rootClickable={false}
+										onSeatClick={incrementCommanderFromMinimap}
+										onSeatLongPress={startCommanderEditFromMinimap}
+										seatLongPressMs={COMMANDER_LONG_PRESS_MS}
+									/>
+								</div>
+							</div>
+							{#if editingCommanderFrom !== null}
+								{@const editingFrom = editingCommanderFrom}
+								{@const editingFromName = $players[editingCommanderFrom - 1]?.playerName ?? `Player ${editingCommanderFrom}`}
+								<div class="mt-4 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
+									<div class="mb-2 text-sm font-semibold text-left">{editingFromName}</div>
+									<div class="flex flex-wrap items-center justify-center gap-2">
 										<button
-											class="px-2 py-1 bg-gray-200 rounded mr-10"
+											class="px-2 py-1 bg-gray-200 rounded"
 											on:pointerdown={() =>
-												startCommanderLongPress($playerModalData.playerId, fromPlayerId, 10)}
+												startCommanderLongPress($playerModalData.playerId, editingFrom, -10)}
 											on:pointerup={stopCommanderLongPress}
 											on:pointerleave={stopCommanderLongPress}
 											on:pointercancel={stopCommanderLongPress}
 											on:click={() =>
-												handleCommanderStepClick($playerModalData.playerId, fromPlayerId, 1)}
-											>+</button
+												handleCommanderStepClick($playerModalData.playerId, editingFrom, -1)}>-</button
 										>
+										<input
+											id={`commander-input-${editingFrom}`}
+											type="number"
+											bind:value={editingCommanderValue}
+											on:keydown={(e) => {
+												if (e.key === 'Enter') saveEditCommander();
+												if (e.key === 'Escape') cancelEditCommander();
+											}}
+											class="w-24 text-center rounded-md px-2 py-1 border border-black/20"
+											placeholder={enterLifeTotalPlaceholder}
+											title={setCommanderDamageString}
+										/>
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:pointerdown={() =>
+												startCommanderLongPress($playerModalData.playerId, editingFrom, 10)}
+											on:pointerup={stopCommanderLongPress}
+											on:pointerleave={stopCommanderLongPress}
+											on:pointercancel={stopCommanderLongPress}
+											on:click={() =>
+												handleCommanderStepClick($playerModalData.playerId, editingFrom, 1)}>+</button
+										>
+										<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
+										<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-500 text-white text-sm rounded">{setLifeTotalCancel}</button>
 									</div>
-								{/each}
-							</div>
+								</div>
+							{/if}
+							<div class="text-sm text-gray-600 mb-2">{String($_('commander_damage_help'))}</div>
+							<!-- <div class="text-xs text-gray-500 mb-5">{damageFromPlayerLabel}</div> -->
 						</div>
 					{/if}
 				</div>

@@ -1,3 +1,78 @@
+<script context="module" lang="ts">
+	export const getBackgroundViewerRotation = (
+		playerIndex: number,
+		numberOfPlayers: number,
+		layout: 'two-by-two' | 'one-two-one' | ''
+	): string => {
+		if (numberOfPlayers === 3) {
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '-90deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 4 && layout === 'two-by-two') {
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '-90deg';
+			if (playerIndex === 3) return '-90deg';
+			return '90deg';
+		}
+		if (numberOfPlayers === 4 && layout === 'one-two-one') {
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '90deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 5) {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '180deg';
+			if (playerIndex === 4) return '180deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 6 && layout === 'two-by-two') {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '180deg';
+			if (playerIndex === 4) return '180deg';
+			if (playerIndex === 5) return '180deg';
+			return '0deg';
+		}
+		if (numberOfPlayers === 6 && layout === 'one-two-one') {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '0deg';
+			if (playerIndex === 4) return '180deg';
+			if (playerIndex === 5) return '180deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 7) {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '0deg';
+			if (playerIndex === 4) return '180deg';
+			if (playerIndex === 5) return '180deg';
+			if (playerIndex === 6) return '180deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 8) {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '0deg';
+			if (playerIndex === 4) return '180deg';
+			if (playerIndex === 5) return '180deg';
+			if (playerIndex === 6) return '180deg';
+			if (playerIndex === 7) return '180deg';
+			return '0deg';
+		}
+
+		return '0deg';
+	};
+</script>
+
 <script lang="ts">
 	import { players } from '$lib/store/player';
 	import { appSettings } from '$lib/store/appSettings';
@@ -8,6 +83,11 @@
 	export let playerIndex: number;
 	export let layout: 'two-by-two' | 'one-two-one' | '' = '';
 	export let orientation: App.Player.Orientation = 'up';
+	export let backgroundClass = 'bg-black/70';
+	export let rootClickable = true;
+	export let onSeatClick: ((targetIndex: number) => void) | null = null;
+	export let onSeatLongPress: ((targetIndex: number) => void) | null = null;
+	export let seatLongPressMs = 1000;
 
 	$: numberOfPlayers = $appSettings.playerCount;
 	$: meString = String($_('me')); // Keep translated "me" label reactive on locale changes.
@@ -206,85 +286,7 @@
 		return getTileRotation(playerIndex);
 	};
 
-	$: getBackgroundViewerRotation = (): string => {
-		// Custom convention requested for the 3-player layout.
-		// Player 1 => normal, player 2 => left, player 3 => right.
-		if (numberOfPlayers === 3) {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 4-player layout.
-		// Player 1 => normal, player 2 => left, player 3 => right, player 4 => upside down.
-		if (numberOfPlayers === 4 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
-			if (playerIndex === 3) return '-90deg';
-			return '90deg';
-		}
-		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '90deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 5-player layout.
-		if (numberOfPlayers === 5) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
-			if (playerIndex === 4) return '180deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 6-player layout.
-		if (numberOfPlayers === 6 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			return '0deg';
-		}
-		if (numberOfPlayers === 6 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 7-player layout.
-		if (numberOfPlayers === 7) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			if (playerIndex === 6) return '180deg';
-			return '0deg';
-		}
-
-		// Custom convention requested for the 8-player layout.
-		if (numberOfPlayers === 8) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			if (playerIndex === 6) return '180deg';
-			if (playerIndex === 7) return '180deg';
-			return '0deg';
-		}
-
-		// Fallback for other layouts: keep previous seat-based behavior.
-		return getTileRotation(playerIndex);
-	};
-
-	$: backgroundRotation = getBackgroundViewerRotation();
+	$: backgroundRotation = getBackgroundViewerRotation(playerIndex, numberOfPlayers, layout);
 	$: isQuarterTurn = backgroundRotation === '90deg' || backgroundRotation === '-90deg';
 	$: backgroundLayerClass = isQuarterTurn ? 'absolute -inset-1/2' : 'absolute inset-0';
 	$: isHorizontalOrientation = orientation === 'up' || orientation === 'down';
@@ -301,6 +303,7 @@
 		: Math.max(5.0, minimapRows.length * 1.15);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: rowsStyle = `grid-template-rows: repeat(${minimapRows.length}, minmax(0, 1fr));`;
+	$: minimapContainerClass = `pointer-events-auto overflow-hidden rounded-md border border-black/70 p-0.5 ${backgroundClass}`;
 
 	$: getBgStyle = (j: number) => {
 		const p = $players[j];
@@ -322,18 +325,64 @@
 	$: shouldShowMe = (targetIndex: number) =>
 		targetIndex === playerIndex &&
 		($players[targetIndex]?.statusEffects?.commanderDamage?.[targetIndex] ?? -1) <= 0;
+
+	let seatLongPressTimeout: ReturnType<typeof setTimeout> | null = null;
+	let seatLongPressConsumedClick = false;
+
+	const handleRootOpen = () => {
+		if (!rootClickable) return;
+		openPlayerModal(playerIndex + 1, 'commander');
+	};
+
+	const handleSeatClick = (event: MouseEvent, targetIndex: number) => {
+		if (seatLongPressConsumedClick) {
+			seatLongPressConsumedClick = false;
+			return;
+		}
+		if (!onSeatClick) return;
+		event.stopPropagation();
+		onSeatClick(targetIndex);
+	};
+
+	const startSeatLongPress = (targetIndex: number) => {
+		if (!onSeatLongPress) return;
+		if (seatLongPressTimeout) {
+			clearTimeout(seatLongPressTimeout);
+			seatLongPressTimeout = null;
+		}
+		seatLongPressTimeout = setTimeout(() => {
+			seatLongPressConsumedClick = true;
+			onSeatLongPress(targetIndex);
+		}, seatLongPressMs);
+	};
+
+	const stopSeatLongPress = () => {
+		if (seatLongPressTimeout) {
+			clearTimeout(seatLongPressTimeout);
+			seatLongPressTimeout = null;
+		}
+	};
+
+	const handleSeatKeydown = (event: KeyboardEvent, targetIndex: number) => {
+		if (!onSeatClick) return;
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			event.stopPropagation();
+			onSeatClick(targetIndex);
+		}
+	};
 </script>
 
 <div
-	class="pointer-events-auto overflow-hidden rounded-md border border-black/70 bg-black/50 p-0.5"
+	class={minimapContainerClass}
 	style={minimapStyle}
 	role="button"
 	tabindex="0"
-	on:click={() => openPlayerModal(playerIndex + 1, 'commander')}
+	on:click={handleRootOpen}
 	on:keydown={(e) => {
-		if (e.key === 'Enter' || e.key === ' ') {
+		if ((e.key === 'Enter' || e.key === ' ') && rootClickable) {
 			e.preventDefault();
-			openPlayerModal(playerIndex + 1, 'commander');
+			handleRootOpen();
 		}
 	}}
 >
@@ -344,9 +393,16 @@
 				style={`grid-template-columns: repeat(${row.length}, minmax(0, 1fr));`}
 			>
 				{#each row as targetIndex}
-					<div
-						class="relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-sm border border-black/60"
+					<button
+						type="button"
+						class={`relative flex h-full min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-sm border border-black/80 ${backgroundClass}`}
 						title={$players[targetIndex]?.playerName}
+						on:pointerdown={() => startSeatLongPress(targetIndex)}
+						on:pointerup={stopSeatLongPress}
+						on:pointerleave={stopSeatLongPress}
+						on:pointercancel={stopSeatLongPress}
+						on:click={(event) => handleSeatClick(event, targetIndex)}
+						on:keydown={(event) => handleSeatKeydown(event, targetIndex)}
 					>
 						<div
 							class={backgroundLayerClass}
@@ -362,7 +418,7 @@
 								{getCommanderDamage(targetIndex)}
 							{/if}
 						</div>
-					</div>
+					</button>
 				{/each}
 			</div>
 		{/each}
