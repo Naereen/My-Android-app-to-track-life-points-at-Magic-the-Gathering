@@ -180,9 +180,13 @@
 								style="--dice-rolling-duration: {rollingMs}ms;"
 							>
 								{#if displayResult === 1}
-									<Dplanar size={iconSize} />
+									<Dplanar size={iconSize} finalGlow={!rolling} />
 								{:else if displayResult === 2}
-									<i class="mi mi-chaos mi-3x text-white" style="font-size: {iconSize};"></i>
+									<i
+										class="mi mi-chaos mi-3x text-white"
+										class:dice-final={!rolling}
+										style="font-size: {iconSize};"
+									></i>
 								{:else}
 									<span class="text-white text-5xl leading-none">-</span>
 								{/if}

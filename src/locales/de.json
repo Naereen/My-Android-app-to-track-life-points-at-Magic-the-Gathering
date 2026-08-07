@@ -111,6 +111,8 @@
 	"damage_from_player": "Schaden von Spieler:",
 	"haptic_feedback": "Haptisches Feedback",
 	"sound_effects": "Soundeffekte",
+	"enable_acorn_mode": "Eichelmodus aktivieren?",
+	"enable_ticket_mode": "Ticketmodus aktivieren?",
 	"show_life_change_history": "Verlauf der Lebenspunkteänderungen anzeigen",
 	"starting_player_probabilities_title": "Angepasste Wahrscheinlichkeiten für den Startspieler",
 	"starting_player_probabilities_caption": "Die App bietet eine experimentelle Funktion, um benutzerdefinierte Wahrscheinlichkeiten für die Wahl des Startspielers zu aktivieren. Achtung: Das kann als Cheaten gelten, wenn ihr es nicht im Einverständnis mit euren Mitspielern nutzt.",

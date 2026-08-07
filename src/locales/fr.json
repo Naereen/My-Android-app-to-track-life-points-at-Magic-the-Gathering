@@ -115,6 +115,8 @@
 	"damage_from_player": "Dégâts infligés par :",
 	"haptic_feedback": "Retour haptique (vibrations)",
 	"sound_effects": "Effets sonores",
+	"enable_acorn_mode": "Activer le mode Gland ?",
+	"enable_ticket_mode": "Activer le mode Tickets ?",
 	"show_life_change_history": "Petit historique des variations de PV",
 	"starting_player_probabilities_title": "Truquer le tirage du joueur qui commence ?",
 	"starting_player_probabilities_caption": "L'application propose une fonctionnalité expérimentale pour activer des probabilités personnalisées pour choisir qui commence. Attention, cela peut être considéré comme de la triche, si vous ne l'utilisez pas en accord avec vos adversaires !",

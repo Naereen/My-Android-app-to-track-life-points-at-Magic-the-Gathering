@@ -242,6 +242,15 @@
 	const isKeyruneIcon = (entry: GameHistoryEntry) =>
 		entry.kind === 'statusBoolean' || entry.kind === 'statusNumeric';
 
+	const isHiddenStatusEntry = (entry: GameHistoryEntry) => {
+		if (entry.kind !== 'statusNumeric') return false;
+		if (entry.payload.key === 'acorn' && !$appSettings.enableAcornMode) return true;
+		if (entry.payload.key === 'ticket' && !$appSettings.enableTicketMode) return true;
+		return false;
+	};
+
+	$: visibleGameHistory = $gameHistory.filter((entry) => !isHiddenStatusEntry(entry));
+
 	const showLifeChart = () => {
 		flushPendingSnapshot();
 		openHistoryModal();
@@ -280,13 +289,13 @@
 		</div>
 
 		<div class="w-full px-4 pb-5 text-white">
-			{#if $gameHistory.length === 0}
+			{#if visibleGameHistory.length === 0}
 				<div class="text-center text-gray-300">
 					{$_('game_history_empty') || 'No changes recorded yet.'}
 				</div>
 			{:else}
 				<ul class="space-y-1.5 space-y-reverse flex flex-col-reverse">
-					{#each $gameHistory as entry (entry.id)}
+					{#each visibleGameHistory as entry (entry.id)}
 						<li class="bg-gray-900/95 border border-gray-800 rounded-lg px-2.5 py-2 text-sm">
 							<div class="flex gap-2">
 								<div
@@ -317,7 +326,7 @@
 			<div class="mt-4 flex flex-wrap justify-center gap-3">
 				<button
 					on:click={clearGameHistory}
-					disabled={$gameHistory.length === 0}
+					disabled={visibleGameHistory.length === 0}
 					class="px-3 py-1 rounded-full border border-gray-700 text-gray-300 text-xs bg-black/30 hover:bg-black/50 disabled:opacity-40 disabled:cursor-not-allowed"
 				>
 					{$_('game_history_clear_button') || 'Clear current history'}

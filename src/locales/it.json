@@ -113,6 +113,8 @@
 	"damage_from_player": "Danno dal giocatore:",
 	"haptic_feedback": "Feedback aptico",
 	"sound_effects": "Effetti sonori",
+	"enable_acorn_mode": "Abilitare modalità Ghianda?",
+	"enable_ticket_mode": "Abilitare modalità Biglietti?",
 	"show_life_change_history": "Mostra cronologia variazioni punti vita",
 	"starting_player_probabilities_title": "Probabilità adattate del giocatore che inizia",
 	"starting_player_probabilities_caption": "L'app include una funzione sperimentale per attivare probabilità personalizzate nella scelta di chi inizia. Attenzione: può essere considerato barare se non la usi con l'accordo dei tuoi avversari.",

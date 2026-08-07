@@ -113,6 +113,8 @@
 	"damage_from_player": "Damage from Player:",
 	"haptic_feedback": "Haptic feedback",
 	"sound_effects": "Sound effects",
+	"enable_acorn_mode": "Enable Acorn mode?",
+	"enable_ticket_mode": "Enable Ticket mode?",
 	"show_life_change_history": "Show life change history",
 	"starting_player_probabilities_title": "Starting Player Probabilities",
 	"starting_player_probabilities_caption": "This app includes an experimental feature to enable custom probabilities for choosing who starts. Warning: this may be considered cheating if you do not use it with your opponents' agreement!",

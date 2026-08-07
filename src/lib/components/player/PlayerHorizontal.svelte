@@ -166,6 +166,8 @@
 	$: radCount = status.rad ?? 0;
 	$: acornCount = status.acorn ?? 0;
 	$: ticketCount = status.ticket ?? 0;
+	$: visibleAcornCount = $appSettings.enableAcornMode ? acornCount : 0;
+	$: visibleTicketCount = $appSettings.enableTicketMode ? ticketCount : 0;
 	$: commandTaxCount = status.commandTax ?? 0;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
@@ -179,8 +181,8 @@
 			energyCount,
 			experienceCount,
 			radCount,
-			acornCount,
-			ticketCount,
+			visibleAcornCount,
+			visibleTicketCount,
 			commandTaxCount,
 			ringBearerCount,
 			startYourEngineSpeedCount
@@ -717,13 +719,13 @@
 								</div>
 							</div>
 						{/if}
-					{#if acornCount > 0}
+					{#if visibleAcornCount > 0}
 						<div
 							title={$_('tooltip_status_acorn')}
 							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 							on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 						>
-							<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{acornCount}</span>
+							<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{visibleAcornCount}</span>
 							<div
 								class="status-rotate-wrapper"
 								style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -732,13 +734,13 @@
 							</div>
 						</div>
 					{/if}
-					{#if ticketCount > 0}
+					{#if visibleTicketCount > 0}
 						<div
 							title={$_('tooltip_status_tickets')}
 							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
 							on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 						>
-							<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{ticketCount}</span>
+							<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{visibleTicketCount}</span>
 							<div
 								class="status-rotate-wrapper"
 								style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"

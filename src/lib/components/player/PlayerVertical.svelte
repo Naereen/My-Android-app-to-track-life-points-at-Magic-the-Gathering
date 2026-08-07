@@ -118,6 +118,8 @@
 	$: radCount = status.rad ?? 0;
 	$: acornCount = status.acorn ?? 0;
 	$: ticketCount = status.ticket ?? 0;
+	$: visibleAcornCount = $appSettings.enableAcornMode ? acornCount : 0;
+	$: visibleTicketCount = $appSettings.enableTicketMode ? ticketCount : 0;
 	$: commandTaxCount = status.commandTax ?? 0;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
@@ -131,8 +133,8 @@
 			energyCount,
 			experienceCount,
 			radCount,
-			acornCount,
-			ticketCount,
+			visibleAcornCount,
+			visibleTicketCount,
 			commandTaxCount,
 			ringBearerCount,
 			startYourEngineSpeedCount
@@ -539,24 +541,24 @@
 					<span class="leading-none">{radCount}</span>
 				</div>
 			{/if}
-			{#if acornCount > 0}
+			{#if visibleAcornCount > 0}
 				<div
 					title={$_('tooltip_status_acorn')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<Acorn />
-					<span class="leading-none">{acornCount}</span>
+					<span class="leading-none">{visibleAcornCount}</span>
 				</div>
 			{/if}
-			{#if ticketCount > 0}
+			{#if visibleTicketCount > 0}
 				<div
 					title={$_('tooltip_status_tickets')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
 					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
 				>
 					<Ticket />
-					<span class="leading-none">{ticketCount}</span>
+					<span class="leading-none">{visibleTicketCount}</span>
 				</div>
 			{/if}
 			{#if commandTaxCount > 0}

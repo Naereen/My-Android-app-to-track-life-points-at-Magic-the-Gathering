@@ -1211,6 +1211,7 @@
 											)}>-</button>
 								</div>
 
+								{#if $appSettings.enableAcornMode}
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><Acorn /> {String($_('acorn'))}</span>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) > 0}
@@ -1256,7 +1257,9 @@
 												($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) + 1
 											)}>+</button>
 								</div>
+								{/if}
 
+								{#if $appSettings.enableTicketMode}
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><Ticket /> {String($_('ticket'))}</span>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) > 0}
@@ -1302,6 +1305,7 @@
 												($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) + 1
 											)}>+</button>
 								</div>
+								{/if}
 
 								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><TheRingerBearer isMax={$players[$playerModalData.playerId - 1].statusEffects?.ringBearer === 4} /> {String($_('ring_bearer'))}</span>

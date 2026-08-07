@@ -111,6 +111,8 @@
 	"damage_from_player": "Daño del jugador:",
 	"haptic_feedback": "Retroalimentación háptica",
 	"sound_effects": "Efectos de sonido",
+	"enable_acorn_mode": "¿Activar modo Bellota?",
+	"enable_ticket_mode": "¿Activar modo Tickets?",
 	"show_life_change_history": "Mostrar historial de cambios de vida",
 	"starting_player_probabilities_title": "Probabilidades adaptadas del jugador que empieza",
 	"starting_player_probabilities_caption": "La aplicación incluye una función experimental para activar probabilidades personalizadas al elegir quién empieza. Atención: esto puede considerarse trampa si no lo usas con el acuerdo de tus oponentes.",

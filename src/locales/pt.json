@@ -113,6 +113,8 @@
 	"sound_effects": "Efeitos sonoros",
 	"show_life_change_history": "Mostrar histórico de mudanças de vida",
 	"starting_player_probabilities_title": "Probabilidades adaptadas do jogador que começa",
+	"enable_acorn_mode": "Ativar modo Bolota?",
+	"enable_ticket_mode": "Ativar modo Ingressos?",
 	"starting_player_probabilities_caption": "O app inclui um recurso experimental para ativar probabilidades personalizadas na escolha de quem começa. Atenção: isso pode ser considerado trapaça se você não usar com o acordo dos seus oponentes.",
 	"starting_player_probabilities_enable": "Ativar esta configuração",
 	"starting_player_probabilities_help": "Os valores são usados como pesos. Eles não precisam somar exatamente 100.",

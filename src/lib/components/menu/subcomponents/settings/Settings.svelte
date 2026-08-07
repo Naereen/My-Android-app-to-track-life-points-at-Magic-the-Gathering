@@ -20,6 +20,8 @@
 		setShowGameHistoryMenu,
 		setShowResourcesButton,
 		setShowRandomizerButton,
+		setEnableAcornMode,
+		setEnableTicketMode,
 		setUseWeightedStartingPlayer,
 		setStartingPlayerProbability,
 		setAppLocale
@@ -44,6 +46,8 @@
 		setSoundEffectsEnabled
 	} from '$lib/store/appSettings';
 	import { setEnableCurrentPlayerGlow, setShowNextPlayerButton } from '$lib/store/appSettings';
+	import Acorn from '$lib/assets/icons/Acorn.svelte';
+	import Ticket from '$lib/assets/icons/Ticket.svelte';
 	import { players } from '$lib/store/player';
 	import { _ } from 'svelte-i18n';
 
@@ -163,6 +167,16 @@
 	const handleShowLifeChangeHistoryChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowLifeChangeHistory(!!target.checked);
+	};
+
+	const handleEnableAcornModeChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setEnableAcornMode(!!target.checked);
+	};
+
+	const handleEnableTicketModeChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setEnableTicketMode(!!target.checked);
 	};
 
 	const handleUseWeightedStartingPlayerChange = (e: Event) => {
@@ -699,6 +713,42 @@
 					class="h-5 w-5"
 				/>
 				<span class="ml-2 text-lg font-semibold">{$_('sound_effects') || 'Sound effects'}</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.enableAcornMode}
+					on:change={handleEnableAcornModeChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold inline-flex items-center gap-2">
+					<Acorn />
+					{$_('enable_acorn_mode') || 'Enable Acorn mode?'}
+				</span>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label
+				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+				style="min-width: 12rem;"
+			>
+				<input
+					type="checkbox"
+					checked={$appSettings.enableTicketMode}
+					on:change={handleEnableTicketModeChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold inline-flex items-center gap-2">
+					<Ticket />
+					{$_('enable_ticket_mode') || 'Enable Ticket mode?'}
+				</span>
 			</label>
 		</div>
 

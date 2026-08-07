@@ -52,6 +52,10 @@ interface AppSettings {
 	vanguardDraftThree: boolean;
 	// show game history menu button in the main menu
 	showGameHistoryMenu: boolean;
+	// enable Acorn status effect controls and badges in the UI
+	enableAcornMode: boolean;
+	// enable Ticket status effect controls and badges in the UI
+	enableTicketMode: boolean;
 	// turn timer: enable per-turn timer (optional)
 	turnTimerEnabled: boolean;
 	// default per-turn duration in seconds (2 minutes)
@@ -153,6 +157,9 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	vanguardDraftThree: false,
 	// show game history menu button in the main menu
 	showGameHistoryMenu: false,
+	// Acorn and Ticket are hidden by default
+	enableAcornMode: false,
+	enableTicketMode: false,
 	// turn timer: enable per-turn timer (optional)
 	turnTimerEnabled: false,
 	// default per-turn duration in seconds (2 minutes)
@@ -304,6 +311,14 @@ export const setShowGameHistoryMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showGameHistoryMenu: show }));
 };
 
+export const setEnableAcornMode = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, enableAcornMode: enabled }));
+};
+
+export const setEnableTicketMode = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, enableTicketMode: enabled }));
+};
+
 export const setTurnTimerEnabled = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, turnTimerEnabled: enabled }));
 };
@@ -364,6 +379,8 @@ appSettings.update((data) => {
 	const withDefaults = {
 		...data,
 		threePlayerLayout: data.threePlayerLayout ?? 'classic',
+		enableAcornMode: data.enableAcornMode ?? false,
+		enableTicketMode: data.enableTicketMode ?? false,
 		globalGameTimerEnabled: data.globalGameTimerEnabled ?? true,
 		globalGameTimerDuration:
 			data.globalGameTimerDuration ?? getDefaultGlobalGameTimerDuration(data.playerCount ?? 4),
