@@ -93,7 +93,7 @@
 	"acorn": "Glands",
 	"ticket": "Tickets",
 	"command_tax": "Taxe du commandant",
-	"partner_mode_label": "2 Commandants (partenaire)",
+	"partner_mode_label": "2 Partenaires ?",
 	"partner_mode_help": "Activer deux sources de dégâts de commandant pour ce joueur",
 	"tooltip_status_monarch": "Le joueur est Monarque",
 	"tooltip_status_initiative": "Le joueur a l'initiative",

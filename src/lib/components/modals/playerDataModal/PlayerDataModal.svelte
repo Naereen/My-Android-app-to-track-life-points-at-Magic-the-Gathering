@@ -189,7 +189,7 @@
 		modalSeatOrientations[($playerModalData?.playerId ?? 1) - 1] ?? 'up';
 	$: modalRotation = orientationToModalRotation(modalPlayerOrientation);
 	$: isQuarterTurnModal = modalRotation === '90deg' || modalRotation === '-90deg';
-	$: modalPanelStyle = `transform: rotate(${modalRotation}); transform-origin: center center; width: ${isQuarterTurnModal ? 'min(90vh, 48rem)' : '91.666667%'}; max-width: ${isQuarterTurnModal ? '90vh' : '48rem'}; max-height: ${isQuarterTurnModal ? '90vw' : '90vh'};`;
+	$: modalPanelStyle = `transform: rotate(${modalRotation}); transform-origin: center center; width: ${isQuarterTurnModal ? 'min(75vh, 44rem)' : '80%'}; max-width: ${isQuarterTurnModal ? '84vh' : '48rem'}; max-height: ${isQuarterTurnModal ? '78vw' : '90vh'};`;
 
 	import { searchCards, randomCards } from '$lib/utils/scryfall';
 	import { searchGifs } from '$lib/utils/klipy';
@@ -698,13 +698,13 @@
 >
 	<div
 		on:click|stopPropagation
-		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[85vh] h-auto opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-4 overflow-auto"
+		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[85vh] opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-4 overflow-auto"
 		style={modalPanelStyle}
 		role="button"
 		on:keydown={() => null}
 		tabindex="0"
 	>
-		<div class="flex flex-col justify-center w-[75vw]">
+		<div class="flex flex-col justify-center">
 			<div class="flex flex-col justify-center items-center sticky top-0 bg-[#d8e5f7] z-10 pb-0">
 				<h2 class="text-2xl font-semibold my-2 relative w-full text-center">
 					<!--
@@ -749,23 +749,23 @@
 						</button>
 					</div>
 				</div>
-				<div class="mt-4 flex flex-col justify-center items-center w-[75vw] px-6 sm:px-10">
-						<div class="w-full flex justify-center gap-4 mb-3">
+				<div class="mt-2 flex flex-col justify-center items-center px-2 sm:px-3">
+						<div class="w-full flex justify-center gap-1 mb-0">
 							<button
-								class="px-3 py-1 rounded-full border"
+								class="px-1 py-1 rounded-full border"
 								on:click={() => (mode = 'background')}
 								class:underline={mode === 'background'}
 								class:font-bold={mode === 'background'}>{$_('open_customize_backgrounds')}</button
 							>
 							<button
-								class="px-3 py-1 rounded-full border"
+								class="px-1 py-1 rounded-full border"
 								on:click={() => (mode = 'status_effects')}
 								class:underline={mode === 'status_effects'}
 								class:font-bold={mode === 'status_effects'}>{$_('status_effects')}</button
 							>
 							{#if $appSettings.playerCount !== 2}
 								<button
-									class="px-3 py-1 rounded-full border"
+									class="px-1 py-1 rounded-full border"
 									on:click={() => (mode = 'commander')}
 									class:underline={mode === 'commander'}
 									class:font-bold={mode === 'commander'}>{$_('commander_damage_short')}</button
@@ -986,8 +986,8 @@
 
 					{#if mode === 'status_effects'}
 						<!-- Status effects controls -->
-						<div class="mt-1 w-full flex flex-col items-center text-center text-normal">
-							<div class="grid grid-cols-2 gap-1 m-1 justify-left w-[75vw]">
+						<div class="mt-1 w-[85%] flex flex-col items-center text-center text-base">
+							<div class="grid grid-cols-2 gap-1 m-1 justify-left">
 								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
@@ -1502,11 +1502,11 @@
 											!$players[$playerModalData.playerId - 1].allowNegativeLife
 										)}
 								/>
-									<span class="ml-1 block text-lg text-center">
+									<span class="ml-1 block text-center">
 										{$_('allow_negative_life')}
 									</span>
 								</label>
-								<div class="mt-2 text-sm text-gray-600 text-center">
+								<div class="mt-2 text-xs text-gray-600 text-center">
 									{$_('allow_negative_life_help')}
 								</div>
 							</div>
@@ -1515,8 +1515,8 @@
 
 					{#if mode === 'commander' && $appSettings.playerCount > 2}
 						<!-- Commander Damage Section (now its own tab) -->
-						<div class="mt-1 w-[75vw] flex flex-col items-center justify-center text-center border-t pt-1 pb-1">
-							<div class="flex w-[75vw] items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
+						<div class="mt-2 flex flex-col items-center justify-center text-center border-t pt-2 pb-1">
+							<div class="flex items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
 								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}); transform-origin: center;`}>
 									<Minimap
 										playerIndex={$playerModalData.playerId - 1}

@@ -90,7 +90,7 @@
 							generateRandomNumber('custom');
 						}}
 						text={$_('custom_number')}
-						><div class="px-2 rounded flex flex-col">
+						><div class="px-2 rounded flex flex-col -z-index-20">
 							<div class="relative">
 								<input
 									on:click|stopPropagation
@@ -104,7 +104,7 @@
 									max="999"
 									min="0"
 								/>
-								<p class="absolute top-2 left-2 text-white text-sm">{$_('set_dice')}</p>
+								<p class="absolute top-2 left-2 text-white text-sm -z-index-20">{$_('set_dice')}</p>
 							</div>
 							<div class="text-white text-xl mb-2 mt-2">{$_('roll')}</div>
 						</div></DiceCard
