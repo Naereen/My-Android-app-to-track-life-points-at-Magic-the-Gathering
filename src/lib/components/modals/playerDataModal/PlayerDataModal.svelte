@@ -26,11 +26,12 @@
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
-	import Minimap, { getBackgroundViewerRotation } from '$lib/components/player/Minimap.svelte';
+	import Minimap, { getBackgroundViewerRotationInCommanderDamage, getSeatOrientations } from '$lib/components/player/Minimap.svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { vibrate } from '$lib/utils/haptics';
+	import { onDestroy, onMount } from 'svelte';
 	let selectedColors: string[] = [];
 	let mode: 'background' | 'commander' | 'status_effects' = 'status_effects';
 	let searchQuery = '';
@@ -82,12 +83,50 @@
 	// allow choosing two images
 	let doubleBackground = false;
 	let bgSelections: string[] = [];
+	let hasModalHistoryEntry = false;
+	let isSyncingModalHistory = false;
 
 	const getModalPlayer = () => {
 		return (
 			$players.find((player) => player.id === $playerModalData.playerId) ??
 			$players[$playerModalData.playerId - 1]
 		);
+	};
+
+	const pushModalHistoryEntry = () => {
+		if (typeof window === 'undefined' || hasModalHistoryEntry) return;
+		try {
+			const currentState =
+				window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
+			window.history.pushState({ ...currentState, __mtgPlayerModalOpen: true }, '', window.location.href);
+			hasModalHistoryEntry = true;
+		} catch {
+			// ignore
+		}
+	};
+
+	const closePlayerModal = () => {
+		if (typeof window !== 'undefined' && hasModalHistoryEntry && !isSyncingModalHistory) {
+			isSyncingModalHistory = true;
+			window.history.back();
+			return;
+		}
+
+		resetPlayerModalData();
+	};
+
+	const handleBackNavigation = () => {
+		if (!$playerModalData.isOpen) {
+			if (isSyncingModalHistory) {
+				hasModalHistoryEntry = false;
+				isSyncingModalHistory = false;
+			}
+			return;
+		}
+
+		hasModalHistoryEntry = false;
+		isSyncingModalHistory = true;
+		resetPlayerModalData();
 	};
 
 	// Translation for damage from player label
@@ -107,16 +146,16 @@
 					? 'one-two-one'
 					: 'two-by-two'
 				: '';
-	let commanderMinimapScale = 5.0;
+	let commanderMinimapScale = 5.5;
 	let commanderMinimapHeightRem = 30;
 	$: commanderMinimapScale =
 		$appSettings.playerCount <= 4
-			? 4.5
+			? 5.0
 			: $appSettings.playerCount === 5
-				? 3.5
+				? 4.5
 				: $appSettings.playerCount === 6
-					? 3.0
-					: 2.5;
+					? 3.5
+					: 3.0;
 	let commanderMinimapRotation = '0deg';
 	$: commanderMinimapHeightRem =
 		$appSettings.playerCount <= 4
@@ -126,7 +165,7 @@
 				: $appSettings.playerCount === 6
 					? 16
 					: 12;
-	$: commanderMinimapRotation = getBackgroundViewerRotation(
+	$: commanderMinimapRotation = getBackgroundViewerRotationInCommanderDamage(
 		($playerModalData?.playerId ?? 1) - 1,
 		$appSettings.playerCount,
 		commanderMinimapLayout
@@ -555,11 +594,24 @@
 		const fromPlayerId = targetIndex + 1;
 		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1);
 	};
+
+	onMount(() => {
+		window.addEventListener('popstate', handleBackNavigation);
+		pushModalHistoryEntry();
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('popstate', handleBackNavigation);
+		if (isSyncingModalHistory) {
+			isSyncingModalHistory = false;
+		}
+		hasModalHistoryEntry = false;
+	});
 </script>
 
 <div
 	class="bg-black/70 fixed inset-0 flex justify-center items-start"
-	on:click={resetPlayerModalData}
+	on:click={closePlayerModal}
 	role="button"
 	on:keydown={() => null}
 	tabindex="0"
@@ -582,7 +634,7 @@
 						</span>
 					{/if} -->
 					<button
-						on:click={resetPlayerModalData}
+						on:click={closePlayerModal}
 						on:contextmenu|preventDefault
 						draggable="false"
 						class="absolute -right-0 top-0"
@@ -1319,11 +1371,13 @@
 					{#if mode === 'commander' && $appSettings.playerCount !== 2}
 						<!-- Commander Damage Section (now its own tab) -->
 						<div class="mt-2 w-full flex flex-col items-center justify-center text-center border-t pt-4 pb-6">
-							<div class="flex w-full items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(180deg);`}>
+							<!-- <div class="text-sm text-gray-500 mb-5">{damageFromPlayerLabel}</div> -->
+							<div class="flex w-full items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(0deg);`}>
 								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}) rotate(${commanderMinimapRotation}); transform-origin: center;`}>
+								<!-- FIXME: this orientation is wrong -->
 									<Minimap
 										playerIndex={$playerModalData.playerId - 1}
-										orientation="up"
+										orientation={getSeatOrientations($appSettings.playerCount, commanderMinimapLayout)[$playerModalData.playerId - 1]}
 										layout={commanderMinimapLayout}
 										backgroundClass="bg-transparent"
 										rootClickable={false}
@@ -1336,8 +1390,8 @@
 							{#if editingCommanderFrom !== null}
 								{@const editingFrom = editingCommanderFrom}
 								{@const editingFromName = $players[editingCommanderFrom - 1]?.playerName ?? `Player ${editingCommanderFrom}`}
-								<div class="mt-4 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
-									<div class="mb-2 text-sm font-semibold text-left">{editingFromName}</div>
+								<div class="mt-2 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
+									<div class="mb-3 text-sm font-semibold text-left">{editingFromName}</div>
 									<div class="flex flex-wrap items-center justify-center gap-2">
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1376,8 +1430,7 @@
 									</div>
 								</div>
 							{/if}
-							<div class="text-sm text-gray-600 mb-2">{String($_('commander_damage_help'))}</div>
-							<!-- <div class="text-xs text-gray-500 mb-5">{damageFromPlayerLabel}</div> -->
+							<div class="mt-8 text-sm text-gray-600 mb-2">{String($_('commander_damage_help'))}</div>
 						</div>
 					{/if}
 				</div>

@@ -123,6 +123,22 @@
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: commanderDamageArray = status.commanderDamage ?? [];
+	$: commanderDamageVisibleCount = doNotShowMinimap
+		? commanderDamageArray.filter((dmg) => dmg > 0).length
+		: 0;
+	$: statusEffectItemCount =
+		[
+			poisonCount,
+			energyCount,
+			experienceCount,
+			radCount,
+			acornCount,
+			ticketCount,
+			commandTaxCount,
+			ringBearerCount,
+			startYourEngineSpeedCount
+		].filter((count) => count > 0).length + commanderDamageVisibleCount;
+	$: shouldWrapStatusEffects = statusEffectItemCount > 5;
 	$: maxCommanderDamage = Math.max(0, ...commanderDamageArray);
 
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
@@ -471,6 +487,10 @@
 	<div class="absolute z-20 left-0 right-0 bottom-1 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
 		<div
 			class="text-white text-xs rounded-full px-1 py-0 flex gap-0.5 items-center pointer-events-auto"
+			class:flex-wrap={shouldWrapStatusEffects}
+			class:gap-y-0={shouldWrapStatusEffects}
+			class:justify-center={shouldWrapStatusEffects}
+			class:max-w-[17rem]={shouldWrapStatusEffects}
 		>
 			{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
 				<div class="mr-2">

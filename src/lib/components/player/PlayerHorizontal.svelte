@@ -139,6 +139,22 @@
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
 	$: commanderDamageArray = status.commanderDamage ?? [];
+	$: commanderDamageVisibleCount = doNotShowMinimap
+		? commanderDamageArray.filter((dmg) => dmg > 0).length
+		: 0;
+	$: statusEffectItemCount =
+		[
+			poisonCount,
+			energyCount,
+			experienceCount,
+			radCount,
+			acornCount,
+			ticketCount,
+			commandTaxCount,
+			ringBearerCount,
+			startYourEngineSpeedCount
+		].filter((count) => count > 0).length + commanderDamageVisibleCount;
+	$: shouldWrapStatusEffects = statusEffectItemCount > 5;
 	$: maxCommanderDamage = Math.max(0, ...commanderDamageArray);
 
 	$: statusRotation =
@@ -597,6 +613,11 @@
 						class="text-white text-xs rounded-full px-0 py-0 flex gap-0.5 items-center pointer-events-auto"
 						class:flex-row={orientation === 'left'}
 						class:flex-row-reverse={orientation === 'left'}
+						class:flex-wrap={shouldWrapStatusEffects}
+						class:gap-y-0={shouldWrapStatusEffects}
+						class:justify-center={shouldWrapStatusEffects}
+						class:max-w-[14rem]={(orientation === 'up' || orientation === 'down') && shouldWrapStatusEffects}
+						class:max-h-[28rem]={(orientation === 'right' || orientation === 'left') && shouldWrapStatusEffects}
 					>
 						{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
 							<div

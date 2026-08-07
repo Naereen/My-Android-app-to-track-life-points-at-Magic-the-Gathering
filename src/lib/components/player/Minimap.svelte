@@ -71,6 +71,112 @@
 
 		return '0deg';
 	};
+
+    // Second try
+	export const getBackgroundViewerRotationInCommanderDamage = (
+		playerIndex: number,
+		numberOfPlayers: number,
+		layout: 'two-by-two' | 'one-two-one' | ''
+	): string => {
+		if (numberOfPlayers === 3) {
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '-90deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 4 && layout === 'two-by-two') {
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '-90deg';
+			if (playerIndex === 3) return '-90deg';
+			return '90deg';
+		}
+		if (numberOfPlayers === 4 && layout === 'one-two-one') {
+			if (playerIndex === 1) return '90deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '90deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 5) {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '180deg';
+			if (playerIndex === 4) return '180deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 6 && layout === 'two-by-two') {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '180deg';
+			if (playerIndex === 4) return '180deg';
+			if (playerIndex === 5) return '180deg';
+			return '0deg';
+		}
+		if (numberOfPlayers === 6 && layout === 'one-two-one') {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '0deg';
+			if (playerIndex === 4) return '180deg';
+			if (playerIndex === 5) return '180deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 7) {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '0deg';
+			if (playerIndex === 4) return '180deg';
+			if (playerIndex === 5) return '180deg';
+			if (playerIndex === 6) return '180deg';
+			return '0deg';
+		}
+
+		if (numberOfPlayers === 8) {
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 3) return '0deg';
+			if (playerIndex === 4) return '180deg';
+			if (playerIndex === 5) return '180deg';
+			if (playerIndex === 6) return '180deg';
+			if (playerIndex === 7) return '180deg';
+			return '0deg';
+		}
+
+		return '0deg';
+	};
+
+    // Orientation
+
+    type SeatOrientation = App.Player.Orientation;
+
+	export const getSeatOrientations = (
+		playerCount: number,
+		currentLayout: 'two-by-two' | 'one-two-one' | ''
+	): SeatOrientation[] => {
+		switch (playerCount) {
+			case 2:
+				return ['up', 'down'];
+			case 3:
+				return ['up', 'right', 'left'];
+			case 4:
+				return currentLayout === 'two-by-two'
+					? ['right', 'right', 'left', 'left']
+					: ['up', 'right', 'down', 'left'];
+			case 5:
+				return ['up', 'right', 'right', 'left', 'left'];
+			case 6:
+				return currentLayout === 'one-two-one'
+					? ['up', 'right', 'right', 'down', 'left', 'left']
+					: ['right', 'right', 'right', 'left', 'left', 'left'];
+			case 7:
+				return ['up', 'right', 'right', 'right', 'left', 'left', 'left'];
+			case 8:
+				return ['up', 'right', 'right', 'right', 'down', 'left', 'left', 'left'];
+			default:
+				return ['up', 'down'];
+		}
+	};
 </script>
 
 <script lang="ts">
@@ -93,7 +199,6 @@
 	$: meString = String($_('me')); // Keep translated "me" label reactive on locale changes.
 
 	type MinimapRows = number[][];
-	type SeatOrientation = App.Player.Orientation;
 
 	const getMinimapRows = (
 		playerId: number,
@@ -163,34 +268,6 @@
 	};
 
 	$: minimapRows = getMinimapRows(playerIndex, numberOfPlayers, layout);
-
-	const getSeatOrientations = (
-		playerCount: number,
-		currentLayout: 'two-by-two' | 'one-two-one' | ''
-	): SeatOrientation[] => {
-		switch (playerCount) {
-			case 2:
-				return ['up', 'down'];
-			case 3:
-				return ['up', 'right', 'left'];
-			case 4:
-				return currentLayout === 'two-by-two'
-					? ['right', 'right', 'left', 'left']
-					: ['up', 'right', 'down', 'left'];
-			case 5:
-				return ['up', 'right', 'right', 'left', 'left'];
-			case 6:
-				return currentLayout === 'one-two-one'
-					? ['up', 'right', 'right', 'down', 'left', 'left']
-					: ['right', 'right', 'right', 'left', 'left', 'left'];
-			case 7:
-				return ['up', 'right', 'right', 'right', 'left', 'left', 'left'];
-			case 8:
-				return ['up', 'right', 'right', 'right', 'down', 'left', 'left', 'left'];
-			default:
-				return [];
-		}
-	};
 
 	const orientationToDegrees = (seatOrientation: SeatOrientation): string => {
 		if (seatOrientation === 'left') return '-90deg';
