@@ -170,21 +170,47 @@
 
 <style>
 	[data-player-seat-index] {
+		transform-origin: center;
+		will-change: transform, box-shadow, opacity;
 		transition:
-			transform 140ms ease,
-			box-shadow 140ms ease,
+			transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+			box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1),
 			opacity 120ms ease;
 	}
 
 	.dnd-drop-target {
-		transform: scale(1.015);
+		transform: rotate(12deg) scale(1.02);
 		box-shadow:
 			inset 0 0 0 4px rgba(125, 211, 252, 0.92),
-			0 0 24px rgba(56, 189, 248, 0.45);
+			0 0 24px rgba(56, 189, 248, 0.45),
+			0 0 44px rgba(14, 165, 233, 0.25);
 		border-radius: 12px;
+		animation: dndTargetPulse 360ms ease-in-out infinite alternate;
 	}
 
 	.dnd-drag-source {
 		opacity: 0.93;
+	}
+
+	@keyframes dndTargetPulse {
+		from {
+			box-shadow:
+				inset 0 0 0 4px rgba(125, 211, 252, 0.86),
+				0 0 20px rgba(56, 189, 248, 0.36),
+				0 0 36px rgba(14, 165, 233, 0.2);
+		}
+		to {
+			box-shadow:
+				inset 0 0 0 4px rgba(125, 211, 252, 1),
+				0 0 28px rgba(56, 189, 248, 0.52),
+				0 0 50px rgba(14, 165, 233, 0.32);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.dnd-drop-target {
+			transform: scale(1.01);
+			animation: none;
+		}
 	}
 </style>
