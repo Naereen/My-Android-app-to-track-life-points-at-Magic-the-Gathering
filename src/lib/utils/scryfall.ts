@@ -160,7 +160,7 @@ export async function searchEmblemCards(
 	if (filter === 'emblem') {
 		composed = clean.length > 0 ? `(${clean}) (t:emblem or t:dungeon)` : '(type:emblem -type:dungeon)';
 	} else if (filter === 'dungeon') {
-		composed = clean.length > 0 ? `(${clean}) t:dungeon unique:card` : 't:dungeon unique:card -(set:oafr or set:oclb)';
+		composed = clean.length > 0 ? `(${clean}) t:dungeon -t:planeswalker unique:card` : 't:dungeon -t:planeswalker unique:card -(set:oafr or set:oclb)';
 	}
 
 	if (!composed || composed.trim().length === 0) return [];

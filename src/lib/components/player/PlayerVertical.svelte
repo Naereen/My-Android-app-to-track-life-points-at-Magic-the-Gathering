@@ -443,7 +443,9 @@
 										class:opacity-25={isDead}
 										class:text-9xl={$appSettings.playerCount === 2}
 										class:text-8xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
-										class:text-7xl={$appSettings.playerCount >= 5}
+										class:text-6xl={$appSettings.playerCount === 5}
+										class:text-5xl={$appSettings.playerCount >= 6}
+										class:-translate-y-5={$appSettings.playerCount === 6}
 										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
 									>
 								</button>

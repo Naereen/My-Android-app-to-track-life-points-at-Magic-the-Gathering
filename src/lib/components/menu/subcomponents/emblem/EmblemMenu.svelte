@@ -105,7 +105,7 @@
 						disabled={isSearchingEmblems}
 					>
 						<span class="mt-1 text-base text-center">
-                            <TheRingerBearer />
+                            <TheRingerBearer isMax={true}/>
                             {$_('emblem_ring_preset')}
                         </span>
 					</button>
@@ -125,7 +125,7 @@
 						disabled={isSearchingEmblems}
 					>
 						<span class="mt-1 text-base text-center">
-                            <StartYourEngineSpeed />
+                            <StartYourEngineSpeed isMax={true} />
                             {$_('emblem_speed_preset')}
                         </span>
 					</button>

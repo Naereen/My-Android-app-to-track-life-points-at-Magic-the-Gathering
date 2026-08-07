@@ -85,14 +85,14 @@
 		}
 
 		if (numberOfPlayers === 4 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
-			if (playerIndex === 3) return '-90deg';
-			return '90deg';
+			if (playerIndex === 1) return '0deg';
+			if (playerIndex === 2) return '90deg';
+			if (playerIndex === 3) return '90deg';
+			return '-90deg';
 		}
 		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '0deg';
+			if (playerIndex === 1) return '-90deg';
+			if (playerIndex === 2) return '-180deg';
 			if (playerIndex === 3) return '90deg';
 			return '0deg';
 		}
@@ -194,6 +194,7 @@
 	export let onSeatClick: ((targetIndex: number) => void) | null = null;
 	export let onSeatLongPress: ((targetIndex: number) => void) | null = null;
 	export let seatLongPressMs = 1000;
+    export let fromPlayerDataModal = false;
 
 	$: numberOfPlayers = $appSettings.playerCount;
 	$: meString = String($_('me')); // Keep translated "me" label reactive on locale changes.
@@ -216,52 +217,64 @@
 			case 4:
 				if (currentLayout === 'two-by-two') {
 					if (playerId === 0)
-						return [
-							[1, 0],
-							[2, 3]
-						];
+						return [[1, 0], [2, 3]];
 					else if (playerId === 1)
-						return [
-							[1, 0],
-							[2, 3]
-						];
+						return [[1, 0], [2, 3]];
 					else if (playerId === 2)
-						return [
-							[2, 3],
-							[1, 0]
-						];
+						return [[2, 3], [1, 0]];
 					else if (playerId === 3)
-						return [
-							[2, 3],
-							[1, 0]
-						];
+						return [[2, 3], [1, 0]];
 					else return [];
 				} else {
 					if (playerId === 0) return [[2], [1, 3], [0]];
 					else if (playerId === 1) return [[1], [2, 0], [3]];
-					else if (playerId === 2) return [[0], [1, 3], [2]];
+					else if (playerId === 2) return [[0], [3, 1], [2]];
 					else if (playerId === 3) return [[3], [2, 0], [1]];
 					else return [];
 				}
 			case 5:
                 if (playerId === 0) return [[2, 3], [1, 4], [0]];
                 else if (playerId === 1) return [[1], [2, 0], [3, 4]];
-                else if (playerId === 2) return [[2], [3, 4], [1, 0]];
-                else if (playerId === 3) return [[3], [4, 0], [1, 2]];
-                else if (playerId === 4) return [[4], [0, 1], [2, 3]];
+                else if (playerId === 2) return [[2], [1, 0], [3, 4]];
+                else if (playerId === 3) return [[3], [4, 0], [2, 1]];
+                else if (playerId === 4) return [[4], [3, 0], [2, 1]];
                 else return [];
 			case 6:
-				return currentLayout === 'one-two-one'
-					? [[3], [2, 4], [1, 5], [0]]
-					: [
-							[2, 3],
-							[1, 4],
-							[0, 5]
-						];
+				if (currentLayout === 'one-two-one') {
+                    if (playerId === 0) return [[3], [1, 4], [2, 5], [0]];
+                    else if (playerId === 1) return [[1], [2, 0], [3, 5], [4]];
+                    else if (playerId === 2) return [[2], [3, 1], [4, 0], [5]];
+                    else if (playerId === 3) return [[0], [5, 1], [4, 2], [3]];
+                    else if (playerId === 4) return [[4], [3, 5], [2, 0], [1]];
+                    else if (playerId === 5) return [[5], [4, 0], [3, 1], [2]];
+                    else return [];
+                } else {
+                    if (playerId <= 2) {
+                        return [[2, 1, 0], [3, 4, 5]];
+                    } else {
+                        return [[3, 4, 5], [2, 1, 0]];
+                    }
+                }
 			case 7:
-				return [[3, 4], [2, 5], [1, 6], [0]];
-			case 8:
-				return [[4], [3, 5], [2, 6], [1, 7], [0]];
+                if (playerId === 0) return [[3, 4], [2, 5], [1, 6], [0]];
+                else if (playerId === 1) return [[1], [2, 0], [3, 6], [4, 5]];
+                else if (playerId === 2) return [[2], [3, 1], [4, 0], [5, 6]];
+                else if (playerId === 3) return [[3], [4, 2], [5, 1], [6, 0]];
+                else if (playerId === 4) return [[4], [5, 3], [6, 2], [0, 1]];
+                else if (playerId === 5) return [[5], [6, 4], [0, 3], [1, 2]];
+                else if (playerId === 6) return [[6], [0, 5], [1, 4], [2, 3]];
+                else return [];
+            case 8:
+                // TODO: finish this mode manually at first!
+                if (playerId === 0) return [[4], [3, 5], [2, 6], [1, 7], [0]];
+                else if (playerId === 1) return [[1], [2, 0], [3, 7], [4, 6], [5]];
+                else if (playerId === 2) return [[2], [3, 1], [4, 0], [5, 7], [6]];
+                else if (playerId === 3) return [[3], [4, 2], [5, 1], [6, 0], [7]];
+                else if (playerId === 4) return [[0], [7, 1], [6, 2], [5, 3], [4]];
+                else if (playerId === 5) return [[5], [6, 4], [7, 3], [0, 2], [1]];
+                else if (playerId === 6) return [[6], [7, 5], [0, 4], [1, 3], [2]];
+                else if (playerId === 7) return [[7], [0, 6], [1, 5], [2, 4], [3]];
+                else return [];
 			default:
 				return [];
 		}
@@ -370,14 +383,14 @@
 	$: minimapWidthRem =
 		(orientation === 'left' || orientation === 'right')
 			? numberOfPlayers >= 3
-				? 4.0
-				: 3.0
-			: 5.0;
+				? (fromPlayerDataModal ? 7.0 : 4.0)
+				: (fromPlayerDataModal ? 5.0 : 3.0)
+			: (fromPlayerDataModal ? 5.0 : 5.0);
 	$: minimapHeightRem = isHorizontalOrientation
 		? numberOfPlayers <= 3
 			? Math.max(4.1, minimapRows.length * 1.75)
-			: Math.max(2.8, minimapRows.length * 1.3)
-		: Math.max(5.0, minimapRows.length * 1.15);
+			: Math.max(3.5, minimapRows.length * 1.3)
+		: Math.max(5.5, minimapRows.length * 1.15);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: rowsStyle = `grid-template-rows: repeat(${minimapRows.length}, minmax(0, 1fr));`;
 	$: minimapContainerClass = `pointer-events-auto overflow-hidden rounded-md border border-black/70 p-0.5 ${backgroundClass}`;

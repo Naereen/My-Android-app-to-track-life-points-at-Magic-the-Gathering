@@ -1001,6 +1001,33 @@
 
 							<div class="w-full grid grid-cols-1 items-center text-center border-t pt-4">
 								<div class="flex items-center gap-2">
+									<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))}</span
+									>
+									{#if ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) > 0}
+										<button
+											class="px-2 py-1 bg-gray-200 rounded"
+											on:click={() =>
+												setPlayerStatusNumeric(
+													$playerModalData.playerId,
+													'commandTax',
+													Math.max(
+														0,
+														($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) -
+															1
+													)
+												)}>-</button>
+									{/if}
+									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
+									<button
+										class="px-2 py-1 bg-gray-200 rounded"
+										on:click={() =>
+											setPlayerStatusNumeric(
+												$playerModalData.playerId,
+												'commandTax',
+												($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) + 1
+											)}>+</button>
+								</div>
+								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><PoisonIcon /> {String($_('poison'))}</span>
 									{#if ($players[$playerModalData.playerId - 1].poison ?? 0) > 0}
 										<button
@@ -1257,34 +1284,6 @@
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))}</span
-									>
-									{#if ($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) > 0}
-										<button
-											class="px-2 py-1 bg-gray-200 rounded"
-											on:click={() =>
-												setPlayerStatusNumeric(
-													$playerModalData.playerId,
-													'commandTax',
-													Math.max(
-														0,
-														($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) -
-															1
-													)
-												)}>-</button>
-									{/if}
-									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0}</span>
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'commandTax',
-												($players[$playerModalData.playerId - 1].statusEffects?.commandTax ?? 0) + 1
-											)}>+</button>
-								</div>
-
-								<div class="flex items-center gap-2">
 									<span class="w-60 text-left"><TheRingerBearer isMax={$players[$playerModalData.playerId - 1].statusEffects?.ringBearer === 4} /> {String($_('ring_bearer'))}</span>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) > 0}
 										<button
@@ -1376,13 +1375,14 @@
 
 					{#if mode === 'commander' && $appSettings.playerCount !== 2}
 						<!-- Commander Damage Section (now its own tab) -->
-						<div class="mt-2 w-full flex flex-col items-center justify-center text-center border-t pt-4 pb-6">
+						<div class="mt-1 w-full flex flex-col items-center justify-center text-center border-t pt-2 pb-2">
 							<!-- <div class="text-sm text-gray-500 mb-5">{damageFromPlayerLabel}</div> -->
 							<div class="flex w-full items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
 								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}) rotate(0deg); transform-origin: center;`}>
 								<!-- FIXME: this orientation is wrong, for the text inside the Minimap portraits -->
 									<Minimap
 										playerIndex={$playerModalData.playerId - 1}
+										fromPlayerDataModal={true}
 										orientation={getSeatOrientations($appSettings.playerCount, commanderMinimapLayout)[$playerModalData.playerId - 1]}
 										layout={commanderMinimapLayout}
 										backgroundClass="bg-transparent"
@@ -1396,7 +1396,7 @@
 							{#if editingCommanderFrom !== null}
 								{@const editingFrom = editingCommanderFrom}
 								{@const editingFromName = $players[editingCommanderFrom - 1]?.playerName ?? `Player ${editingCommanderFrom}`}
-								<div class="mt-2 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
+								<div class="relative mt-12 mb-2 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
 									<div class="mb-3 text-sm font-semibold text-center">
 										{editingFromName} → {$players[$playerModalData.playerId - 1]?.playerName ?? `Player ${$playerModalData.playerId}`}
 									</div>
@@ -1438,7 +1438,7 @@
 									</div>
 								</div>
 							{/if}
-							<div class="mt-8 text-sm text-gray-500 mb-2">{String($_('commander_damage_help'))}</div>
+							<div class="mt-12 text-sm text-gray-500 mb-2">{String($_('commander_damage_help'))}</div>
 						</div>
 					{/if}
 				</div>

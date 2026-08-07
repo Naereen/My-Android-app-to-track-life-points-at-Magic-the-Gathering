@@ -14,14 +14,14 @@
 		<div class="h-full w-full flex justify-between gap-2">
 			<div class="w-full">
 				<DraggablePlayerSlot className="w-full h-full" seatId={5}>
-					<PlayerVertical doNotShowMinimap={false} orientation="down" layout="one-two-one" id={5} />
+					<PlayerVertical doNotShowMinimap={true} orientation="down" layout="one-two-one" id={5} />
 				</DraggablePlayerSlot>
 			</div>
 		</div>
 	</div>
 
 	{#if !$appState.isMenuOpen}
-	<div class="flex gap-2 bg-black sticky top-0" class:h-[20%]={!$appState.isMenuOpen}>
+	<div class="flex gap-2 bg-black sticky top-0 pt-2" class:h-[20%]={!$appState.isMenuOpen}>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={4}>
 				<PlayerHorizontal doNotShowMinimap={false} orientation="right" layout="one-two-one" id={4} />
@@ -36,7 +36,7 @@
 	{/if}
 
 	{#if !$appState.isMenuOpen}
-	<div class="flex gap-2 bg-black sticky top-0" class:h-[20%]={!$appState.isMenuOpen}>
+	<div class="flex gap-2 bg-black sticky top-0 pt-2" class:h-[20%]={!$appState.isMenuOpen}>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={3}>
 				<PlayerHorizontal doNotShowMinimap={false} orientation="right" layout="one-two-one" id={3} />
@@ -55,7 +55,7 @@
 	</div>
 
 	{#if !$appState.isMenuOpen}
-	<div class="flex gap-2 bg-black sticky top-0" class:h-[18%]={!$appState.isMenuOpen}>
+	<div class="flex gap-2 bg-black sticky top-0 pb-2" class:h-[18%]={!$appState.isMenuOpen}>
 		<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
 			<DraggablePlayerSlot className="w-full h-full" seatId={2}>
 				<PlayerHorizontal doNotShowMinimap={false} orientation="right" layout="one-two-one" id={2} />
@@ -76,7 +76,7 @@
 		<div class="h-full w-full flex justify-between gap-2">
 			<div class="w-full">
 				<DraggablePlayerSlot className="w-full h-full" seatId={1}>
-					<PlayerVertical doNotShowMinimap={false} orientation="up" layout="one-two-one" id={1} />
+					<PlayerVertical doNotShowMinimap={true} orientation="up" layout="one-two-one" id={1} />
 				</DraggablePlayerSlot>
 			</div>
 		</div>

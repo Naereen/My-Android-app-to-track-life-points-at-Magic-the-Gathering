@@ -304,7 +304,7 @@
 					stroke-width={tick === 0 ? 3 : 1}
 					stroke-dasharray={tick === 0 ? undefined : '4 8'}
 				/>
-				<text x={padding.left - 14} y={y + 5} fill="#9ca3af" font-size="14" text-anchor="end">
+				<text x={padding.left - 14} y={y + 5} fill="#9ca3af" font-size="24" text-anchor="end">
 					{tick}
 				</text>
 			{/each}
@@ -336,7 +336,7 @@
 					stroke="#6b7280"
 					stroke-width="1.2"
 				/>
-				<text x={tickX} y={viewBoxHeight - 26} fill="#9ca3af" font-size="12" text-anchor="middle">
+				<text x={tickX} y={viewBoxHeight - 26} fill="#9ca3af" font-size="24" text-anchor="middle">
 					{formatFiveMinuteTickLabel(tickMs)}
 				</text>
 			{/each}
@@ -345,7 +345,7 @@
 				x={padding.left}
 				y={viewBoxHeight - 18}
 				fill="#9ca3af"
-				font-size="14"
+				font-size="24"
 				text-anchor="start"
 			>
 				0s
