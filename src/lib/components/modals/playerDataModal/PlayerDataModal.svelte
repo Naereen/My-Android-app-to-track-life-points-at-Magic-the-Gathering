@@ -187,6 +187,8 @@
 	$: modalSeatOrientations = getSeatOrientations($appSettings.playerCount, commanderMinimapLayout);
 	$: modalPlayerOrientation =
 		modalSeatOrientations[($playerModalData?.playerId ?? 1) - 1] ?? 'up';
+	$: modalPlayer = getModalPlayer();
+	$: modalPlayerPartnerMode = !!modalPlayer?.statusEffects?.partnerMode;
 	$: modalRotation = orientationToModalRotation(modalPlayerOrientation);
 	$: isQuarterTurnModal = modalRotation === '90deg' || modalRotation === '-90deg';
 	$: modalPanelStyle = `transform: rotate(${modalRotation}); transform-origin: center center; width: ${isQuarterTurnModal ? 'min(75vh, 44rem)' : '80%'}; max-width: ${isQuarterTurnModal ? '84vh' : '48rem'}; max-height: ${isQuarterTurnModal ? '78vw' : '90vh'};`;
@@ -494,6 +496,43 @@
 	let editingCommanderValuePrimary = '';
 	let editingCommanderValueSecondary = '';
 
+	const syncCommanderEditorValues = (
+		playerId: number,
+		fromPlayerId: number,
+		focusedSource: 0 | 1 | null = null,
+		forceSource: 0 | 1 | null = null
+	) => {
+		const targetPlayer = $players[playerId - 1];
+		const primaryValue = String(getCommanderDamageSourceValue(targetPlayer, fromPlayerId, 0));
+		const secondaryValue = String(getCommanderDamageSourceValue(targetPlayer, fromPlayerId, 1));
+
+		if (focusedSource !== 0 || forceSource === 0) {
+			editingCommanderValuePrimary = primaryValue;
+		}
+		if (focusedSource !== 1 || forceSource === 1) {
+			editingCommanderValueSecondary = secondaryValue;
+		}
+	};
+
+	const getFocusedCommanderInputSource = (): 0 | 1 | null => {
+		if (typeof document === 'undefined' || editingCommanderFrom === null) return null;
+		const active = document.activeElement;
+		if (!(active instanceof HTMLInputElement)) return null;
+
+		const primaryId = `commander-input-${editingCommanderFrom}-1`;
+		const secondaryId = `commander-input-${editingCommanderFrom}-2`;
+		if (active.id === primaryId) return 0;
+		if (active.id === secondaryId) return 1;
+		return null;
+	};
+
+	// Keep editor values aligned with store updates (buttons, long-press, or external updates)
+	// while avoiding clobbering the currently focused input.
+	$: if (editingCommanderFrom !== null) {
+		const focusedSource = getFocusedCommanderInputSource();
+		syncCommanderEditorValues($playerModalData.playerId, editingCommanderFrom, focusedSource);
+	}
+
 	// Inline editor state for numeric status effects (poison, energy, etc.)
 	let editingStat: string | null = null;
 	let editingStatValue = '';
@@ -501,9 +540,7 @@
 	const startEditCommander = async (playerId: number, fromPlayerId: number) => {
 		vibrate(20);
 		editingCommanderFrom = fromPlayerId;
-		const targetPlayer = $players[playerId - 1];
-		editingCommanderValuePrimary = String(getCommanderDamageSourceValue(targetPlayer, fromPlayerId, 0));
-		editingCommanderValueSecondary = String(getCommanderDamageSourceValue(targetPlayer, fromPlayerId, 1));
+		syncCommanderEditorValues(playerId, fromPlayerId);
 		await tick();
 		const el = document.getElementById(`commander-input-${fromPlayerId}-1`) as HTMLInputElement | null;
 		el?.focus();
@@ -583,10 +620,71 @@
 	};
 
 	const getCommandTaxSourceValue = (playerId: number, sourceIndex = 0): number => {
-		const targetPlayer = $players[playerId - 1];
+		const targetPlayer =
+			$players.find((player) => player.id === playerId) ?? $players[playerId - 1];
 		const pair = getCommandTaxBySourceForPlayer(targetPlayer);
 		const slot = sourceIndex === 1 ? 1 : 0;
 		return pair[slot] ?? 0;
+	};
+
+	let editingCommandTaxValuePrimary = '0';
+	let editingCommandTaxValueSecondary = '0';
+
+	const getFocusedCommandTaxInputSource = (): 0 | 1 | null => {
+		if (typeof document === 'undefined') return null;
+		const active = document.activeElement;
+		if (!(active instanceof HTMLInputElement)) return null;
+		if (active.id === 'command-tax-input-1') return 0;
+		if (active.id === 'command-tax-input-2') return 1;
+		return null;
+	};
+
+	const syncCommandTaxEditorValues = (
+		playerId: number,
+		focusedSource: 0 | 1 | null = null,
+		forceSource: 0 | 1 | null = null
+	) => {
+		const primaryValue = String(getCommandTaxSourceValue(playerId, 0));
+		const secondaryValue = String(getCommandTaxSourceValue(playerId, 1));
+
+		if (focusedSource !== 0 || forceSource === 0) {
+			editingCommandTaxValuePrimary = primaryValue;
+		}
+		if (focusedSource !== 1 || forceSource === 1) {
+			editingCommandTaxValueSecondary = secondaryValue;
+		}
+	};
+
+	$: if ($playerModalData?.playerId) {
+		const focusedSource = getFocusedCommandTaxInputSource();
+		syncCommandTaxEditorValues($playerModalData.playerId, focusedSource);
+	}
+
+	const handleCommandTaxInput = (playerId: number, sourceIndex: 0 | 1, event: Event) => {
+		const target = event.currentTarget as HTMLInputElement | null;
+		const rawValue = target?.value ?? '';
+
+		if (sourceIndex === 1) {
+			editingCommandTaxValueSecondary = rawValue;
+		} else {
+			editingCommandTaxValuePrimary = rawValue;
+		}
+
+		const parsed = parseInt(rawValue, 10);
+		if (Number.isNaN(parsed)) return;
+		setPlayerCommandTax(playerId, Math.max(0, parsed), sourceIndex);
+	};
+
+	const setCommandTaxDelta = (playerId: number, sourceIndex: 0 | 1, delta: number) => {
+		const nextValue = Math.max(0, getCommandTaxSourceValue(playerId, sourceIndex) + delta);
+		setPlayerCommandTax(playerId, nextValue, sourceIndex);
+		syncCommandTaxEditorValues(playerId, null, sourceIndex);
+	};
+
+	const toggleModalPartnerMode = () => {
+		const currentPartnerMode = !!getModalPlayer()?.statusEffects?.partnerMode;
+		setPlayerPartnerMode($playerModalData.playerId, !currentPartnerMode);
+		syncCommandTaxEditorValues($playerModalData.playerId);
 	};
 
 	const setCommanderDamageDelta = (
@@ -599,13 +697,11 @@
 		const nextValue = Math.max(0, current + delta);
 		setCommanderDamage(playerId, fromPlayerId, nextValue, sourceIndex);
 
-		// Keep inline editor value in sync when the input is visible.
+		// Keep editor inputs strictly aligned with store updates after button presses,
+		// including when one of the inputs is currently focused.
 		if (editingCommanderFrom === fromPlayerId && playerId === $playerModalData.playerId) {
-			if (sourceIndex === 1) {
-				editingCommanderValueSecondary = String(nextValue);
-			} else {
-				editingCommanderValuePrimary = String(nextValue);
-			}
+			const normalizedSource = sourceIndex === 1 ? 1 : 0;
+			syncCommanderEditorValues(playerId, fromPlayerId, null, normalizedSource);
 		}
 	};
 
@@ -1082,62 +1178,54 @@
 								>
 									<input
 										type="checkbox"
-										checked={$players[$playerModalData.playerId - 1].statusEffects?.partnerMode ?? false}
-										on:change={() =>
-											setPlayerPartnerMode(
-												$playerModalData.playerId,
-												!($players[$playerModalData.playerId - 1].statusEffects?.partnerMode ?? false)
-											)}
+										checked={modalPlayerPartnerMode}
+										on:change={toggleModalPartnerMode}
 									/>
 									<span>{$_('partner_mode_label') ?? 'Mode partenaire (Commandant)'}</span>
 								</label>
 							</div>
 
 							<div class="w-full grid grid-cols-1 items-center text-center border-t pt-4">
-								{#if $players[$playerModalData.playerId - 1].statusEffects?.partnerMode}
+								{#if modalPlayerPartnerMode}
 									<div class="flex items-center gap-2">
 										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} 1</span>
 										{#if getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
-												on:click={() =>
-													setPlayerCommandTax(
-														$playerModalData.playerId,
-														Math.max(0, getCommandTaxSourceValue($playerModalData.playerId, 0) - 1),
-														0
-													)}>-</button>
+												on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, -1)}>-</button>
 										{/if}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span>
+										<input
+											id="command-tax-input-1"
+											type="number"
+											min="0"
+											step="1"
+											class="w-16 min-w-[2rem] px-2 py-1 bg-gray-100 rounded text-center"
+											bind:value={editingCommandTaxValuePrimary}
+											on:input={(event) => handleCommandTaxInput($playerModalData.playerId, 0, event)}
+										/>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
-											on:click={() =>
-												setPlayerCommandTax(
-													$playerModalData.playerId,
-													getCommandTaxSourceValue($playerModalData.playerId, 0) + 1,
-													0
-												)}>+</button>
+											on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, 1)}>+</button>
 									</div>
 									<div class="flex items-center gap-2">
 										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} 2</span>
 										{#if getCommandTaxSourceValue($playerModalData.playerId, 1) > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
-												on:click={() =>
-													setPlayerCommandTax(
-														$playerModalData.playerId,
-														Math.max(0, getCommandTaxSourceValue($playerModalData.playerId, 1) - 1),
-														1
-													)}>-</button>
+												on:click={() => setCommandTaxDelta($playerModalData.playerId, 1, -1)}>-</button>
 										{/if}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{getCommandTaxSourceValue($playerModalData.playerId, 1)}</span>
+										<input
+											id="command-tax-input-2"
+											type="number"
+											min="0"
+											step="1"
+											class="w-16 min-w-[2rem] px-2 py-1 bg-gray-100 rounded text-center"
+											bind:value={editingCommandTaxValueSecondary}
+											on:input={(event) => handleCommandTaxInput($playerModalData.playerId, 1, event)}
+										/>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
-											on:click={() =>
-												setPlayerCommandTax(
-													$playerModalData.playerId,
-													getCommandTaxSourceValue($playerModalData.playerId, 1) + 1,
-													1
-												)}>+</button>
+											on:click={() => setCommandTaxDelta($playerModalData.playerId, 1, 1)}>+</button>
 									</div>
 								{:else}
 									<div class="flex items-center gap-2">
@@ -1145,22 +1233,20 @@
 										{#if getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
-												on:click={() =>
-													setPlayerCommandTax(
-														$playerModalData.playerId,
-														Math.max(0, getCommandTaxSourceValue($playerModalData.playerId, 0) - 1),
-														0
-													)}>-</button>
+												on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, -1)}>-</button>
 										{/if}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span>
+										<input
+											id="command-tax-input-1"
+											type="number"
+											min="0"
+											step="1"
+											class="w-16 min-w-[2rem] px-2 py-1 bg-gray-100 rounded text-center"
+											bind:value={editingCommandTaxValuePrimary}
+											on:input={(event) => handleCommandTaxInput($playerModalData.playerId, 0, event)}
+										/>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
-											on:click={() =>
-												setPlayerCommandTax(
-													$playerModalData.playerId,
-													getCommandTaxSourceValue($playerModalData.playerId, 0) + 1,
-													0
-												)}>+</button>
+											on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, 1)}>+</button>
 									</div>
 								{/if}
 								<div class="flex items-center gap-2">

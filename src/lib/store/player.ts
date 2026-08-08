@@ -389,7 +389,11 @@ export const getCommandTaxBySourceForPlayer = (
 ): [number, number] => {
 	const bySource = player?.statusEffects?.commandTaxBySource;
 	if (Array.isArray(bySource)) {
-		return normalizeCommandTaxPair(bySource);
+		const pair = normalizeCommandTaxPair(bySource);
+		if (!player?.statusEffects?.partnerMode) {
+			return [pair[0] + pair[1], 0];
+		}
+		return pair;
 	}
 
 	const legacy = clampCommanderDamageAmount(Number(player?.statusEffects?.commandTax ?? 0));
@@ -478,6 +482,11 @@ export const setPlayerPartnerMode = (playerId: number, enabled: boolean) => {
 
 			if (player.id === playerId) {
 				baseStatusEffects.partnerMode = normalized;
+				if (!normalized) {
+					const [firstTax] = getCommandTaxBySourceForPlayer(player);
+					baseStatusEffects.commandTaxBySource = [firstTax, 0];
+					baseStatusEffects.commandTax = firstTax;
+				}
 				return {
 					...player,
 					statusEffects: baseStatusEffects
@@ -959,11 +968,6 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 					};
 				}
 			}
-									if (!normalized) {
-										const [firstTax] = getCommandTaxBySourceForPlayer(player);
-										baseStatusEffects.commandTaxBySource = [firstTax, 0];
-										baseStatusEffects.commandTax = firstTax;
-									}
 
 			return player;
 		});
