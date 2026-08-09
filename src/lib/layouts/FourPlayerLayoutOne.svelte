@@ -5,6 +5,9 @@
 	import DraggablePlayerSlot from '$lib/components/player/DraggablePlayerSlot.svelte';
 </script>
 
+<!-- The default four-player layout keeps the two top seats mirrored above the menu and
+     the two bottom seats mirrored below it, which matches the most common tabletop view. -->
+
 <div class="flex flex-col justify-between relative h-full" data-dnd-layout>
 	{#if !$appState.isMenuOpen}
 	<div

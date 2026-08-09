@@ -1,3 +1,5 @@
+<!-- Acorn is a full SVG because the symbol needs to remain recognizable at tiny sizes
+     and match the custom MTG status badge rather than a generic UI icon. -->
 <!-- From: https://files.mtg.wiki/A.svg -->
 <svg
 	xmlns="http://www.w3.org/2000/svg"

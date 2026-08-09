@@ -4,6 +4,8 @@
  * @returns {string} Hex color string; defaults to white for unknown names.
  */
 const nameToHex = (n: string) => {
+	// The token names come from persisted player settings, so the mapping is intentionally
+	// stable and tiny instead of relying on theme-aware runtime lookups.
 	switch (n.trim()) {
 		case 'mud':
 			return '#704214';
@@ -44,6 +46,8 @@ const colorToBg = (c: string) => {
 
 	// support gradients encoded as comma-separated color names
 	if (c.includes(',')) {
+		// Multi-color players are stored as comma-separated tokens; a gradient gives each
+		// seat a distinct visual identity without introducing extra metadata.
 		const parts = c.split(',').map((p) => nameToHex(p));
 		// produce a smooth linear gradient, from left bottom to right top
 		return `linear-gradient(to right top, ${parts.join(', ')})`;

@@ -6,6 +6,9 @@
 	import DraggablePlayerSlot from '$lib/components/player/DraggablePlayerSlot.svelte';
 </script>
 
+<!-- This variant splits the six-player board into three visible bands around the menu,
+     preserving symmetry while keeping the center usable for the main control panel. -->
+
 <div class="flex flex-col gap-0 h-full justify-between" data-dnd-layout>
 	<div
 		class="flex flex-col gap-2 bg-black sticky top-0 pb-2"

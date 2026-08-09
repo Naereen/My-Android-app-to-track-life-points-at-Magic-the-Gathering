@@ -1,4 +1,5 @@
 <script>
+	// The font glyph is enough here; the surrounding UI provides all the visual framing.
 	export let size = '3.0rem';
 </script>
 

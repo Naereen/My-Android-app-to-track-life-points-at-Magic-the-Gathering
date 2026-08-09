@@ -55,6 +55,9 @@
 	const MOUSE_AFTER_TOUCH_GUARD_MS = 1000;
 	let lastTouchAt = 0;
 
+	// Horizontal cards are used on the crowded sides of the board, so the component keeps
+	// a separate background-frame builder instead of relying on CSS alone.
+
 	/**
 	 * Filters ghost mouse events emitted right after touch events on mobile browsers.
 	 * @returns {unknown} Result produced by isLikelySyntheticMouseEvent.
@@ -95,6 +98,8 @@
 		mobile: boolean,
 		seatOrientation: App.Player.Orientation
 	): BackgroundFrame => {
+		// The frame is intentionally data-driven because the same art has to fit duels,
+		// four-player grids, and very crowded six-to-eight player tables.
 		const isCompactTable = playerCount >= 5;
 		const isDuel = playerCount <= 2;
 		const isCrowdedSideSeat =
@@ -146,6 +151,8 @@
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
 		const bgValue = $players[index].backgroundImage;
+		// Background variables are composed into one string so the player container can
+		// consume them as a single style attribute.
 		// default no-image behavior
 		if (!bgValue) {
 			return `--bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-size: ${horizontalBackgroundFrame.size};`;
@@ -202,6 +209,9 @@
 		].filter((count) => count > 0).length + commanderDamageVisibleCount;
 	$: shouldWrapStatusEffects = statusEffectItemCount > 5;
 	$: maxCommanderDamage = getMaxCommanderDamageSingleSource($players[index], $appSettings.playerCount);
+
+	// Once the status badges become too numerous, the layout switches to wrapped mode so
+	// the value row remains readable on small screens.
 
 	$: statusRotation =
 		orientation === 'down' ? '180deg'
@@ -277,6 +287,8 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleTouchStart = (type: App.Player.LifeMoveType) => {
+		// Touch handlers use the same long-press lifecycle as mouse handlers, but record the
+		// last touch timestamp to suppress the synthetic mouse event that often follows.
 		lastTouchAt = Date.now();
 		isHolding = true;
 		holdingType = type;
@@ -300,6 +312,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleTouchEnd = (type: App.Player.LifeMoveType) => {
+		// A quick tap resolves to a single delta; a held press has already started an interval.
 		lastTouchAt = Date.now();
 		if (interval) {
 			clearInterval(interval);
@@ -320,6 +333,8 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleCancelHold = () => {
+		// Cancel is used by pointer leave / touch cancel paths so the UI never applies an
+		// extra life change when the gesture was interrupted.
 		lastTouchAt = Date.now();
 		// Called on mouseleave / touchcancel — stop repeating and remove highlight without applying a final single change
 		if (interval) {

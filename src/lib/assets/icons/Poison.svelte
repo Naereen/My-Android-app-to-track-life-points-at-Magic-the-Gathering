@@ -1,3 +1,5 @@
+<!-- Poison deliberately mirrors the MTG counter art style instead of the generic icon set
+     so the badge feels like a game-state marker, not a menu affordance. -->
 <svg
 	xmlns="http://www.w3.org/2000/svg"
 	width="1.5rem"

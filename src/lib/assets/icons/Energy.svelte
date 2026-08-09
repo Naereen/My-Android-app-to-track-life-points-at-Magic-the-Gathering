@@ -1,3 +1,5 @@
+<!-- Resource counters use a hand-drawn glyph so the icon reads like a gameplay token,
+     not a generic UI badge. -->
 <svg
 	xmlns="http://www.w3.org/2000/svg"
 	width="1.25rem"

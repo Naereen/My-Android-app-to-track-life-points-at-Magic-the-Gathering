@@ -27,6 +27,9 @@
 		((navigator as any).maxTouchPoints > 0 ||
 			(typeof matchMedia !== 'undefined' && matchMedia('(pointer:coarse)').matches));
 
+	// The slot only enables the touch long-press action on touch-first devices so desktop
+	// users keep the simpler pointer interactions.
+
 	$: seatIndex = Math.max(0, seatId - 1);
 	$: isDropTarget = isDragging && hoveredSeatIndex === seatIndex && dragFromSeatIndex !== seatIndex;
 	$: isDragSource = isDragging && dragFromSeatIndex === seatIndex;
@@ -36,6 +39,8 @@
 		fromSeatIndex: number | null,
 		hoveredSeatIndex: number | null
 	) => {
+		// A global event lets all seats react to the drag state without coupling them to the
+		// source slot instance.
 		if (typeof window === 'undefined') return;
 		window.dispatchEvent(
 			new CustomEvent<DragStatePayload>(DRAG_STATE_EVENT, {
@@ -92,12 +97,16 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const getLayoutContainer = () => {
+		// Seats search their nearest layout container so drag target discovery stays bounded
+		// to the current board, not the whole document.
 		if (!slotEl) return document.body as HTMLElement;
 		return (slotEl.closest('[data-dnd-layout]') as HTMLElement | null) ??
 			(document.body as HTMLElement);
 	};
 
 	const findClosestSeatIndex = (x: number, y: number): number | null => {
+		// The nearest-seat heuristic is intentionally geometric instead of DOM-order based so
+		// future layout variants can rearrange seats without changing drag semantics.
 		const container = getLayoutContainer();
 		const slots = Array.from(
 			container.querySelectorAll<HTMLElement>('[data-player-seat-index]')
@@ -164,6 +173,7 @@
 	const handleDragMove = (event: Event) => {
 		const customEvent = event as CustomEvent<{ x: number; y: number }>;
 		const toIndex = findClosestSeatIndex(customEvent.detail.x, customEvent.detail.y);
+		// Haptics fire only when the hover target changes to avoid vibrating on every move.
 		const nextTarget = toIndex ?? seatIndex;
 		if (nextTarget !== lastHapticTargetIndex) {
 			lastHapticTargetIndex = nextTarget;

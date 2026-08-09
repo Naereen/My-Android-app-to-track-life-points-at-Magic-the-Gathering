@@ -55,6 +55,9 @@
 	const MOUSE_AFTER_TOUCH_GUARD_MS = 1000;
 	let lastTouchAt = 0;
 
+	// Vertical cards are the canonical single-seat shape; the background logic is kept here
+	// because it differs from the horizontal component in coverage and image splitting.
+
 	/**
 	 * Detects synthetic mouse events fired after touch to avoid duplicate life updates.
 	 * @returns {unknown} Result produced by isLikelySyntheticMouseEvent.
@@ -92,6 +95,8 @@
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
 		const bgValue = $players[index].backgroundImage;
+		// The full style string avoids a pile of conditional class bindings in the template,
+		// which would be harder to keep aligned with the split-image rules.
 		// default no-image behavior
 		if (!bgValue) {
 			return `--bg-image: none; --bg-rotation: ${verticalBackgroundFrame.rotation}; --bg-positionx: ${verticalBackgroundFrame.positionX}; --bg-positiony: ${verticalBackgroundFrame.positionY}; --bg-width: ${verticalBackgroundFrame.width}; --bg-height: ${verticalBackgroundFrame.height}; --bg-top: ${verticalBackgroundFrame.top}; --bg-left: ${verticalBackgroundFrame.left}; --bg-size: ${verticalBackgroundFrame.size};`;
@@ -154,6 +159,9 @@
 		].filter((count) => count > 0).length + commanderDamageVisibleCount;
 	$: shouldWrapStatusEffects = statusEffectItemCount > 10;
 	$: maxCommanderDamage = getMaxCommanderDamageSingleSource($players[index], $appSettings.playerCount);
+
+	// Vertical slots can hold more content before wrapping, so the threshold is higher than
+	// on horizontal seats.
 
 	/**
 	 * Begins mouse hold-to-repeat life adjustment for vertical player card.

@@ -5,6 +5,9 @@
 	import DraggablePlayerSlot from '$lib/components/player/DraggablePlayerSlot.svelte';
 </script>
 
+<!-- Two-player mode keeps the seats pinned to opposite ends so turn ownership stays
+     visually obvious and the drag/reorder affordance remains predictable. -->
+
 <div class="flex flex-col h-full" data-dnd-layout>
 	<div class="flex items-start bg-black sticky top-0" class:h-full={!$appState.isMenuOpen}>
 		<DraggablePlayerSlot className="w-full h-full" seatId={2}>

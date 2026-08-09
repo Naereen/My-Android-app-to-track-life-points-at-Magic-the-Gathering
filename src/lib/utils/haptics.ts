@@ -11,6 +11,9 @@ const isEnabled = (): boolean => {
 
 const canVibrate = (): boolean => typeof navigator !== 'undefined' && 'vibrate' in navigator;
 
+// Haptics are intentionally centralized so every control shares the same user preference
+// and the app never has to duplicate permission/support checks in component code.
+
 /**
  * Triggers a vibration pattern if haptics are enabled in settings and supported by the device.
  * @param {number | number[]} pattern Milliseconds or vibration sequence passed to `navigator.vibrate`.
@@ -44,6 +47,7 @@ export const error = () => tap([40, 20, 40]);
  * @returns {void}
  */
 export function vibrate(intensity: number = 10) {
+	// Symmetric pulse shape gives short feedback without feeling like a long buzzing alert.
 	return tap([2 * intensity, intensity, 2 * intensity]);
 }
 
@@ -61,6 +65,8 @@ export function haptic(node: HTMLElement, pattern: number | number[] = 10) {
 	 * @returns {void}
 	 */
 	const handler = () => {
+		// Keep the action passive so it behaves like a pure enhancement and never blocks
+		// the click path used by buttons, links, and custom controls.
 		try {
 			if (!isEnabled()) return;
 			if (!canVibrate()) return;

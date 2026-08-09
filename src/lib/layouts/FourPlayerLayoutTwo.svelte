@@ -6,6 +6,9 @@
 	import DraggablePlayerSlot from '$lib/components/player/DraggablePlayerSlot.svelte';
 </script>
 
+<!-- This stacked variant compresses the board into taller bands so the menu can stay
+     readable while still giving each seat a stable, touch-friendly target. -->
+
 <div class="flex flex-col justify-between w-full h-full relative" data-dnd-layout>
 	<div
 		class="w-full pt-2 bg-black sticky top-0"

@@ -1,4 +1,5 @@
 <script>
+	// Size-only adapter for the dicefont face used by the randomizer and preset menus.
 	export let size = '3.0rem';
 </script>
 

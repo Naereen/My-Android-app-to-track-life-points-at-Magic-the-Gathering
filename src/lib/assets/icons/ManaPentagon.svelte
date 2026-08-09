@@ -1,3 +1,5 @@
+<!-- The pentagon layout is a compact visual map of the five mana colors, used where the
+     app needs a symbolic color wheel rather than a text label. -->
 <div class="w-10 h-10 flex justify-center items-center">
 	<div class="relative w-6 h-6 mx-auto mb-[4px]">
 		<div

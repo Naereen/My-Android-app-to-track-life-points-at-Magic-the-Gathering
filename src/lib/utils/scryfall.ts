@@ -22,6 +22,9 @@ export type ScryfallEmblemCard = {
 	faces: ScryfallEmblemFace[];
 };
 
+// Scryfall is the canonical remote source for card art and emblem-like cards.
+// This adapter keeps the rest of the app insulated from API shape differences.
+
 /**
  * Performs an HTTP GET request and decodes the Scryfall JSON payload.
  * @param {string} url Absolute Scryfall API URL.
@@ -29,6 +32,7 @@ export type ScryfallEmblemCard = {
  * @throws {Error} Throws when the HTTP response status is not successful.
  */
 async function fetchJson(url: string) {
+	// Centralizing the fetch/JSON step makes error handling consistent across card queries.
 	const res = await fetch(url);
 	if (!res.ok) throw new Error(`Scryfall error ${res.status}`);
 	return res.json();
@@ -41,6 +45,8 @@ async function fetchJson(url: string) {
  * @returns {ScryfallEmblemCard | null} Normalized card or `null` when mandatory data is missing.
  */
 function normalizeEmblemCard(c: any): ScryfallEmblemCard | null {
+	// Emblem-like cards can be single-faced or multi-faced; this normalizer collapses both
+	// into the same modal-friendly structure used by the UI.
 	if (!c || !c.id || !c.name) return null;
 
 	const faces: ScryfallEmblemFace[] = [];
@@ -86,6 +92,7 @@ function normalizeEmblemCard(c: any): ScryfallEmblemCard | null {
  */
 export async function searchCards(query: string, limit = 256): Promise<ScryfallCard[]> {
 	if (!query || query.trim().length === 0) return [];
+	// `unique=art` prevents duplicate art entries from cluttering the picker.
 	const q = encodeURIComponent(query);
 	const url = `https://api.scryfall.com/cards/search?q=${q}&order=released&unique=art`;
 	try {
@@ -129,6 +136,8 @@ export async function searchCards(query: string, limit = 256): Promise<ScryfallC
  */
 export async function randomCards(query: string, limit = 256): Promise<ScryfallCard[]> {
 	if (!query || query.trim().length === 0) return [];
+	// Random results are normalized into the same array shape as search results so the
+	// modal can reuse one rendering path for both flows.
 	const q = encodeURIComponent(query);
 	const url = `https://api.scryfall.com/cards/random?q=${q}&unique=art`;
 	try {
@@ -186,6 +195,8 @@ export async function searchEmblemCards(
 	filter: 'emblem' | 'dungeon' | 'none' = 'emblem'
 ): Promise<ScryfallEmblemCard[]> {
 	const clean = query?.trim() ?? '';
+	// The composed query intentionally narrows to emblem/dungeon-style cards because the UI
+	// needs mechanics, not arbitrary spells that happen to match the search text.
 
 	let composed = clean;
 	if (filter === 'emblem') {
@@ -226,6 +237,8 @@ export async function searchVanguardCards(
 	limit = 120
 ): Promise<ScryfallEmblemCard[]> {
 	const clean = query?.trim() ?? '';
+	// Paper-only vanguards avoid digital-only printings and keep the modal aligned with the
+	// physical variant of the game.
 	const composed =
 		clean.length > 0 ? `(${clean}) t:vanguard game:paper` : 't:vanguard game:paper';
 
@@ -261,6 +274,9 @@ export async function fetchCardBySetCollector(
 	collectorNumber: string
 ): Promise<ScryfallEmblemCard | null> {
 	if (!setCode || !collectorNumber) return null;
+
+	// Preset shortcuts use set/collector lookups because they stay stable even when card
+	// names are ambiguous or transliterated across locales.
 
 	const set = encodeURIComponent(setCode.trim().toLowerCase());
 	const cn = encodeURIComponent(collectorNumber.trim());

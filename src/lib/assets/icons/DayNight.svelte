@@ -1,3 +1,5 @@
+<!-- Day/Night is rendered as a symbolic sun so the toggled state remains obvious even
+     when the icon is shrunk into the status history or player overlay. -->
 <svg
 	xmlns="http://www.w3.org/2000/svg"
 	width="1.25rem"

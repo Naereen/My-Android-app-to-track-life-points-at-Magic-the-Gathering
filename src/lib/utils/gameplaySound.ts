@@ -18,6 +18,8 @@ type Tone = {
 };
 
 const SOUND_PATTERNS: Record<GameplaySoundType, Tone[]> = {
+	// The tone recipes intentionally map game semantics to distinct timbres so players can
+	// recognize what happened without looking directly at the screen.
 	bigLifeUp: [
 		{ frequency: 620, duration: 0.07, wave: 'triangle', gain: 0.025, gap: 0.015 },
 		{ frequency: 820, duration: 0.1, wave: 'triangle', gain: 0.03 }
@@ -56,6 +58,8 @@ let audioContext: AudioContext | null = null;
 const canPlaySound = () => {
 	if (typeof window === 'undefined') return false;
 	if (!get(appSettings).soundEffectsEnabled) return false;
+	// WebAudio support is checked lazily because some browsers expose the API only after
+	// user interaction or in a partially suspended state.
 	return !!(window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext);
 };
 
@@ -110,6 +114,8 @@ export const playGameplaySound = (sound: GameplaySoundType) => {
 
 	let cursor = ctx.currentTime + 0.005;
 	for (const tone of pattern) {
+		// Schedule each tone slightly after the previous one so the melody feels intentional
+		// instead of like a raw, overlapping oscillator burst.
 		playTone(ctx, tone, cursor);
 		cursor += tone.duration + (tone.gap ?? 0);
 	}

@@ -3,6 +3,9 @@
 
 import { getLocaleFromNavigator } from 'svelte-i18n';
 
+// Klipy is an optional GIF provider. This adapter keeps it isolated so the modal can
+// fall back cleanly when the service or API key is unavailable.
+
 export type KlipyResult = {
     id: string;
     title: string;
@@ -12,6 +15,7 @@ export type KlipyResult = {
 
 const readKey = async (): Promise<string | null> => {
     try {
+        // Environment variables are the preferred setup path for local development.
         // Prefer vite env variable when building
         // @ts-ignore
         const envKey = import.meta.env?.VITE_KLIPY_API_KEY;
@@ -19,6 +23,7 @@ const readKey = async (): Promise<string | null> => {
     } catch {}
 
     try {
+        // Fallback to a plain key file for deployments that cannot inject env variables.
         // Try to fetch a key placed in the app root (e.g. static/klipy_api.key)
         const resp = await fetch('klipy_api.key');
         if (resp.ok) {
@@ -37,6 +42,8 @@ export const searchGifs = async (q: string): Promise<KlipyResult[]> => {
     if (!key) return [];
 
     try {
+        // These defaults deliberately keep result sets small so background searches stay
+        // fast enough for the modal UX.
         // These parameters are based on Klipy API docs and examples; adjust as needed
         const page = 1;  // pagination support; can be extended to allow fetching more results
         const per_page = 5;  // number of results per page; adjust based on UI needs and API limits
@@ -69,8 +76,8 @@ export const searchGifs = async (q: string): Promise<KlipyResult[]> => {
 
         const data = await resp.json();
 
-        // Map to KlipyResult; structure depends on API but we try common fields
-        // Normalize response: Klipy may return an object or an array.
+        // The payload shape is intentionally normalized aggressively because the provider
+        // can return nested arrays or a single object depending on search conditions.
         let raw = Array.isArray(data?.data?.data) ? data?.data?.data : [];
 
         console.log("Raw data:", raw);

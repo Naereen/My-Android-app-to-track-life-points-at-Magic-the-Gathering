@@ -13,6 +13,8 @@ export function isMobileDevice(innerWidth?: number): boolean {
 			// userAgentData (modern browsers) provides a reliable mobile hint
 			const uaData: any = (navigator as any).userAgentData;
 			if (uaData && typeof uaData.mobile === 'boolean') {
+				// Prefer structured browser hints when available, because they survive UA spoofing
+				// better than plain string matching.
 				return uaData.mobile;
 			}
 
@@ -44,6 +46,8 @@ export function isMobileDevice(innerWidth?: number): boolean {
 
 		// Final fallback: use innerWidth when provided (threshold conservative)
 		if (typeof innerWidth === 'number') {
+			// Width fallback is deliberately conservative so tablets do not accidentally fall
+			// into phone-only layout branches unless all other signals were inconclusive.
 			return innerWidth <= 400;
 		}
 	} catch (e) {

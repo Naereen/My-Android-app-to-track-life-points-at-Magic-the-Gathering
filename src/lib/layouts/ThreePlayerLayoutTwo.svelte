@@ -6,6 +6,9 @@
 	import DraggablePlayerSlot from '$lib/components/player/DraggablePlayerSlot.svelte';
 </script>
 
+<!-- The inverted three-player layout gives the upper player a vertical slot and keeps
+     the lower pair horizontal, which is useful when the table is read from the opposite side. -->
+
 <div class="flex flex-col h-full justify-between" data-dnd-layout>
 		<div
 			class="flex items-start bg-black sticky top-0 pt-2"

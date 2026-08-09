@@ -1,3 +1,5 @@
+<!-- Ticket is one of the custom status counters, so the icon uses a bespoke SVG instead
+     of a font glyph to keep the mechanic visually distinct. -->
 <!-- From: https://files.mtg.wiki/TK.svg -->
 <svg
 	viewBox="0 0 206.67979 264.58329"

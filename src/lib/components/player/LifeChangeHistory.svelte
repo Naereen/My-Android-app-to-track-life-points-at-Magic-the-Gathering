@@ -7,6 +7,9 @@
 
 	const MERGE_WINDOW_MS = 2000;
 
+	// This compact stack mirrors the more verbose game history, but it is optimized for the
+	// small space around a life counter where only the immediate recent deltas matter.
+
 	export let score: number;
 	export let maxLines = 8;
 	export let resetToken = 0;
@@ -45,6 +48,8 @@
 	 */
 	const canMergeEntries = (previous: HistoryEntry, nextOldScore: number, nextDelta: number) => {
 		if (Date.now() - previous.timestamp > MERGE_WINDOW_MS) return false;
+		// The sign check is intentionally commented out because this mini-history is meant to
+		// preserve score continuity across mixed up/down taps within the merge window.
 		// PROPOSAL: If the previous entry's delta and the next delta have different signs, we don't merge them.
 		// REASON: This is a good idea, as it prevents merging entries that represent opposite changes in score. We can implement this by checking the sign of the previous delta and the next delta. If they have different signs, we return false to indicate that they should not be merged.
 		// ANSWER: It is the opposite of what I wanted.
