@@ -57,6 +57,9 @@
 	let relayHealthStatus: RelayHealthStatus = 'idle';
 	let relayHealthMessage = '';
 
+	// The settings menu intentionally acts as the control hub for the whole app, so it
+	// centralizes store mutations that would otherwise be scattered across several views.
+
 	/**
 	 * Clears persisted app stores after user confirmation, then reloads the page.
 	 * @returns {unknown} Result produced by resetLocalStorage.
@@ -81,6 +84,8 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const isCustomStartingLife = () => {
+		// Treat anything outside the standard presets as a custom value, which keeps the UI
+		// in sync even when data was loaded from an older persistence snapshot.
 		return (
 			$appSettings.startingLifeTotal !== 20 &&
 			$appSettings.startingLifeTotal !== 25 &&
@@ -149,6 +154,8 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const setLifeTotal = async (startingLifeTotal: number) => {
+		// Changing starting life resets the board because most game-state calculations derive
+		// from that baseline and would otherwise remain inconsistent.
 		const confirm = await showConfirm( `${ $_('window_confirm_change_life_total').replace('{lifeTotal}', startingLifeTotal.toString() ) }`);
 		if (confirm) {
 			const nextLife = clampCustomStartingLifeTotal(startingLifeTotal);
@@ -168,6 +175,8 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const setNewPlayerCount = async (playerCount: number) => {
+		// Player count is one of the most structurally important settings, so the app asks for
+		// confirmation before reshaping seat layout and dependent defaults.
 		const confirm = await showConfirm($_('window_confirm_change_player_count').replace('{playerCount}', playerCount.toString()));
 		if (confirm) {
 			setPlayerCount(playerCount);
@@ -190,6 +199,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleScrollKeydown = (event: KeyboardEvent) => {
+		// Keyboard scrolling preserves accessibility on desktop when the settings panel is long.
 		const target = event.currentTarget as HTMLElement;
 		if (!target) return;
 		if (event.key === 'ArrowDown') {

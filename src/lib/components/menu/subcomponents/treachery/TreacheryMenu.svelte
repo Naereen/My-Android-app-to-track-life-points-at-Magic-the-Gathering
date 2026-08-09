@@ -36,6 +36,9 @@
 			? null
 			: activePlayers.find((player) => player.id === revealedPlayerId) ?? null;
 
+	// Treachery and Shogun share the same component tree, so the labels adapt instead of
+	// maintaining two separate menu implementations.
+
 	/**
 	 * Formats internal role key into user-facing treachery/shogun label.
 	 * @param {string | null | undefined} role - Parameter used by roleDisplay.
@@ -61,6 +64,7 @@
 	};
 
 	onMount(async () => {
+		// The first visit can seed roles automatically so the menu doubles as setup.
 		if (hasInitialized) return;
 		hasInitialized = true;
 
@@ -98,6 +102,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const revealForPlayer = (playerId: number) => {
+		// Reveal only players that already have a role; this avoids opening a dead overlay.
 		const target = activePlayers.find((player) => player.id === playerId);
 		if (!target?.treacheryRole) return;
 		if (target.treacherySeen && !allAssignedPlayersSeenOnce) return;

@@ -24,11 +24,15 @@
 
 	$: innerHeight = 0;
 	$: activePlayers = $players.slice(0, $appSettings.playerCount);
+
+	// Vanguard follows the same pattern as treachery: one screen for auto-assignment, manual
+	// reassignment, and a search flow that can overwrite the selected card.
 	$: if (!activePlayers.some((p) => p.id === selectedPlayerId) && activePlayers.length > 0) {
 		selectedPlayerId = activePlayers[0].id;
 	}
 
 	onMount(async () => {
+		// Auto-fill only when the mode is active but the players have not been seeded yet.
 		if (hasInitialized) return;
 		hasInitialized = true;
 
@@ -92,6 +96,8 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const assignSearchedCard = (card: ScryfallEmblemCard) => {
+		// A manual search result becomes both the active card and the only choice so the
+		// selection remains stable after closing the search UI.
 		setPlayerVanguard(selectedPlayerId, card);
 		setPlayerVanguardChoices(selectedPlayerId, [card]);
 	};

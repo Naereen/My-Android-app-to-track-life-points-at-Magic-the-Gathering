@@ -7,6 +7,8 @@
 	let pressTimer: number | null = null;
 	const longPressDuration = 600; // ms
 
+	// This button is oversized on purpose so the long-press gesture stays easy to hit.
+
 	/**
 	 * Starts long-press timer and dispatches `longpress` event when threshold is reached.
 	 * @param {PointerEvent} event - Parameter used by startPress.

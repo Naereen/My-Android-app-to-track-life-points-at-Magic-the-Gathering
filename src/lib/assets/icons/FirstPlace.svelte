@@ -9,6 +9,7 @@
 	viewBox="0 0 31.701 31.701"
 	xml:space="preserve"
 >
+	<!-- Compact medal icon used for first-place or ranking markers in small controls. -->
 	<g>
 		<g>
 			<polygon

@@ -7,6 +7,8 @@
 
 	export let type: App.Resources.Resource;
 
+	// One generic row covers mana, waste, and storm, which keeps the menu visually uniform.
+
 	const images: { [key in App.Resources.Resource]: string } = {
 		white: 'white-mana-symbol.webp',
 		blue: 'blue-mana-symbol.webp',
@@ -24,7 +26,6 @@
 			on:click={() => setResource(type, $resourceCounter[type] - 1)}
 			customText
 			highlight
-			light
 			small><Minus light size="1.25rem" /></CircularButton
 		>
 	</div>
@@ -32,6 +33,7 @@
 		class="h-16 w-16 flex flex-row items-center justify-center flex-grow"
 		class:brightness-[25%]={$resourceCounter[type] === 0}
 	>
+		<!-- Empty counters are dimmed so zero values are readable at a glance. -->
 		<img srcset={optimize(images[type])} alt="mana symbol" class="h-16 w-16" /><span
 			class="ml-4 text-2xl text-center w-2">{$resourceCounter[type]}</span
 		>
@@ -41,7 +43,6 @@
 			on:click={() => setResource(type, $resourceCounter[type] + 1)}
 			customText
 			highlight
-			light
 			small><Plus light size="1.25rem" /></CircularButton
 		>
 	</div>

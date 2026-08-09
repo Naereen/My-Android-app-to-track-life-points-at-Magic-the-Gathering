@@ -9,6 +9,9 @@
 	import { haptic } from '$lib/utils/haptics';
 
 	$: innerHeight = 0;
+
+	// This menu groups all resource-like counters together because they share the same
+	// increment/decrement pattern even though their gameplay meaning differs.
 </script>
 
 <svelte:window bind:innerHeight />
@@ -22,6 +25,7 @@
 		<div
 			class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black z-10"
 		>
+			<!-- Keep the title bar pinned so long lists stay readable while scrolling. -->
 			<button
 				on:click={() => toggleIsMenuOpen('')}
 				on:contextmenu|preventDefault
@@ -56,6 +60,7 @@
 				</div>
 			</div>
 			<div class="flex justify-center gap-2 py-2">
+				<!-- Close and clear are separate because clearing resources is destructive. -->
 				<Button on:click={() => toggleIsMenuOpen('')} hapticPattern={100}>{$_('close')}</Button>
 				<Button on:click={resetResources} hapticPattern={100} type="dark">{$_('clear')}</Button>
 			</div>

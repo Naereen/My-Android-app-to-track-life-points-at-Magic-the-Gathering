@@ -21,6 +21,9 @@
 	let selectedActivePlayer: number | null = null;
 	let showOpponentSelector = false;
 
+	// The randomizer menu combines several independent mini-tools in one place, so the
+	// state is intentionally local and simple rather than delegated to a heavier store.
+
 	/**
 	 * Restricts custom randomizer input to numeric/edit keys and clamps range.
 	 * @param {KeyboardEvent} event - Parameter used by handleCustomRandomizerKeyPress.
@@ -28,6 +31,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleCustomRandomizerKeyPress = (event: KeyboardEvent) => {
+		// Prevent non-numeric keystrokes from corrupting the custom random number field.
 		const { key } = event;
 
 		const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Enter'];
@@ -49,6 +53,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleRandomOpponent = () => {
+		// Random opponent selection is a two-step flow: choose the active player, then roll.
 		vibrate(20);
 		showOpponentSelector = true;
 	};
@@ -60,6 +65,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const selectPlayerAsActive = (playerId: number) => {
+		// The chosen active player becomes the reference for the next opponent roll.
 		vibrate(20);
 		selectedActivePlayer = playerId;
 		selectRandomOpponent(playerId);

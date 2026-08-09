@@ -10,6 +10,7 @@
 	style="display:inline-block; vertical-align:middle;"
 >
 	<defs id="defs294" />
+	<!-- Tiny wrapper around the experience symbol so sizing stays consistent everywhere. -->
 	<path
 		id="path2"
 		style="fill:cyan;stroke-width:1.5"

@@ -18,6 +18,9 @@
 	let isSearchingEmblems = false;
 	let hasSearchedEmblems = false;
 
+	// Emblem search stays on the menu side so players can browse presets and search results
+	// without leaving the main gameplay flow.
+
 	$: innerHeight = 0;
 
 	/**
@@ -40,6 +43,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const openPresetEmblem = async (setCode: string, collectorNumber: string) => {
+		// Presets skip search to give instant access to the most common emblem-like cards.
 		vibrate(20);
 		isSearchingEmblems = true;
 		try {
@@ -69,6 +73,8 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const runEmblemSearch = async (filter: 'emblem' | 'dungeon') => {
+		// The filter decides whether the search surface is focused on emblems or dungeons;
+		// the user query is optional and simply narrows the provider-side result set.
 		vibrate(20);
 		isSearchingEmblems = true;
 		hasSearchedEmblems = true;
