@@ -191,7 +191,56 @@
 		$players.find((player) => player.id === $playerModalData.playerId) ??
 		$players[$playerModalData.playerId - 1];
 	$: modalPlayerPartnerMode = !!modalPlayer?.statusEffects?.partnerMode;
-	$: modalRotation = orientationToModalRotation(modalPlayerOrientation);
+	const MOBILE_KEYBOARD_THRESHOLD_PX = 150;
+	let isMobileKeyboardOpen = false;
+	let maxVisibleViewportHeight = 0;
+
+	const isEditableElement = (element: Element | null): element is HTMLElement => {
+		return !!element && element instanceof HTMLElement && (
+			element instanceof HTMLInputElement ||
+			element instanceof HTMLTextAreaElement ||
+			element.isContentEditable
+		);
+	};
+
+	const getVisibleViewportHeight = () => {
+		if (typeof window === 'undefined') return 0;
+		const viewport = window.visualViewport;
+		return viewport ? viewport.height + viewport.offsetTop : window.innerHeight;
+	};
+
+	const updateMobileKeyboardState = () => {
+		if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+		const visibleViewportHeight = getVisibleViewportHeight();
+		if (visibleViewportHeight > maxVisibleViewportHeight) {
+			maxVisibleViewportHeight = visibleViewportHeight;
+		}
+
+		const activeElement = document.activeElement;
+		const hasEditableFocusInModal =
+			isEditableElement(activeElement) && !!playerModalScrollEl?.contains(activeElement);
+
+		if (!hasEditableFocusInModal) {
+			isMobileKeyboardOpen = false;
+			return;
+		}
+
+		isMobileKeyboardOpen =
+			maxVisibleViewportHeight - visibleViewportHeight > MOBILE_KEYBOARD_THRESHOLD_PX;
+	};
+
+	const handleViewportKeyboardChange = () => {
+		updateMobileKeyboardState();
+	};
+
+	$: shouldNeutralizeModalRotation =
+		$playerModalData?.isOpen &&
+		modalPlayerOrientation !== 'up' &&
+		isMobileKeyboardOpen;
+	$: modalRotation = shouldNeutralizeModalRotation
+		? '0deg'
+		: orientationToModalRotation(modalPlayerOrientation);
 	$: isQuarterTurnModal = modalRotation === '90deg' || modalRotation === '-90deg';
 	$: modalPanelStyle = `transform: rotate(${modalRotation}); transform-origin: center center; width: ${isQuarterTurnModal ? 'min(75vh, 44rem)' : '80%'}; max-width: ${isQuarterTurnModal ? '84vh' : '48rem'}; max-height: ${isQuarterTurnModal ? '78vw' : '90vh'};`;
 
@@ -261,6 +310,11 @@
 	// When the modal opens, use any requested mode from the store (for example 'commander')
 	$: if ($playerModalData && $playerModalData.isOpen) {
 		mode = $playerModalData.mode ?? 'status_effects';
+	}
+
+	$: if (!$playerModalData?.isOpen) {
+		isMobileKeyboardOpen = false;
+		maxVisibleViewportHeight = 0;
 	}
 
 	// Track if background tab has been initialized for the current player
@@ -761,12 +815,23 @@
 	};
 
 	onMount(() => {
+		const viewport = typeof window !== 'undefined' ? window.visualViewport : null;
 		window.addEventListener('popstate', handleBackNavigation);
+		window.addEventListener('focusin', handleViewportKeyboardChange);
+		window.addEventListener('focusout', handleViewportKeyboardChange);
+		window.addEventListener('resize', handleViewportKeyboardChange);
+		viewport?.addEventListener('resize', handleViewportKeyboardChange);
+		updateMobileKeyboardState();
 		pushModalHistoryEntry();
 	});
 
 	onDestroy(() => {
+		const viewport = typeof window !== 'undefined' ? window.visualViewport : null;
 		window.removeEventListener('popstate', handleBackNavigation);
+		window.removeEventListener('focusin', handleViewportKeyboardChange);
+		window.removeEventListener('focusout', handleViewportKeyboardChange);
+		window.removeEventListener('resize', handleViewportKeyboardChange);
+		viewport?.removeEventListener('resize', handleViewportKeyboardChange);
 		if (isSyncingModalHistory) {
 			isSyncingModalHistory = false;
 		}
