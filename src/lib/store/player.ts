@@ -5,7 +5,11 @@ import { showConfirm, selectRandomPlayer } from '$lib/store/modal';
 import { setCurrentTurn, appState, setDayNightCycleEnabled } from './appState';
 import { persist } from './persist';
 import { vibrate } from '$lib/utils/haptics';
-import { playGameplaySound } from '$lib/utils/gameplaySound';
+import {
+	playGameplaySound,
+	playLifeLongStepSound,
+	playLifeTapBurstSound
+} from '$lib/utils/gameplaySound';
 import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
 import {
 	clearLifeHistory,
@@ -1243,8 +1247,8 @@ export const setCommanderDamage = (
 			if (player.id !== playerId) return player;
 
 			const playerSlots = Math.max(2, Math.min(8, existingPlayers.length));
-			const commanderDamageBySource = getCommanderDamageBySourceForPlayer(player, playerSlots).map((pair) =>
-				pair.slice(0, COMMANDER_DAMAGE_SOURCE_SLOTS)
+			const commanderDamageBySource = getCommanderDamageBySourceForPlayer(player, playerSlots).map(
+				(pair) => pair.slice(0, COMMANDER_DAMAGE_SOURCE_SLOTS)
 			);
 			commanderDamageBySource[fromPlayerId - 1][sourceSlot] = newAmount;
 			const commanderDamage = commanderDamageBySource.map((pair) => pair[0] + pair[1]);
@@ -1701,6 +1705,42 @@ export const setPlayerLifeAbsolute = (playerId: number, value: number) => {
 	}
 };
 
+type LifeBurstState = {
+	count: number;
+	timer: ReturnType<typeof setTimeout> | null;
+};
+
+const LIFE_BURST_DEBOUNCE_MS = 650;
+const lifeBurstMap = new Map<string, LifeBurstState>();
+
+const flushLifeBurst = (key: string, lifeType: App.Player.LifeMoveType) => {
+	const burst = lifeBurstMap.get(key);
+	if (!burst) return;
+	if (burst.timer) {
+		clearTimeout(burst.timer);
+	}
+	lifeBurstMap.delete(key);
+
+	if (burst.count <= 0) return;
+	playLifeTapBurstSound(burst.count, lifeType === 'subtract' ? 'damage' : 'heal');
+};
+
+const queueLifeBurst = (playerId: number, lifeType: App.Player.LifeMoveType, increment: number) => {
+	const key = `${playerId}:${lifeType}`;
+	const existing = lifeBurstMap.get(key);
+	const nextCount = (existing?.count ?? 0) + increment;
+	if (existing?.timer) {
+		clearTimeout(existing.timer);
+	}
+	const timer = setTimeout(() => {
+		flushLifeBurst(key, lifeType);
+	}, LIFE_BURST_DEBOUNCE_MS);
+	lifeBurstMap.set(key, {
+		count: nextCount,
+		timer
+	});
+};
+
 export const manageLifeTotal = (
 	type: App.Player.LifeMoveType,
 	playerId: number,
@@ -1745,10 +1785,6 @@ export const manageLifeTotal = (
 		});
 	});
 
-	if (amount > 5) {
-		playGameplaySound(type === 'add' ? 'bigLifeUp' : 'bigLifeDown');
-	}
-
 	// Only run this if life total is within bounds
 	// recompute withinBounds according to allowed min when needed
 	if (withinBounds) {
@@ -1757,6 +1793,12 @@ export const manageLifeTotal = (
 
 	const targetAfter = get(players).find((player) => player.id === playerId);
 	if (targetAfter && targetAfter.lifeTotal !== targetBefore.lifeTotal) {
+		if (amount > 5) {
+			playLifeLongStepSound(type === 'subtract' ? 'damage' : 'heal');
+		} else if (amount === 1) {
+			queueLifeBurst(playerId, type, 1);
+		}
+
 		addGameHistoryEntry({
 			playerId: targetAfter.id,
 			playerName: targetAfter.playerName,

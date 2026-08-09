@@ -30,6 +30,7 @@ type PlaySoundOptions = {
 };
 
 type CommanderBurstDirection = 'up' | 'down';
+type LifeSoundDirection = 'heal' | 'damage';
 
 const SOUND_PATTERNS: Record<GameplaySoundType, Tone[]> = {
 	// The tone recipes intentionally map game semantics to distinct timbres so players can
@@ -248,6 +249,7 @@ export const playCommanderDamageBurst = (
 	const intensity = Math.min(1, (cappedHits - 1) / 11);
 	const isDown = direction === 'down';
 	const startAt = ctx.currentTime + 0.005;
+	const burstTailPulses = cappedHits >= 12 ? 3 : cappedHits >= 8 ? 2 : cappedHits >= 5 ? 1 : 0;
 
 	const primaryStart = isDown ? 760 : 430;
 	const primaryEnd = isDown ? 360 - intensity * 70 : 780 + intensity * 180;
@@ -287,6 +289,212 @@ export const playCommanderDamageBurst = (
 				release: 0.16 + intensity * 0.2
 			},
 			startAt + primaryDuration * 0.45
+		);
+	}
+
+	for (let i = 0; i < burstTailPulses; i += 1) {
+		const tailStart = startAt + primaryDuration * 0.7 + i * 0.09;
+		const tailAttenuation = 1 - i * 0.22;
+		playTone(
+			ctx,
+			{
+				frequency: isDown ? 340 - i * 28 : 520 + i * 32,
+				toFrequency: isDown ? 250 - i * 20 : 680 + i * 40,
+				duration: 0.09 + intensity * 0.06,
+				wave: 'square',
+				gain: primaryGain * 0.36 * tailAttenuation,
+				filterStartHz: 1800,
+				filterEndHz: isDown ? 620 : 1300,
+				attack: 0.009,
+				release: 0.11 + intensity * 0.08
+			},
+			tailStart
+		);
+	}
+};
+
+/**
+ * Plays one stronger synthesized pulse for long-press life steps (typically +/-10).
+ * Damage is intentionally harsher; heal is intentionally softer.
+ * @param {LifeSoundDirection} direction Life change semantic.
+ * @param {PlaySoundOptions} [options] Sound playback options.
+ * @returns {void}
+ */
+export const playLifeLongStepSound = (
+	direction: LifeSoundDirection,
+	options?: PlaySoundOptions
+) => {
+	const ctx = getAudioContext(options);
+	if (!ctx) return;
+
+	if (ctx.state === 'suspended') {
+		void ctx.resume();
+	}
+
+	const isDamage = direction === 'damage';
+	const startAt = ctx.currentTime + 0.005;
+
+	playTone(
+		ctx,
+		{
+			frequency: isDamage ? 690 : 460,
+			toFrequency: isDamage ? 260 : 620,
+			duration: isDamage ? 0.3 : 0.24,
+			wave: isDamage ? 'sawtooth' : 'triangle',
+			gain: isDamage ? 0.032 : 0.016,
+			filterStartHz: isDamage ? 2600 : 1900,
+			filterEndHz: isDamage ? 700 : 1300,
+			detuneCents: isDamage ? 4 : -3,
+			attack: 0.012,
+			release: isDamage ? 0.26 : 0.18
+		},
+		startAt
+	);
+
+	if (isDamage) {
+		playTone(
+			ctx,
+			{
+				frequency: 330,
+				toFrequency: 210,
+				duration: 0.18,
+				wave: 'square',
+				gain: 0.015,
+				filterStartHz: 1700,
+				filterEndHz: 580,
+				attack: 0.01,
+				release: 0.19
+			},
+			startAt + 0.07
+		);
+	}
+};
+
+/**
+ * Plays one compact cue after a burst of rapid +/-1 life taps.
+ * Higher tap counts produce slightly longer/louder cues.
+ * @param {number} tapCount Number of taps merged in the burst.
+ * @param {LifeSoundDirection} direction Life change semantic.
+ * @param {PlaySoundOptions} [options] Sound playback options.
+ * @returns {void}
+ */
+export const playLifeTapBurstSound = (
+	tapCount: number,
+	direction: LifeSoundDirection,
+	options?: PlaySoundOptions
+) => {
+	const ctx = getAudioContext(options);
+	if (!ctx) return;
+
+	if (ctx.state === 'suspended') {
+		void ctx.resume();
+	}
+
+	const cappedTaps = Math.max(1, Math.min(18, Math.round(tapCount)));
+	const intensity = Math.min(1, (cappedTaps - 1) / 10);
+	const isDamage = direction === 'damage';
+	const startAt = ctx.currentTime + 0.005;
+	const isSmallBurst = cappedTaps <= 3;
+	const pulseCount =
+		cappedTaps >= 16 ? 5 : cappedTaps >= 12 ? 4 : cappedTaps >= 8 ? 3 : cappedTaps >= 5 ? 2 : 1;
+	const pulseSpacing = 0.055;
+
+	if (isSmallBurst) {
+		// Arcade-like tiny chirps for single taps and very small bursts.
+		playTone(
+			ctx,
+			{
+				frequency: isDamage ? 700 : 820,
+				toFrequency: isDamage ? 520 : 980,
+				duration: 0.05,
+				wave: 'square',
+				gain: isDamage ? 0.015 : 0.013,
+				filterStartHz: 2600,
+				filterEndHz: isDamage ? 1100 : 1700,
+				detuneCents: isDamage ? 2 : -2,
+				attack: 0.006,
+				release: 0.07
+			},
+			startAt
+		);
+
+		if (cappedTaps >= 2) {
+			playTone(
+				ctx,
+				{
+					frequency: isDamage ? 560 : 980,
+					toFrequency: isDamage ? 460 : 1100,
+					duration: 0.045,
+					wave: 'square',
+					gain: isDamage ? 0.012 : 0.011,
+					filterStartHz: 2400,
+					filterEndHz: isDamage ? 980 : 1800,
+					attack: 0.005,
+					release: 0.06
+				},
+				startAt + pulseSpacing
+			);
+		}
+
+		if (cappedTaps >= 3) {
+			playTone(
+				ctx,
+				{
+					frequency: isDamage ? 500 : 1160,
+					toFrequency: isDamage ? 420 : 1240,
+					duration: 0.045,
+					wave: 'square',
+					gain: isDamage ? 0.011 : 0.01,
+					filterStartHz: 2200,
+					filterEndHz: isDamage ? 900 : 1900,
+					attack: 0.005,
+					release: 0.06
+				},
+				startAt + pulseSpacing * 2
+			);
+		}
+
+		return;
+	}
+
+	for (let i = 0; i < pulseCount; i += 1) {
+		const pulseIntensity = Math.max(0.35, 1 - i * 0.12);
+		const pulseStart = startAt + i * pulseSpacing;
+		playTone(
+			ctx,
+			{
+				frequency: (isDamage ? 560 : 500) + (isDamage ? -22 : 28) * i,
+				toFrequency:
+					(isDamage ? 320 - intensity * 70 : 640 + intensity * 140) + (isDamage ? -16 : 22) * i,
+				duration: 0.085 + intensity * 0.11,
+				wave: isDamage ? 'square' : 'triangle',
+				gain:
+					((isDamage ? 0.014 : 0.011) + intensity * (isDamage ? 0.015 : 0.011)) * pulseIntensity,
+				filterStartHz: isDamage ? 2100 : 2000,
+				filterEndHz: isDamage ? 700 : 1350,
+				detuneCents: isDamage ? 3 : -2,
+				attack: 0.009,
+				release: 0.11 + intensity * 0.14
+			},
+			pulseStart
+		);
+	}
+
+	if (cappedTaps >= 7) {
+		playTone(
+			ctx,
+			{
+				frequency: isDamage ? 280 : 760,
+				toFrequency: isDamage ? 210 : 980,
+				duration: 0.1 + intensity * 0.12,
+				wave: isDamage ? 'sawtooth' : 'triangle',
+				gain: (isDamage ? 0.01 : 0.008) + intensity * 0.01,
+				filterStartHz: 1800,
+				filterEndHz: isDamage ? 560 : 1500,
+				attack: 0.008,
+				release: 0.13 + intensity * 0.14
+			},
+			startAt + pulseCount * pulseSpacing * 0.7
 		);
 	}
 };
