@@ -232,6 +232,8 @@
 	$: modalPlayerPartnerMode = !!modalPlayer?.statusEffects?.partnerMode;
 	const MOBILE_KEYBOARD_THRESHOLD_PX = 150;
 	let isMobileKeyboardOpen = false;
+	let hasEditableFocusInModal = false;
+	let maxRawViewportHeight = 0;
 	let maxVisibleViewportHeight = 0;
 	const COMMANDER_MINIMAP_SOUND_DEBOUNCE_MS = 900;
 	let commanderMinimapSoundBursts = new Map<string, CommanderMinimapBurstState>();
@@ -265,13 +267,18 @@
 	const updateMobileKeyboardState = () => {
 		if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
+		const viewport = window.visualViewport;
+		const rawViewportHeight = viewport ? viewport.height : window.innerHeight;
 		const visibleViewportHeight = getVisibleViewportHeight();
+		if (rawViewportHeight > maxRawViewportHeight) {
+			maxRawViewportHeight = rawViewportHeight;
+		}
 		if (visibleViewportHeight > maxVisibleViewportHeight) {
 			maxVisibleViewportHeight = visibleViewportHeight;
 		}
 
 		const activeElement = document.activeElement;
-		const hasEditableFocusInModal =
+		hasEditableFocusInModal =
 			isEditableElement(activeElement) && !!playerModalScrollEl?.contains(activeElement);
 
 		// The neutral rotation fallback only applies when a focused editable element is
@@ -281,8 +288,11 @@
 			return;
 		}
 
+		const heightDropFromRaw = maxRawViewportHeight - rawViewportHeight;
+		const heightDropFromVisible = maxVisibleViewportHeight - visibleViewportHeight;
 		isMobileKeyboardOpen =
-			maxVisibleViewportHeight - visibleViewportHeight > MOBILE_KEYBOARD_THRESHOLD_PX;
+			heightDropFromRaw > MOBILE_KEYBOARD_THRESHOLD_PX ||
+			heightDropFromVisible > MOBILE_KEYBOARD_THRESHOLD_PX;
 	};
 
 	/**
@@ -297,7 +307,7 @@
 	$: shouldNeutralizeModalRotation =
 		$playerModalData?.isOpen &&
 		modalPlayerOrientation !== 'up' &&
-		isMobileKeyboardOpen;
+		(isMobileKeyboardOpen || (mode === 'commander' && editingCommanderFrom !== null && hasEditableFocusInModal));
 	$: modalRotation = shouldNeutralizeModalRotation
 		? '0deg'
 		: orientationToModalRotation(modalPlayerOrientation);
@@ -392,6 +402,8 @@
 
 	$: if (!$playerModalData?.isOpen) {
 		isMobileKeyboardOpen = false;
+		hasEditableFocusInModal = false;
+		maxRawViewportHeight = 0;
 		maxVisibleViewportHeight = 0;
 	}
 
@@ -1095,6 +1107,7 @@
 		window.addEventListener('focusout', handleViewportKeyboardChange);
 		window.addEventListener('resize', handleViewportKeyboardChange);
 		viewport?.addEventListener('resize', handleViewportKeyboardChange);
+		viewport?.addEventListener('scroll', handleViewportKeyboardChange);
 		updateMobileKeyboardState();
 		pushModalHistoryEntry();
 	});
@@ -1107,6 +1120,7 @@
 		window.removeEventListener('focusout', handleViewportKeyboardChange);
 		window.removeEventListener('resize', handleViewportKeyboardChange);
 		viewport?.removeEventListener('resize', handleViewportKeyboardChange);
+		viewport?.removeEventListener('scroll', handleViewportKeyboardChange);
 		if (isSyncingModalHistory) {
 			isSyncingModalHistory = false;
 		}
