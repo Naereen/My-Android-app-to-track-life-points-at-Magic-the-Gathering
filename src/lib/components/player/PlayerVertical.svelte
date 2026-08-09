@@ -386,16 +386,16 @@
 									</div>
 								{/if}
 								-->
+								{#if $players[index].isFirst}
+									<div class="flex justify-center items-center mr-1">
+										<FirstPlace />
+									</div>
+								{/if}
 								<span
 									class="beleren mt-1"
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
 									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}>{$players[index].playerName}</span>
-								{#if $players[index].isFirst}
-									<div class="flex justify-center items-center ml-2">
-										<FirstPlace />
-									</div>
-								{/if}
 								{#each booleanStatuses as s}
 									{#if s === 'monarch'}
 										<Crown />
@@ -420,7 +420,10 @@
 							{$players[index].tempLifeDiff < 0 ? `${$players[index].tempLifeDiff}` : ''}
 						</div>
 						{#if $appSettings.showLifeChangeHistory}
-							<div class="absolute left-0 top-1/2 translate-x-28 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2">
+							<div class="absolute left-0 top-1/2 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2"
+								class:translate-x-28={numberOfPlayers >= 3}
+								class:translate-x-20={numberOfPlayers === 2}
+							>
 								<LifeChangeHistory
 									score={$players[index].lifeTotal}
 									maxLines={numberOfPlayers >= 3 ? 6 : 12}

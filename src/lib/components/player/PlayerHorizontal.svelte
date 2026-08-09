@@ -472,6 +472,11 @@
 									</div>
 								{/if}
 								-->
+								{#if $players[index].isFirst}
+									<div class="flex justify-center items-center mb-1 rotate-90">
+										<FirstPlace />
+									</div>
+								{/if}
 								<span
 									class="beleren mr-1"
 									style="font-size: x-large; color: white;"
@@ -479,11 +484,6 @@
 									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}
 									>{$players[index].playerName}</span>
 								<!-- Use the class:overline only if the glowing gold animation is disabled and if the next player button is enabled -->
-								{#if $players[index].isFirst}
-									<div class="flex justify-center items-center mt-2 rotate-90">
-										<FirstPlace />
-									</div>
-								{/if}
 								{#each booleanStatuses as s}
 									{#if s === 'monarch'}
 										<div class="flex justify-center items-center rotate-90 mt-1 mb-1">
