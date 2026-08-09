@@ -1,4 +1,6 @@
 <script lang="ts">
+	// Commander damage icon is parameterized by seat index so the same component can be
+	// reused for randomizer previews, minimaps, and player panels without extra wrappers.
 	// Use the player index
 	export let playerIndex: number = 0;
 	// Allow passing a color prop to customize the icon color (e.g. for dark mode)
@@ -27,6 +29,7 @@
 		// + 'ss-foil '
 	];
 	const rotationEffects = [
+		// The rotation palette mirrors the asymmetry of the commander-damage emblem sheets.
 		'transform: rotate(-45deg);',
 		'transform: rotate(0deg);',
 		'transform: rotate(-45deg);',
@@ -39,6 +42,7 @@
 	$: rotationEffect = extraRotationEffect ? extraRotationEffect : rotationEffects[playerIndex % rotationEffects.length];
 </script>
 
+<!-- The outer span only establishes sizing and inherits the caller's text color. -->
 <span style="font-size: 1.25rem; color: {color}; display: inline-grid; align-items: center;">
 	<i class="ss {iconSet} ss-1x ss-fw {effect} {extraEffects}" style="{rotationEffect}"></i>
 </span>

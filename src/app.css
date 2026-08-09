@@ -88,18 +88,23 @@
 	}
 
 	div .rotation-180 {
+		/* These helpers keep utility markup readable when a simple transform token is enough. */
 		transform: rotate(180deg);
 	}
 
 	div .rotation-90 {
+		/* Used for icons and backgrounds that need to align with the player's seat orientation. */
 		transform: rotate(90deg);
 	}
 
 	div .rotation-270 {
+		/* 270deg is the inverse rotation helper for the same seat-orientation palette. */
 		transform: rotate(270deg);
 	}
 
 	@font-face {
+		/* Beleren is the UI's identity font, so it is loaded once globally and reused by
+		   labels, counters, and icon-adjacent headings instead of being duplicated per component. */
 		/* https://freefontsvault.com/beleren-font/ */
 		font-family: 'Beleren2016';
 		src: url('/Beleren2016-Bold.ttf') format('truetype');
@@ -118,6 +123,8 @@
 
 	/* Style for the active player: a golden glow around the card */
 	.player--active {
+		/* The active-player glow intentionally competes with other UI chrome so the current
+		   turn remains obvious even when many overlays are visible. */
 		/* above the background and overlay but below the content (content uses z-index:10) */
 		z-index: 20;
 		box-shadow: 0 0 0 4px rgba(212,175,55,0.18), 0 0 30px rgba(212,175,55,0.6);
@@ -140,6 +147,8 @@
 
 	/* Style for the active player and the timer is over: a red glow around the card */
 	.player--active-timer-over {
+		/* Timer-over uses the same geometry as active player highlighting, but switches to
+		   red so urgency can be distinguished from ordinary turn ownership. */
 		/* above the background and overlay but below the content (content uses z-index:10) */
 		z-index: 20;
 		box-shadow: 0 0 0 4px rgba(255,0,0,0.2), 0 0 30px rgba(255,0,0,0.4);

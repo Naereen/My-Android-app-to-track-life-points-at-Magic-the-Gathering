@@ -1,4 +1,5 @@
 <script>
+	// Small wrapper around a generic plus glyph; the caller owns size and contrast.
 	export let size = '3rem';
 	export let light = true;
 </script>

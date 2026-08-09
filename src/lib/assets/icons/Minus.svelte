@@ -1,4 +1,5 @@
 <script>
+	// Same styling contract as Plus.svelte so both controls can be swapped symmetrically.
 	export let size = '3rem';
 	export let light = true;
 </script>

@@ -1,3 +1,4 @@
+<!-- Reset icon deliberately stays stroke-based so it remains legible on textured cards. -->
 <svg
 	xmlns="http://www.w3.org/2000/svg"
 	aria-hidden="true"
