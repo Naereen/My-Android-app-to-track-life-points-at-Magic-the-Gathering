@@ -120,6 +120,10 @@ export const getTreacheryImageCandidates = (
 	const candidates: string[] = [];
 	const strategies: Array<'encode-all' | 'space-only' | 'raw'> = ['encode-all', 'space-only', 'raw'];
 
+	// Upstream card images are not perfectly consistent in URL encoding and apostrophe usage.
+	// We generate deterministic candidates in priority order and let the UI pick the first
+	// reachable one, which keeps runtime behavior robust without server-side proxying.
+
 	for (const variant of nameVariants(cardName, slug)) {
 		for (const strategy of strategies) {
 			const built = buildTreacheryImageUrl(cardId, role, variant, strategy);

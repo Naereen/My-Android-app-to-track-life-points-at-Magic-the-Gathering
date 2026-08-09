@@ -226,6 +226,8 @@
 		playerCount: number,
 		currentLayout: 'two-by-two' | 'one-two-one' | ''
 	): MinimapMatrix => {
+		// Seat identities are encoded here, not visual positions; later transforms can then
+		// reuse one canonical structure for multiple orientations and modal modes.
 		switch (playerCount) {
 			case 2:
 				return [[1, 1], [0, 0]];
@@ -299,6 +301,8 @@
 		viewerOrientation: SeatOrientation,
 		isCommanderModal: boolean
 	): MinimapMatrix => {
+		// Commander modal uses the selected player's perspective as the reference frame,
+		// while the in-game minimap uses the board's global orientation.
 		if (isCommanderModal) {
             if (viewerOrientation === 'down') {
                 return rotate180(matrix);
@@ -351,6 +355,8 @@
 		matrix: MinimapMatrix,
 		playerCount: number
 	): MinimapTilePlacement[] => {
+		// Converting once here keeps the template declarative and avoids duplicating the
+		// seat-shape logic in markup.
 		const placements: MinimapTilePlacement[] = [];
 		for (let target = 0; target < playerCount; target += 1) {
 			let minRow = Number.POSITIVE_INFINITY;

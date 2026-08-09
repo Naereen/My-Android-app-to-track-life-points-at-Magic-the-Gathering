@@ -45,6 +45,9 @@ const createTurnTimer = () => {
     let initialState: TimerState = persisted?.state || { remaining: 0, total: 0, running: false, playerIndex: null };
 
     if (initialState.running) {
+        // Recover elapsed time from wall clock, not from interval counts.
+        // Browsers throttle timers in background tabs/mobile lock screen, so replaying
+        // based on Date.now() keeps the countdown honest after focus returns.
         const elapsed = Math.max(0, Math.floor((Date.now() - lastTickEpochMs) / 1000));
         if (elapsed > 0) {
             initialState = {
@@ -123,6 +126,8 @@ const createTurnTimer = () => {
     const advanceByElapsed = (s: TimerState, elapsedSeconds: number): TimerState => {
         if (!s.running || elapsedSeconds <= 0) return s;
 
+        // Remaining time is allowed to go below zero on purpose: overtime is displayed
+        // and consumed by UI state (red glow, urgency) instead of clamping at 0.
         const nextRemaining = s.remaining - elapsedSeconds;
         const crossedTimeout = s.remaining > 0 && nextRemaining <= 0;
         const next = { ...s, remaining: nextRemaining };

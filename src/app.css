@@ -10,6 +10,11 @@
 	}
 
 	:root {
+		/*
+			Fallback values are required because some Android WebViews report safe-area env()
+			inconsistently until after first layout. CSS variables allow runtime class-based
+			overrides without forcing JS writes in every route.
+		*/
 		/* On définit des variables par défaut au cas où env() ne soit pas supporté */
 		--safe-area-inset-top: 0px;
 		--safe-area-inset-bottom: 0px;
@@ -29,6 +34,11 @@
 	}
 
 	body {
+		/*
+			The app uses a full-screen "board" layout and relies on fixed viewport logic.
+			Hidden overflow is intentional: player panes and overlays are designed to animate
+			inside fixed containers instead of using document scrolling.
+		*/
 		/* On utilise les constantes fournies par le moteur de rendu de l'appareil */
 		padding-top: env(safe-area-inset-top, var(--safe-area-inset-top, 0px));
 		padding-bottom: env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 64px));
@@ -52,6 +62,10 @@
 	/* Si vous voulez être très précis et utiliser les variables d'environnement
 	tout en ayant un "fallback" manuel : */
 	body.is-native {
+		/*
+			`max()` keeps a stable tappable area for bottom controls even when safe-area is 0
+			(e.g. gesture nav devices that still need spacing from system UI zones).
+		*/
 		padding-bottom: max(64px, env(safe-area-inset-bottom, var(--safe-area-inset-bottom, 0px)));
 	}
 
@@ -159,6 +173,10 @@
 	/* Pseudo-élément plus grand pour couvrir correctement après rotation */
 	.bg-rotated::before, .bg-rotated::after,
 	.bg-rotated-horizontal::before, .bg-rotated-horizontal::after {
+		/*
+			Backgrounds are rendered on pseudo-elements so artwork can rotate independently
+			of interactive content. This avoids transform side effects on hit-testing.
+		*/
 		content: '';
 		position: absolute;
 		top: var(--bg-top, 50%);
@@ -210,6 +228,10 @@
 
 	/* Overlay qui apparaît au-dessus du background (non interactif) */
 	.bg-rotated-overlay, .bg-rotated-horizontal-overlay {
+		/*
+			Overlay sits above artwork but below controls. Keeping it non-interactive prevents
+			accidental tap blocking while still allowing dynamic visual emphasis.
+		*/
 		position: absolute;
 		inset: 0;
 		/* below the content (which uses z-index:10) but above the background pseudo-element (z-index:0) */

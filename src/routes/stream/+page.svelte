@@ -19,7 +19,8 @@
 			'Player 8'
 		],
 		lifeTotals: [20, 20, 0, 0, 0, 0, 0, 0],
-        // Flat properties for backward compatibility with older payload formats. TODO: remove in a future version.
+		// Flat properties for backward compatibility with older payload formats.
+		// Some external overlays still read these keys directly.
 		namePlayer1: 'Player 1',
 		namePlayer2: 'Player 2',
 		namePlayer3: 'Player 3',
@@ -255,6 +256,7 @@
 			source?.close();
 			source = null;
 			clearReconnectTimer();
+			// Fixed retry interval keeps behavior predictable for stream overlays used in OBS.
 			reconnectTimer = setTimeout(() => {
 				connectToStream();
 			}, 2000);
@@ -288,6 +290,8 @@
 	onDestroy(() => {
 		clearReconnectTimer();
 		source?.close();
+		// Restore the previous shell theme so leaving /stream does not leak styling
+		// into the main interactive application route.
 		if (typeof document !== 'undefined') {
 			document.body.style.backgroundColor = previousBodyBackground;
 			document.body.style.color = previousBodyColor;

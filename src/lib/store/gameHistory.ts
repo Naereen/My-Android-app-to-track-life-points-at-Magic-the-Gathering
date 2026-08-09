@@ -40,6 +40,10 @@ const MAX_GAME_HISTORY_ENTRIES = 500;
 const MERGE_WINDOW_MS = 2000;
 const MERGEABLE_STATUS_KEYS = new Set(['energy', 'experience', 'rad', 'acorn', 'ticket']);
 
+// History is intentionally capped and merge-compressed to keep localStorage writes bounded.
+// Rapid actions (hold-to-increment, repeated poison updates, etc.) would otherwise generate
+// noisy timelines and noticeably increase serialization overhead on mobile devices.
+
 export const gameHistory = persist<GameHistoryEntry[]>('gameHistory', []);
 
 /**

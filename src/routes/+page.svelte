@@ -42,6 +42,9 @@
 	let hasMenuHistoryEntry = false;
 	let isSyncingMenuHistory = false;
 
+	// This derived store is intentionally minimal: only setting/game fragments needed
+	// for relay sync are observed, which avoids accidental network chatter from unrelated UI updates.
+
 	const streamSyncState = derived([appSettings, gameState], ([$appSettings, $gameState]) => ({
 		appSettings: $appSettings,
 		gameState: $gameState
@@ -82,6 +85,8 @@
 	const pushMenuHistoryEntry = () => {
 		if (typeof window === 'undefined' || hasMenuHistoryEntry) return;
 		try {
+			// We inject a synthetic browser history entry so Android/back gesture closes
+			// the in-app menu first, instead of immediately leaving/reloading the app shell.
 			const currentState =
 				window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
 			window.history.pushState({ ...currentState, __mtgMenuOpen: true }, '', window.location.href);
@@ -212,6 +217,8 @@
 				clearTimeout(streamDebounceTimer);
 			}
 
+			// Debounce + signature dedupe protects the relay from bursts when multiple stores
+			// update during one user gesture (life, turn and history updates can happen together).
 			streamDebounceTimer = setTimeout(() => {
 				lastSentSignature = signature;
 				void postStreamUpdate(appSettings.remoteServerUrl, gameState);

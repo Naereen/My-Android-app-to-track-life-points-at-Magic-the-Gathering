@@ -9,6 +9,9 @@ import { addGameHistoryEntry } from './gameHistory';
 const MAX_STREAM_PLAYERS = 8;
 
 export interface StreamGameState {
+	// `names`/`lifeTotals` are the canonical modern payload fields.
+	// Flat `namePlayerX`/`lifePlayerX` fields are kept for backward compatibility
+	// with older overlays and external relay consumers.
 	playerCount: number;
 	currentTurn: number;
 	updatedAt: number;
@@ -134,7 +137,8 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTi
 			return newData;
 		}
 
-		// If we moved back to the player before the starting player, by going negatively, decrement the turn counter
+		// Reverse navigation semantics: moving "just before" the starting player means
+		// crossing a full turn boundary backward, so turnCount must decrease.
 		if (index === ((data.startingPlayerIndex - 1 + (get(appSettings).playerCount || 4)) % (get(appSettings).playerCount || 4)) && !updateIsPositive) {
 			vibrate(50);
 			const nextCount = Math.max(0, Math.min(99, (data.turnCount || 0) - 1));
@@ -255,6 +259,8 @@ export const prevTurn = () => {
 };
 
 export const gameState = derived([players, appSettings, appState], ([$players, $appSettings, $appState]) => {
+	// Stream payload is always normalized to 8 slots. Keeping a fixed width simplifies
+	// consumer code and avoids schema churn when player count changes during a session.
 	const playerCount = $appSettings.playerCount ?? 4;
 	const activePlayers = $players.slice(0, playerCount);
 

@@ -49,6 +49,8 @@
 
 		if (document.fullscreenElement) return;
 
+		// Many mobile browsers reject fullscreen on initial load without explicit user
+		// gesture. We install one-shot listeners as a controlled fallback path.
 		/**
 		 * Deferred fullscreen retry bound to the first touch/pointer interaction.
 		 * @returns {void}
@@ -75,6 +77,8 @@
 	const applyNativeContext = async () => {
 		const body = document.body;
 
+		// Platform classes are a contract with app.css and player/layout components.
+		// They are used as the single source of truth for native/web visual branches.
 		// 1. Détection simple via le Core de Capacitor
 		if (Capacitor.isNativePlatform()) {
 			body.classList.add('is-native');
@@ -91,6 +95,8 @@
 		}
 	};
 
+	// Run once at module evaluation: classes must exist before most route content mounts,
+	// otherwise first frame can render with wrong safe-area and cause visible layout jumps.
 	applyNativeContext();
 </script>
 

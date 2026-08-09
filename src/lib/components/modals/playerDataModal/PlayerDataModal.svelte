@@ -197,6 +197,8 @@
 		: $appSettings.playerCount === 5 ? 18
 		: $appSettings.playerCount === 6 ? 16
 		: 14;
+	// The commander minimap is rotated around the selected seat so directional cues
+	// stay useful even when the modal itself is opened from another player's perspective.
 	$: commanderMinimapRotation = getBackgroundViewerRotationInCommanderDamage(
 		($playerModalData?.playerId ?? 1) - 1,
 		$appSettings.playerCount,
@@ -260,6 +262,8 @@
 		const hasEditableFocusInModal =
 			isEditableElement(activeElement) && !!playerModalScrollEl?.contains(activeElement);
 
+		// The neutral rotation fallback only applies when a focused editable element is
+		// actually inside this modal; otherwise preserve the seat-specific orientation.
 		if (!hasEditableFocusInModal) {
 			isMobileKeyboardOpen = false;
 			return;
@@ -316,6 +320,8 @@
 		 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 		 */
 		const scrollToBottomRight = () => {
+			// This corner anchors the commander damage grid where the player expects it,
+			// especially after the minimap has rotated away from the default reading order.
 			scrollElement.scrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
 			scrollElement.scrollLeft = Math.max(0, scrollElement.scrollWidth - scrollElement.clientWidth);
 		};

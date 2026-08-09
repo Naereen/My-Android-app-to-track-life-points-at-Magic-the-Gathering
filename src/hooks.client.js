@@ -1,5 +1,8 @@
 import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 
+// i18n is initialized in a client hook so every route (including stream overlay)
+// sees the same translation registry before UI components subscribe to locale data.
+
 // On lie les fichiers JSON de traduction
 register('en', () => import('./locales/en.json'));
 register('fr', () => import('./locales/fr.json'));

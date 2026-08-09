@@ -117,6 +117,9 @@
 		startYourEngineSpeed: StartYourEngineSpeed
 	} as const;
 
+	// These maps stay local to the menu because the rendering rules are mostly about
+	// presentation, not game state. Keeping them close to the formatter reduces drift.
+
 	const resourceIconMap = {
 		white: 'white-mana-symbol.webp',
 		blue: 'blue-mana-symbol.webp',
@@ -243,6 +246,8 @@
 		if (entry.kind === 'resourceChange') {
 			const key = entry.payload.key as keyof typeof resourceIconMap;
 			const resourceIcon = resourceIconMap[key];
+			// Resource changes are the only history events that need rendered image assets;
+			// everything else can be expressed with icons or glyphs.
 			if (resourceIcon) {
 				return { imageSrc: optimize(resourceIcon), className: 'text-cyan-300' };
 			}
@@ -313,6 +318,9 @@
 	};
 
 	$: visibleGameHistory = $gameHistory.filter((entry) => !isHiddenStatusEntry(entry));
+
+	// The list is inverted in DOM order so the newest action reads as the topmost row,
+	// which matches how players scan a live game log during play.
 
 	/**
 	 * Flushes pending life snapshots then opens the life-chart modal.

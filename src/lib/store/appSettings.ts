@@ -90,6 +90,8 @@ const sanitizeStartingPlayerProbabilities = (
 	probabilities: number[] | undefined,
 	playerCount: number
 ): number[] => {
+	// Legacy payloads may have too few entries or invalid numeric values.
+	// We normalize shape first, then validate active-seat sum.
 	const fallback = getUniformStartingProbabilities(playerCount);
 	const source = Array.isArray(probabilities) ? probabilities : [];
 	const normalized = Array.from({ length: MAX_PLAYER_SLOTS }, (_, index) => {
@@ -200,11 +202,8 @@ export const setPlayerCount = (playerCount: number) => {
 		...data,
 		playerCount,
 		startingLifeTotal: getDefaultStartingLifeTotal(playerCount),
-		startingPlayerProbabilities: sanitizeStartingPlayerProbabilities(
-			data.startingPlayerProbabilities,
-			playerCount
-		),
-		// Update the default probabilities for each players
+		// Product decision: changing the number of seats resets weighted probabilities
+		// to a uniform distribution for the new format.
 		startingPlayerProbabilities: getUniformStartingProbabilities(playerCount),
 		// Default behavior by format size: ON up to 4 players, OFF otherwise.
 		showLifeChangeHistory: playerCount <= 4,

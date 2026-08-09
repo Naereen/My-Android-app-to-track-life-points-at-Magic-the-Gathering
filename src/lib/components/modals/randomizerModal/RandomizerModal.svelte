@@ -80,6 +80,8 @@
 		abort = false;
 		rolling = true;
 		if ($randomizerModalData.type === 'dplanar') {
+			// Planar dice are animated through semantic faces rather than numeric pips so the
+			// user sees the magic-specific state transitions before the final result settles.
 			const final = $randomizerModalData.result;
 			const rounds = Math.floor(Math.random() * 5 + 5);
 			const totalMs = 1000;
@@ -125,6 +127,7 @@
 	}
 
 	$: if ($randomizerModalData.isOpen && $randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent') {
+		// Re-entering the modal should restart the visual suspense effect from a clean state.
 		// When modal opens for a die, start the rolling animation
 		startRollAnimation();
 	} else if ($randomizerModalData.type === 'custom') {

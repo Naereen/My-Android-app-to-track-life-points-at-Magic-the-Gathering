@@ -8,6 +8,8 @@ import { StatusBar, Style } from '@capacitor/status-bar';
  * @throws {Error} Propagates Capacitor plugin errors if native APIs are unavailable.
  */
 export const setupStatusBar = async () => {
+	// Native-only cosmetic setup: visual consistency with app theme and safer top spacing.
+	// This must stay best-effort because browser builds do not provide these Capacitor APIs.
     // Empêche la WebView de s'afficher "sous" la barre d'état
     await StatusBar.setOverlaysWebView({ overlay: false });
 

@@ -22,6 +22,9 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
     let lastX = 0;
     let lastY = 0;
 
+    // We avoid Pointer Events here because Android WebView gesture behavior was more
+    // reliable with raw touch events for this long-press drag interaction.
+
     /**
      * Checks whether the initial touch target belongs to the configured drag handle.
      * @param {EventTarget | null} target Native event target from the touch event.
@@ -125,7 +128,7 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
         const dx = t.clientX - startX;
         const dy = t.clientY - startY;
         const distSq = dx * dx + dy * dy;
-        // If moved before long-press threshold, cancel the long-press
+        // Movement threshold protects against accidental drags while tapping life buttons.
         if (!dragging && distSq > 12 * 12) {
             cancelLongPress();
             return;

@@ -82,6 +82,9 @@ const generateUniqueRandomPlayerNames = (count: number): string[] => {
 };
 
 const defaultPlayers: App.Player.Data[] = [
+	// Keep a full 8-seat scaffold even for smaller games.
+	// This stabilizes persistence shape and avoids re-allocating nested status fields
+	// each time player count changes mid-session.
 	{
 		id: 1,
 		lifeTotal: get(appSettings).startingLifeTotal,
@@ -259,6 +262,8 @@ const getInitialPlayers = (): App.Player.Data[] => {
 		try {
 			const raw = localStorage.getItem('players');
 			if (!raw) {
+				// Two-part color token format (`primary,accent`) is consumed by `colorToBg`.
+				// Keeping this format here avoids scattered color bootstrap logic.
 				// choose between all the colors for backgrounds
 				const first_choices = ['white', 'blue', 'black', 'red', 'green'];
 				const second_choices = [

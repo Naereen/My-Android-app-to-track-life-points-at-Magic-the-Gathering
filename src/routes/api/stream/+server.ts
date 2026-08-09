@@ -20,6 +20,10 @@ let latestState: StreamPayload = {
 	updatedAt: Date.now()
 };
 
+// In-memory pub/sub is enough for the current LAN relay use-case:
+// one controller device publishes updates, a small number of overlays subscribe.
+// If this ever moves to multi-instance hosting, this must be replaced by shared state.
+
 /**
  * Serializes one payload as a Server-Sent Events frame.
  * @param {StreamPayload} data Snapshot to broadcast to overlay clients.
@@ -87,6 +91,7 @@ export const GET: RequestHandler = async () => {
 			const id = crypto.randomUUID();
 			currentClientId = id;
 
+			// Heartbeat comments keep intermediaries from closing idle SSE connections.
 			const pingInterval = setInterval(() => {
 				try {
 					controller.enqueue(encoder.encode(': ping\n\n'));
