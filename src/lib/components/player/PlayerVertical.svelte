@@ -70,6 +70,8 @@
 	$: isMobile = isMobileDevice(innerWidth);
 	$: numberOfPlayers = $appSettings.playerCount;
 	$: index = id - 1;
+	$: hasSplitBackground =
+		Array.isArray($players[index].backgroundImage) && $players[index].backgroundImage.length > 1;
 	$: isDead =
 		($players[index].lifeTotal <= 0 &&
 			!($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) ||
@@ -107,15 +109,16 @@
 			const image_left = `url('${two[0]}')`;
 			const image_right = `url('${two[1]}')`;
 			const bgSize = 'cover';
+			// const bgSize = '50% 100%, 50% 100%'; // each image takes half the width and full height
 			const bgLeft = (numberOfPlayers <= 3) ? '100%' : '100%';
 			const bgRight = (numberOfPlayers <= 3) ? '25%' : '25%';
 			const posLeft = (numberOfPlayers === 3) ? '-200%' :
 							(numberOfPlayers === 2) ? '-100%' :
-							'100%';
+							'50%';
 			const posRight = (numberOfPlayers === 3) ? '200%' :
 							(numberOfPlayers === 2) ? '100%' :
-							'0%';
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${verticalBackgroundFrame.rotation}; --bg-top: ${verticalBackgroundFrame.top}; --bg-left: ${bgLeft}; --bg-right: ${bgRight}; --pos-left: ${posLeft}; --pos-right: ${posRight}; --bg-width: ${verticalBackgroundFrame.width}; --bg-height: ${verticalBackgroundFrame.height}; --bg-size: ${bgSize}`;
+							'50%';
+			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${verticalBackgroundFrame.rotation}; --bg-top: ${verticalBackgroundFrame.top}; --bg-left: ${bgLeft}; --bg-right: ${bgRight}; --pos-left: ${posLeft}; --pos-right: ${posRight}; --bg-width: ${verticalBackgroundFrame.width}; --bg-height: ${verticalBackgroundFrame.height}; --bg-size: ${bgSize}; background-clip: padding-box; background-origin: padding-box`;
 		}
 
 		// single string image
@@ -360,6 +363,7 @@
 	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
 	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
 	class:bg-rotated={!!$players[index].backgroundImage}
+	class:bg-split={hasSplitBackground}
 	class:overflow-hidden={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}

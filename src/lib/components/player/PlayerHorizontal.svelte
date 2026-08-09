@@ -69,6 +69,8 @@
 	$: isMobile = isMobileDevice(innerWidth);
 	$: numberOfPlayers = $appSettings.playerCount;
 	$: index = id - 1;
+	$: hasSplitBackground =
+		Array.isArray($players[index].backgroundImage) && $players[index].backgroundImage.length > 1;
 	$: isDead =
 		($players[index].lifeTotal <= 0 &&
 			!($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) ||
@@ -155,21 +157,20 @@
 		// consume them as a single style attribute.
 		// default no-image behavior
 		if (!bgValue) {
-			return `--bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-size: ${horizontalBackgroundFrame.size};`;
+			return `--bg-fallback-color: ${bg}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-image: none; --bg-positionx: none; --bg-positiony: none; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-size: ${horizontalBackgroundFrame.size};`;
 		}
 		// support array of images (e.g. partners / double commanders)
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
 			const images = two.map((u: string) => `url('${u}')`).join(', ');
-			const image_left = `url('${two[0]}')`;
-			const image_right = `url('${two[1]}')`;
-			const bgBottom = '100%';
+			const imageTop = `url('${two[0]}')`;
+			const imageBottom = `url('${two[1]}')`;
 
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-bottom: ${bgBottom}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-right: ${horizontalBackgroundFrame.left}; --bg-left-top: ${horizontalBackgroundFrame.splitTop}; --pos-bottom: ${horizontalBackgroundFrame.splitBottom}; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-size: ${horizontalBackgroundFrame.size};`;
+			return `--bg-fallback-color: ${bg}; --bg-image: ${images}; --bg-image-top: ${imageTop}; --bg-image-bottom: ${imageBottom}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --pos-left: 50%; --bg-top-split: ${horizontalBackgroundFrame.splitTop}; --bg-bottom-split: ${horizontalBackgroundFrame.splitBottom}; --pos-top: 50%; --pos-bottom: 50%; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-size: ${horizontalBackgroundFrame.size};`;
 		}
 
 		// single string image
-		return `--bg-image: url('${bgValue}'); --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-positionx: ${horizontalBackgroundFrame.positionX}; --bg-positiony: ${horizontalBackgroundFrame.positionY}; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-size: ${horizontalBackgroundFrame.size};`;
+		return `--bg-fallback-color: ${bg}; --bg-image: url('${bgValue}'); --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-positionx: ${horizontalBackgroundFrame.positionX}; --bg-positiony: ${horizontalBackgroundFrame.positionY}; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --bg-size: ${horizontalBackgroundFrame.size};`;
 	})();
 
 	$: status = $players[index].statusEffects ?? {};
@@ -434,6 +435,7 @@
 	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
 	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
 	class:bg-rotated-horizontal={!!$players[index].backgroundImage}
+	class:bg-split={hasSplitBackground}
 	class:overflow-hidden={!!$players[index].backgroundImage}
 	style={styleVars}
 	style:background={!$players[index].backgroundImage ? bg : undefined}

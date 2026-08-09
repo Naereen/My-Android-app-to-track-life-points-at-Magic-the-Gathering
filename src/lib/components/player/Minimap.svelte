@@ -72,7 +72,6 @@
 		return '0deg';
 	};
 
-    // Second try
 	export const getBackgroundViewerRotationInCommanderDamage = (
 		playerIndex: number,
 		numberOfPlayers: number,
@@ -410,8 +409,20 @@
             return '0deg';
         }
 		else if (seatOrientation === 'down') {
-            if (numberOfPlayers === 4 && playerIndex !== 2 && layout === 'one-two-one') {
-                return '180deg';
+            if (numberOfPlayers === 4 && layout === 'one-two-one') {
+				if (playerIndex === 0) {
+					return '180deg';
+				}
+				else if (playerIndex === 1) {
+					return '90deg';
+				}
+				else if (playerIndex === 2) {
+					return '0deg';
+				}
+				else if (playerIndex === 3) {
+					return '180deg';
+				}
+				return '0deg';
             } else if (numberOfPlayers === 6 && playerIndex === 3 && layout === 'one-two-one') {
                 return '0deg';
             } else {
@@ -430,7 +441,7 @@
                 else if (seatOrientation === 'right') { return '90deg'; }
                 return '0deg';
             } else if (playerIndex === 1) {
-                if (seatOrientation === 'down') { return '-90deg'; }
+                if (seatOrientation === 'down') { return '90deg'; }
                 else if (seatOrientation === 'up') { return '-90deg'; }
                 else if (seatOrientation === 'left') { return '180deg'; }
                 else if (seatOrientation === 'right') { return '0deg'; }
@@ -575,11 +586,11 @@
 
 	$: getTileBackgroundRotation = (targetIndex: number, fromPlayerDataModal: boolean = false): string => {
 		const seatOrientation = seatOrientations[targetIndex] ?? 'up';
-        if (fromPlayerDataModal) {
+        // if (fromPlayerDataModal) {
             return orientationToDegreesFromDataModal(seatOrientation);
-        } else {
-    		return orientationToDegrees(seatOrientation);
-        }
+        // } else {
+			// return orientationToDegrees(seatOrientation);
+        // }
 	};
 
 	$: getTileBackgroundLayerClass = (targetIndex: number): string => {
@@ -588,25 +599,54 @@
 	};
 
 	$: getBgStyle = (j: number) => {
+		const orientation = seatOrientations[j] ?? 'up';
+		const isRotation90Deg = getTileBackgroundRotation(j, fromPlayerDataModal) === '90deg' || getTileBackgroundRotation(j, fromPlayerDataModal) === '-90deg';
 		const p = $players[j];
-		if (!p) return '';
 		const bg = p.backgroundImage;
-		if (!bg && p.color) return `background: ${colorToBg(p.color)};`;
-		if (Array.isArray(bg) && bg.length === 1)
+		if (!p) return '';
+		else if (!bg && p.color) return `background: ${colorToBg(p.color)};`;
+		else if (Array.isArray(bg) && bg.length >= 2) {
+			const [leftImage, rightImage] = bg.slice(0, 2);
+			if (orientation === 'left' || orientation === 'right') {
+				return [
+					`background-image: url('${leftImage}'), url('${rightImage}');`,
+					'background-size: 50% 100%, 50% 100%;',
+					'background-clip: padding-box;',
+					'background-origin: padding-box;',
+					'background-position: left center, right center;',
+					'background-repeat: no-repeat;'
+				].join(' ');
+			} else {
+				return [
+					`background-image: url('${leftImage}'), url('${rightImage}');`,
+					'background-size: 50% 100%, 50% 100%;',
+					'background-clip: padding-box;',
+					'background-origin: padding-box;',
+					'background-position: left center, right center;',
+					'background-repeat: no-repeat;'
+				].join(' ');
+			}
+		}
+		else if (Array.isArray(bg) && bg.length === 1)
 			return `background-image: url('${bg[0]}'); background-size: cover; background-repeat: no-repeat; background-position: center;`;
-		if (Array.isArray(bg) && bg.length === 2)
-			return `background-image: url('${bg[0]}'), url('${bg[1]}'); background-size: cover, cover; background-repeat: no-repeat; background-position: center;`;
-		if (bg && typeof bg === 'string')
-			return `background-image: url('${bg}'); background-size: cover; background-repeat: no-repeat; background-position: center;`;
+		else if (bg && typeof bg === 'string') {
+			if (orientation === 'left' || orientation === 'right') {
+				return `background-image: url('${bg}'); background-size: cover; background-repeat: no-repeat; background-position: center;`;
+			} else {
+				return `background-image: url('${bg}'); background-size: 100%; background-repeat: no-repeat; background-position: center;`;
+			}
+		}
 		return '';
 	};
 
+	/*
 	$: getCommanderDamage = (targetIndex: number) =>
 		getCommanderDamageTotalFromPlayer(
 			$players[playerIndex],
 			targetIndex + 1,
 			$appSettings.playerCount
 		);
+	*/
 
 	$: getCommanderDamagePair = (targetIndex: number): [number, number] => {
 		const bySource = getCommanderDamageBySourceForPlayer($players[playerIndex], $appSettings.playerCount);
