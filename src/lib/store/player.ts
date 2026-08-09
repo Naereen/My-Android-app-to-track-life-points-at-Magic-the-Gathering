@@ -1114,7 +1114,8 @@ export const setCommanderDamage = (
 	amount: number,
 	sourceIndex = 0
 ) => {
-	// Read old value to compute delta so we can adjust life total accordingly
+	// Commander damage editing tracks commander counters only.
+	// It must not directly modify life totals.
 	const currentPlayers = get(players);
 	const target = currentPlayers.find((p) => p.id === playerId);
 	if (!target) return;
@@ -1125,10 +1126,10 @@ export const setCommanderDamage = (
 		playerName: target.playerName
 	};
 	const oldCommanderDamage = getCommanderDamageSourceValue(target, fromPlayerId, sourceSlot);
+	const sourcePlayerName = currentPlayers.find((player) => player.id === fromPlayerId)?.playerName;
 	const newAmount = clampCommanderDamageAmount(amount);
 	const delta = newAmount - oldCommanderDamage;
 	if (delta === 0) return;
-	const oldLifeTotal = target.lifeTotal;
 
 	updatePlayersAndPlayEliminationSounds((existingPlayers) => {
 		return existingPlayers.map((player) => {
@@ -1143,7 +1144,6 @@ export const setCommanderDamage = (
 
 			return {
 				...player,
-				lifeTotal: player.lifeTotal - delta,
 				statusEffects: {
 					...player.statusEffects,
 					commanderDamage,
@@ -1163,20 +1163,10 @@ export const setCommanderDamage = (
 		kind: 'commanderDamage',
 		payload: {
 			fromPlayerId,
+			fromPlayerName: sourcePlayerName,
 			sourceIndex: sourceSlot + 1,
 			from: oldCommanderDamage,
-			to: newAmount,
-			lifeDelta: -delta
-		}
-	});
-
-	addGameHistoryEntry({
-		playerId: snapshot.id,
-		playerName: snapshot.playerName,
-		kind: delta > 0 ? 'positiveLife' : 'negativeLife',
-		payload: {
-			from: oldLifeTotal,
-			to: oldLifeTotal - delta
+			to: newAmount
 		}
 	});
 

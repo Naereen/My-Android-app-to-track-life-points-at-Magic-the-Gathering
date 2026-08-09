@@ -24,9 +24,11 @@ export type GameHistoryEntry = {
 		key?: string;
 		from?: number | boolean;
 		to?: number | boolean;
+		sourceIndex?: number;
 		diceSides?: number;
 		diceResult?: number | string;
 		fromPlayerId?: number;
+		fromPlayerName?: string;
 		lifeDelta?: number;
 		toPlayerName?: string;
 		fromTurn?: number;
@@ -58,6 +60,17 @@ const canMergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry
 	if (previous.kind === 'statusNumeric') {
 		const key = previous.payload.key;
 		return !!key && MERGEABLE_STATUS_KEYS.has(key) && key === next.payload.key;
+	}
+
+	if (previous.kind === 'commanderDamage') {
+		if (previous.payload.fromPlayerId !== next.payload.fromPlayerId) return false;
+		if ((previous.payload.sourceIndex ?? 1) !== (next.payload.sourceIndex ?? 1)) return false;
+
+		const previousDelta = previousTo - previousFrom;
+		const nextDelta = nextTo - nextFrom;
+		if (previousDelta === 0 || nextDelta === 0) return false;
+
+		return Math.sign(previousDelta) === Math.sign(nextDelta);
 	}
 
 	return false;

@@ -168,6 +168,7 @@
 	"history_game_restarted": "Spiel neu gestartet",
 	"history_state_on": "AN",
 	"history_state_off": "AUS",
+	"history_from": "von",
 	"history_from_player": "von Spieler",
 	"history_resources_cleared": "Mana- und Sturmzähler zurückgesetzt",
 	"history_resource_white": "Weißes Mana",

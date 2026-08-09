@@ -170,6 +170,7 @@
 	"history_game_restarted": "Partita riavviata",
 	"history_state_on": "ATTIVO",
 	"history_state_off": "DISATTIVO",
+	"history_from": "da",
 	"history_from_player": "dal giocatore",
 	"history_resources_cleared": "Contatori mana e tempesta azzerati",
 	"history_resource_white": "Mana bianco",

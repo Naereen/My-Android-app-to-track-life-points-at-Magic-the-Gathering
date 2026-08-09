@@ -135,11 +135,14 @@
 		}
 
 		if (entry.kind === 'commanderDamage') {
+			const fromPlayerLabel = entry.payload.fromPlayerName
+				? `${$_('history_from')} ${entry.payload.fromPlayerName}`
+				: `${$_('history_from_player')} #${entry.payload.fromPlayerId ?? '-'}`;
 			const lifePart =
 				typeof entry.payload.lifeDelta === 'number' && entry.payload.lifeDelta !== 0
 					? ` · ${$_('life')} ${entry.payload.lifeDelta > 0 ? '+' : ''}${entry.payload.lifeDelta}`
 					: '';
-			return `${entry.playerName} · ${$_('commander_damage')} (${$_('history_from_player')} #${entry.payload.fromPlayerId ?? '-'}) : ${fromValue} → ${toValue}${lifePart}`;
+			return `${entry.playerName} · ${$_('commander_damage')} (${fromPlayerLabel}) : ${fromValue} → ${toValue}${lifePart}`;
 		}
 
 		if (entry.kind === 'resourceChange') {

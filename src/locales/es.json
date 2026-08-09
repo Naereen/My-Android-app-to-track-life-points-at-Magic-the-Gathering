@@ -168,6 +168,7 @@
 	"history_game_restarted": "Partida reiniciada",
 	"history_state_on": "ACTIVO",
 	"history_state_off": "INACTIVO",
+	"history_from": "desde",
 	"history_from_player": "desde jugador",
 	"history_resources_cleared": "Contadores de maná y storm reiniciados",
 	"history_resource_white": "Maná blanco",

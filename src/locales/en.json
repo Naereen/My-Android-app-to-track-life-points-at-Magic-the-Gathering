@@ -170,6 +170,7 @@
 	"history_game_restarted": "Game restarted",
 	"history_state_on": "ON",
 	"history_state_off": "OFF",
+	"history_from": "from",
 	"history_from_player": "from player",
 	"history_resources_cleared": "Mana and storm counters cleared",
 	"history_resource_white": "White mana",

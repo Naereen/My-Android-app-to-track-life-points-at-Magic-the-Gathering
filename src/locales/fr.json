@@ -172,6 +172,7 @@
 	"history_game_restarted": "Partie redémarrée",
 	"history_state_on": "ACTIF",
 	"history_state_off": "INACTIF",
+	"history_from": "depuis",
 	"history_from_player": "depuis joueur",
 	"history_resources_cleared": "Compteurs de mana et de déluge remis à zéro",
 	"history_resource_white": "Mana blanc",
