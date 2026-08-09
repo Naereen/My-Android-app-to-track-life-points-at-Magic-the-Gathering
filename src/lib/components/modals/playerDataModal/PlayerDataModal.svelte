@@ -195,6 +195,43 @@
 	$: isQuarterTurnModal = modalRotation === '90deg' || modalRotation === '-90deg';
 	$: modalPanelStyle = `transform: rotate(${modalRotation}); transform-origin: center center; width: ${isQuarterTurnModal ? 'min(75vh, 44rem)' : '80%'}; max-width: ${isQuarterTurnModal ? '84vh' : '48rem'}; max-height: ${isQuarterTurnModal ? '78vw' : '90vh'};`;
 
+	let playerModalScrollEl: HTMLDivElement | null = null;
+	let lastAutoScrollKey: string | null = null;
+
+	const waitForAnimationFrame = () =>
+		new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+	const scrollPlayerModalToBottomRight = async (scrollElement: HTMLDivElement) => {
+		await tick();
+		await waitForAnimationFrame();
+		await waitForAnimationFrame();
+
+		const scrollToBottomRight = () => {
+			scrollElement.scrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+			scrollElement.scrollLeft = Math.max(0, scrollElement.scrollWidth - scrollElement.clientWidth);
+		};
+
+		scrollToBottomRight();
+		await waitForAnimationFrame();
+		scrollToBottomRight();
+	};
+
+	$: {
+		const shouldAutoScroll =
+			$playerModalData?.isOpen && mode === 'commander' &&
+			(modalPlayerOrientation === 'left' || modalPlayerOrientation === 'right');
+		const autoScrollKey = shouldAutoScroll
+			? `${$playerModalData.playerId}:${modalPlayerOrientation}`
+			: null;
+
+		if (playerModalScrollEl && autoScrollKey && autoScrollKey !== lastAutoScrollKey) {
+			lastAutoScrollKey = autoScrollKey;
+			void scrollPlayerModalToBottomRight(playerModalScrollEl);
+		} else if (!autoScrollKey) {
+			lastAutoScrollKey = null;
+		}
+	}
+
 	import { searchCards, randomCards } from '$lib/utils/scryfall';
 	import { searchGifs } from '$lib/utils/klipy';
 	import { setPlayerBackgroundImage } from '$lib/store/player';
@@ -746,6 +783,7 @@
 >
 	<div
 		on:click|stopPropagation
+		bind:this={playerModalScrollEl}
 		class="bg-[#d8e5f7] max-w-3xl w-11/12 max-h-[85vh] opacity-100 rounded-[1.5rem] flex justify-center items-start text-black p-4 relative mt-4 overflow-auto"
 		style={modalPanelStyle}
 		role="button"
@@ -1535,7 +1573,7 @@
 
 					{#if mode === 'commander' && $appSettings.playerCount > 2}
 						<!-- Commander Damage Section (now its own tab) -->
-						<div class="mt-2 flex flex-col items-center justify-center text-center border-t pt-2 pb-1">
+						<div class="mt-2 flex flex-col items-center justify-center text-center border-t pt-2 pb-[-2] mb-[-2]">
 							<div class="flex items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
 								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}); transform-origin: center;`}>
 									<Minimap
