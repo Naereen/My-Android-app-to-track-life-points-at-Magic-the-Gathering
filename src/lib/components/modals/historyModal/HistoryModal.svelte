@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { appSettings } from '$lib/store/appSettings';
 	import LifeChart from './LifeChart.svelte';
-	import { closeHistoryModal } from '$lib/store/modal';
+	import { closeHistoryModal, handleHistoryModalBackNavigation, pushHistoryModalHistoryEntry } from '$lib/store/modal';
 	import { lifeHistory } from '$lib/store/lifeHistory';
 	import { _ } from 'svelte-i18n';
+	import { onDestroy, onMount } from 'svelte';
 
 	$: latestSnapshot = $lifeHistory[$lifeHistory.length - 1];
 	$: legendEntries = [...(latestSnapshot?.players ?? [])].sort((left, right) => left.id - right.id);
@@ -61,6 +62,15 @@
 	};
 
 	$: startDateText = formatStartDate($lifeHistory[0]?.timestamp, $appSettings.locale);
+
+	onMount(() => {
+		pushHistoryModalHistoryEntry();
+		window.addEventListener('popstate', handleHistoryModalBackNavigation);
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('popstate', handleHistoryModalBackNavigation);
+	});
 </script>
 
 <div

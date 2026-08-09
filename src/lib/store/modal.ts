@@ -262,19 +262,22 @@ const initialHistoryModalState = { isOpen: false };
 
 export const historyModalData = writable(initialHistoryModalState);
 
-/**
- * Opens the global game history modal.
- * @returns {void}
- */
-export const openHistoryModal = () => {
-	historyModalData.set({ isOpen: true });
+let hasHistoryModalHistoryEntry = false;
+let isSyncingHistoryModalHistory = false;
+
+export const pushHistoryModalHistoryEntry = () => {
+	if (typeof window === 'undefined' || hasHistoryModalHistoryEntry) return;
+	try {
+		const currentState =
+			window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
+		window.history.pushState({ ...currentState, __mtgHistoryModalOpen: true }, '', window.location.href);
+		hasHistoryModalHistoryEntry = true;
+	} catch {
+		// ignore
+	}
 };
 
-/**
- * Closes game history modal and collapses history menu when it is the active panel.
- * @returns {void}
- */
-export const closeHistoryModal = () => {
+const resetHistoryModalState = () => {
 	historyModalData.set(initialHistoryModalState);
 	appState.update((state) => {
 		if (state.isMenuOpen && state.activeMenu === 'history') {
@@ -286,6 +289,47 @@ export const closeHistoryModal = () => {
 		}
 		return state;
 	});
+};
+
+/**
+ * Opens the global game history modal.
+ * @returns {void}
+ */
+export const openHistoryModal = () => {
+	historyModalData.set({ isOpen: true });
+	pushHistoryModalHistoryEntry();
+};
+
+/**
+ * Closes game history modal and collapses history menu when it is the active panel.
+ * @returns {void}
+ */
+export const closeHistoryModal = () => {
+	if (typeof window !== 'undefined' && hasHistoryModalHistoryEntry && !isSyncingHistoryModalHistory) {
+		isSyncingHistoryModalHistory = true;
+		window.history.back();
+		return;
+	}
+
+	resetHistoryModalState();
+};
+
+/**
+ * Handles `popstate` to map browser Back events to history-modal close semantics.
+ * @returns {void}
+ */
+export const handleHistoryModalBackNavigation = () => {
+	if (!get(historyModalData).isOpen) {
+		if (isSyncingHistoryModalHistory) {
+			hasHistoryModalHistoryEntry = false;
+			isSyncingHistoryModalHistory = false;
+		}
+		return;
+	}
+
+	hasHistoryModalHistoryEntry = false;
+	isSyncingHistoryModalHistory = true;
+	resetHistoryModalState();
 };
 
 // Confirm modal store: holds a message and a resolver function for promise-based API
