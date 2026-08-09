@@ -731,6 +731,7 @@
 	let editingCommanderFrom: number | null = null;
 	let editingCommanderValuePrimary = '';
 	let editingCommanderValueSecondary = '';
+	let commanderSaveHandledByPointer = false;
 
 	const syncCommanderEditorValues = (
 		playerId: number,
@@ -766,7 +767,9 @@
 	// while avoiding clobbering the currently focused input.
 	$: if (editingCommanderFrom !== null) {
 		const focusedSource = getFocusedCommanderInputSource();
-		syncCommanderEditorValues($playerModalData.playerId, editingCommanderFrom, focusedSource);
+		if (focusedSource !== null) {
+			syncCommanderEditorValues($playerModalData.playerId, editingCommanderFrom, focusedSource);
+		}
 	}
 
 	// Inline editor state for numeric status effects (poison, energy, etc.)
@@ -809,6 +812,19 @@
 			setCommanderDamage($playerModalData.playerId, editingCommanderFrom, 0, 1);
 		}
 		editingCommanderFrom = null;
+	};
+
+	const handleCommanderSavePointerDown = () => {
+		commanderSaveHandledByPointer = true;
+		saveEditCommander();
+	};
+
+	const handleCommanderSaveClick = () => {
+		if (commanderSaveHandledByPointer) {
+			commanderSaveHandledByPointer = false;
+			return;
+		}
+		saveEditCommander();
 	};
 
 	/**
@@ -1951,8 +1967,13 @@
 								<div class="relative mt-12 mb-2 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
 									<div class="mb-3 text-xl font-semibold text-center">
 										{editingFromName} → {$players[$playerModalData.playerId - 1]?.playerName ?? `Player ${$playerModalData.playerId}`}
-										<button on:click={saveEditCommander} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-										<button on:click={cancelEditCommander} class="px-2 py-1 bg-gray-500 text-white text-sm rounded">{setLifeTotalCancel}</button>
+										<button
+											type="button"
+											on:pointerdown|preventDefault={handleCommanderSavePointerDown}
+											on:click={handleCommanderSaveClick}
+											class="px-2 py-1 bg-green-600 text-white text-sm rounded"
+										>{setLifeTotalSave}</button>
+										<button type="button" on:click={cancelEditCommander} class="px-2 py-1 bg-gray-500 text-white text-sm rounded">{setLifeTotalCancel}</button>
 									</div>
 									<div class="flex flex-col items-center justify-center gap-2">
 										{#each Array.from({ length: getCommanderSourceCountForPlayer(editingFrom) }) as sourceMarker, sourceIndex}
