@@ -298,6 +298,11 @@ export const lifeChangeHistoryResetKey = writable(0);
 export const COMMANDER_DAMAGE_SOURCE_SLOTS = 2;
 export const COMMANDER_TAX_SOURCE_SLOTS = 2;
 
+/**
+ * Normalizes commander damage/tax counters into an integer range accepted by the UI.
+ * @param {number} value Raw numeric value.
+ * @returns {number} Rounded value clamped to `0..999`.
+ */
 const clampCommanderDamageAmount = (value: number) => {
 	if (!Number.isFinite(value)) return 0;
 	return Math.max(0, Math.min(999, Math.round(value)));
@@ -471,6 +476,13 @@ export const isPartnerModeEnabledForPlayer = (playerId: number): boolean => {
 	return !!player?.statusEffects?.partnerMode;
 };
 
+/**
+ * Enables or disables partner mode for one player.
+ * Disabling merges partner damage/tax back into single-source counters for compatibility.
+ * @param {number} playerId Target player id.
+ * @param {boolean} enabled Partner mode toggle.
+ * @returns {void}
+ */
 export const setPlayerPartnerMode = (playerId: number, enabled: boolean) => {
 	const normalized = !!enabled;
 
@@ -529,6 +541,12 @@ if (get(lifeHistory).length === 0) {
 	recordImmediateSnapshot(get(players));
 }
 
+/**
+ * Evaluates whether a player is eliminated under current game rules.
+ * Checks life total policy, explicit KO marker, and commander-damage threshold.
+ * @param {App.Player.Data} player Player state to evaluate.
+ * @returns {boolean} `true` when player should be treated as out of the game.
+ */
 const isEliminated = (player: App.Player.Data) => {
 	const globalAllowNegative = get(appSettings).allowNegativeLife || false;
 	const allowNegative = globalAllowNegative || !!player.allowNegativeLife;
@@ -540,6 +558,12 @@ const isEliminated = (player: App.Player.Data) => {
 	);
 };
 
+/**
+ * Determines if a player can go below zero for life calculations.
+ * @param {App.Player.Data} player Player record.
+ * @param {number} [nextLifeTotal] Optional projected life total after pending operation.
+ * @returns {boolean} `true` when negative values are allowed or already implied by state.
+ */
 const canUseNegativeLife = (player: App.Player.Data, nextLifeTotal?: number) => {
 	const globalAllowNegative = get(appSettings).allowNegativeLife || false;
 	const allowNegative = globalAllowNegative || !!player.allowNegativeLife;
@@ -553,6 +577,11 @@ const canUseNegativeLife = (player: App.Player.Data, nextLifeTotal?: number) => 
 	return false;
 };
 
+/**
+ * Counts non-eliminated players among active seats.
+ * @param {App.Player.Data[]} list Full players array.
+ * @returns {number} Number of players still alive.
+ */
 const alivePlayersCount = (list: App.Player.Data[]) => {
 	const count = get(appSettings).playerCount;
 	return list.slice(0, count).filter((player) => !isEliminated(player)).length;
@@ -591,6 +620,11 @@ const updatePlayersAndPlayEliminationSounds = (
 	playEliminationSoundsIfNeeded(beforePlayers, afterPlayers);
 };
 
+/**
+ * Captures minimal immutable identity used by history entries.
+ * @param {number} playerId Player id.
+ * @returns {{ id: number; playerName: string } | null} Snapshot or `null` when player is missing.
+ */
 const getPlayerSnapshot = (playerId: number) => {
 	const target = get(players).find((player) => player.id === playerId);
 	if (!target) return null;
@@ -600,6 +634,12 @@ const getPlayerSnapshot = (playerId: number) => {
 	};
 };
 
+/**
+ * Sets display color/gradient token for a player profile.
+ * @param {number} playerId Target player id.
+ * @param {string} color Stored color token (single color or comma-separated gradient seed).
+ * @returns {void}
+ */
 export const setPlayerColor = (playerId: number, color: string) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -614,6 +654,12 @@ export const setPlayerColor = (playerId: number, color: string) => {
 	});
 };
 
+/**
+ * Overrides negative-life policy for one player.
+ * @param {number} playerId Target player id.
+ * @param {boolean} allow Whether this player may go below zero regardless of global rule.
+ * @returns {void}
+ */
 export const setPlayerAllowNegative = (playerId: number, allow: boolean) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -628,6 +674,12 @@ export const setPlayerAllowNegative = (playerId: number, allow: boolean) => {
 	});
 };
 
+/**
+ * Assigns selected Vanguard card for a player.
+ * @param {number} playerId Target player id.
+ * @param {ScryfallEmblemCard | null} vanguard Selected Vanguard, or `null` to clear.
+ * @returns {void}
+ */
 export const setPlayerVanguard = (playerId: number, vanguard: ScryfallEmblemCard | null) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -642,6 +694,12 @@ export const setPlayerVanguard = (playerId: number, vanguard: ScryfallEmblemCard
 	});
 };
 
+/**
+ * Stores draft options shown to the player in Vanguard draft-three mode.
+ * @param {number} playerId Target player id.
+ * @param {ScryfallEmblemCard[]} choices Candidate Vanguard cards.
+ * @returns {void}
+ */
 export const setPlayerVanguardChoices = (playerId: number, choices: ScryfallEmblemCard[]) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -675,6 +733,12 @@ export const setPlayerTreacheryCard = (
 	});
 };
 
+/**
+ * Marks whether a player's Treachery role/card has been revealed to them.
+ * @param {number} playerId Target player id.
+ * @param {boolean} seen Reveal state.
+ * @returns {void}
+ */
 export const setPlayerTreacherySeen = (playerId: number, seen: boolean) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -698,6 +762,11 @@ const shuffleCards = <T>(array: T[]) => {
 	return copy;
 };
 
+/**
+ * Assigns random Vanguard cards for every active player according to settings.
+ * Supports single-pick mode and draft-three mode.
+ * @returns {Promise<void>}
+ */
 export const assignRandomVanguardsForGame = async () => {
 	const settings = get(appSettings);
 	const totalPlayers = settings.playerCount || 4;
@@ -755,6 +824,11 @@ export const assignRandomVanguardsForGame = async () => {
 	});
 };
 
+/**
+ * Assigns Treachery roles (and cards when not in Shogun variant) to active players.
+ * Clears assignments when mode is disabled or player count is unsupported.
+ * @returns {Promise<void>}
+ */
 export const assignRandomTreacheryForGame = async () => {
 	const settings = get(appSettings);
 	const totalPlayers = settings.playerCount || 4;
@@ -908,6 +982,14 @@ export const setPlayerBackgroundImage = (
 	});
 };
 
+/**
+ * Updates a boolean status flag (monarch, initiative, ko, dayNight, ...).
+ * Enforces uniqueness for selected statuses and writes history when value changes.
+ * @param {number} playerId Target player id.
+ * @param {string} key Status key.
+ * @param {boolean} value New flag value.
+ * @returns {void}
+ */
 export const setPlayerStatusBoolean = (playerId: number, key: string, value: boolean) => {
 	const beforePlayers = get(players);
 	const targetBefore = beforePlayers.find((player) => player.id === playerId);
@@ -991,6 +1073,10 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 	}
 };
 
+/**
+ * Clears day/night marker from all players and disables global Day/Night tracking.
+ * @returns {void}
+ */
 export const clearDayNightStatus = () => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -1057,6 +1143,12 @@ export const setPlayerStatusNumeric = (
 	}
 };
 
+/**
+ * Toggles temporary highlight state used by seat selection/spin animations.
+ * @param {number} playerId Target player id.
+ * @param {boolean} highlighted Highlight state.
+ * @returns {void}
+ */
 export const setPlayerHighlighted = (playerId: number, highlighted: boolean) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -1071,6 +1163,13 @@ export const setPlayerHighlighted = (playerId: number, highlighted: boolean) => 
 	});
 };
 
+/**
+ * Sets poison counters for a player and records the update in game history.
+ * @param {number} playerId Target player id.
+ * @param {number} amount Absolute poison counter value.
+ * @param {string} [mergeKey] Optional history merge key.
+ * @returns {void}
+ */
 export const setPlayerPoison = (playerId: number, amount: number, mergeKey?: string) => {
 	const beforePlayers = get(players);
 	const targetBefore = beforePlayers.find((player) => player.id === playerId);
@@ -1173,6 +1272,11 @@ export const setCommanderDamage = (
 	recordSnapshot(get(players));
 };
 
+/**
+ * Extracts image/artist/set metadata from raw Scryfall card payload.
+ * @param {any} data Raw Scryfall card object.
+ * @returns {{ imageUrl: string; artist: string | null; set_name: string | null } | null} Normalized background payload.
+ */
 const extractScryfallImagePayload = (data: any) => {
 	// try common image locations
 	let imageUrl: string | null = null;
@@ -1203,6 +1307,12 @@ const extractScryfallImagePayload = (data: any) => {
 
 // Try to fetch a random card image from Scryfall matching a given name.
 // Returns a payload compatible with `setPlayerBackgroundImage` helper or null on failure.
+/**
+ * Searches Scryfall random endpoint for a thematic background matching player name.
+ * Tries several fallback queries centered on commanders/planeswalkers.
+ * @param {string} name Player name used as search hint.
+ * @returns {Promise<{ imageUrl: string; artist: string | null; set_name: string | null } | null>} Background payload or `null`.
+ */
 const fetchScryfallImageForName = async (name: string) => {
 	if (typeof window === 'undefined' || !name) return null;
 
@@ -1266,6 +1376,12 @@ if (typeof window !== 'undefined') {
 // Object to store timeout references for each player
 const resetTimers: { [key: number]: ReturnType<typeof setTimeout> } = {};
 
+/**
+ * Resets game state for a new match (life, statuses, timers, history, optional profile reset/seat shuffle).
+ * Can prompt user for extra options before applying the reset.
+ * @param {boolean} alreadyConfirmed Skip confirmation modal when `true`.
+ * @returns {Promise<void>}
+ */
 export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	let resetProfiles = false;
 	let randomizeSeats = false;
@@ -1478,6 +1594,12 @@ function shuffle(array: any[]) {
 	return array;
 }
 
+/**
+ * Applies a relative life delta to a player and records it in history.
+ * @param {number} playerId Target player id.
+ * @param {number} amount Signed delta to add to current life total.
+ * @returns {void}
+ */
 export const setPlayerLifeTotal = (playerId: number, amount: number) => {
 	const beforePlayers = get(players);
 	const targetBefore = beforePlayers.find((player) => player.id === playerId);
@@ -1515,6 +1637,13 @@ export const setPlayerLifeTotal = (playerId: number, amount: number) => {
 };
 
 // Set the player's life total to an absolute value (clamped according to settings)
+/**
+ * Sets absolute life total for one player, clamped by game rules.
+ * Also computes a temporary visual delta and records history entry when value changes.
+ * @param {number} playerId Target player id.
+ * @param {number} value Desired absolute life total.
+ * @returns {void}
+ */
 export const setPlayerLifeAbsolute = (playerId: number, value: number) => {
 	const currentPlayers = get(players);
 	const player = currentPlayers.find((p) => p.id === playerId);
@@ -1634,6 +1763,12 @@ export const manageLifeTotal = (
 	}
 };
 
+/**
+ * Updates displayed player name.
+ * @param {number} playerId Target player id.
+ * @param {string} playerName New player name.
+ * @returns {void}
+ */
 export const setPlayerName = (playerId: number, playerName: string) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
@@ -1648,6 +1783,11 @@ export const setPlayerName = (playerId: number, playerName: string) => {
 	});
 };
 
+/**
+ * Rewrites player ids to remain 1-based seat indexes after reorder/swap operations.
+ * @param {App.Player.Data[]} list Player array in visual seat order.
+ * @returns {App.Player.Data[]} Same list with normalized seat ids.
+ */
 const normalizeSeatIds = (list: App.Player.Data[]) => {
 	return list.map((player, index) => ({
 		...player,
@@ -1657,6 +1797,12 @@ const normalizeSeatIds = (list: App.Player.Data[]) => {
 
 // Swap exactly two player seats (0-based indices).
 // This keeps seat-based ids consistent with visual positions.
+/**
+ * Swaps two active seats by index and renormalizes player ids.
+ * @param {number} fromIndex Source seat index (0-based).
+ * @param {number} toIndex Target seat index (0-based).
+ * @returns {void}
+ */
 export const swapPlayersSeats = (fromIndex: number, toIndex: number) => {
 	players.update((currentPlayers) => {
 		const n = currentPlayers.length;
@@ -1673,6 +1819,12 @@ export const swapPlayersSeats = (fromIndex: number, toIndex: number) => {
 };
 
 // Reorder players array by moving element at fromIndex to toIndex (0-based indices)
+/**
+ * Reorders seats by delegating to swap behavior used by draggable UI.
+ * @param {number} fromIndex Source seat index.
+ * @param {number} toIndex Destination seat index.
+ * @returns {void}
+ */
 export const reorderPlayers = (fromIndex: number, toIndex: number) => {
 	swapPlayersSeats(fromIndex, toIndex);
 };
@@ -1720,6 +1872,10 @@ export const setTempLifeDiff = (
 	});
 };
 
+/**
+ * Clears the `isFirst` flag for all players.
+ * @returns {void}
+ */
 export const removeFirstPlace = () => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => ({
@@ -1740,6 +1896,11 @@ const pickRandomSeatIndex = (totalPlayers: number): number => {
 	return pickWeightedIndex(settings.startingPlayerProbabilities ?? [], totalPlayers);
 };
 
+/**
+ * Marks one seat as starting player and aligns turn state accordingly.
+ * @param {number} playerIndex Starting player seat index (0-based).
+ * @returns {void}
+ */
 export const setFirstPlayer = (playerIndex: number) => {
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player, index) => ({
@@ -1752,6 +1913,11 @@ export const setFirstPlayer = (playerIndex: number) => {
 	setCurrentTurn(playerIndex, true, true);
 };
 
+/**
+ * Runs animated seat-highlighting roulette and chooses the starting player.
+ * Uses weighted probabilities when enabled in settings.
+ * @returns {void}
+ */
 export const spinToSelectFirstPlayer = () => {
 	const totalPlayers = get(appSettings).playerCount;
 	if (totalPlayers === 0) return;
@@ -1764,6 +1930,10 @@ export const spinToSelectFirstPlayer = () => {
 	let intervalTime = 25;
 	const finalPauseTime = 100;
 
+	/**
+	 * Executes one animation step of the starting-player roulette.
+	 * @returns {void}
+	 */
 	const spin = () => {
 		players.update((currentPlayers) => {
 			return currentPlayers.map((player, index) => {
@@ -1802,6 +1972,10 @@ export const spinToSelectFirstPlayer = () => {
 	spin();
 };
 
+/**
+ * Runs a short roulette animation and selects a random active player for modal display.
+ * @returns {void}
+ */
 export const spinToSelectRandomPlayer = () => {
 	const totalPlayers = get(appSettings).playerCount;
 	if (totalPlayers === 0) return;
@@ -1814,6 +1988,10 @@ export const spinToSelectRandomPlayer = () => {
 	let intervalTime = 10;
 	const finalPauseTime = 100;
 
+	/**
+	 * Executes one animation step for random-player roulette.
+	 * @returns {void}
+	 */
 	const spin = () => {
 		players.update((currentPlayers) => {
 			return currentPlayers.map((player, index) => {

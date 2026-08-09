@@ -11,6 +11,11 @@ const isEnabled = (): boolean => {
 
 const canVibrate = (): boolean => typeof navigator !== 'undefined' && 'vibrate' in navigator;
 
+/**
+ * Triggers a vibration pattern if haptics are enabled in settings and supported by the device.
+ * @param {number | number[]} pattern Milliseconds or vibration sequence passed to `navigator.vibrate`.
+ * @returns {void}
+ */
 export const tap = (pattern: number | number[] = 20) => {
 	if (!isEnabled()) return;
 	if (!canVibrate()) return;
@@ -22,16 +27,39 @@ export const tap = (pattern: number | number[] = 20) => {
 	}
 };
 
+/**
+ * Plays a short positive haptic feedback pattern.
+ * @returns {void}
+ */
 export const confirm = () => tap([20, 10, 20]);
+/**
+ * Plays a stronger error haptic feedback pattern.
+ * @returns {void}
+ */
 export const error = () => tap([40, 20, 40]);
 
+/**
+ * Convenience wrapper to build a symmetric vibration pattern from a single intensity value.
+ * @param {number} intensity Base duration used to scale the pulse sequence.
+ * @returns {void}
+ */
 export function vibrate(intensity: number = 10) {
 	return tap([2 * intensity, intensity, 2 * intensity]);
 }
 
 // Svelte action to attach haptic feedback to an element without stopping event forwarding
+/**
+ * Svelte action that attaches click-triggered haptic feedback to an element.
+ * @param {HTMLElement} node Target DOM element.
+ * @param {number | number[]} pattern Initial vibration pattern.
+ * @returns {{ update: (newPattern: number | number[]) => void; destroy: () => void }} Action lifecycle hooks.
+ */
 export function haptic(node: HTMLElement, pattern: number | number[] = 10) {
 	let currentPattern = pattern;
+	/**
+	 * Handles click events and dispatches vibration with the latest pattern value.
+	 * @returns {void}
+	 */
 	const handler = () => {
 		try {
 			if (!isEnabled()) return;

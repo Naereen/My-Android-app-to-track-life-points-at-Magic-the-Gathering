@@ -9,12 +9,22 @@
 
 	import { onMount } from 'svelte';
 
+	/**
+	 * Detects touch-first mobile browsers outside Capacitor native runtime.
+	 * Uses both pointer capability and user-agent heuristics for broad compatibility.
+	 * @returns {boolean} `true` when the page is likely running in a mobile browser.
+	 */
 	const isMobileWeb = () => {
 		const isCoarsePointer = window.matchMedia?.('(pointer: coarse)').matches ?? false;
 		const mobileUa = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 		return isCoarsePointer || mobileUa;
 	};
 
+	/**
+	 * Requests fullscreen for mobile web sessions when supported by the browser.
+	 * The call is intentionally no-op when fullscreen is unavailable or already active.
+	 * @returns {Promise<void>}
+	 */
 	const requestFullscreen = async () => {
 		const element = document.documentElement;
 		if (!element.requestFullscreen || document.fullscreenElement) return;
@@ -26,6 +36,11 @@
 		}
 	};
 
+	/**
+	 * Tries to enter fullscreen automatically on mobile web.
+	 * If blocked by gesture policy, retries once on the first user interaction.
+	 * @returns {Promise<void>}
+	 */
 	const enableMobileFullscreenByDefault = async () => {
 		if (Capacitor.isNativePlatform()) return;
 		if (!isMobileWeb()) return;
@@ -34,6 +49,10 @@
 
 		if (document.fullscreenElement) return;
 
+		/**
+		 * Deferred fullscreen retry bound to the first touch/pointer interaction.
+		 * @returns {void}
+		 */
 		const onFirstInteraction = () => {
 			void requestFullscreen();
 		};
@@ -48,6 +67,11 @@
 		await enableMobileFullscreenByDefault();
 	});
 
+	/**
+	 * Adds runtime CSS context classes on `<body>` (`is-native`, `is-android`, `is-ios`, `is-web`).
+	 * These classes drive safe-area and platform-specific styling across the app.
+	 * @returns {Promise<void>}
+	 */
 	const applyNativeContext = async () => {
 		const body = document.body;
 

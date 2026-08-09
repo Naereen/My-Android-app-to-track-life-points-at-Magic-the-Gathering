@@ -19,6 +19,11 @@ type PersistedGlobalGameTimerState = {
 
 const STORAGE_KEY = 'globalGameTimerState';
 
+/**
+ * Creates the global match timer store with persistence and overtime support.
+ * Remaining time can become negative after timeout to represent overtime duration.
+ * @returns {{ subscribe: typeof subscribe; start: () => void; stop: () => void; togglePause: () => void; resetForNewGame: () => void; applyDuration: (durationSeconds: number) => void }} Timer API.
+ */
 const createGlobalGameTimer = () => {
 	const isBrowser = typeof window !== 'undefined';
 	const initialDuration = get(appSettings).globalGameTimerDuration || 5400;
@@ -85,6 +90,10 @@ const createGlobalGameTimer = () => {
 		}
 	});
 
+	/**
+	 * Stops the internal 1-second ticking interval.
+	 * @returns {void}
+	 */
 	const stopInternal = () => {
 		if (interval) {
 			clearInterval(interval);
@@ -92,6 +101,11 @@ const createGlobalGameTimer = () => {
 		}
 	};
 
+	/**
+	 * Plays timeout feedback (haptic + long audio pulse when enabled in settings).
+	 * Triggered once when countdown crosses from positive to zero/negative.
+	 * @returns {void}
+	 */
 	const playTimeoutAlert = () => {
 		const settings = get(appSettings);
 		if (settings.hapticsEnabled) {
@@ -148,6 +162,10 @@ const createGlobalGameTimer = () => {
 		};
 	};
 
+	/**
+	 * Recomputes elapsed seconds from wall clock to survive background throttling.
+	 * @returns {void}
+	 */
 	const syncWithWallClock = () => {
 		if (!state.running) {
 			lastTickEpochMs = Date.now();
@@ -162,6 +180,10 @@ const createGlobalGameTimer = () => {
 		update((s) => advanceByElapsed(s, elapsedSeconds));
 	};
 
+	/**
+	 * Starts internal ticking loop when running in browser context.
+	 * @returns {void}
+	 */
 	const startInternal = () => {
 		if (!isBrowser || interval) return;
 		interval = setInterval(() => {
@@ -169,6 +191,10 @@ const createGlobalGameTimer = () => {
 		}, 1000) as unknown as number;
 	};
 
+	/**
+	 * Starts global timer if feature is enabled and timer is currently paused.
+	 * @returns {void}
+	 */
 	const start = () => {
 		if (!isBrowser) return;
 		if (!get(appSettings).globalGameTimerEnabled) return;
@@ -178,6 +204,10 @@ const createGlobalGameTimer = () => {
 		startInternal();
 	};
 
+	/**
+	 * Pauses global timer and keeps current remaining/overtime value.
+	 * @returns {void}
+	 */
 	const stop = () => {
 		syncWithWallClock();
 		stopInternal();
@@ -185,6 +215,10 @@ const createGlobalGameTimer = () => {
 		update((s) => ({ ...s, running: false }));
 	};
 
+	/**
+	 * Toggles global timer between running and paused states.
+	 * @returns {void}
+	 */
 	const togglePause = () => {
 		if (state.running) {
 			stop();
@@ -193,6 +227,10 @@ const createGlobalGameTimer = () => {
 		start();
 	};
 
+	/**
+	 * Resets timer to configured game duration and auto-starts when feature is enabled.
+	 * @returns {void}
+	 */
 	const resetForNewGame = () => {
 		const duration = Math.max(1, Math.round(get(appSettings).globalGameTimerDuration || 5400));
 		lastTickEpochMs = Date.now();
@@ -208,6 +246,11 @@ const createGlobalGameTimer = () => {
 		}
 	};
 
+	/**
+	 * Applies a new configured duration and resets timer to that value.
+	 * @param {number} durationSeconds Duration in seconds.
+	 * @returns {void}
+	 */
 	const applyDuration = (durationSeconds: number) => {
 		const duration = Math.max(1, Math.round(durationSeconds));
 		lastTickEpochMs = Date.now();

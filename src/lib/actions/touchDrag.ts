@@ -22,11 +22,22 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
     let lastX = 0;
     let lastY = 0;
 
+    /**
+     * Checks whether the initial touch target belongs to the configured drag handle.
+     * @param {EventTarget | null} target Native event target from the touch event.
+     * @returns {boolean} `true` when long-press drag is allowed to start.
+     */
     const withinHandle = (target: EventTarget | null) => {
         if (!target || !(target instanceof Element)) return false;
         return target.closest(handleSelector) !== null;
     };
 
+    /**
+     * Starts long-press detection and initializes drag state for the first touch point.
+     * When long press completes, dispatches `dragstart` and creates the floating clone preview.
+     * @param {TouchEvent} e Touch start event.
+     * @returns {void}
+     */
     const onTouchStart = (e: TouchEvent) => {
         if (!e.touches || e.touches.length === 0) return;
         const t = e.touches[0];
@@ -72,6 +83,10 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
                 lastX = startX - rect.width / 2;
                 lastY = startY - rect.height / 2;
 
+                /**
+                 * Animation frame loop that repositions the floating clone under the finger.
+                 * @returns {void}
+                 */
                 const frame = () => {
                     if (!cloneEl) return;
                     cloneEl.style.transform = `translate3d(${lastX}px, ${lastY}px, 0)`;
@@ -84,6 +99,10 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
         }, longPressMs);
     };
 
+    /**
+     * Cancels pending long-press activation and clears drag-tracking primitives.
+     * @returns {void}
+     */
     const cancelLongPress = () => {
         if (longPressTimer) {
             clearTimeout(longPressTimer);
@@ -93,6 +112,12 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
         dragging = false;
     };
 
+    /**
+     * Handles movement during pending long-press or active drag gesture.
+     * Cancels if user moves too far before activation; otherwise emits `dragmove` while dragging.
+     * @param {TouchEvent} e Touch move event.
+     * @returns {void}
+     */
     const onTouchMove = (e: TouchEvent) => {
         if (touchId === null) return;
         const t = Array.from(e.touches).find((tt) => tt.identifier === touchId);
@@ -116,6 +141,11 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
         }
     };
 
+    /**
+     * Finalizes the gesture, emits `dragend` when needed, and restores visual state.
+     * @param {TouchEvent} e Touch end event carrying the final pointer location.
+     * @returns {void}
+     */
     const onTouchEnd = (e: TouchEvent) => {
         if (touchId === null) return;
         const t = Array.from(e.changedTouches).find((tt) => tt.identifier === touchId);

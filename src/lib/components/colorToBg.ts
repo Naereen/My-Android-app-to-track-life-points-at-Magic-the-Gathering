@@ -1,3 +1,8 @@
+/**
+ * Converts a supported color keyword into a deterministic hex color.
+ * @param {string} n Stored color name from player settings.
+ * @returns {string} Hex color string; defaults to white for unknown names.
+ */
 const nameToHex = (n: string) => {
 	switch (n.trim()) {
 		case 'mud':
@@ -28,6 +33,12 @@ const nameToHex = (n: string) => {
 	}
 };
 
+/**
+ * Converts stored color selection into a CSS background value.
+ * Supports single colors and comma-separated multi-color gradients.
+ * @param {string} c Color token (`red`) or list (`red,blue`).
+ * @returns {string} Hex color or `linear-gradient(...)` CSS value.
+ */
 const colorToBg = (c: string) => {
 	if (!c) return nameToHex('white');
 

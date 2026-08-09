@@ -23,16 +23,35 @@ let latestState = {
 
 const clients = new Map();
 
+/**
+ * Applies permissive CORS headers for browser-based controller and overlay clients.
+ * @param {unknown} res - Parameter used by setCorsHeaders.
+ * @returns {unknown} Result produced by setCorsHeaders.
+ * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+ */
 const setCorsHeaders = (res) => {
     res.setHeader('Access-Control-Allow-Origin', CORS_ALLOW_ORIGIN);
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 };
 
+/**
+ * Serializes and pushes one SSE `data:` frame to a connected response stream.
+ * @param {unknown} res - Parameter used by writeSseData.
+ * @param {unknown} data - Parameter used by writeSseData.
+ * @returns {unknown} Result produced by writeSseData.
+ * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+ */
 const writeSseData = (res, data) => {
     res.write(`data: ${JSON.stringify(data)}\n\n`);
 };
 
+/**
+ * Broadcasts latest payload to all active SSE clients and cleans up dead connections.
+ * @param {unknown} data - Parameter used by sendToAllClients.
+ * @returns {unknown} Result produced by sendToAllClients.
+ * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+ */
 const sendToAllClients = (data) => {
     for (const [clientId, client] of clients.entries()) {
         try {
@@ -49,6 +68,11 @@ const sendToAllClients = (data) => {
     }
 };
 
+/**
+ * Creates HTTP server exposing relay endpoints: health check, SSE subscription, and state updates.
+ * @returns {unknown} Result produced by createServer.
+ * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+ */
 const createServer = () => {
     return http.createServer((req, res) => {
         const { method, url } = req;

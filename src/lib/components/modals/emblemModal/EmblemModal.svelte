@@ -18,6 +18,11 @@
 		wasOpen = false;
 	}
 
+	/**
+	 * Advances to next emblem face when available, otherwise closes the modal.
+	 * @returns {unknown} Result produced by handleAdvanceOrClose.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleAdvanceOrClose = () => {
 		if (!selected) {
 			closeSelectedEmblem();

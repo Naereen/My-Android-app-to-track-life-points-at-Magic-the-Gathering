@@ -47,12 +47,24 @@
 		gameState: $gameState
 	}));
 
+	/**
+	 * Resolves the relay endpoint used to publish game state updates.
+	 * Falls back to the local SvelteKit endpoint when no remote URL is configured.
+	 * @param {string} remoteServerUrl Base relay URL from settings (with or without trailing slash).
+	 * @returns {string} Absolute relay endpoint or local `/api/stream` path.
+	 */
 	const getStreamEndpoint = (remoteServerUrl: string) => {
 		const trimmedUrl = (remoteServerUrl || '').trim();
 		if (!trimmedUrl) return '/api/stream';
 		return `${trimmedUrl.replace(/\/$/, '')}/api/stream`;
 	};
 
+	/**
+	 * Builds a stable signature to detect meaningful stream state changes.
+	 * Only fields relevant to remote overlays are included to avoid redundant POSTs.
+	 * @param {StreamGameState} state Current aggregated game state snapshot.
+	 * @returns {string} JSON signature used by the debounce/deduplication layer.
+	 */
 	const getGameStateSignature = (state: StreamGameState) => {
 		return JSON.stringify({
 			playerCount: state.playerCount,
@@ -62,6 +74,11 @@
 		});
 	};
 
+	/**
+	 * Pushes a synthetic history entry when the side menu opens.
+	 * This lets Android/browser Back close the menu first instead of leaving the page.
+	 * @returns {void}
+	 */
 	const pushMenuHistoryEntry = () => {
 		if (typeof window === 'undefined' || hasMenuHistoryEntry) return;
 		try {
@@ -74,12 +91,22 @@
 		}
 	};
 
+	/**
+	 * Pops the synthetic menu history entry previously inserted by `pushMenuHistoryEntry`.
+	 * Uses a guard flag to distinguish intentional history sync from real user navigation.
+	 * @returns {void}
+	 */
 	const popMenuHistoryEntry = () => {
 		if (typeof window === 'undefined' || !hasMenuHistoryEntry) return;
 		isSyncingMenuHistory = true;
 		window.history.back();
 	};
 
+	/**
+	 * Handles `popstate` and maps Back behavior to menu state transitions.
+	 * If menu is open, closes it; otherwise only clears internal sync flags.
+	 * @returns {void}
+	 */
 	const handleBackNavigation = () => {
 		if (!get(appState).isMenuOpen) {
 			if (isSyncingMenuHistory) {
@@ -94,6 +121,11 @@
 		toggleIsMenuOpen('');
 	};
 
+	/**
+	 * Attempts to lock the app in portrait mode on supported browsers/WebViews.
+	 * Failures are intentionally swallowed because support depends on install/fullscreen context.
+	 * @returns {Promise<void>}
+	 */
 	const lockPortraitOrientation = async () => {
 		if (typeof window === 'undefined') return;
 		const orientationApi = window.screen?.orientation;
@@ -106,6 +138,14 @@
 		}
 	};
 
+	/**
+	 * Sends the latest game snapshot to the configured relay server.
+	 * Aborts any in-flight request so only the most recent state is delivered.
+	 * @param {string} remoteServerUrl Base relay URL selected in settings.
+	 * @param {StreamGameState} payload Serialized game payload consumed by stream clients.
+	 * @returns {Promise<void>} Resolves when the request completes or is intentionally aborted.
+	 * @throws {Error} Throws on non-OK HTTP responses before being handled by the local catch block.
+	 */
 	const postStreamUpdate = async (remoteServerUrl: string, payload: StreamGameState) => {
 		const endpoint = getStreamEndpoint(remoteServerUrl);
 

@@ -7,6 +7,12 @@
 	let pressTimer: number | null = null;
 	const longPressDuration = 600; // ms
 
+	/**
+	 * Starts long-press timer and dispatches `longpress` event when threshold is reached.
+	 * @param {PointerEvent} event - Parameter used by startPress.
+	 * @returns {unknown} Result produced by startPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const startPress = (event: PointerEvent) => {
 		// only left button
 		if ((event as PointerEvent).button && (event as PointerEvent).button !== 0) return;
@@ -18,6 +24,11 @@
 		}, longPressDuration) as unknown as number;
 	};
 
+	/**
+	 * Cancels pending long-press timer on pointer/touch release or cancellation.
+	 * @returns {unknown} Result produced by cancelPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const cancelPress = () => {
 		if (pressTimer) {
 			clearTimeout(pressTimer);

@@ -15,6 +15,13 @@
 
 	const legendMarkerStroke = '#e5e7eb';
 
+	/**
+	 * Returns SVG polygon points for non-circle/non-square legend markers.
+	 * @param {number} kind - Parameter used by markerPolygonPoints.
+	 * @param {number} size - Parameter used by markerPolygonPoints.
+	 * @returns {unknown} Result produced by markerPolygonPoints.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const markerPolygonPoints = (kind: number, size: number) => {
 		switch (kind % 8) {
 			case 2:
@@ -34,6 +41,13 @@
 		}
 	};
 
+	/**
+	 * Formats first snapshot timestamp for chart header metadata.
+	 * @param {number | undefined} timestamp - Parameter used by formatStartDate.
+	 * @param {string} locale - Parameter used by formatStartDate.
+	 * @returns {unknown} Result produced by formatStartDate.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const formatStartDate = (timestamp: number | undefined, locale: string) => {
 		if (!timestamp) return '';
 		try {

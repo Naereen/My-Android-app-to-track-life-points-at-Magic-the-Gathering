@@ -26,6 +26,12 @@
 		previousIsOpen = false;
 	}
 
+	/**
+	 * Returns checkbox payload in the shape expected by confirm modal consumers.
+	 * Multi-checkbox mode returns `boolean[]`, single-checkbox mode returns `boolean`.
+	 * @returns {unknown} Result produced by getCheckboxValue.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	function getCheckboxValue() {
 		return Array.isArray($confirmModalData.checkboxLabel) ? checkboxValues : (checkboxValues[0] ?? false);
 	}

@@ -36,12 +36,24 @@
 			? null
 			: activePlayers.find((player) => player.id === revealedPlayerId) ?? null;
 
+	/**
+	 * Formats internal role key into user-facing treachery/shogun label.
+	 * @param {string | null | undefined} role - Parameter used by roleDisplay.
+	 * @returns {unknown} Result produced by roleDisplay.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const roleDisplay = (role: string | null | undefined) => {
 		if (!role) return '-';
 		if (isShogunVariant && role === 'leader') return 'Shogun';
 		return role.charAt(0).toUpperCase() + role.slice(1);
 	};
 
+	/**
+	 * Indicates whether a player's card can be revealed now (first reveal or global replay unlocked).
+	 * @param {App.Player.Data} player - Parameter used by canRevealPlayer.
+	 * @returns {unknown} Result produced by canRevealPlayer.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const canRevealPlayer = (player: App.Player.Data) => {
 		if (!player.treacheryRole) return false;
 		if (!player.treacherySeen) return true;
@@ -63,6 +75,11 @@
 		}
 	});
 
+	/**
+	 * Reassigns random treachery/shogun roles to all active players.
+	 * @returns {unknown} Result produced by rerollAll.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const rerollAll = async () => {
 		vibrate(30);
 		isAssigning = true;
@@ -74,6 +91,12 @@
 		}
 	};
 
+	/**
+	 * Opens reveal overlay for one player and prepares fallback image candidates.
+	 * @param {number} playerId - Parameter used by revealForPlayer.
+	 * @returns {unknown} Result produced by revealForPlayer.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const revealForPlayer = (playerId: number) => {
 		const target = activePlayers.find((player) => player.id === playerId);
 		if (!target?.treacheryRole) return;
@@ -93,12 +116,22 @@
 		revealedPlayerId = playerId;
 	};
 
+	/**
+	 * Switches to next candidate image when current reveal art fails to load.
+	 * @returns {unknown} Result produced by handleRevealImageError.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleRevealImageError = () => {
 		if (revealImageIndex < revealImageCandidates.length - 1) {
 			revealImageIndex += 1;
 		}
 	};
 
+	/**
+	 * Closes reveal overlay, marks card as seen, and resets reveal-local state.
+	 * @returns {unknown} Result produced by closeReveal.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const closeReveal = () => {
 		if (revealedPlayerId !== null) {
 			setPlayerTreacherySeen(revealedPlayerId, true);

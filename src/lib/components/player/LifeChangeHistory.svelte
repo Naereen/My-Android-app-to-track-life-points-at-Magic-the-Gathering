@@ -16,8 +16,18 @@
 	let historyEntries: HistoryEntry[] = [];
 	let lastResetToken = 0;
 
+	/**
+	 * Computes max number of stored rows, keeping one line for current score display.
+	 * @returns {unknown} Result produced by getHistoryLimit.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const getHistoryLimit = () => Math.max(0, maxLines - 1);
 
+	/**
+	 * Trims oldest history entries beyond configured limit.
+	 * @returns {unknown} Result produced by trimHistoryToLimit.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const trimHistoryToLimit = () => {
 		const limit = getHistoryLimit();
 		if (historyEntries.length > limit) {
@@ -25,6 +35,14 @@
 		}
 	};
 
+	/**
+	 * Decides whether two consecutive changes can be merged into one compact row.
+	 * @param {HistoryEntry} previous - Parameter used by canMergeEntries.
+	 * @param {number} nextOldScore - Parameter used by canMergeEntries.
+	 * @param {number} nextDelta - Parameter used by canMergeEntries.
+	 * @returns {unknown} Result produced by canMergeEntries.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const canMergeEntries = (previous: HistoryEntry, nextOldScore: number, nextDelta: number) => {
 		if (Date.now() - previous.timestamp > MERGE_WINDOW_MS) return false;
 		// PROPOSAL: If the previous entry's delta and the next delta have different signs, we don't merge them.
@@ -36,6 +54,13 @@
 		return true;
 	};
 
+	/**
+	 * Appends a life change entry, merging with previous one when allowed.
+	 * @param {number} oldScore - Parameter used by pushHistoryEntry.
+	 * @param {number} delta - Parameter used by pushHistoryEntry.
+	 * @returns {unknown} Result produced by pushHistoryEntry.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const pushHistoryEntry = (oldScore: number, delta: number) => {
 		const previous = historyEntries[historyEntries.length - 1];
 		if (previous && canMergeEntries(previous, oldScore, delta)) {
@@ -56,6 +81,11 @@
 	};
 
 	// Public method: clear the history stack and restart from current score baseline.
+	/**
+	 * Clears life-change history and re-bases to current external score.
+	 * @returns {unknown} Result produced by reset.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	export const reset = () => {
 		historyEntries = [];
 		currentScore = score;
@@ -63,6 +93,12 @@
 	};
 
 	// Public method: apply a relative change (+X / -X) to the current score.
+	/**
+	 * Applies a relative life delta and records it in history stack.
+	 * @param {number} delta - Parameter used by updateScore.
+	 * @returns {unknown} Result produced by updateScore.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	export const updateScore = (delta: number) => {
 		if (delta === 0) return;
 		pushHistoryEntry(currentScore, delta);
@@ -70,6 +106,12 @@
 	};
 
 	// Public method: set an absolute score and record the computed delta.
+	/**
+	 * Sets absolute life value and records resulting delta if score changed.
+	 * @param {number} newScore - Parameter used by setScore.
+	 * @returns {unknown} Result produced by setScore.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	export const setScore = (newScore: number) => {
 		const delta = newScore - currentScore;
 		if (delta === 0) {

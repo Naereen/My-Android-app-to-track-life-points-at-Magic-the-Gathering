@@ -18,6 +18,11 @@ type PersistedTurnTimerState = {
 
 const STORAGE_KEY = 'turnTimerState';
 
+/**
+ * Builds the per-turn countdown store with localStorage persistence and wall-clock resync.
+ * Timer state survives reloads/focus changes and can go negative after timeout.
+ * @returns {{ subscribe: typeof subscribe; startForPlayer: (playerIndex: number, options?: { forceReset?: boolean }) => void; pause: () => void; resume: () => void; stop: () => void; resetForCurrent: (forceReset?: boolean) => void }} Timer API.
+ */
 const createTurnTimer = () => {
     const isBrowser = typeof window !== 'undefined';
 
@@ -71,6 +76,10 @@ const createTurnTimer = () => {
         }
     });
 
+    /**
+     * Stops the tick interval without mutating timer values.
+     * @returns {void}
+     */
     const stopInternal = () => {
         if (interval) {
             clearInterval(interval);
@@ -78,6 +87,10 @@ const createTurnTimer = () => {
         }
     };
 
+    /**
+     * Emits haptic and optional audio cue when the timer crosses from positive to non-positive.
+     * @returns {void}
+     */
     const notifyTimeoutReached = () => {
         try {
             if (get(appSettings).hapticsEnabled) vibrate(200);
@@ -119,6 +132,10 @@ const createTurnTimer = () => {
         return next;
     };
 
+    /**
+     * Recomputes remaining seconds from epoch timestamps to survive tab throttling/backgrounding.
+     * @returns {void}
+     */
     const syncWithWallClock = () => {
         if (!state.running) {
             lastTickEpochMs = Date.now();
@@ -133,6 +150,10 @@ const createTurnTimer = () => {
         update((s) => advanceByElapsed(s, elapsedSeconds));
     };
 
+    /**
+     * Starts the ticking interval exactly once.
+     * @returns {void}
+     */
     const ensureIntervalRunning = () => {
         if (interval) return;
         interval = setInterval(() => {
@@ -140,6 +161,13 @@ const createTurnTimer = () => {
         }, 1000) as unknown as number;
     };
 
+    /**
+     * Starts or resumes timer tracking for a given player index.
+     * Resets duration when switching player or when `forceReset` is enabled.
+     * @param {number} playerIndex Active player index in turn order.
+     * @param {{ forceReset?: boolean }} [options] Optional behavior overrides.
+     * @returns {void}
+     */
     const startForPlayer = (playerIndex: number, options?: { forceReset?: boolean }) => {
         const forceReset = !!options?.forceReset;
         const duration = get(appSettings).turnTimerDuration || 240;
@@ -160,6 +188,10 @@ const createTurnTimer = () => {
         ensureIntervalRunning();
     };
 
+    /**
+     * Pauses timer progression while preserving remaining seconds and player binding.
+     * @returns {void}
+     */
     const pause = () => {
         // stop interval but keep remaining and playerIndex
         syncWithWallClock();
@@ -168,6 +200,10 @@ const createTurnTimer = () => {
         update((s) => ({ ...s, running: false }));
     };
 
+    /**
+     * Resumes ticking for the current bound player if timer is paused.
+     * @returns {void}
+     */
     const resume = () => {
         // resume only if there's an active playerIndex
         if (state.playerIndex === null) return;
@@ -178,6 +214,10 @@ const createTurnTimer = () => {
         update((s) => ({ ...s, running: true }));
     };
 
+    /**
+     * Stops ticking and keeps the current remaining value as-is.
+     * @returns {void}
+     */
     const stop = () => {
         syncWithWallClock();
         stopInternal();
@@ -185,6 +225,11 @@ const createTurnTimer = () => {
         update((s) => ({ ...s, running: false }));
     };
 
+    /**
+     * Resets/starts timer for the current turn owner from `appState.currentTurn`.
+     * @param {boolean} forceReset Whether to reset even if timer is already bound to that player.
+     * @returns {void}
+     */
     const resetForCurrent = (forceReset = false) => {
         const idx = get(appState).currentTurn;
         if (idx >= 0) startForPlayer(idx, { forceReset });

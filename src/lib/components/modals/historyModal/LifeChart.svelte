@@ -41,8 +41,22 @@
 	const innerWidth = viewBoxWidth - padding.left - padding.right;
 	const innerHeight = viewBoxHeight - padding.top - padding.bottom;
 
+	/**
+	 * Clamps a numeric value into an inclusive range.
+	 * @param {number} value - Parameter used by clamp.
+	 * @param {number} min - Parameter used by clamp.
+	 * @param {number} max - Parameter used by clamp.
+	 * @returns {unknown} Result produced by clamp.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
+	/**
+	 * Formats elapsed milliseconds into compact `s`, `m`, or `h` chart labels.
+	 * @param {number} milliseconds - Parameter used by formatElapsed.
+	 * @returns {unknown} Result produced by formatElapsed.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const formatElapsed = (milliseconds: number) => {
 		const totalSeconds = Math.max(0, Math.round(milliseconds / 1000));
 		const minutes = Math.floor(totalSeconds / 60);
@@ -58,6 +72,12 @@
 		return `${seconds}s`;
 	};
 
+	/**
+	 * Formats X-axis labels for five-minute major ticks.
+	 * @param {number} milliseconds - Parameter used by formatFiveMinuteTickLabel.
+	 * @returns {unknown} Result produced by formatFiveMinuteTickLabel.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const formatFiveMinuteTickLabel = (milliseconds: number) => {
 		const totalMinutes = Math.floor(milliseconds / 60000);
 		if (totalMinutes < 60) {
@@ -95,17 +115,35 @@
 	).filter((value) => value < durationMs);
 	const xTicksMsWithoutLast = xTicksMs.slice(0, -1);
 
+	/**
+	 * Projects a timestamp to chart X coordinate within drawable bounds.
+	 * @param {number} timestamp - Parameter used by xForTimestamp.
+	 * @returns {unknown} Result produced by xForTimestamp.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const xForTimestamp = (timestamp: number) => {
 		if (snapshots.length <= 1) return padding.left;
 		const progress = clamp((timestamp - firstTimestamp) / durationMs, 0, 1);
 		return padding.left + progress * innerWidth;
 	};
 
+	/**
+	 * Projects a life value to chart Y coordinate.
+	 * @param {number} life - Parameter used by yForLife.
+	 * @returns {unknown} Result produced by yForLife.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const yForLife = (life: number) => {
 		const progress = (life - yMin) / yRange;
 		return padding.top + innerHeight - progress * innerHeight;
 	};
 
+	/**
+	 * Builds SVG path instructions from chart points.
+	 * @param {ChartPoint[]} points - Parameter used by linePathFromPoints.
+	 * @returns {unknown} Result produced by linePathFromPoints.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const linePathFromPoints = (points: ChartPoint[]) => {
 		if (points.length === 0) return '';
 		if (points.length === 1) {
@@ -118,6 +156,12 @@
 			.join(' ');
 	};
 
+	/**
+	 * Keeps endpoint markers and inflection markers while hiding flat-run intermediates.
+	 * @param {ChartPoint[]} points - Parameter used by getVisibleMarkerIndices.
+	 * @returns {unknown} Result produced by getVisibleMarkerIndices.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const getVisibleMarkerIndices = (points: ChartPoint[]) => {
 		const visible = new Set<number>();
 		if (points.length === 0) return visible;
@@ -141,6 +185,13 @@
 		return visible;
 	};
 
+	/**
+	 * Returns polygon marker geometry based on series index.
+	 * @param {number} kind - Parameter used by markerPolygonPoints.
+	 * @param {number} size - Parameter used by markerPolygonPoints.
+	 * @returns {unknown} Result produced by markerPolygonPoints.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const markerPolygonPoints = (kind: number, size: number) => {
 		switch (kind % 8) {
 			case 2:
@@ -207,6 +258,9 @@
 				entry.point !== null
 		);
 
+	/**
+	 * Computes collision-avoiding Y positions for end-of-line labels.
+	 */
 	const latestPointLabels = (() => {
 		if (latestPoints.length === 0) return [];
 

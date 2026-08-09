@@ -14,6 +14,11 @@
 	let iconSize = '6rem';
 	let rollingMs = 0;
 
+	/**
+	 * Simulates planar die probabilities (blank/planeswalk/chaos) for animation frames.
+	 * @returns {unknown} Result produced by rollPlanarFace.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const rollPlanarFace = () => {
 		const roll = Math.floor(Math.random() * 6) + 1;
 		if (roll <= 4) return 0;
@@ -21,6 +26,12 @@
 		return 2;
 	};
 
+	/**
+	 * Maps die type to dicefont class prefix used for icon glyph rendering.
+	 * @param {string} type - Parameter used by getPrefix.
+	 * @returns {unknown} Result produced by getPrefix.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	function getPrefix(type?: string) {
 		if (!type || type === '') return null;
 		const map: Record<string, string> = {
@@ -39,6 +50,12 @@
 	$: prefix = getPrefix($randomizerModalData.type);
 	$: diceClass = prefix && face ? `${prefix}-${face}` : '';
 
+	/**
+	 * Returns number of sides for predefined and custom dice modes.
+	 * @param {string} type - Parameter used by getMaxSides.
+	 * @returns {unknown} Result produced by getMaxSides.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	function getMaxSides(type?: string) {
 		if (!type || type === '') return 0;
 		const map: Record<string, number> = {
@@ -54,6 +71,11 @@
 		return map[type] || 0;
 	}
 
+	/**
+	 * Runs timed rolling animation and lands on precomputed randomizer result.
+	 * @returns {unknown} Result produced by startRollAnimation.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	async function startRollAnimation() {
 		abort = false;
 		rolling = true;

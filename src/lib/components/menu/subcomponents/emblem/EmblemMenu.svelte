@@ -20,12 +20,25 @@
 
 	$: innerHeight = 0;
 
+	/**
+	 * Opens emblem modal for a selected result and closes the menu.
+	 * @param {ScryfallEmblemCard | null} emblem - Parameter used by openEmblem.
+	 * @returns {unknown} Result produced by openEmblem.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const openEmblem = (emblem: ScryfallEmblemCard | null) => {
 		if (!emblem) return;
 		openSelectedEmblem(emblem);
 		toggleIsMenuOpen('');
 	};
 
+	/**
+	 * Fetches one known preset emblem/dungeon card and opens it.
+	 * @param {string} setCode - Parameter used by openPresetEmblem.
+	 * @param {string} collectorNumber - Parameter used by openPresetEmblem.
+	 * @returns {unknown} Result produced by openPresetEmblem.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const openPresetEmblem = async (setCode: string, collectorNumber: string) => {
 		vibrate(20);
 		isSearchingEmblems = true;
@@ -37,12 +50,24 @@
 		}
 	};
 
+	/**
+	 * Runs emblem search on Enter key from the query input.
+	 * @param {KeyboardEvent} event - Parameter used by handleEmblemSearchKeyPress.
+	 * @returns {unknown} Result produced by handleEmblemSearchKeyPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleEmblemSearchKeyPress = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			runEmblemSearch('emblem');
 		}
 	};
 
+	/**
+	 * Queries Scryfall for emblems or dungeons and updates result list state.
+	 * @param {'emblem' | 'dungeon'} filter - Parameter used by runEmblemSearch.
+	 * @returns {unknown} Result produced by runEmblemSearch.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const runEmblemSearch = async (filter: 'emblem' | 'dungeon') => {
 		vibrate(20);
 		isSearchingEmblems = true;

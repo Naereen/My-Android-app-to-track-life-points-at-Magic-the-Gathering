@@ -69,6 +69,10 @@ if (restoredLastType !== null && !isPersistedReplayableRandomizerType(restoredLa
 	lastReplayableRandomizerType.set(null);
 }
 
+/**
+ * Simulates a planar die roll with canonical distribution (blank/planeswalk/chaos).
+ * @returns {0 | 1 | 2} `0` blank, `1` planeswalk, `2` chaos.
+ */
 const rollPlanarDie = () => {
 	const roll = Math.floor(Math.random() * 6) + 1;
 	if (roll <= 4) return 0;
@@ -76,6 +80,12 @@ const rollPlanarDie = () => {
 	return 2;
 };
 
+/**
+ * Executes a randomizer action (standard dice, planar die, or custom range).
+ * Persists replayable dice type and logs dice outcomes into game history.
+ * @param {string} type Randomizer mode key (`d6`, `d20`, `dplanar`, `custom`, ...).
+ * @returns {number} Numeric roll result (or planar encoded value).
+ */
 export const generateRandomNumber = (type: string) => {
 	vibrate(20);
 	const dieTypes: { [key: string]: number | null } = {
@@ -143,6 +153,10 @@ export const generateRandomNumber = (type: string) => {
 	return result;
 };
 
+/**
+ * Replays the last persisted replayable randomizer type.
+ * @returns {boolean} `true` when a previous type existed and was replayed.
+ */
 export const replayLastRandomizerRoll = () => {
 	const lastType = get(lastReplayableRandomizerType);
 	if (!lastType) return false;
@@ -150,6 +164,12 @@ export const replayLastRandomizerRoll = () => {
 	return true;
 };
 
+/**
+ * Selects one active player at random (or via weighted probabilities when enabled).
+ * Opens randomizer modal with the selected player's name and background.
+ * @param {number | null} [randomIndex] Optional deterministic index for testing/scripting.
+ * @returns {void}
+ */
 export const selectRandomPlayer = (randomIndex: number | null = null) => {
 	vibrate(20);
 	const currentPlayers = get(players);
@@ -179,6 +199,11 @@ export const selectRandomPlayer = (randomIndex: number | null = null) => {
 	});
 };
 
+/**
+ * Selects a random opponent among active players excluding the current player.
+ * @param {number} activePlayerId Player id that must be excluded from candidates.
+ * @returns {void}
+ */
 export const selectRandomOpponent = (activePlayerId: number) => {
 	vibrate(20);
 	const currentPlayers = get(players);
@@ -202,6 +227,10 @@ export const selectRandomOpponent = (activePlayerId: number) => {
 	});
 };
 
+/**
+ * Resets randomizer modal state to its closed default.
+ * @returns {void}
+ */
 export const resetRandomizer = () => {
 	randomizerModalData.set(initialRandomizerModalState);
 };
@@ -221,6 +250,10 @@ export const openPlayerModal = (
 	playerModalData.set({ isOpen: true, playerId, mode });
 };
 
+/**
+ * Closes the player data modal and restores its default mode/id payload.
+ * @returns {void}
+ */
 export const resetPlayerModalData = () => {
 	playerModalData.set(initialPlayerModalData);
 };
@@ -229,10 +262,18 @@ const initialHistoryModalState = { isOpen: false };
 
 export const historyModalData = writable(initialHistoryModalState);
 
+/**
+ * Opens the global game history modal.
+ * @returns {void}
+ */
 export const openHistoryModal = () => {
 	historyModalData.set({ isOpen: true });
 };
 
+/**
+ * Closes game history modal and collapses history menu when it is the active panel.
+ * @returns {void}
+ */
 export const closeHistoryModal = () => {
 	historyModalData.set(initialHistoryModalState);
 	appState.update((state) => {

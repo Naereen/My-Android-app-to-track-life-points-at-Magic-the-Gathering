@@ -52,6 +52,11 @@
 	let previousLayoutBackground = '';
 	let previousLayoutForeground = '';
 
+	/**
+	 * Applies light/dark theme colors to the document and stream layout CSS variables.
+	 * Keeps the overlay visually coherent even when it is opened in a dedicated tab/window.
+	 * @returns {void}
+	 */
 	const applyDocumentTheme = () => {
 		if (typeof document === 'undefined') return;
 		const background = isDarkTheme ? 'rgb(0 0 0)' : 'rgb(241 245 249)';
@@ -64,6 +69,11 @@
 		document.documentElement.style.setProperty('--stream-layout-fg', color);
 	};
 
+	/**
+	 * Resolves the relay base URL from query string first, then local storage settings.
+	 * Supports both modern (`appSettings`) and legacy (`streamSettings`) persistence keys.
+	 * @returns {string} Normalized relay base URL without trailing slash, or empty string.
+	 */
 	const getConfiguredServerBaseUrl = () => {
 		if (typeof window === 'undefined') return '';
 
@@ -101,6 +111,12 @@
 		}
 	};
 
+	/**
+	 * Normalizes relay payload formats into the internal `StreamGameState` shape.
+	 * Accepts both array-based fields and legacy flat `namePlayerX`/`lifePlayerX` keys.
+	 * @param {unknown} payload Raw SSE payload parsed from JSON.
+	 * @returns {StreamGameState | null} Normalized state, or `null` when payload is invalid.
+	 */
 	const normalizePayload = (payload: unknown): StreamGameState | null => {
 		if (!payload || typeof payload !== 'object') {
             // console.warn('Invalid payload format: not an object', payload);
@@ -157,6 +173,10 @@
 		};
 	};
 
+	/**
+	 * Clears the pending reconnect timeout after stream failure.
+	 * @returns {void}
+	 */
 	const clearReconnectTimer = () => {
 		if (reconnectTimer) {
 			clearTimeout(reconnectTimer);
@@ -164,6 +184,11 @@
 		}
 	};
 
+	/**
+	 * Detects HTTPS page -> HTTP relay combinations that browsers block as mixed content.
+	 * @param {string} baseUrl Relay base URL configured by the user.
+	 * @returns {boolean} `true` when the connection would be blocked by browser security policy.
+	 */
 	const isMixedContentBlocked = (baseUrl: string) => {
 		if (typeof window === 'undefined') return false;
 		try {
@@ -174,6 +199,11 @@
 		}
 	};
 
+	/**
+	 * Opens the SSE connection to the relay and keeps local UI state in sync.
+	 * Handles initial connect, payload validation, disconnections and automatic retry.
+	 * @returns {void}
+	 */
 	const connectToStream = () => {
 		clearReconnectTimer();
 		source?.close();

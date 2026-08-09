@@ -57,6 +57,11 @@
 	let relayHealthStatus: RelayHealthStatus = 'idle';
 	let relayHealthMessage = '';
 
+	/**
+	 * Clears persisted app stores after user confirmation, then reloads the page.
+	 * @returns {unknown} Result produced by resetLocalStorage.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const resetLocalStorage = async () => {
 		const confirmReset = await showConfirm($_('window_confirm_reset_local_storage'));
 		if (!confirmReset) return;
@@ -70,6 +75,11 @@
 		window.location.reload();
 	};
 
+	/**
+	 * Checks whether the selected starting life is outside standard preset buttons.
+	 * @returns {unknown} Result produced by isCustomStartingLife.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const isCustomStartingLife = () => {
 		return (
 			$appSettings.startingLifeTotal !== 20 &&
@@ -79,20 +89,43 @@
 		);
 	};
 
+	/**
+	 * Normalizes custom life input to an integer value accepted by the app.
+	 * @param {number} value - Parameter used by clampCustomStartingLifeTotal.
+	 * @returns {unknown} Result produced by clampCustomStartingLifeTotal.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const clampCustomStartingLifeTotal = (value: number) => {
 		if (!Number.isFinite(value)) return 1;
 		return Math.max(1, Math.min(999, Math.round(value)));
 	};
 
+	/**
+	 * Persists live value typed in the custom life input field.
+	 * @param {Event} event - Parameter used by handleCustomLifeTotalInput.
+	 * @returns {unknown} Result produced by handleCustomLifeTotalInput.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleCustomLifeTotalInput = (event: Event) => {
 		const target = event.currentTarget as HTMLInputElement;
 		setCustomStartingLifeTotal(clampCustomStartingLifeTotal(Number(target.value)));
 	};
 
+	/**
+	 * Applies custom life value by reusing the same flow as preset buttons.
+	 * @returns {unknown} Result produced by applyCustomStartingLifeTotal.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const applyCustomStartingLifeTotal = () => {
 		setLifeTotal(clampCustomStartingLifeTotal($appSettings.customStartingLifeTotal));
 	};
 
+	/**
+	 * Submits custom life value when the user presses Enter.
+	 * @param {KeyboardEvent} event - Parameter used by handleCustomLifeTotalKeydown.
+	 * @returns {unknown} Result produced by handleCustomLifeTotalKeydown.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleCustomLifeTotalKeydown = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			event.preventDefault();
@@ -100,10 +133,21 @@
 		}
 	};
 
+	/**
+	 * Expands the custom starting-life editor controls.
+	 * @returns {unknown} Result produced by openCustomStartingLifeEditor.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const openCustomStartingLifeEditor = () => {
 		showCustomStartingLifeEditor = true;
 	};
 
+	/**
+	 * Confirms and applies a new starting life total, then resets the match.
+	 * @param {number} startingLifeTotal - Parameter used by setLifeTotal.
+	 * @returns {unknown} Result produced by setLifeTotal.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const setLifeTotal = async (startingLifeTotal: number) => {
 		const confirm = await showConfirm( `${ $_('window_confirm_change_life_total').replace('{lifeTotal}', startingLifeTotal.toString() ) }`);
 		if (confirm) {
@@ -117,6 +161,12 @@
 		}
 	};
 
+	/**
+	 * Confirms and applies a new player count, then resets the match state.
+	 * @param {number} playerCount - Parameter used by setNewPlayerCount.
+	 * @returns {unknown} Result produced by setNewPlayerCount.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const setNewPlayerCount = async (playerCount: number) => {
 		const confirm = await showConfirm($_('window_confirm_change_player_count').replace('{playerCount}', playerCount.toString()));
 		if (confirm) {
@@ -133,6 +183,12 @@
 		showCustomStartingLifeEditor = true;
 	}
 
+	/**
+	 * Adds keyboard scrolling support for the settings panel.
+	 * @param {KeyboardEvent} event - Parameter used by handleScrollKeydown.
+	 * @returns {unknown} Result produced by handleScrollKeydown.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleScrollKeydown = (event: KeyboardEvent) => {
 		const target = event.currentTarget as HTMLElement;
 		if (!target) return;
@@ -145,55 +201,121 @@
 		}
 	};
 
+	/**
+	 * Persists the global "allow negative life" checkbox value.
+	 * @param {Event} e - Parameter used by handleGlobalAllowChange.
+	 * @returns {unknown} Result produced by handleGlobalAllowChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleGlobalAllowChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setAllowNegativeLife(!!target.checked);
 	};
 
+	/**
+	 * Persists the screen wake-lock preference from settings UI.
+	 * @param {Event} e - Parameter used by handlePreventSleepChange.
+	 * @returns {unknown} Result produced by handlePreventSleepChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handlePreventSleepChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setPreventScreenSleep(!!target.checked);
 	};
 
+	/**
+	 * Persists haptics toggle from settings UI.
+	 * @param {Event} e - Parameter used by handleHapticsChange.
+	 * @returns {unknown} Result produced by handleHapticsChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleHapticsChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setHapticsEnabled(!!target.checked);
 	};
 
+	/**
+	 * Persists gameplay sound toggle from settings UI.
+	 * @param {Event} e - Parameter used by handleSoundEffectsChange.
+	 * @returns {unknown} Result produced by handleSoundEffectsChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleSoundEffectsChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setSoundEffectsEnabled(!!target.checked);
 	};
 
+	/**
+	 * Persists visibility of floating life change history badges.
+	 * @param {Event} e - Parameter used by handleShowLifeChangeHistoryChange.
+	 * @returns {unknown} Result produced by handleShowLifeChangeHistoryChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShowLifeChangeHistoryChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowLifeChangeHistory(!!target.checked);
 	};
 
+	/**
+	 * Persists Acorn counter mode toggle.
+	 * @param {Event} e - Parameter used by handleEnableAcornModeChange.
+	 * @returns {unknown} Result produced by handleEnableAcornModeChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleEnableAcornModeChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setEnableAcornMode(!!target.checked);
 	};
 
+	/**
+	 * Persists Ticket counter mode toggle.
+	 * @param {Event} e - Parameter used by handleEnableTicketModeChange.
+	 * @returns {unknown} Result produced by handleEnableTicketModeChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleEnableTicketModeChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setEnableTicketMode(!!target.checked);
 	};
 
+	/**
+	 * Enables/disables weighted start-player randomization from checkbox state.
+	 * @param {Event} e - Parameter used by handleUseWeightedStartingPlayerChange.
+	 * @returns {unknown} Result produced by handleUseWeightedStartingPlayerChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleUseWeightedStartingPlayerChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setUseWeightedStartingPlayer(!!target.checked);
 	};
 
+	/**
+	 * Restores uniform probabilities for all active players.
+	 * @returns {unknown} Result produced by handleResetStartingPlayerProbabilities.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleResetStartingPlayerProbabilities = () => {
 		resetStartingPlayerProbabilities();
 	};
 
+	/**
+	 * Returns player name label used in weighted-probability settings rows.
+	 * @param {number} index - Parameter used by getDisplayedPlayerName.
+	 * @returns {unknown} Result produced by getDisplayedPlayerName.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const getDisplayedPlayerName = (index: number) => {
 		const fallback = `Player ${index + 1}`;
 		return $players[index]?.playerName?.trim() || fallback;
 	};
 
+	/**
+	 * Parses and clamps one probability input before persisting it.
+	 * @param {number} index - Parameter used by handleStartingPlayerProbabilityChange.
+	 * @param {string} value - Parameter used by handleStartingPlayerProbabilityChange.
+	 * @returns {unknown} Result produced by handleStartingPlayerProbabilityChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleStartingPlayerProbabilityChange = (index: number, value: string) => {
 		let parsed = Number(value);
 		if (!Number.isFinite(parsed)) parsed = 0;
@@ -201,6 +323,13 @@
 		setStartingPlayerProbability(index, parsed);
 	};
 
+	/**
+	 * Bridges raw DOM input events to probability parsing routine.
+	 * @param {number} index - Parameter used by handleStartingPlayerProbabilityInput.
+	 * @param {Event} event - Parameter used by handleStartingPlayerProbabilityInput.
+	 * @returns {unknown} Result produced by handleStartingPlayerProbabilityInput.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleStartingPlayerProbabilityInput = (index: number, event: Event) => {
 		const target = event.currentTarget as HTMLInputElement | null;
 		handleStartingPlayerProbabilityChange(index, target?.value ?? '0');
@@ -210,6 +339,12 @@
 		.slice(0, $appSettings.playerCount)
 		.reduce((sum, p) => sum + (Number.isFinite(Number(p)) ? Number(p) : 0), 0);
 
+	/**
+	 * Updates current-player glow preference while enforcing dependency on next-player button.
+	 * @param {Event} e - Parameter used by handleEnableGlowChange.
+	 * @returns {unknown} Result produced by handleEnableGlowChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleEnableGlowChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		// Ne pas permettre d'activer le glow si le bouton "next player" est désactivé
@@ -220,6 +355,12 @@
 		setEnableCurrentPlayerGlow(!!target.checked);
 	};
 
+	/**
+	 * Toggles next-player controls and keeps glow setting consistent with availability.
+	 * @param {Event} e - Parameter used by handleShowNextButtonChange.
+	 * @returns {unknown} Result produced by handleShowNextButtonChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShowNextButtonChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		const checked = !!target.checked;
@@ -233,61 +374,133 @@
 		}
 	};
 
+	/**
+	 * Persists emblem menu visibility checkbox.
+	 * @param {Event} e - Parameter used by handleShowEmblemMenuChange.
+	 * @returns {unknown} Result produced by handleShowEmblemMenuChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShowEmblemMenuChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowEmblemMenu(!!target.checked);
 	};
 
+	/**
+	 * Persists resources-button visibility checkbox.
+	 * @param {Event} e - Parameter used by handleShowResourcesButtonChange.
+	 * @returns {unknown} Result produced by handleShowResourcesButtonChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShowResourcesButtonChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowResourcesButton(!!target.checked);
 	};
 
+	/**
+	 * Persists randomizer-button visibility checkbox.
+	 * @param {Event} e - Parameter used by handleShowRandomizerButtonChange.
+	 * @returns {unknown} Result produced by handleShowRandomizerButtonChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShowRandomizerButtonChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowRandomizerButton(!!target.checked);
 	};
 
+	/**
+	 * Persists Vanguard menu visibility checkbox.
+	 * @param {Event} e - Parameter used by handleShowVanguardMenuChange.
+	 * @returns {unknown} Result produced by handleShowVanguardMenuChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShowVanguardMenuChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowVanguardMenu(!!target.checked);
 	};
 
+	/**
+	 * Persists Treachery menu visibility checkbox.
+	 * @param {Event} e - Parameter used by handleShowTreacheryMenuChange.
+	 * @returns {unknown} Result produced by handleShowTreacheryMenuChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShowTreacheryMenuChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowTreacheryMenu(!!target.checked);
 	};
 
+	/**
+	 * Persists Vanguard mode activation toggle.
+	 * @param {Event} e - Parameter used by handleVanguardModeEnabledChange.
+	 * @returns {unknown} Result produced by handleVanguardModeEnabledChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleVanguardModeEnabledChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setVanguardModeEnabled(!!target.checked);
 	};
 
+	/**
+	 * Persists Treachery mode activation toggle.
+	 * @param {Event} e - Parameter used by handleTreacheryModeEnabledChange.
+	 * @returns {unknown} Result produced by handleTreacheryModeEnabledChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleTreacheryModeEnabledChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setTreacheryModeEnabled(!!target.checked);
 	};
 
+	/**
+	 * Persists Shogun Treachery variant toggle.
+	 * @param {Event} e - Parameter used by handleShogunVariantEnabledChange.
+	 * @returns {unknown} Result produced by handleShogunVariantEnabledChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShogunVariantEnabledChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShogunVariantEnabled(!!target.checked);
 	};
 
+	/**
+	 * Persists Vanguard draft-three setup toggle.
+	 * @param {Event} e - Parameter used by handleVanguardDraftThreeChange.
+	 * @returns {unknown} Result produced by handleVanguardDraftThreeChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleVanguardDraftThreeChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setVanguardDraftThree(!!target.checked);
 	};
 
+	/**
+	 * Persists game-history menu visibility checkbox.
+	 * @param {Event} e - Parameter used by handleShowGameHistoryMenuChange.
+	 * @returns {unknown} Result produced by handleShowGameHistoryMenuChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleShowGameHistoryMenuChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowGameHistoryMenu(!!target.checked);
 	};
 
+	/**
+	 * Persists per-turn timer activation toggle.
+	 * @param {Event} e - Parameter used by handleTurnTimerEnabledChange.
+	 * @returns {unknown} Result produced by handleTurnTimerEnabledChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleTurnTimerEnabledChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setTurnTimerEnabled(!!target.checked);
 	};
 
+	/**
+	 * Parses turn-timer minutes input, normalizes bounds, and applies converted seconds.
+	 * @param {Event} e - Parameter used by handleTurnTimerDurationChange.
+	 * @returns {unknown} Result produced by handleTurnTimerDurationChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleTurnTimerDurationChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		// input is minutes; enforce integer between 1 and 10
@@ -312,11 +525,23 @@
 		setTurnTimerDuration(minutes * 60);
 	};
 
+	/**
+	 * Persists timeout sound toggle for turn timer.
+	 * @param {Event} e - Parameter used by handleTurnTimerSoundChange.
+	 * @returns {unknown} Result produced by handleTurnTimerSoundChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleTurnTimerSoundChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setTurnTimerSound(!!target.checked);
 	};
 
+	/**
+	 * Persists global timer toggle and resets timer when enabling it.
+	 * @param {Event} e - Parameter used by handleGlobalGameTimerEnabledChange.
+	 * @returns {unknown} Result produced by handleGlobalGameTimerEnabledChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleGlobalGameTimerEnabledChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setGlobalGameTimerEnabled(!!target.checked);
@@ -325,6 +550,12 @@
 		}
 	};
 
+	/**
+	 * Parses global timer minutes input and propagates duration to both settings and live timer.
+	 * @param {Event} e - Parameter used by handleGlobalGameTimerDurationChange.
+	 * @returns {unknown} Result produced by handleGlobalGameTimerDurationChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleGlobalGameTimerDurationChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		// input is minutes; enforce integer between 1 and 300
@@ -348,11 +579,23 @@
 		globalGameTimer.applyDuration(minutes * 60);
 	};
 
+	/**
+	 * Persists stream-mode activation toggle.
+	 * @param {Event} e - Parameter used by handleStreamModeChange.
+	 * @returns {unknown} Result produced by handleStreamModeChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleStreamModeChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setIsStreamMode(!!target.checked);
 	};
 
+	/**
+	 * Persists relay base URL and clears previous health-check state.
+	 * @param {Event} e - Parameter used by handleStreamRemoteServerUrlChange.
+	 * @returns {unknown} Result produced by handleStreamRemoteServerUrlChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleStreamRemoteServerUrlChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setRemoteServerUrl(target.value || '');
@@ -360,6 +603,12 @@
 		relayHealthMessage = '';
 	};
 
+	/**
+	 * Validates and normalizes relay base URL to http(s) origin/path without trailing slash.
+	 * @param {string} rawUrl - Parameter used by getSanitizedRelayBaseUrl.
+	 * @returns {unknown} Result produced by getSanitizedRelayBaseUrl.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const getSanitizedRelayBaseUrl = (rawUrl: string) => {
 		const trimmed = (rawUrl || '').trim();
 		if (!trimmed) return '';
@@ -375,6 +624,11 @@
 	$: relayBaseUrl = getSanitizedRelayBaseUrl($appSettings.remoteServerUrl);
 	$: relayHealthUrl = relayBaseUrl ? `${relayBaseUrl}/health` : '';
 
+	/**
+	 * Probes relay `/health` endpoint with timeout and updates UI health status.
+	 * @returns {unknown} Result produced by testRelayHealth.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const testRelayHealth = async () => {
 		relayHealthMessage = '';
 		const baseUrl = getSanitizedRelayBaseUrl($appSettings.remoteServerUrl);
@@ -412,6 +666,12 @@
 		}
 	};
 
+	/**
+	 * Prevents opening health URL when no valid relay endpoint is available.
+	 * @param {MouseEvent} event - Parameter used by handleOpenRelayHealthClick.
+	 * @returns {unknown} Result produced by handleOpenRelayHealthClick.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleOpenRelayHealthClick = (event: MouseEvent) => {
 		if (!relayHealthUrl) {
 			event.preventDefault();
@@ -427,6 +687,12 @@
 		{ code: 'pt', label: 'Português', emoji: '🇵🇹' }
 	];
 
+	/**
+	 * Persists locale selection and triggers runtime i18n language switch.
+	 * @param {string} code - Parameter used by handleChangeLocale.
+	 * @returns {unknown} Result produced by handleChangeLocale.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleChangeLocale = (code: string) => {
 		setAppLocale(code);
 	};

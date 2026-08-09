@@ -22,12 +22,24 @@ export type ScryfallEmblemCard = {
 	faces: ScryfallEmblemFace[];
 };
 
+/**
+ * Performs an HTTP GET request and decodes the Scryfall JSON payload.
+ * @param {string} url Absolute Scryfall API URL.
+ * @returns {Promise<any>} Parsed JSON body.
+ * @throws {Error} Throws when the HTTP response status is not successful.
+ */
 async function fetchJson(url: string) {
 	const res = await fetch(url);
 	if (!res.ok) throw new Error(`Scryfall error ${res.status}`);
 	return res.json();
 }
 
+/**
+ * Maps a raw Scryfall card object to the app emblem/dungeon structure.
+ * Handles single-face cards and multi-face cards while keeping the best available image URL.
+ * @param {any} c Raw Scryfall card object.
+ * @returns {ScryfallEmblemCard | null} Normalized card or `null` when mandatory data is missing.
+ */
 function normalizeEmblemCard(c: any): ScryfallEmblemCard | null {
 	if (!c || !c.id || !c.name) return null;
 
@@ -66,6 +78,12 @@ function normalizeEmblemCard(c: any): ScryfallEmblemCard | null {
 	};
 }
 
+/**
+ * Searches Scryfall cards for generic picker UI (art + full card images).
+ * @param {string} query Scryfall query syntax entered by the user.
+ * @param {number} limit Maximum number of cards returned to the UI.
+ * @returns {Promise<ScryfallCard[]>} Normalized list, or an empty list on network/API failures.
+ */
 export async function searchCards(query: string, limit = 256): Promise<ScryfallCard[]> {
 	if (!query || query.trim().length === 0) return [];
 	const q = encodeURIComponent(query);
@@ -103,6 +121,12 @@ export async function searchCards(query: string, limit = 256): Promise<ScryfallC
 	}
 }
 
+/**
+ * Fetches one random card matching a Scryfall query and normalizes it to card-list format.
+ * @param {string} query Scryfall random query syntax.
+ * @param {number} limit Maximum number of normalized items (kept for API parity with searchCards).
+ * @returns {Promise<ScryfallCard[]>} Usually a one-item array; empty list when fetch fails.
+ */
 export async function randomCards(query: string, limit = 256): Promise<ScryfallCard[]> {
 	if (!query || query.trim().length === 0) return [];
 	const q = encodeURIComponent(query);
@@ -149,6 +173,13 @@ export async function randomCards(query: string, limit = 256): Promise<ScryfallC
 	}
 }
 
+/**
+ * Searches emblem/dungeon cards and normalizes results for emblem and vanguard modals.
+ * @param {string} query Free-text or advanced Scryfall query.
+ * @param {number} limit Maximum number of returned items.
+ * @param {'emblem' | 'dungeon' | 'none'} filter Additional type filtering strategy.
+ * @returns {Promise<ScryfallEmblemCard[]>} Matching normalized cards, or empty list on failure.
+ */
 export async function searchEmblemCards(
 	query: string,
 	limit = 60,
@@ -184,6 +215,12 @@ export async function searchEmblemCards(
 	}
 }
 
+/**
+ * Searches paper Vanguard cards from Scryfall and converts them to emblem-card shape.
+ * @param {string} query Optional user query appended to the vanguard filter.
+ * @param {number} limit Maximum number of cards returned.
+ * @returns {Promise<ScryfallEmblemCard[]>} Vanguard cards ready for modal selection.
+ */
 export async function searchVanguardCards(
 	query: string,
 	limit = 120
@@ -213,6 +250,12 @@ export async function searchVanguardCards(
 	}
 }
 
+/**
+ * Fetches a specific card by set code and collector number (used by preset shortcuts).
+ * @param {string} setCode Scryfall set identifier (e.g. `otj`, `mh3`).
+ * @param {string} collectorNumber Collector number inside the set.
+ * @returns {Promise<ScryfallEmblemCard | null>} Normalized card or `null` when unavailable.
+ */
 export async function fetchCardBySetCollector(
 	setCode: string,
 	collectorNumber: string

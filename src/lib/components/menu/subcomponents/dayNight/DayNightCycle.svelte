@@ -8,6 +8,12 @@
 	let longPressTimeout: ReturnType<typeof setTimeout> | null = null;
 	let longPressTriggered = false;
 
+	/**
+	 * Starts long-press timer for day/night control.
+	 * Long press clears all day/night statuses instead of toggling phase.
+	 * @returns {unknown} Result produced by startPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const startPress = () => {
 		vibrate(10);
 		if (longPressTimeout) clearTimeout(longPressTimeout);
@@ -17,6 +23,11 @@
 		}, LONG_PRESS_MS);
 	};
 
+	/**
+	 * Cancels pending long-press action when pointer/touch is released.
+	 * @returns {unknown} Result produced by endPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const endPress = () => {
 		if (longPressTimeout) {
 			clearTimeout(longPressTimeout);
@@ -24,6 +35,12 @@
 		}
 	};
 
+	/**
+	 * Toggles day/night phase on normal click.
+	 * Ignores click immediately following a consumed long press.
+	 * @returns {unknown} Result produced by handleClick.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleClick = () => {
 		if (longPressTriggered) {
 			setTimeout(() => {

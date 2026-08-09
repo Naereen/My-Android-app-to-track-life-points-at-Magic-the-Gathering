@@ -45,12 +45,23 @@
 		}
 	});
 
+	/**
+	 * Opens emblem-style modal for a selected vanguard card and closes current menu.
+	 * @param {ScryfallEmblemCard | null | undefined} vanguard - Parameter used by openVanguard.
+	 * @returns {unknown} Result produced by openVanguard.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const openVanguard = (vanguard: ScryfallEmblemCard | null | undefined) => {
 		if (!vanguard) return;
 		openSelectedEmblem(vanguard);
 		toggleIsMenuOpen('');
 	};
 
+	/**
+	 * Queries Scryfall for vanguard cards matching the current search text.
+	 * @returns {unknown} Result produced by runVanguardSearch.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const runVanguardSearch = async () => {
 		vibrate(20);
 		hasSearched = true;
@@ -62,17 +73,34 @@
 		}
 	};
 
+	/**
+	 * Triggers card search when user presses Enter in the vanguard search input.
+	 * @param {KeyboardEvent} event - Parameter used by handleSearchKeyPress.
+	 * @returns {unknown} Result produced by handleSearchKeyPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleSearchKeyPress = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			runVanguardSearch();
 		}
 	};
 
+	/**
+	 * Assigns one searched vanguard card to the selected player and stores it as the active choice.
+	 * @param {ScryfallEmblemCard} card - Parameter used by assignSearchedCard.
+	 * @returns {unknown} Result produced by assignSearchedCard.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const assignSearchedCard = (card: ScryfallEmblemCard) => {
 		setPlayerVanguard(selectedPlayerId, card);
 		setPlayerVanguardChoices(selectedPlayerId, [card]);
 	};
 
+	/**
+	 * Reassigns random vanguard options for all active players.
+	 * @returns {unknown} Result produced by rerollAll.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const rerollAll = async () => {
 		vibrate(30);
 		isAssigning = true;
@@ -83,6 +111,13 @@
 		}
 	};
 
+	/**
+	 * Selects one vanguard from a player's pre-generated choice list.
+	 * @param {number} playerId - Parameter used by chooseFromChoices.
+	 * @param {ScryfallEmblemCard} choice - Parameter used by chooseFromChoices.
+	 * @returns {unknown} Result produced by chooseFromChoices.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const chooseFromChoices = (playerId: number, choice: ScryfallEmblemCard) => {
 		setPlayerVanguard(playerId, choice);
 	};

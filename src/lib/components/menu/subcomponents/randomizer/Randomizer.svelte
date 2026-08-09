@@ -21,6 +21,12 @@
 	let selectedActivePlayer: number | null = null;
 	let showOpponentSelector = false;
 
+	/**
+	 * Restricts custom randomizer input to numeric/edit keys and clamps range.
+	 * @param {KeyboardEvent} event - Parameter used by handleCustomRandomizerKeyPress.
+	 * @returns {unknown} Result produced by handleCustomRandomizerKeyPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleCustomRandomizerKeyPress = (event: KeyboardEvent) => {
 		const { key } = event;
 
@@ -37,11 +43,22 @@
 		}
 	};
 
+	/**
+	 * Opens the opponent selector flow used before choosing a random opponent.
+	 * @returns {unknown} Result produced by handleRandomOpponent.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleRandomOpponent = () => {
 		vibrate(20);
 		showOpponentSelector = true;
 	};
 
+	/**
+	 * Sets the active player reference and immediately rolls a random opponent.
+	 * @param {number} playerId - Parameter used by selectPlayerAsActive.
+	 * @returns {unknown} Result produced by selectPlayerAsActive.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const selectPlayerAsActive = (playerId: number) => {
 		vibrate(20);
 		selectedActivePlayer = playerId;

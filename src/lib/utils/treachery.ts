@@ -26,6 +26,11 @@ const TREACHERY_IMAGE_BASE_URL = 'https://mtgtreachery.net/images/cards/en/trd/'
 let cachedCatalog: TreacheryCatalogEntry[] | null = null;
 let catalogPromise: Promise<TreacheryCatalogEntry[]> | null = null;
 
+/**
+ * Canonicalizes user-facing strings used in catalog search and image filename generation.
+ * @param {string} text Raw role/name text.
+ * @returns {string} Trimmed string with collapsed internal whitespace.
+ */
 const normalizeWhitespace = (text: string) => text.replace(/\s+/g, ' ').trim();
 
 const roleOrder: TreacheryRole[] = ['leader', 'guardian', 'assassin', 'traitor'];
@@ -70,6 +75,11 @@ const buildTreacheryImageUrl = (
 	return `${TREACHERY_IMAGE_BASE_URL}${encodeURIComponent(fileName)}`;
 };
 
+/**
+ * Converts a treachery slug (`my-card-name`) into a display label (`My Card Name`).
+ * @param {string} slug Slug from catalog JSON.
+ * @returns {string} Human-readable card name.
+ */
 const slugToName = (slug: string) =>
 	normalizeWhitespace(
 		slug
@@ -147,6 +157,11 @@ const normalizeTreacheryCard = (entry: TreacheryCatalogEntry): TreacheryCard => 
 	};
 };
 
+/**
+ * Returns role distribution rules for Treachery mode based on current player count.
+ * @param {number} playerCount Number of active players in the game.
+ * @returns {{leader: number; traitor: number; assassin: number; guardian: number} | null} Required role counts, or `null` if mode is unsupported for this size.
+ */
 export const getRequiredTreacheryRoleCounts = (playerCount: number) => {
 	switch (playerCount) {
 		case 4:

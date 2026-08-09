@@ -20,8 +20,19 @@ let latestState: StreamPayload = {
 	updatedAt: Date.now()
 };
 
+/**
+ * Serializes one payload as a Server-Sent Events frame.
+ * @param {StreamPayload} data Snapshot to broadcast to overlay clients.
+ * @returns {string} SSE-compliant `data:` block terminated by a blank line.
+ */
 const serializeData = (data: StreamPayload) => `data: ${JSON.stringify(data)}\n\n`;
 
+/**
+ * Enqueues a payload on a connected SSE client stream.
+ * @param {StreamClient} client Connected client controller and heartbeat timer metadata.
+ * @param {StreamPayload} data Snapshot to send.
+ * @returns {boolean} `true` when enqueue succeeds, `false` when client stream is no longer writable.
+ */
 const pushDataToClient = (client: StreamClient, data: StreamPayload) => {
 	try {
 		client.controller.enqueue(encoder.encode(serializeData(data)));
@@ -31,6 +42,12 @@ const pushDataToClient = (client: StreamClient, data: StreamPayload) => {
 	}
 };
 
+/**
+ * Broadcasts a snapshot to all active stream clients.
+ * Any client that throws during enqueue is removed and its heartbeat is stopped.
+ * @param {StreamPayload} data Snapshot to push to every listener.
+ * @returns {void}
+ */
 const broadcast = (data: StreamPayload) => {
 	for (const [clientId, client] of clients.entries()) {
 		const ok = pushDataToClient(client, data);

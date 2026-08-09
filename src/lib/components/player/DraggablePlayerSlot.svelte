@@ -48,6 +48,12 @@
 		);
 	};
 
+	/**
+	 * Applies shared drag state broadcast so every seat can update source/target visuals.
+	 * @param {Event} event - Parameter used by onGlobalDragState.
+	 * @returns {unknown} Result produced by onGlobalDragState.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const onGlobalDragState = (event: Event) => {
 		const customEvent = event as CustomEvent<DragStatePayload>;
 		isDragging = customEvent.detail.active;
@@ -80,6 +86,11 @@
 		window.removeEventListener(DRAG_STATE_EVENT, onGlobalDragState as EventListener);
 	});
 
+	/**
+	 * Finds nearest layout container used to resolve candidate drop targets.
+	 * @returns {unknown} Result produced by getLayoutContainer.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const getLayoutContainer = () => {
 		if (!slotEl) return document.body as HTMLElement;
 		return (slotEl.closest('[data-dnd-layout]') as HTMLElement | null) ??
@@ -118,6 +129,12 @@
 		return closestIndex;
 	};
 
+	/**
+	 * Finalizes seat drag and swaps players when a distinct target seat is selected.
+	 * @param {Event} event - Parameter used by handleDragEnd.
+	 * @returns {unknown} Result produced by handleDragEnd.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleDragEnd = (event: Event) => {
 		const customEvent = event as CustomEvent<{ x: number; y: number }>;
 		const toIndex = findClosestSeatIndex(customEvent.detail.x, customEvent.detail.y);
@@ -128,11 +145,22 @@
 		publishDragState(false, null, null);
 	};
 
+	/**
+	 * Starts drag feedback and publishes origin seat.
+	 * @returns {unknown} Result produced by handleDragStart.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleDragStart = () => {
 		lastHapticTargetIndex = seatIndex;
 		publishDragState(true, seatIndex, seatIndex);
 	};
 
+	/**
+	 * Tracks nearest hovered seat during drag and triggers haptic feedback on seat transitions.
+	 * @param {Event} event - Parameter used by handleDragMove.
+	 * @returns {unknown} Result produced by handleDragMove.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleDragMove = (event: Event) => {
 		const customEvent = event as CustomEvent<{ x: number; y: number }>;
 		const toIndex = findClosestSeatIndex(customEvent.detail.x, customEvent.detail.y);

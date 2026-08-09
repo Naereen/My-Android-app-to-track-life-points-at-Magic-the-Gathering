@@ -1,6 +1,12 @@
 import { StatusBar, Style } from '@capacitor/status-bar';
 // import { NavigationBar } from '@capacitor/navigation-bar';
 
+/**
+ * Configures Capacitor status bar integration for the native Android shell.
+ * Ensures the WebView is laid out below the system bar, then applies app-themed colors.
+ * @returns {Promise<void>} Resolves once status bar overlay, color, style and visibility are set.
+ * @throws {Error} Propagates Capacitor plugin errors if native APIs are unavailable.
+ */
 export const setupStatusBar = async () => {
     // Empêche la WebView de s'afficher "sous" la barre d'état
     await StatusBar.setOverlaysWebView({ overlay: false });

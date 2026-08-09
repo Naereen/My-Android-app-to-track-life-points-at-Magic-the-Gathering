@@ -42,6 +42,13 @@ const MERGEABLE_STATUS_KEYS = new Set(['energy', 'experience', 'rad', 'acorn', '
 
 export const gameHistory = persist<GameHistoryEntry[]>('gameHistory', []);
 
+/**
+ * Determines whether a new history event can be merged into the previous one.
+ * Merge is allowed only for same player/kind within a short time window and compatible payload deltas.
+ * @param {GameHistoryEntry} previous Last persisted history entry.
+ * @param {Omit<GameHistoryEntry, 'id' | 'timestamp'>} next Incoming event candidate.
+ * @returns {boolean} `true` when entries should be collapsed into one.
+ */
 const canMergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry, 'id' | 'timestamp'>) => {
 	if (previous.playerId !== next.playerId) return false;
 	if (previous.kind !== next.kind) return false;
@@ -125,6 +132,10 @@ export const addGameHistoryEntry = (
 	});
 };
 
+/**
+ * Removes all stored game history entries.
+ * @returns {void}
+ */
 export const clearGameHistory = () => {
 	gameHistory.set([]);
 };

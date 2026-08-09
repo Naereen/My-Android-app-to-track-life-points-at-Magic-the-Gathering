@@ -59,6 +59,12 @@
 	let searchOptionActive = true;
 	let klipyKeyPresent = false;
 
+	/**
+	 * Detects whether a Klipy API key is available (env or local key file).
+	 * Used to decide if GIF search mode can be exposed meaningfully.
+	 * @returns {unknown} Result produced by checkKlipyKey.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const checkKlipyKey = async () => {
 		// fast check for Vite env
 		try {
@@ -92,6 +98,12 @@
 	let hasModalHistoryEntry = false;
 	let isSyncingModalHistory = false;
 
+	/**
+	 * Resolves the player currently edited by the modal.
+	 * Falls back to array index lookup for compatibility with older seat/id states.
+	 * @returns {unknown} Result produced by getModalPlayer.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const getModalPlayer = () => {
 		return (
 			$players.find((player) => player.id === $playerModalData.playerId) ??
@@ -99,6 +111,11 @@
 		);
 	};
 
+	/**
+	 * Pushes a synthetic history state when modal opens so browser Back closes the modal first.
+	 * @returns {unknown} Result produced by pushModalHistoryEntry.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const pushModalHistoryEntry = () => {
 		if (typeof window === 'undefined' || hasModalHistoryEntry) return;
 		try {
@@ -111,6 +128,11 @@
 		}
 	};
 
+	/**
+	 * Closes modal while synchronizing synthetic history entry when needed.
+	 * @returns {unknown} Result produced by closePlayerModal.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const closePlayerModal = () => {
 		if (typeof window !== 'undefined' && hasModalHistoryEntry && !isSyncingModalHistory) {
 			isSyncingModalHistory = true;
@@ -121,6 +143,11 @@
 		resetPlayerModalData();
 	};
 
+	/**
+	 * Handles `popstate` to map browser Back events to modal close semantics.
+	 * @returns {unknown} Result produced by handleBackNavigation.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleBackNavigation = () => {
 		if (!$playerModalData.isOpen) {
 			if (isSyncingModalHistory) {
@@ -203,12 +230,24 @@
 		);
 	};
 
+	/**
+	 * Help for getVisibleViewportHeight.
+	 * This function returns the height of the visible viewport, taking into account the virtual keyboard on mobile devices.
+	 * It uses the Visual Viewport API if available, otherwise it falls back to window.innerHeight.
+	 *
+	 * @returns {number} The height of the visible viewport in pixels.
+	*/
 	const getVisibleViewportHeight = () => {
 		if (typeof window === 'undefined') return 0;
 		const viewport = window.visualViewport;
 		return viewport ? viewport.height + viewport.offsetTop : window.innerHeight;
 	};
 
+	/**
+	 * Tracks virtual keyboard open/closed state for rotated modal ergonomics on mobile.
+	 * @returns {unknown} Result produced by updateMobileKeyboardState.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const updateMobileKeyboardState = () => {
 		if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
@@ -230,6 +269,11 @@
 			maxVisibleViewportHeight - visibleViewportHeight > MOBILE_KEYBOARD_THRESHOLD_PX;
 	};
 
+	/**
+	 * Reacts to viewport/focus changes and recomputes keyboard visibility state.
+	 * @returns {unknown} Result produced by handleViewportKeyboardChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleViewportKeyboardChange = () => {
 		updateMobileKeyboardState();
 	};
@@ -247,14 +291,30 @@
 	let playerModalScrollEl: HTMLDivElement | null = null;
 	let lastAutoScrollKey: string | null = null;
 
+	/**
+	 * Resolves on next animation frame; used to wait for DOM layout before scrolling.
+	 * @returns {unknown} Result produced by waitForAnimationFrame.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const waitForAnimationFrame = () =>
 		new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 
+	/**
+	 * Auto-scrolls commander view to the bottom-right area for side-oriented players.
+	 * @param {HTMLDivElement} scrollElement - Parameter used by scrollPlayerModalToBottomRight.
+	 * @returns {unknown} Result produced by scrollPlayerModalToBottomRight.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const scrollPlayerModalToBottomRight = async (scrollElement: HTMLDivElement) => {
 		await tick();
 		await waitForAnimationFrame();
 		await waitForAnimationFrame();
 
+		/**
+		 * Performs one immediate scroll pass to the desired corner.
+		 * @returns {unknown} Result produced by scrollToBottomRight.
+		 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+		 */
 		const scrollToBottomRight = () => {
 			scrollElement.scrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
 			scrollElement.scrollLeft = Math.max(0, scrollElement.scrollWidth - scrollElement.clientWidth);
@@ -334,6 +394,11 @@
 		_initBackgroundTab();
 	}
 
+	/**
+	 * Initializes background tab state once per player (not on every reactive update).
+	 * @returns {unknown} Result produced by _initBackgroundTab.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	function _initBackgroundTab() {
 		const p = getModalPlayer();
 		if (!p) return;
@@ -379,6 +444,12 @@
 		else bgSelections = [];
 	}
 
+	/**
+	 * Normalizes image URLs to compare selected backgrounds robustly.
+	 * @param {string | null | undefined} url - Parameter used by normalizeImageUrl.
+	 * @returns {unknown} Result produced by normalizeImageUrl.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const normalizeImageUrl = (url: string | null | undefined) => {
 		if (!url) return null;
 		const value = String(url).trim();
@@ -414,10 +485,23 @@
 		return normalizedCandidates.includes(normalizedStored);
 	};
 
+	/**
+	 * Picks preferred selectable preview image from a search result entry.
+	 * @param {{ image?: string | null; cardImage?: string | null }} result - Parameter used by getSelectableImage.
+	 * @returns {unknown} Result produced by getSelectableImage.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const getSelectableImage = (result: { image?: string | null; cardImage?: string | null }) => {
 		return result.image ?? result.cardImage ?? null;
 	};
 
+	/**
+	 * Applies/updates background color selection, including gradient mode multi-selection.
+	 * @param {number} playerId - Parameter used by toggleColorSelection.
+	 * @param {string} c - Parameter used by toggleColorSelection.
+	 * @returns {unknown} Result produced by toggleColorSelection.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const toggleColorSelection = (playerId: number, c: string) => {
 		if (!gradientMode) {
 			setPlayerColor(playerId, c);
@@ -444,6 +528,12 @@
 		}
 	};
 
+	/**
+	 * Clears both color and image background selection for the player.
+	 * @param {number} playerId - Parameter used by clearSelection.
+	 * @returns {unknown} Result produced by clearSelection.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const clearSelection = (playerId: number) => {
 		selectedColors = [];
 		setPlayerColor(playerId, 'white');
@@ -451,6 +541,12 @@
 		setPlayerBackgroundImage(playerId, null);
 	};
 
+	/**
+	 * Handles keyboard shortcuts and max-length guard on player name input.
+	 * @param {KeyboardEvent} event - Parameter used by handleOnKeyPress.
+	 * @returns {unknown} Result produced by handleOnKeyPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleOnKeyPress = (event: KeyboardEvent) => {
 		// ignore IME composition events (mobile/virtual keyboards)
 		if ((event as any).isComposing) return;
@@ -465,6 +561,12 @@
 		}
 	};
 
+	/**
+	 * Runs background search when user presses Enter in search field.
+	 * @param {KeyboardEvent} event - Parameter used by handleOnKeyPressScryfallSearch.
+	 * @returns {unknown} Result produced by handleOnKeyPressScryfallSearch.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleOnKeyPressScryfallSearch = (event: KeyboardEvent) => {
 		// ignore IME composition events which may falsely emit Enter on some mobile keyboards
 		if ((event as any).isComposing) return;
@@ -473,6 +575,11 @@
 		}
 	};
 
+	/**
+	 * Executes Scryfall/Klipy search for player background candidates.
+	 * @returns {unknown} Result produced by doSearch.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const doSearch = async () => {
 		vibrate(20);
 		if (typeof document !== 'undefined') {
@@ -510,6 +617,12 @@
 		hasSearched = true;
 	};
 
+	/**
+	 * Picks and applies one random background from current results or remote source.
+	 * @param {number} playerId - Parameter used by chooseRandom.
+	 * @returns {unknown} Result produced by chooseRandom.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const chooseRandom = async (playerId: number) => {
 		// If we already have search results, pick one from them
 		if (searchResults && searchResults.length > 0) {
@@ -630,6 +743,13 @@
 	let editingStat: string | null = null;
 	let editingStatValue = '';
 
+	/**
+	 * Opens inline commander-damage editor for one opposing player slot.
+	 * @param {number} playerId - Parameter used by startEditCommander.
+	 * @param {number} fromPlayerId - Parameter used by startEditCommander.
+	 * @returns {unknown} Result produced by startEditCommander.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const startEditCommander = async (playerId: number, fromPlayerId: number) => {
 		vibrate(20);
 		editingCommanderFrom = fromPlayerId;
@@ -640,6 +760,11 @@
 		el?.select();
 	};
 
+	/**
+	 * Commits commander-damage editor values to store (including partner second source).
+	 * @returns {unknown} Result produced by saveEditCommander.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const saveEditCommander = () => {
 		if (editingCommanderFrom === null) return;
 		const sourceCount = getCommanderSourceCountForPlayer(editingCommanderFrom);
@@ -656,10 +781,22 @@
 		editingCommanderFrom = null;
 	};
 
+	/**
+	 * Cancels inline commander-damage edit mode.
+	 * @returns {unknown} Result produced by cancelEditCommander.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const cancelEditCommander = () => {
 		editingCommanderFrom = null;
 	};
 
+	/**
+	 * Opens inline numeric status editor (poison/energy/experience/rad/etc.).
+	 * @param {string} stat - Parameter used by startEditStat.
+	 * @param {number} current - Parameter used by startEditStat.
+	 * @returns {unknown} Result produced by startEditStat.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const startEditStat = async (stat: string, current: number) => {
 		vibrate(20);
 		editingStat = stat;
@@ -670,6 +807,11 @@
 		el?.select();
 	};
 
+	/**
+	 * Saves inline numeric status value to the corresponding player field.
+	 * @returns {unknown} Result produced by saveEditStat.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const saveEditStat = () => {
 		if (!editingStat) return;
 		const v = parseInt(editingStatValue, 10);
@@ -685,6 +827,11 @@
 		editingStat = null;
 	};
 
+	/**
+	 * Cancels inline numeric status editing.
+	 * @returns {unknown} Result produced by cancelEditStat.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const cancelEditStat = () => {
 		editingStat = null;
 	};
@@ -720,11 +867,24 @@
 		return pair[slot] ?? 0;
 	};
 
+	/**
+	 * Applies one-step delta to command tax for a specific source slot.
+	 * @param {number} playerId - Parameter used by setCommandTaxDelta.
+	 * @param {0 | 1} sourceIndex - Parameter used by setCommandTaxDelta.
+	 * @param {number} delta - Parameter used by setCommandTaxDelta.
+	 * @returns {unknown} Result produced by setCommandTaxDelta.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const setCommandTaxDelta = (playerId: number, sourceIndex: 0 | 1, delta: number) => {
 		const nextValue = Math.max(0, getCommandTaxSourceValue(playerId, sourceIndex) + delta);
 		setPlayerCommandTax(playerId, nextValue, sourceIndex);
 	};
 
+	/**
+	 * Toggles partner mode for currently edited player.
+	 * @returns {unknown} Result produced by toggleModalPartnerMode.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const toggleModalPartnerMode = () => {
 		const currentPartnerMode = modalPlayerPartnerMode;
 		setPlayerPartnerMode($playerModalData.playerId, !currentPartnerMode);
@@ -764,6 +924,11 @@
 		}, COMMANDER_LONG_PRESS_MS);
 	};
 
+	/**
+	 * Stops commander long-press acceleration timers and clears consumed-click guard.
+	 * @returns {unknown} Result produced by stopCommanderLongPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const stopCommanderLongPress = () => {
 		if (commanderLongPressTimeout) {
 			clearTimeout(commanderLongPressTimeout);
@@ -793,16 +958,35 @@
 		setCommanderDamageDelta(playerId, fromPlayerId, step, sourceIndex);
 	};
 
+	/**
+	 * Opens commander editor from minimap seat interaction.
+	 * @param {number} targetIndex - Parameter used by startCommanderEditFromMinimap.
+	 * @returns {unknown} Result produced by startCommanderEditFromMinimap.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const startCommanderEditFromMinimap = (targetIndex: number) => {
 		const fromPlayerId = targetIndex + 1;
 		startEditCommander($playerModalData.playerId, fromPlayerId);
 	};
 
+	/**
+	 * Increments commander damage (+1) for selected minimap attacker.
+	 * @param {number} targetIndex - Parameter used by incrementCommanderFromMinimap.
+	 * @returns {unknown} Result produced by incrementCommanderFromMinimap.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const incrementCommanderFromMinimap = (targetIndex: number) => {
 		const fromPlayerId = targetIndex + 1;
 		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0);
 	};
 
+	/**
+	 * Increments commander damage by side/source in partner split mode.
+	 * @param {number} targetIndex - Parameter used by incrementCommanderFromMinimapByHalf.
+	 * @param {'left' | 'right'} side - Parameter used by incrementCommanderFromMinimapByHalf.
+	 * @returns {unknown} Result produced by incrementCommanderFromMinimapByHalf.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const incrementCommanderFromMinimapByHalf = (targetIndex: number, side: 'left' | 'right') => {
 		const fromPlayerId = targetIndex + 1;
 		if (getCommanderSourceCountForPlayer(fromPlayerId) <= 1) {

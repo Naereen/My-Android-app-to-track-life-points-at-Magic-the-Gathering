@@ -49,6 +49,10 @@ const SOUND_PATTERNS: Record<GameplaySoundType, Tone[]> = {
 
 let audioContext: AudioContext | null = null;
 
+/**
+ * Checks runtime support and user preference before creating or using WebAudio.
+ * @returns {boolean} `true` when sound effects are enabled and an audio context implementation exists.
+ */
 const canPlaySound = () => {
 	if (typeof window === 'undefined') return false;
 	if (!get(appSettings).soundEffectsEnabled) return false;
@@ -64,6 +68,13 @@ const getAudioContext = (): AudioContext | null => {
 	return audioContext;
 };
 
+/**
+ * Schedules one synthesized tone with fade-in/fade-out envelope in the audio graph.
+ * @param {AudioContext} ctx Active audio context.
+ * @param {Tone} tone Frequency, duration, oscillator waveform and gain parameters.
+ * @param {number} startAt AudioContext timeline position (in seconds).
+ * @returns {void}
+ */
 const playTone = (ctx: AudioContext, tone: Tone, startAt: number) => {
 	const oscillator = ctx.createOscillator();
 	const gainNode = ctx.createGain();
@@ -81,6 +92,11 @@ const playTone = (ctx: AudioContext, tone: Tone, startAt: number) => {
 	oscillator.stop(startAt + tone.duration + 0.02);
 };
 
+/**
+ * Plays one predefined gameplay sound sequence (life swings, commander swings, KO, victory).
+ * @param {GameplaySoundType} sound Symbolic key for the tone pattern to schedule.
+ * @returns {void}
+ */
 export const playGameplaySound = (sound: GameplaySoundType) => {
 	const ctx = getAudioContext();
 	if (!ctx) return;

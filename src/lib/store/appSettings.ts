@@ -189,6 +189,12 @@ export const getDefaultStartingLifeTotal = (playerCount: number): number => {
 	return 40;
 };
 
+/**
+ * Applies a new player count and synchronizes dependent defaults.
+ * Recomputes starting life, weighted probabilities, life-history visibility and default global timer.
+ * @param {number} playerCount Number of active seats.
+ * @returns {void}
+ */
 export const setPlayerCount = (playerCount: number) => {
 	appSettings.update((data) => ({
 		...data,
@@ -210,34 +216,74 @@ export const setPlayerCount = (playerCount: number) => {
 	}));
 };
 
+/**
+ * Sets the currently selected starting life total preset.
+ * @param {number} startingLifeTotal Life value used by game reset.
+ * @returns {void}
+ */
 export const setStartingLifeTotal = (startingLifeTotal: number) => {
 	appSettings.update((data) => ({ ...data, startingLifeTotal }));
 };
 
+/**
+ * Persists custom life total value entered in settings.
+ * @param {number} customStartingLifeTotal User-defined life total.
+ * @returns {void}
+ */
 export const setCustomStartingLifeTotal = (customStartingLifeTotal: number) => {
 	appSettings.update((data) => ({ ...data, customStartingLifeTotal }));
 };
 
+/**
+ * Sets the upper bound used by the custom randomizer mode.
+ * @param {number} customRandomNumber Maximum roll value for custom die mode.
+ * @returns {void}
+ */
 export const setCustomRandomNumber = (customRandomNumber: number) => {
 	appSettings.update((data) => ({ ...data, customRandomNumber }));
 };
 
+/**
+ * Toggles global negative-life support for elimination rules.
+ * @param {boolean} allowNegativeLife Whether players can stay alive below 0 life.
+ * @returns {void}
+ */
 export const setAllowNegativeLife = (allowNegativeLife: boolean) => {
 	appSettings.update((data) => ({ ...data, allowNegativeLife }));
 };
 
+/**
+ * Toggles wake-lock preference to keep the display on during matches.
+ * @param {boolean} preventScreenSleep Whether wake-lock should be requested when possible.
+ * @returns {void}
+ */
 export const setPreventScreenSleep = (preventScreenSleep: boolean) => {
 	appSettings.update((data) => ({ ...data, preventScreenSleep }));
 };
 
+/**
+ * Enables or disables vibration-based feedback globally.
+ * @param {boolean} hapticsEnabled Haptics preference.
+ * @returns {void}
+ */
 export const setHapticsEnabled = (hapticsEnabled: boolean) => {
 	appSettings.update((data) => ({ ...data, hapticsEnabled }));
 };
 
+/**
+ * Enables/disables synthesized gameplay sound effects.
+ * @param {boolean} soundEffectsEnabled Audio feedback preference.
+ * @returns {void}
+ */
 export const setSoundEffectsEnabled = (soundEffectsEnabled: boolean) => {
 	appSettings.update((data) => ({ ...data, soundEffectsEnabled }));
 };
 
+/**
+ * Toggles per-player floating life-change history display.
+ * @param {boolean} showLifeChangeHistory Whether transient life delta markers are rendered.
+ * @returns {void}
+ */
 export const setShowLifeChangeHistory = (showLifeChangeHistory: boolean) => {
 	appSettings.update((data) => ({ ...data, showLifeChangeHistory }));
 };
@@ -271,94 +317,208 @@ appSettings.update((data) => {
 	return data;
 });
 
+/**
+ * Toggles glow/highlight effect around current active player.
+ * @param {boolean} enable Whether current-turn glow is enabled.
+ * @returns {void}
+ */
 export const setEnableCurrentPlayerGlow = (enable: boolean) => {
 	appSettings.update((data) => ({ ...data, enableCurrentPlayerGlow: enable }));
 };
 
+/**
+ * Shows or hides quick-access "next player" controls.
+ * @param {boolean} show Whether next-player controls are visible.
+ * @returns {void}
+ */
 export const setShowNextPlayerButton = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showNextPlayerButton: show }));
 };
 
+/**
+ * Shows or hides the resources modal/menu entry.
+ * @param {boolean} show Whether resources button is visible.
+ * @returns {void}
+ */
 export const setShowResourcesButton = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showResourcesButton: show }));
 };
 
+/**
+ * Shows or hides randomizer access in the menu.
+ * @param {boolean} show Whether randomizer button is visible.
+ * @returns {void}
+ */
 export const setShowRandomizerButton = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showRandomizerButton: show }));
 };
 
+/**
+ * Controls visibility of the emblem menu section.
+ * @param {boolean} show Whether emblem menu entry is displayed.
+ * @returns {void}
+ */
 export const setShowEmblemMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showEmblemMenu: show }));
 };
 
+/**
+ * Controls visibility of the Vanguard menu section.
+ * @param {boolean} show Whether Vanguard menu entry is displayed.
+ * @returns {void}
+ */
 export const setShowVanguardMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showVanguardMenu: show }));
 };
 
+/**
+ * Controls visibility of the Treachery menu section.
+ * @param {boolean} show Whether Treachery menu entry is displayed.
+ * @returns {void}
+ */
 export const setShowTreacheryMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showTreacheryMenu: show }));
 };
 
+/**
+ * Enables/disables Vanguard game mode for resets/new games.
+ * @param {boolean} enabled Whether Vanguard rules are active.
+ * @returns {void}
+ */
 export const setVanguardModeEnabled = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, vanguardModeEnabled: enabled }));
 };
 
+/**
+ * Enables/disables Treachery mode assignment at game start.
+ * @param {boolean} enabled Whether Treachery mode is active.
+ * @returns {void}
+ */
 export const setTreacheryModeEnabled = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, treacheryModeEnabled: enabled }));
 };
 
+/**
+ * Enables the simplified hidden-role Treachery variant (Shogun style).
+ * @param {boolean} enabled Whether Shogun variant is active.
+ * @returns {void}
+ */
 export const setShogunVariantEnabled = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, shogunVariantEnabled: enabled }));
 };
 
+/**
+ * Enables "draft three vanguards, keep one" setup flow.
+ * @param {boolean} enabled Whether draft-three variant is active.
+ * @returns {void}
+ */
 export const setVanguardDraftThree = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, vanguardDraftThree: enabled }));
 };
 
+/**
+ * Shows or hides the game-history menu entry.
+ * @param {boolean} show Whether history menu entry is visible.
+ * @returns {void}
+ */
 export const setShowGameHistoryMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showGameHistoryMenu: show }));
 };
 
+/**
+ * Enables Acorn status/counter support in the UI and stores.
+ * @param {boolean} enabled Whether Acorn mode is available.
+ * @returns {void}
+ */
 export const setEnableAcornMode = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, enableAcornMode: enabled }));
 };
 
+/**
+ * Enables Ticket status/counter support in the UI and stores.
+ * @param {boolean} enabled Whether Ticket mode is available.
+ * @returns {void}
+ */
 export const setEnableTicketMode = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, enableTicketMode: enabled }));
 };
 
+/**
+ * Enables/disables per-turn player timer.
+ * @param {boolean} enabled Whether turn timer is active.
+ * @returns {void}
+ */
 export const setTurnTimerEnabled = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, turnTimerEnabled: enabled }));
 };
 
+/**
+ * Sets per-turn timer duration in seconds.
+ * @param {number} seconds Turn duration for each player.
+ * @returns {void}
+ */
 export const setTurnTimerDuration = (seconds: number) => {
 	appSettings.update((data) => ({ ...data, turnTimerDuration: seconds }));
 };
 
+/**
+ * Enables/disables timeout sound cue for per-turn timer.
+ * @param {boolean} enabled Whether timeout beep is played.
+ * @returns {void}
+ */
 export const setTurnTimerSound = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, turnTimerSound: enabled }));
 };
 
+/**
+ * Enables/disables the global match timer displayed in the center bar.
+ * @param {boolean} enabled Whether global timer is active.
+ * @returns {void}
+ */
 export const setGlobalGameTimerEnabled = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, globalGameTimerEnabled: enabled }));
 };
 
+/**
+ * Sets the base duration for the global match timer.
+ * @param {number} seconds Match duration in seconds before overtime.
+ * @returns {void}
+ */
 export const setGlobalGameTimerDuration = (seconds: number) => {
 	appSettings.update((data) => ({ ...data, globalGameTimerDuration: seconds }));
 };
 
+/**
+ * Enables controller->relay streaming mode.
+ * @param {boolean} isStreamMode Whether state updates are posted to remote relay.
+ * @returns {void}
+ */
 export const setIsStreamMode = (isStreamMode: boolean) => {
 	appSettings.update((data) => ({ ...data, isStreamMode }));
 };
 
+/**
+ * Sets relay server base URL used by stream mode.
+ * @param {string} remoteServerUrl Relay origin/base URL (trimmed before persistence).
+ * @returns {void}
+ */
 export const setRemoteServerUrl = (remoteServerUrl: string) => {
 	appSettings.update((data) => ({ ...data, remoteServerUrl: remoteServerUrl.trim() }));
 };
 
+/**
+ * Toggles weighted random selection for starting player.
+ * @param {boolean} enabled Whether weighted probabilities should be used.
+ * @returns {void}
+ */
 export const setUseWeightedStartingPlayer = (enabled: boolean) => {
 	appSettings.update((data) => ({ ...data, useWeightedStartingPlayer: enabled }));
 };
 
+/**
+ * Resets per-seat starting-player probabilities to a uniform distribution.
+ * @returns {void}
+ */
 export const resetStartingPlayerProbabilities = () => {
 	appSettings.update((data) => ({
 		...data,
@@ -366,6 +526,12 @@ export const resetStartingPlayerProbabilities = () => {
 	}));
 };
 
+/**
+ * Updates one player's weighted start probability (clamped to 0..100).
+ * @param {number} playerIndex Zero-based player slot index.
+ * @param {number} probability Desired probability percentage.
+ * @returns {void}
+ */
 export const setStartingPlayerProbability = (playerIndex: number, probability: number) => {
 	appSettings.update((data) => {
 		if (playerIndex < 0 || playerIndex >= MAX_PLAYER_SLOTS) return data;
@@ -381,10 +547,20 @@ export const setStartingPlayerProbability = (playerIndex: number, probability: n
 	});
 };
 
+/**
+ * Selects the 4-player board layout variant.
+ * @param {'matrix' | 'stacked'} layout 4-player layout key.
+ * @returns {void}
+ */
 export const setFourPlayerLayout = (layout: 'matrix' | 'stacked') => {
 	appSettings.update((data) => ({ ...data, fourPlayerLayout: layout }));
 };
 
+/**
+ * Selects the 3-player board layout variant.
+ * @param {'classic' | 'inverted'} layout 3-player layout key.
+ * @returns {void}
+ */
 export const setThreePlayerLayout = (layout: 'classic' | 'inverted') => {
 	appSettings.update((data) => ({ ...data, threePlayerLayout: layout }));
 };
@@ -408,10 +584,20 @@ appSettings.update((data) => {
 	return withDefaults;
 });
 
+/**
+ * Selects the 6-player board layout variant.
+ * @param {'one' | 'two'} layout 6-player layout key.
+ * @returns {void}
+ */
 export const setSixPlayerLayout = (layout: 'one' | 'two') => {
 	appSettings.update((data) => ({ ...data, sixPlayerLayout: layout }));
 };
 
+/**
+ * Persists application locale and forwards it to `svelte-i18n` runtime.
+ * @param {string} locale Locale code (e.g. `en`, `fr`, `es`).
+ * @returns {void}
+ */
 export const setAppLocale = (locale: string) => {
 	appSettings.update((data) => ({ ...data, locale }));
 	try {

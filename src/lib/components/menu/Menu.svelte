@@ -34,6 +34,11 @@
 	let previousMinutePulseId = 0;
 	let timerGlowClass = '';
 
+	/**
+	 * Starts long-press detection on the Next button to trigger previous-turn navigation.
+	 * @returns {unknown} Result produced by handleTurnDown.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleTurnDown = () => {
 		vibrate(20);
 		// start long-press to go to previous player (on Next button)
@@ -44,6 +49,11 @@
 		}, 700);
 	};
 
+	/**
+	 * Ends long-press tracking on the Next button and resets trigger state.
+	 * @returns {unknown} Result produced by handleTurnUp.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleTurnUp = () => {
 		vibrate(20);
 		if (turnPrevTimeout) {
@@ -58,6 +68,11 @@
 		}
 	};
 
+	/**
+	 * Starts long-press detection for random-player button (replay last roll or random seat).
+	 * @returns {unknown} Result produced by handleRandomPlayerDown.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleRandomPlayerDown = () => {
 		vibrate(20);
 		// Long press: replay last randomizer die roll, or fallback to random player selection.
@@ -71,6 +86,11 @@
 		}, 500);
 	};
 
+	/**
+	 * Ends random-player long-press tracking and clears delayed trigger state.
+	 * @returns {unknown} Result produced by handleRandomPlayerUp.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleRandomPlayerUp = () => {
 		vibrate(20);
 		if (randomPlayerTimeout) {
@@ -85,6 +105,11 @@
 		}
 	};
 
+	/**
+	 * Opens randomizer menu unless the click was consumed by long-press behavior.
+	 * @returns {unknown} Result produced by handleRandomizerClick.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleRandomizerClick = () => {
 		if (randomPlayerTriggered) {
 			// consumed by long-press
@@ -94,11 +119,21 @@
 		toggleIsMenuOpen('randomizer');
 	};
 
+	/**
+	 * Opens resources menu from the mana button.
+	 * @returns {unknown} Result produced by handleManaClick.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleManaClick = () => {
 		vibrate(20);
 		toggleIsMenuOpen('resources');
 	};
 
+	/**
+	 * Advances turn unless the click was consumed by previous-turn long-press.
+	 * @returns {unknown} Result produced by handleNextClick.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleNextClick = () => {
 		vibrate(20);
 		if (turnPrevTriggered) {
@@ -109,6 +144,11 @@
 		nextTurn();
 	};
 
+	/**
+	 * Toggles pause/resume for the global match timer.
+	 * @returns {unknown} Result produced by handleGlobalGameTimerClick.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleGlobalGameTimerClick = () => {
 		vibrate(20);
 		globalGameTimer.togglePause();

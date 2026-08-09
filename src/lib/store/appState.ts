@@ -45,6 +45,12 @@ export const appState = persist('appState', {
 	startingPlayerIndex: null as number | null
 });
 
+/**
+ * Opens/closes the global menu and synchronizes turn-timer pause/resume behavior.
+ * Also emits short haptic feedback to acknowledge menu toggle on mobile.
+ * @param {App.AppState.Menu} menu Menu section to mark as active when opening.
+ * @returns {void}
+ */
 export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 	vibrate(10);
 	// Pause/resume timer when opening/closing the global menu to avoid resetting it
@@ -68,6 +74,12 @@ export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 	appState.update((data) => ({ ...data, activeMenu: menu, isMenuOpen: !data.isMenuOpen }));
 };
 
+/**
+ * Enables/disables Day/Night mode tracking for the current match.
+ * Disabling the feature resets the phase to `day` to keep UI deterministic.
+ * @param {boolean} enabled Whether Day/Night state should be tracked.
+ * @returns {void}
+ */
 export const setDayNightCycleEnabled = (enabled: boolean) => {
 	appState.update((data) => ({
 		...data,
@@ -76,6 +88,10 @@ export const setDayNightCycleEnabled = (enabled: boolean) => {
 	}));
 };
 
+/**
+ * Switches Day/Night phase only when Day/Night mode is enabled.
+ * @returns {void}
+ */
 export const toggleDayNightPhase = () => {
 	appState.update((data) => {
 		if (!data.dayNightCycleEnabled) return data;
@@ -86,6 +102,14 @@ export const toggleDayNightPhase = () => {
 	});
 };
 
+/**
+ * Sets the active player turn and updates round counter semantics.
+ * The round counter increments when cycling back to starting player, decrements on reverse wrap.
+ * @param {number} index New active player index (`-1` means no active turn).
+ * @param {boolean} updateIsPositive `true` for forward turn progression, `false` for backward.
+ * @param {boolean} forceTimerReset Forces turn timer reset even when the same player remains active.
+ * @returns {void}
+ */
 export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTimerReset = false) => {
 	appState.update((data) => {
 		const newData = { ...data, currentTurn: index } as any;
@@ -131,6 +155,11 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTi
 	}
 };
 
+/**
+ * Advances to the next alive player and records the transition in game history.
+ * Skips KO/eliminated players according to life/poison/status rules.
+ * @returns {void}
+ */
 export const nextTurn = () => {
 	vibrate(10);
 	const totalPlayers = get(appSettings).playerCount || 4;
@@ -176,6 +205,10 @@ export const nextTurn = () => {
 	appState.update((data) => ({ ...data, currentTurn: -1 }));
 };
 
+/**
+ * Moves back to the previous alive player and records the transition in game history.
+ * @returns {void}
+ */
 export const prevTurn = () => {
 	vibrate(10);
 	const totalPlayers = get(appSettings).playerCount || 4;

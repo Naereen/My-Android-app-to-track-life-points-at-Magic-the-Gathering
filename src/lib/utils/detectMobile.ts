@@ -2,6 +2,11 @@
 // to improve accuracy across different environments and browsers.
 // Returns true if any of the signals indicate a mobile device.
 // innerWidth can be optionally provided as a final fallback check.
+/**
+ * Heuristically detects mobile devices using UA data, touch support and pointer capabilities.
+ * @param {number} [innerWidth] Optional viewport width fallback when other signals are unavailable.
+ * @returns {boolean} `true` when the runtime likely targets a phone/tablet form factor.
+ */
 export function isMobileDevice(innerWidth?: number): boolean {
 	try {
 		if (typeof navigator !== 'undefined') {

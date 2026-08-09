@@ -55,6 +55,11 @@
 	const MOUSE_AFTER_TOUCH_GUARD_MS = 1000;
 	let lastTouchAt = 0;
 
+	/**
+	 * Detects synthetic mouse events fired after touch to avoid duplicate life updates.
+	 * @returns {unknown} Result produced by isLikelySyntheticMouseEvent.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const isLikelySyntheticMouseEvent = () =>
 		(Date.now() - lastTouchAt) < MOUSE_AFTER_TOUCH_GUARD_MS;
 
@@ -150,6 +155,12 @@
 	$: shouldWrapStatusEffects = statusEffectItemCount > 10;
 	$: maxCommanderDamage = getMaxCommanderDamageSingleSource($players[index], $appSettings.playerCount);
 
+	/**
+	 * Begins mouse hold-to-repeat life adjustment for vertical player card.
+	 * @param {App.Player.LifeMoveType} type - Parameter used by handleMouseDown.
+	 * @returns {unknown} Result produced by handleMouseDown.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
 		if (isLikelySyntheticMouseEvent()) {
 			return;
@@ -169,6 +180,12 @@
 		}, 1000);
 	};
 
+	/**
+	 * Finalizes mouse hold interaction and applies either repeated or click-based delta.
+	 * @param {App.Player.LifeMoveType} type - Parameter used by handleMouseUp.
+	 * @returns {unknown} Result produced by handleMouseUp.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleMouseUp = (type: App.Player.LifeMoveType) => {
 		if (isLikelySyntheticMouseEvent()) {
 			return;
@@ -186,6 +203,12 @@
 		setPlayerHighlighted(id, false);
 	};
 
+	/**
+	 * Begins touch hold-to-repeat life adjustment.
+	 * @param {App.Player.LifeMoveType} type - Parameter used by handleTouchStart.
+	 * @returns {unknown} Result produced by handleTouchStart.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleTouchStart = (type: App.Player.LifeMoveType) => {
 		lastTouchAt = Date.now();
 		isHolding = true;
@@ -203,6 +226,12 @@
 		}, 1000);
 	};
 
+	/**
+	 * Ends touch interaction and commits appropriate life delta.
+	 * @param {App.Player.LifeMoveType} type - Parameter used by handleTouchEnd.
+	 * @returns {unknown} Result produced by handleTouchEnd.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleTouchEnd = (type: App.Player.LifeMoveType) => {
 		lastTouchAt = Date.now();
 		if (interval) {
@@ -218,6 +247,11 @@
 		setPlayerHighlighted(id, false);
 	};
 
+	/**
+	 * Cancels active hold sequence without adding an extra tap-based change.
+	 * @returns {unknown} Result produced by handleCancelHold.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleCancelHold = () => {
 		lastTouchAt = Date.now();
 		if (interval) {
@@ -234,6 +268,11 @@
 	let editing = false;
 	let editValue = '';
 
+	/**
+	 * Opens prompt fallback to set an absolute life total.
+	 * @returns {unknown} Result produced by openPromptSetLife.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const openPromptSetLife = () => {
 		const current = $players[index].lifeTotal;
 		const input = prompt($_('set_life_total') ?? 'Set life total', String(current));
@@ -244,6 +283,11 @@
 		}
 	};
 
+	/**
+	 * Enables inline life editing and focuses the numeric field.
+	 * @returns {unknown} Result produced by startEdit.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const startEdit = async () => {
 		editing = true;
 		editValue = String($players[index].lifeTotal);
@@ -253,6 +297,11 @@
 		el?.select();
 	};
 
+	/**
+	 * Saves inline life edit value to player store.
+	 * @returns {unknown} Result produced by saveEdit.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const saveEdit = () => {
 		const val = Number(editValue);
 		if (!Number.isNaN(val)) {
@@ -261,6 +310,11 @@
 		editing = false;
 	};
 
+	/**
+	 * Exits inline life edit mode without applying changes.
+	 * @returns {unknown} Result produced by cancelEdit.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const cancelEdit = () => {
 		editing = false;
 	};

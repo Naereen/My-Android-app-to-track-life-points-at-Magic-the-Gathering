@@ -51,8 +51,19 @@ export const lifeHistory = persist<GameSnapshot[]>(LIFE_HISTORY_STORAGE_KEY, [])
 let recordTimer: ReturnType<typeof setTimeout> | null = null;
 let pendingSnapshot: GameSnapshot | null = null;
 
+/**
+ * Validates a CSS hex color token (`#rgb` or `#rrggbb`).
+ * @param {string} value Candidate color string.
+ * @returns {boolean} `true` when the token is a valid hex color.
+ */
 const isHexColor = (value: string) => /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(value.trim());
 
+/**
+ * Resolves player color strings to canonical chart colors.
+ * Rejects gradients and returns `null` when no safe single color is available.
+ * @param {string | undefined} value Raw player color setting.
+ * @returns {string | null} Normalized color or `null`.
+ */
 const normalizePlayerColor = (value: string | undefined) => {
 	if (!value || value.includes(',')) return null;
 	const normalized = value.trim().toLowerCase();
@@ -60,6 +71,13 @@ const normalizePlayerColor = (value: string | undefined) => {
 	return namedPlayerColors[normalized] ?? null;
 };
 
+/**
+ * Decides whether a normalized player color is acceptable for chart rendering.
+ * Prevents duplicate colors and avoids low-contrast defaults (white/black).
+ * @param {string | null} value Candidate normalized color.
+ * @param {Set<string>} usedColors Palette entries already assigned to previous players.
+ * @returns {boolean} `true` when color should be used instead of fallback palette.
+ */
 const shouldUsePlayerColor = (value: string | null, usedColors: Set<string>) => {
 	if (!value) return false;
 	if (value === '#ffffff' || value === '#202020') return false;
@@ -71,6 +89,12 @@ const cloneSnapshot = (snapshot: GameSnapshot): GameSnapshot => ({
 	players: snapshot.players.map((player) => ({ ...player }))
 });
 
+/**
+ * Compares two snapshots to avoid storing redundant chart points.
+ * @param {GameSnapshot | undefined} left Previous persisted snapshot.
+ * @param {GameSnapshot | null} right Incoming snapshot candidate.
+ * @returns {boolean} `true` when player identity/colors/life values are identical.
+ */
 const areSnapshotsEquivalent = (left: GameSnapshot | undefined, right: GameSnapshot | null) => {
 	if (!left || !right) return false;
 	if (left.players.length !== right.players.length) return false;
@@ -86,6 +110,11 @@ const areSnapshotsEquivalent = (left: GameSnapshot | undefined, right: GameSnaps
 	});
 };
 
+/**
+ * Persists one snapshot, enforces retention cap, and clears pending debounce state.
+ * @param {GameSnapshot} snapshot Snapshot to append if distinct from latest entry.
+ * @returns {void}
+ */
 const commitSnapshot = (snapshot: GameSnapshot) => {
 	lifeHistory.update((current) => {
 		const previous = current[current.length - 1];
@@ -153,12 +182,20 @@ export const recordImmediateSnapshot = (
 	commitSnapshot(buildSnapshot(players, activePlayerCount));
 };
 
+/**
+ * Immediately commits the currently debounced snapshot, if any.
+ * @returns {void}
+ */
 export const flushPendingSnapshot = () => {
 	if (pendingSnapshot) {
 		commitSnapshot(pendingSnapshot);
 	}
 };
 
+/**
+ * Cancels pending snapshot recording and clears all persisted life history.
+ * @returns {void}
+ */
 export const clearLifeHistory = () => {
 	if (recordTimer) {
 		clearTimeout(recordTimer);

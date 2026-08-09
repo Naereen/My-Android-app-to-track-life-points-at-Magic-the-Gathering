@@ -1,8 +1,16 @@
 let wakeLock: any = null;
 let keepAwake = false;
 
+/**
+ * Checks whether the browser exposes the Screen Wake Lock API.
+ * @returns {boolean} `true` when `navigator.wakeLock` is available.
+ */
 const isSupported = () => typeof navigator !== 'undefined' && 'wakeLock' in navigator;
 
+/**
+ * Attempts to acquire a screen wake lock and keeps a reference to the lock sentinel.
+ * @returns {Promise<void>}
+ */
 async function requestWakeLock() {
 	if (!isSupported()) return;
 	try {
@@ -18,6 +26,10 @@ async function requestWakeLock() {
 	}
 }
 
+/**
+ * Releases the active wake lock if one is currently held.
+ * @returns {Promise<void>}
+ */
 async function releaseWakeLock() {
 	if (!wakeLock) return;
 	try {
@@ -28,6 +40,11 @@ async function releaseWakeLock() {
 	wakeLock = null;
 }
 
+/**
+ * Re-acquires wake lock when tab becomes visible and preference is enabled.
+ * Releases lock when tab goes to background to avoid unnecessary battery drain.
+ * @returns {void}
+ */
 function handleVisibilityChange() {
 	if (document.visibilityState === 'visible' && keepAwake) {
 		requestWakeLock();
@@ -37,6 +54,12 @@ function handleVisibilityChange() {
 	}
 }
 
+/**
+ * Toggles the keep-awake policy for the application.
+ * Immediately acquires or releases the wake lock based on current visibility state.
+ * @param {boolean} enable Whether screen should be kept awake while the app is visible.
+ * @returns {void}
+ */
 export function setKeepAwake(enable: boolean) {
 	keepAwake = !!enable;
 	if (keepAwake) {
@@ -46,12 +69,20 @@ export function setKeepAwake(enable: boolean) {
 	}
 }
 
+/**
+ * Starts wake-lock lifecycle listeners for visibility changes and page unload.
+ * @returns {void}
+ */
 export function initWakeLock() {
 	if (typeof document === 'undefined') return;
 	document.addEventListener('visibilitychange', handleVisibilityChange);
 	window.addEventListener('beforeunload', () => releaseWakeLock());
 }
 
+/**
+ * Stops wake-lock lifecycle handling and releases any active lock.
+ * @returns {void}
+ */
 export function stopWakeLockManager() {
 	if (typeof document === 'undefined') return;
 	document.removeEventListener('visibilitychange', handleVisibilityChange);

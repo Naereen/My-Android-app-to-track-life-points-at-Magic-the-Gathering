@@ -15,6 +15,13 @@ export const resourceCounter: Writable<{ [key in App.Resources.Resource]: number
 	}
 );
 
+/**
+ * Sets one shared resource counter (mana, storm, etc.) to a non-negative integer value.
+ * Adds a `resourceChange` game-history entry only when the value actually changes.
+ * @param {App.Resources.Resource} resourceType Resource key to update.
+ * @param {number} count Requested new value.
+ * @returns {void}
+ */
 export const setResource = (resourceType: App.Resources.Resource, count: number) => {
 	const nextCount = Math.max(0, Math.trunc(count));
 	let previousCount = 0;
@@ -46,6 +53,11 @@ export const setResource = (resourceType: App.Resources.Resource, count: number)
 	}
 };
 
+/**
+ * Resets all shared resources to `0`.
+ * Adds a `resourceReset` history entry when at least one value was non-zero.
+ * @returns {void}
+ */
 export const resetResources = () => {
 	let changed = false;
 

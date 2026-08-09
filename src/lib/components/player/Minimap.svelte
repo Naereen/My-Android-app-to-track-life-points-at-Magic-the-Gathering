@@ -660,11 +660,23 @@
 	let seatLongPressTimeout: ReturnType<typeof setTimeout> | null = null;
 	let seatLongPressConsumedClick = false;
 
+	/**
+	 * Opens player modal from minimap background tap when root is interactive.
+	 * @returns {unknown} Result produced by handleRootOpen.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleRootOpen = () => {
 		if (!rootClickable) return;
 		openPlayerModal(playerIndex + 1, 'commander');
 	};
 
+	/**
+	 * Routes seat click to split-side callback or regular callback, honoring long-press consumption.
+	 * @param {MouseEvent} event - Parameter used by handleSeatClick.
+	 * @param {number} targetIndex - Parameter used by handleSeatClick.
+	 * @returns {unknown} Result produced by handleSeatClick.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleSeatClick = (event: MouseEvent, targetIndex: number) => {
 		if (seatLongPressConsumedClick) {
 			seatLongPressConsumedClick = false;
@@ -687,6 +699,12 @@
 		onSeatClick(targetIndex);
 	};
 
+	/**
+	 * Starts delayed long-press timer for a seat to open commander edit affordance.
+	 * @param {number} targetIndex - Parameter used by startSeatLongPress.
+	 * @returns {unknown} Result produced by startSeatLongPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const startSeatLongPress = (targetIndex: number) => {
 		if (!onSeatLongPress) return;
 		if (seatLongPressTimeout) {
@@ -699,6 +717,11 @@
 		}, seatLongPressMs);
 	};
 
+	/**
+	 * Cancels pending seat long-press timer.
+	 * @returns {unknown} Result produced by stopSeatLongPress.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const stopSeatLongPress = () => {
 		if (seatLongPressTimeout) {
 			clearTimeout(seatLongPressTimeout);
@@ -706,6 +729,13 @@
 		}
 	};
 
+	/**
+	 * Provides keyboard activation parity for seat interaction buttons.
+	 * @param {KeyboardEvent} event - Parameter used by handleSeatKeydown.
+	 * @param {number} targetIndex - Parameter used by handleSeatKeydown.
+	 * @returns {unknown} Result produced by handleSeatKeydown.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
 	const handleSeatKeydown = (event: KeyboardEvent, targetIndex: number) => {
 		if (!onSeatClick && !onSeatSplitClick) return;
 		if (event.key === 'Enter' || event.key === ' ') {

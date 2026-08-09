@@ -26,6 +26,11 @@
 
 	$: innerHeight = 0;
 
+	/**
+	 * Formats a timestamp into a localized long-date + time string for history rows.
+	 * @param {number} timestamp Unix timestamp in milliseconds.
+	 * @returns {string} Human-readable date/time label.
+	 */
 	const formatTime = (timestamp: number) => {
 		try {
 			const locale = $appSettings.locale || undefined;
@@ -47,6 +52,11 @@
 		}
 	};
 
+	/**
+	 * Resolves a localized label for status keys stored in history payloads.
+	 * @param {string | undefined} statusKey Internal status identifier.
+	 * @returns {string} Localized status label.
+	 */
 	const statusLabel = (statusKey: string | undefined) => {
 		if (!statusKey) return '';
 
@@ -68,6 +78,11 @@
 		return statusKey;
 	};
 
+	/**
+	 * Resolves a localized label for mana/resource history entries.
+	 * @param {string | undefined} resourceKey Internal resource identifier.
+	 * @returns {string} Localized resource label.
+	 */
 	const resourceLabel = (resourceKey: string | undefined) => {
 		if (!resourceKey) return '';
 
@@ -112,6 +127,11 @@
 		storm: 'storm-counter-symbol.webp'
 	} as const;
 
+	/**
+	 * Formats one `GameHistoryEntry` into a readable line displayed in the list.
+	 * @param {GameHistoryEntry} entry Raw history event.
+	 * @returns {string} Human-readable description of the event.
+	 */
 	const formatEntry = (entry: GameHistoryEntry) => {
 		const fromValue = entry.payload.from ?? 0;
 		const toValue = entry.payload.to ?? 0;
@@ -178,6 +198,12 @@
 		return '';
 	};
 
+	/**
+	 * Selects the icon descriptor used to render one history row.
+	 * @param {GameHistoryEntry} entry History event.
+	 * @returns {{component?: unknown; imageSrc?: string; glyph?: string; className: string}}
+	 * Icon descriptor with either Svelte component, image, or glyph fallback.
+	 */
 	const iconForEntry = (entry: GameHistoryEntry) => {
 		if (entry.kind === 'positiveLife') {
 			return { glyph: '💚', className: 'text-green-200' };
@@ -238,13 +264,47 @@
 		return { glyph: '•', className: 'text-gray-300' };
 	};
 
+	/**
+	 * Returns the optional Svelte component icon for a history entry.
+	 * @param {GameHistoryEntry} entry History event.
+	 * @returns {unknown} Component constructor when available.
+	 */
 	const iconComponent = (entry: GameHistoryEntry) => iconForEntry(entry).component;
+
+	/**
+	 * Returns the optional image icon source for a history entry.
+	 * @param {GameHistoryEntry} entry History event.
+	 * @returns {string | undefined} Image source when available.
+	 */
 	const iconImageSrc = (entry: GameHistoryEntry) => iconForEntry(entry).imageSrc;
+
+	/**
+	 * Returns the glyph fallback for a history entry icon.
+	 * @param {GameHistoryEntry} entry History event.
+	 * @returns {string | undefined} Unicode glyph when no component/image is used.
+	 */
 	const iconGlyph = (entry: GameHistoryEntry) => iconForEntry(entry).glyph;
+
+	/**
+	 * Returns CSS text-color class associated with entry icon.
+	 * @param {GameHistoryEntry} entry History event.
+	 * @returns {string} Tailwind class name.
+	 */
 	const iconClassName = (entry: GameHistoryEntry) => iconForEntry(entry).className;
+
+	/**
+	 * Flags entries that should use Keyrune-like icon shell sizing.
+	 * @param {GameHistoryEntry} entry History event.
+	 * @returns {boolean} True for boolean/numeric status icons.
+	 */
 	const isKeyruneIcon = (entry: GameHistoryEntry) =>
 		entry.kind === 'statusBoolean' || entry.kind === 'statusNumeric';
 
+	/**
+	 * Hides status entries for disabled optional mechanics (Acorn/Ticket).
+	 * @param {GameHistoryEntry} entry History event.
+	 * @returns {boolean} True when the row should not be displayed.
+	 */
 	const isHiddenStatusEntry = (entry: GameHistoryEntry) => {
 		if (entry.kind !== 'statusNumeric') return false;
 		if (entry.payload.key === 'acorn' && !$appSettings.enableAcornMode) return true;
@@ -254,6 +314,9 @@
 
 	$: visibleGameHistory = $gameHistory.filter((entry) => !isHiddenStatusEntry(entry));
 
+	/**
+	 * Flushes pending life snapshots then opens the life-chart modal.
+	 */
 	const showLifeChart = () => {
 		flushPendingSnapshot();
 		openHistoryModal();
