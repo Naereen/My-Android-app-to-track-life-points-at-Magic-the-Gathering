@@ -26,6 +26,8 @@
 
 	const viewBoxWidth = 1000;
 	const viewBoxHeight = 900;
+	const baseXTickIntervalMs = 5 * 60 * 1000;
+	const maxIntermediateXLabels = 6;
 	const padding = {
 		top: 0,
 		right: 36,
@@ -89,6 +91,26 @@
 		return `${hours}h${remainingMinutes > 0 ? ` ${remainingMinutes}m` : ''}`;
 	};
 
+	/**
+	 * Returns an X-axis tick interval (multiple of 5 minutes) that keeps labels readable.
+	 * @param {number} totalDurationMs - Parameter used by getAdaptiveXTickInterval.
+	 * @returns {unknown} Result produced by getAdaptiveXTickInterval.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
+	const getAdaptiveXTickInterval = (totalDurationMs: number) => {
+		let interval = baseXTickIntervalMs;
+
+		while (true) {
+			const rawTickCount = Math.max(0, Math.floor((totalDurationMs - 1) / interval));
+			const visibleTickCount = Math.max(0, rawTickCount - 1);
+			if (visibleTickCount <= maxIntermediateXLabels) {
+				return interval;
+			}
+
+			interval += baseXTickIntervalMs;
+		}
+	};
+
 	const minLife = snapshots.length
 		? Math.min(0, ...snapshots.flatMap((snapshot) => snapshot.players.map((player) => player.life)))
 		: 0;
@@ -104,7 +126,7 @@
 	const firstTimestamp = snapshots[0]?.timestamp ?? 0;
 	const lastTimestamp = snapshots[snapshots.length - 1]?.timestamp ?? firstTimestamp;
 	const durationMs = Math.max(1, lastTimestamp - firstTimestamp);
-	const xTickIntervalMs = 5 * 60 * 1000;
+	const xTickIntervalMs = getAdaptiveXTickInterval(durationMs);
 	const yTicks = Array.from(
 		{ length: Math.floor((yMax - yMin) / 10) + 1 },
 		(_, index) => yMin + index * 10
