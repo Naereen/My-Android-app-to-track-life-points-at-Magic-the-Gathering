@@ -26,8 +26,12 @@
 
 	const viewBoxWidth = 1000;
 	const viewBoxHeight = 900;
-	const baseXTickIntervalMs = 5 * 60 * 1000;
 	const maxIntermediateXLabels = 6;
+	const tenSecondsMs = 10 * 1000;
+	const thirtySecondsMs = 30 * 1000;
+	const oneMinuteMs = 60 * 1000;
+	const twoMinutesMs = 2 * oneMinuteMs;
+	const fiveMinutesMs = 5 * oneMinuteMs;
 	const padding = {
 		top: 0,
 		right: 36,
@@ -75,13 +79,23 @@
 	};
 
 	/**
-	 * Formats X-axis labels for five-minute major ticks.
-	 * @param {number} milliseconds - Parameter used by formatFiveMinuteTickLabel.
-	 * @returns {unknown} Result produced by formatFiveMinuteTickLabel.
+	 * Formats X-axis labels for elapsed-time major ticks.
+	 * @param {number} milliseconds - Parameter used by formatXTickLabel.
+	 * @returns {unknown} Result produced by formatXTickLabel.
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
-	const formatFiveMinuteTickLabel = (milliseconds: number) => {
+	const formatXTickLabel = (milliseconds: number) => {
+		const totalSeconds = Math.floor(milliseconds / 1000);
+		if (totalSeconds < 60) {
+			return `${totalSeconds}s`;
+		}
+
 		const totalMinutes = Math.floor(milliseconds / 60000);
+		const remainingSeconds = totalSeconds % 60;
+		if (totalMinutes < 10 && remainingSeconds > 0) {
+			return `${totalMinutes}m ${String(remainingSeconds).padStart(2, '0')}s`;
+		}
+
 		if (totalMinutes < 60) {
 			return `${totalMinutes}m`;
 		}
@@ -92,22 +106,33 @@
 	};
 
 	/**
-	 * Returns an X-axis tick interval (multiple of 5 minutes) that keeps labels readable.
+	 * Returns an X-axis tick interval that guarantees short-game labels (1m/2m/5m)
+	 * and keeps longer-game labels readable.
 	 * @param {number} totalDurationMs - Parameter used by getAdaptiveXTickInterval.
 	 * @returns {unknown} Result produced by getAdaptiveXTickInterval.
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const getAdaptiveXTickInterval = (totalDurationMs: number) => {
-		let interval = baseXTickIntervalMs;
+		const compactIntervals = [tenSecondsMs, thirtySecondsMs, oneMinuteMs, twoMinutesMs, fiveMinutesMs];
+
+		for (const interval of compactIntervals) {
+			const tickCount = Math.max(0, Math.floor((totalDurationMs - 1) / interval));
+			const visibleTickCount = tickCount > 1 ? tickCount - 1 : tickCount;
+			if (visibleTickCount <= maxIntermediateXLabels) {
+				return interval;
+			}
+		}
+
+		let interval = fiveMinutesMs;
 
 		while (true) {
-			const rawTickCount = Math.max(0, Math.floor((totalDurationMs - 1) / interval));
-			const visibleTickCount = Math.max(0, rawTickCount - 1);
+			const tickCount = Math.max(0, Math.floor((totalDurationMs - 1) / interval));
+			const visibleTickCount = tickCount > 1 ? tickCount - 1 : tickCount;
 			if (visibleTickCount <= maxIntermediateXLabels) {
 				return interval;
 			}
 
-			interval += baseXTickIntervalMs;
+			interval += fiveMinutesMs;
 		}
 	};
 
@@ -135,7 +160,7 @@
 		{ length: Math.floor(durationMs / xTickIntervalMs) },
 		(_, index) => (index + 1) * xTickIntervalMs
 	).filter((value) => value < durationMs);
-	const xTicksMsWithoutLast = xTicksMs.slice(0, -1);
+	const xTicksMsWithoutLast = xTicksMs.length > 1 ? xTicksMs.slice(0, -1) : xTicksMs;
 
 	/**
 	 * Projects a timestamp to chart X coordinate within drawable bounds.
@@ -413,7 +438,7 @@
 					stroke-width="1.2"
 				/>
 				<text x={tickX} y={viewBoxHeight - 26} fill="#9ca3af" font-size="24" text-anchor="middle">
-					{formatFiveMinuteTickLabel(tickMs)}
+					{formatXTickLabel(tickMs)}
 				</text>
 			{/each}
 
