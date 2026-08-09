@@ -34,10 +34,20 @@
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
 	import Minimap, { getBackgroundViewerRotationInCommanderDamage, getSeatOrientations } from '$lib/components/player/Minimap.svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
+	import { playCommanderDamageBurst } from '$lib/utils/gameplaySound';
 	import { _ } from 'svelte-i18n';
 	import { appSettings } from '$lib/store/appSettings';
 	import { vibrate } from '$lib/utils/haptics';
 	import { onDestroy, onMount } from 'svelte';
+
+	type CommanderMinimapBurstState = {
+		playerId: number;
+		fromPlayerId: number;
+		sourceIndex: number;
+		deltaTotal: number;
+		hitCount: number;
+		timer: ReturnType<typeof setTimeout> | null;
+	};
 	let selectedColors: string[] = [];
 	let mode: 'background' | 'commander' | 'status_effects' = 'status_effects';
 	let searchQuery = '';
@@ -223,6 +233,8 @@
 	const MOBILE_KEYBOARD_THRESHOLD_PX = 150;
 	let isMobileKeyboardOpen = false;
 	let maxVisibleViewportHeight = 0;
+	const COMMANDER_MINIMAP_SOUND_DEBOUNCE_MS = 900;
+	let commanderMinimapSoundBursts = new Map<string, CommanderMinimapBurstState>();
 
 	const isEditableElement = (element: Element | null): element is HTMLElement => {
 		return !!element && element instanceof HTMLElement && (
@@ -896,15 +908,82 @@
 		setPlayerPartnerMode($playerModalData.playerId, !currentPartnerMode);
 	};
 
+	const buildCommanderMinimapSoundBurstKey = (
+		playerId: number,
+		fromPlayerId: number,
+		sourceIndex: number
+	) => `${playerId}:${fromPlayerId}:${sourceIndex === 1 ? 1 : 0}`;
+
+	const flushCommanderMinimapSoundBurst = (key: string) => {
+		const burst = commanderMinimapSoundBursts.get(key);
+		if (!burst) return;
+
+		if (burst.timer) {
+			clearTimeout(burst.timer);
+		}
+		commanderMinimapSoundBursts.delete(key);
+
+		if (burst.deltaTotal === 0) return;
+
+		playCommanderDamageBurst(Math.abs(burst.deltaTotal), burst.deltaTotal > 0 ? 'down' : 'up');
+	};
+
+	const queueCommanderMinimapBurstSound = (
+		playerId: number,
+		fromPlayerId: number,
+		delta: number,
+		sourceIndex: number
+	) => {
+		const normalizedSourceIndex = sourceIndex === 1 ? 1 : 0;
+		const key = buildCommanderMinimapSoundBurstKey(playerId, fromPlayerId, normalizedSourceIndex);
+		const existing = commanderMinimapSoundBursts.get(key);
+		const next: CommanderMinimapBurstState = existing
+			? {
+					...existing,
+					deltaTotal: existing.deltaTotal + delta,
+					hitCount: existing.hitCount + Math.abs(delta)
+				}
+			: {
+					playerId,
+					fromPlayerId,
+					sourceIndex: normalizedSourceIndex,
+					deltaTotal: delta,
+					hitCount: Math.abs(delta),
+					timer: null
+				};
+
+		if (next.timer) {
+			clearTimeout(next.timer);
+		}
+
+		next.timer = setTimeout(() => {
+			flushCommanderMinimapSoundBurst(key);
+		}, COMMANDER_MINIMAP_SOUND_DEBOUNCE_MS);
+
+		commanderMinimapSoundBursts.set(key, next);
+	};
+
+	const flushAllCommanderMinimapSoundBursts = () => {
+		const keys = Array.from(commanderMinimapSoundBursts.keys());
+		for (const key of keys) {
+			flushCommanderMinimapSoundBurst(key);
+		}
+	};
+
 	const setCommanderDamageDelta = (
 		playerId: number,
 		fromPlayerId: number,
 		delta: number,
-		sourceIndex = 0
+		sourceIndex = 0,
+		options?: {
+			playSound?: boolean;
+		}
 	) => {
 		const current = getCommanderDamageValue(playerId, fromPlayerId, sourceIndex);
 		const nextValue = Math.max(0, current + delta);
-		setCommanderDamage(playerId, fromPlayerId, nextValue, sourceIndex);
+		setCommanderDamage(playerId, fromPlayerId, nextValue, sourceIndex, {
+			playSound: options?.playSound !== false
+		});
 
 		// Keep editor inputs strictly aligned with store updates after button presses,
 		// including when one of the inputs is currently focused.
@@ -983,7 +1062,8 @@
 	 */
 	const incrementCommanderFromMinimap = (targetIndex: number) => {
 		const fromPlayerId = targetIndex + 1;
-		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0);
+		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0, { playSound: false });
+		queueCommanderMinimapBurstSound($playerModalData.playerId, fromPlayerId, 1, 0);
 	};
 
 	/**
@@ -996,12 +1076,16 @@
 	const incrementCommanderFromMinimapByHalf = (targetIndex: number, side: 'left' | 'right') => {
 		const fromPlayerId = targetIndex + 1;
 		if (getCommanderSourceCountForPlayer(fromPlayerId) <= 1) {
-			setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0);
+			setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0, { playSound: false });
+			queueCommanderMinimapBurstSound($playerModalData.playerId, fromPlayerId, 1, 0);
 			return;
 		}
 
 		const sourceIndex = side === 'right' ? 1 : 0;
-		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, sourceIndex);
+		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, sourceIndex, {
+			playSound: false
+		});
+		queueCommanderMinimapBurstSound($playerModalData.playerId, fromPlayerId, 1, sourceIndex);
 	};
 
 	onMount(() => {
@@ -1017,6 +1101,7 @@
 
 	onDestroy(() => {
 		const viewport = typeof window !== 'undefined' ? window.visualViewport : null;
+		flushAllCommanderMinimapSoundBursts();
 		window.removeEventListener('popstate', handleBackNavigation);
 		window.removeEventListener('focusin', handleViewportKeyboardChange);
 		window.removeEventListener('focusout', handleViewportKeyboardChange);

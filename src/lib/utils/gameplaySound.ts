@@ -29,6 +29,8 @@ type PlaySoundOptions = {
 	ignoreSoundEffectsSetting?: boolean;
 };
 
+type CommanderBurstDirection = 'up' | 'down';
+
 const SOUND_PATTERNS: Record<GameplaySoundType, Tone[]> = {
 	// The tone recipes intentionally map game semantics to distinct timbres so players can
 	// recognize what happened without looking directly at the screen.
@@ -219,5 +221,72 @@ export const playGameplaySound = (sound: GameplaySoundType, options?: PlaySoundO
 		// instead of like a raw, overlapping oscillator burst.
 		playTone(ctx, tone, cursor);
 		cursor += tone.duration + (tone.gap ?? 0);
+	}
+};
+
+/**
+ * Plays one aggregated commander-damage cue after a burst of quick taps.
+ * The cue gets louder/longer as hit count grows, but remains a single audio event.
+ * @param {number} hitCount Number of taps merged in the burst.
+ * @param {CommanderBurstDirection} direction Damage direction semantic (`down` for adding damage taken).
+ * @param {PlaySoundOptions} [options] Sound playback options.
+ * @returns {void}
+ */
+export const playCommanderDamageBurst = (
+	hitCount: number,
+	direction: CommanderBurstDirection,
+	options?: PlaySoundOptions
+) => {
+	const ctx = getAudioContext(options);
+	if (!ctx) return;
+
+	if (ctx.state === 'suspended') {
+		void ctx.resume();
+	}
+
+	const cappedHits = Math.max(1, Math.min(20, Math.round(hitCount)));
+	const intensity = Math.min(1, (cappedHits - 1) / 11);
+	const isDown = direction === 'down';
+	const startAt = ctx.currentTime + 0.005;
+
+	const primaryStart = isDown ? 760 : 430;
+	const primaryEnd = isDown ? 360 - intensity * 70 : 780 + intensity * 180;
+	const primaryDuration = 0.16 + intensity * 0.28;
+	const primaryGain = 0.022 + intensity * 0.028;
+
+	playTone(
+		ctx,
+		{
+			frequency: primaryStart,
+			toFrequency: primaryEnd,
+			duration: primaryDuration,
+			wave: isDown ? 'square' : 'triangle',
+			gain: primaryGain,
+			filterStartHz: 2800 - intensity * 900,
+			filterEndHz: 900 + intensity * 500,
+			detuneCents: isDown ? 4 : -4,
+			attack: 0.01,
+			release: 0.2 + intensity * 0.25
+		},
+		startAt
+	);
+
+	if (cappedHits >= 4) {
+		playTone(
+			ctx,
+			{
+				frequency: isDown ? primaryEnd * 1.05 : primaryEnd * 0.82,
+				toFrequency: isDown ? primaryEnd * 0.75 : primaryEnd * 1.18,
+				duration: 0.1 + intensity * 0.18,
+				wave: isDown ? 'sawtooth' : 'triangle',
+				gain: primaryGain * 0.58,
+				filterStartHz: 2200,
+				filterEndHz: 700,
+				detuneCents: isDown ? -6 : 6,
+				attack: 0.01,
+				release: 0.16 + intensity * 0.2
+			},
+			startAt + primaryDuration * 0.45
+		);
 	}
 };

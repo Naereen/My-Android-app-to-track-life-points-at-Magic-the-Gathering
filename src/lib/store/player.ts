@@ -1216,7 +1216,10 @@ export const setCommanderDamage = (
 	playerId: number,
 	fromPlayerId: number,
 	amount: number,
-	sourceIndex = 0
+	sourceIndex = 0,
+	options?: {
+		playSound?: boolean;
+	}
 ) => {
 	// Commander damage editing tracks commander counters only.
 	// It must not directly modify life totals.
@@ -1257,7 +1260,7 @@ export const setCommanderDamage = (
 		});
 	});
 
-	if (Math.abs(delta) > 0) {
+	if (Math.abs(delta) > 0 && options?.playSound !== false) {
 		playGameplaySound(delta > 0 ? 'bigCommanderDown' : 'bigCommanderUp');
 	}
 
