@@ -509,6 +509,16 @@
 					<Minimap playerIndex={index} orientation={orientation} layout={layout} />
 				</div>
 			{/if}
+			{#if commandTaxCount > 0}
+				<div
+					title={$_('tooltip_status_command_tax')}
+					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
+					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+				>
+					<CommandTax />
+					<span class="leading-none">{commandTaxDisplay}</span>
+				</div>
+			{/if}
 			{#if poisonCount > 0}
 				<div
 					title={$_('tooltip_status_poison')}
@@ -569,17 +579,7 @@
 					<span class="leading-none">{visibleTicketCount}</span>
 				</div>
 			{/if}
-			{#if commandTaxCount > 0}
-				<div
-					title={$_('tooltip_status_command_tax')}
-					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
-				>
-					<CommandTax />
-					<span class="leading-none">{commandTaxDisplay}</span>
-				</div>
-			{/if}
-				{#if ringBearerCount > 0}
+			{#if ringBearerCount > 0}
 				<div
 					title={$_('tooltip_status_ring_bearer')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"

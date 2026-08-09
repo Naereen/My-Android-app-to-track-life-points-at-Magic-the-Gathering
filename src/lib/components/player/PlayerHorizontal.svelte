@@ -667,6 +667,21 @@
 								<Minimap playerIndex={index} orientation={orientation} layout={layout} />
 							</div>
 						{/if}
+						{#if commandTaxCount > 0}
+							<div
+								title={$_('tooltip_status_command_tax')}
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
+								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+							>
+								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{commandTaxDisplay}</span>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<CommandTax />
+								</div>
+							</div>
+						{/if}
 						{#if poisonCount > 0}
 							<div
 								title={$_('tooltip_status_poison')}
@@ -757,21 +772,6 @@
 							</div>
 						</div>
 					{/if}
-						{#if commandTaxCount > 0}
-							<div
-								title={$_('tooltip_status_command_tax')}
-								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
-							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{commandTaxDisplay}</span>
-								<div
-									class="status-rotate-wrapper"
-									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
-								>
-									<CommandTax />
-								</div>
-							</div>
-						{/if}
 						{#if ringBearerCount > 0}
 							<div
 								title={$_('tooltip_status_ring_bearer')}

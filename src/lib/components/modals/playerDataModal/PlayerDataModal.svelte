@@ -187,7 +187,9 @@
 	$: modalSeatOrientations = getSeatOrientations($appSettings.playerCount, commanderMinimapLayout);
 	$: modalPlayerOrientation =
 		modalSeatOrientations[($playerModalData?.playerId ?? 1) - 1] ?? 'up';
-	$: modalPlayer = getModalPlayer();
+	$: modalPlayer =
+		$players.find((player) => player.id === $playerModalData.playerId) ??
+		$players[$playerModalData.playerId - 1];
 	$: modalPlayerPartnerMode = !!modalPlayer?.statusEffects?.partnerMode;
 	$: modalRotation = orientationToModalRotation(modalPlayerOrientation);
 	$: isQuarterTurnModal = modalRotation === '90deg' || modalRotation === '-90deg';
@@ -615,11 +617,11 @@
 		return getCommanderDamageSourceValue($players[playerId - 1], fromPlayerId, sourceIndex, $appSettings.playerCount);
 	};
 
-	const getCommanderSourceCountForPlayer = (playerId: number): number => {
+	$: getCommanderSourceCountForPlayer = (playerId: number): number => {
 		return isPartnerModeEnabledForPlayer(playerId) ? COMMANDER_DAMAGE_SOURCE_SLOTS : 1;
 	};
 
-	const getCommandTaxSourceValue = (playerId: number, sourceIndex = 0): number => {
+	$: getCommandTaxSourceValue = (playerId: number, sourceIndex = 0): number => {
 		const targetPlayer =
 			$players.find((player) => player.id === playerId) ?? $players[playerId - 1];
 		const pair = getCommandTaxBySourceForPlayer(targetPlayer);
@@ -627,64 +629,14 @@
 		return pair[slot] ?? 0;
 	};
 
-	let editingCommandTaxValuePrimary = '0';
-	let editingCommandTaxValueSecondary = '0';
-
-	const getFocusedCommandTaxInputSource = (): 0 | 1 | null => {
-		if (typeof document === 'undefined') return null;
-		const active = document.activeElement;
-		if (!(active instanceof HTMLInputElement)) return null;
-		if (active.id === 'command-tax-input-1') return 0;
-		if (active.id === 'command-tax-input-2') return 1;
-		return null;
-	};
-
-	const syncCommandTaxEditorValues = (
-		playerId: number,
-		focusedSource: 0 | 1 | null = null,
-		forceSource: 0 | 1 | null = null
-	) => {
-		const primaryValue = String(getCommandTaxSourceValue(playerId, 0));
-		const secondaryValue = String(getCommandTaxSourceValue(playerId, 1));
-
-		if (focusedSource !== 0 || forceSource === 0) {
-			editingCommandTaxValuePrimary = primaryValue;
-		}
-		if (focusedSource !== 1 || forceSource === 1) {
-			editingCommandTaxValueSecondary = secondaryValue;
-		}
-	};
-
-	$: if ($playerModalData?.playerId) {
-		const focusedSource = getFocusedCommandTaxInputSource();
-		syncCommandTaxEditorValues($playerModalData.playerId, focusedSource);
-	}
-
-	const handleCommandTaxInput = (playerId: number, sourceIndex: 0 | 1, event: Event) => {
-		const target = event.currentTarget as HTMLInputElement | null;
-		const rawValue = target?.value ?? '';
-
-		if (sourceIndex === 1) {
-			editingCommandTaxValueSecondary = rawValue;
-		} else {
-			editingCommandTaxValuePrimary = rawValue;
-		}
-
-		const parsed = parseInt(rawValue, 10);
-		if (Number.isNaN(parsed)) return;
-		setPlayerCommandTax(playerId, Math.max(0, parsed), sourceIndex);
-	};
-
 	const setCommandTaxDelta = (playerId: number, sourceIndex: 0 | 1, delta: number) => {
 		const nextValue = Math.max(0, getCommandTaxSourceValue(playerId, sourceIndex) + delta);
 		setPlayerCommandTax(playerId, nextValue, sourceIndex);
-		syncCommandTaxEditorValues(playerId, null, sourceIndex);
 	};
 
 	const toggleModalPartnerMode = () => {
-		const currentPartnerMode = !!getModalPlayer()?.statusEffects?.partnerMode;
+		const currentPartnerMode = modalPlayerPartnerMode;
 		setPlayerPartnerMode($playerModalData.playerId, !currentPartnerMode);
-		syncCommandTaxEditorValues($playerModalData.playerId);
 	};
 
 	const setCommanderDamageDelta = (
@@ -1082,7 +1034,7 @@
 
 					{#if mode === 'status_effects'}
 						<!-- Status effects controls -->
-						<div class="mt-1 w-[85%] flex flex-col items-center text-center text-base">
+						<div class="mt-1 w-[95%] flex flex-col items-center text-center text-base">
 							<div class="grid grid-cols-2 gap-1 m-1 justify-left">
 								<label class="flex items-center gap-1"
 									><input
@@ -1174,55 +1126,43 @@
 									{String($_('day_night'))}
 								</label>
 								<label class="flex items-center gap-1"
-									title={$_('partner_mode_help') ?? 'Activer deux sources de dégâts de commandant pour ce joueur'}
+									title={$_('partner_mode_help') ?? 'Activate two sources of Commander Damage for this player.'}
 								>
 									<input
 										type="checkbox"
 										checked={modalPlayerPartnerMode}
 										on:change={toggleModalPartnerMode}
 									/>
-									<span>{$_('partner_mode_label') ?? 'Mode partenaire (Commandant)'}</span>
+									<span>{$_('partner_mode_label') ?? 'Mode Partner (Commandant)'}</span>
 								</label>
 							</div>
 
 							<div class="w-full grid grid-cols-1 items-center text-center border-t pt-4">
 								{#if modalPlayerPartnerMode}
 									<div class="flex items-center gap-2">
-										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} 1</span>
+										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} #1/2</span>
 										{#if getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
 												on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, -1)}>-</button>
 										{/if}
-										<input
-											id="command-tax-input-1"
-											type="number"
-											min="0"
-											step="1"
-											class="w-16 min-w-[2rem] px-2 py-1 bg-gray-100 rounded text-center"
-											bind:value={editingCommandTaxValuePrimary}
-											on:input={(event) => handleCommandTaxInput($playerModalData.playerId, 0, event)}
-										/>
+											<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
+												>{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span
+											>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
 											on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, 1)}>+</button>
 									</div>
 									<div class="flex items-center gap-2">
-										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} 2</span>
+										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} #2/2</span>
 										{#if getCommandTaxSourceValue($playerModalData.playerId, 1) > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
 												on:click={() => setCommandTaxDelta($playerModalData.playerId, 1, -1)}>-</button>
 										{/if}
-										<input
-											id="command-tax-input-2"
-											type="number"
-											min="0"
-											step="1"
-											class="w-16 min-w-[2rem] px-2 py-1 bg-gray-100 rounded text-center"
-											bind:value={editingCommandTaxValueSecondary}
-											on:input={(event) => handleCommandTaxInput($playerModalData.playerId, 1, event)}
-										/>
+											<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 1) > 0}
+												>{getCommandTaxSourceValue($playerModalData.playerId, 1)}</span
+											>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
 											on:click={() => setCommandTaxDelta($playerModalData.playerId, 1, 1)}>+</button>
@@ -1235,15 +1175,9 @@
 												class="px-2 py-1 bg-gray-200 rounded"
 												on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, -1)}>-</button>
 										{/if}
-										<input
-											id="command-tax-input-1"
-											type="number"
-											min="0"
-											step="1"
-											class="w-16 min-w-[2rem] px-2 py-1 bg-gray-100 rounded text-center"
-											bind:value={editingCommandTaxValuePrimary}
-											on:input={(event) => handleCommandTaxInput($playerModalData.playerId, 0, event)}
-										/>
+											<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
+												>{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span
+											>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
 											on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, 1)}>+</button>
@@ -1260,7 +1194,7 @@
 													Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1)
 													)}>-</button>
 									{/if}
-									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
+									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].poison ?? 0) > 0}>{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
 									{#if ($players[$playerModalData.playerId - 1].poison ?? 0) < POISON_MAX}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1307,7 +1241,7 @@
 											</div>
 										</div>
 									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('energy', $players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) > 0} on:dblclick={() => startEditStat('energy', $players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -1355,7 +1289,7 @@
 											</div>
 										</div>
 									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('experience', $players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) > 0} on:dblclick={() => startEditStat('experience', $players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -1401,7 +1335,7 @@
 											</div>
 										</div>
 									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('rad', $players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) > 0} on:dblclick={() => startEditStat('rad', $players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -1410,7 +1344,7 @@
 												$playerModalData.playerId,
 												'rad',
 												($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1
-											)}>-</button>
+											)}>+</button>
 								</div>
 
 								{#if $appSettings.enableAcornMode}
@@ -1448,7 +1382,7 @@
 											</div>
 										</div>
 									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('acorn', $players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0}</span>
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) > 0} on:dblclick={() => startEditStat('acorn', $players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0}</span>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -1496,7 +1430,7 @@
 											</div>
 										</div>
 									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" on:dblclick={() => startEditStat('ticket', $players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0}</span>
+										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) > 0} on:dblclick={() => startEditStat('ticket', $players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0}</span>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -1525,7 +1459,7 @@
 													)
 												)}>-</button>
 									{/if}
-									<span class="min-w-[1rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
+									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) > 0}>{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) < RING_BEARER_MAX}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1558,7 +1492,7 @@
 													)
 												)}>-</button>
 									{/if}
-									<span class="min-w-[1rem] px-2 py-1 bg-gray-100 rounded">{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
+									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) > 0}>{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) < SPEED_MAX}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
