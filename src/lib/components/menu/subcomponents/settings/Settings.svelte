@@ -1297,10 +1297,10 @@
 			</div>
 		{/if}
 
-		<!-- All the main checkboxes -->
+		<!-- All the additional checkboxes -->
 		<div class="w-full flex justify-center mt-6 mb-2">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">{$_('main_checkboxes_settings')}</div>
+				<div class="text-2xl font-bold">{$_('additional_checkboxes_settings')}</div>
 			</div>
 		</div>
 		<div class="w-full flex justify-start mt-0 mb-0">
@@ -1438,7 +1438,7 @@
 				<div class="text-2xl font-bold">{$_('stream_mode_title') || 'Experimental Stream Mode (LAN relay)'}</div>
 			</div>
 		</div>
-		<div class="w-full flex justify-center mt-0 mb-0">
+		<div class="w-full flex justify-left mt-0 mb-0">
 			<label
 				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
 				style="min-width: 12rem;"
