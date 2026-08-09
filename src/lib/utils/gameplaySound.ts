@@ -7,7 +7,9 @@ export type GameplaySoundType =
 	| 'bigCommanderUp'
 	| 'bigCommanderDown'
 	| 'ko'
-	| 'victory';
+	| 'victory'
+	| 'timerTimeout'
+	| 'matchTimeout';
 
 type Tone = {
 	frequency: number;
@@ -15,6 +17,16 @@ type Tone = {
 	wave: OscillatorType;
 	gain: number;
 	gap?: number;
+	toFrequency?: number;
+	filterStartHz?: number;
+	filterEndHz?: number;
+	detuneCents?: number;
+	attack?: number;
+	release?: number;
+};
+
+type PlaySoundOptions = {
+	ignoreSoundEffectsSetting?: boolean;
 };
 
 const SOUND_PATTERNS: Record<GameplaySoundType, Tone[]> = {
@@ -46,6 +58,56 @@ const SOUND_PATTERNS: Record<GameplaySoundType, Tone[]> = {
 		{ frequency: 523.25, duration: 0.09, wave: 'triangle', gain: 0.025, gap: 0.015 },
 		{ frequency: 659.25, duration: 0.09, wave: 'triangle', gain: 0.025, gap: 0.015 },
 		{ frequency: 783.99, duration: 0.13, wave: 'triangle', gain: 0.028 }
+	],
+	timerTimeout: [
+		{
+			frequency: 932.33,
+			toFrequency: 783.99,
+			duration: 0.12,
+			wave: 'triangle',
+			gain: 0.022,
+			gap: 0.02,
+			filterStartHz: 3200,
+			filterEndHz: 1800,
+			detuneCents: 5
+		},
+		{
+			frequency: 698.46,
+			toFrequency: 523.25,
+			duration: 0.18,
+			wave: 'triangle',
+			gain: 0.024,
+			filterStartHz: 2200,
+			filterEndHz: 1200,
+			detuneCents: -6
+		}
+	],
+	matchTimeout: [
+		{
+			frequency: 246.94,
+			toFrequency: 220,
+			duration: 0.5,
+			wave: 'sawtooth',
+			gain: 0.026,
+			gap: 0.045,
+			filterStartHz: 1900,
+			filterEndHz: 850,
+			detuneCents: 4,
+			attack: 0.015,
+			release: 0.28
+		},
+		{
+			frequency: 220,
+			toFrequency: 196,
+			duration: 1.1,
+			wave: 'sawtooth',
+			gain: 0.03,
+			filterStartHz: 1200,
+			filterEndHz: 450,
+			detuneCents: -5,
+			attack: 0.02,
+			release: 0.8
+		}
 	]
 };
 
@@ -55,18 +117,23 @@ let audioContext: AudioContext | null = null;
  * Checks runtime support and user preference before creating or using WebAudio.
  * @returns {boolean} `true` when sound effects are enabled and an audio context implementation exists.
  */
-const canPlaySound = () => {
+const canPlaySound = (options?: PlaySoundOptions) => {
 	if (typeof window === 'undefined') return false;
-	if (!get(appSettings).soundEffectsEnabled) return false;
+	if (!options?.ignoreSoundEffectsSetting && !get(appSettings).soundEffectsEnabled) return false;
 	// WebAudio support is checked lazily because some browsers expose the API only after
 	// user interaction or in a partially suspended state.
-	return !!(window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext);
+	return !!(
+		window.AudioContext ||
+		(window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+	);
 };
 
-const getAudioContext = (): AudioContext | null => {
-	if (!canPlaySound()) return null;
+const getAudioContext = (options?: PlaySoundOptions): AudioContext | null => {
+	if (!canPlaySound(options)) return null;
 	if (audioContext && audioContext.state !== 'closed') return audioContext;
-	const Ctx = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+	const Ctx =
+		window.AudioContext ||
+		(window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
 	if (!Ctx) return null;
 	audioContext = new Ctx();
 	return audioContext;
@@ -81,19 +148,53 @@ const getAudioContext = (): AudioContext | null => {
  */
 const playTone = (ctx: AudioContext, tone: Tone, startAt: number) => {
 	const oscillator = ctx.createOscillator();
+	const supportingOscillator = ctx.createOscillator();
 	const gainNode = ctx.createGain();
+	const filter = ctx.createBiquadFilter();
+
+	const attack = Math.max(0.005, tone.attack ?? 0.01);
+	const release = Math.max(0.01, tone.release ?? Math.max(0.02, tone.duration * 0.7));
+	const peakGain = Math.max(0.0001, tone.gain);
+	const endAt = startAt + tone.duration;
 
 	oscillator.type = tone.wave;
+	supportingOscillator.type = tone.wave;
 	oscillator.frequency.setValueAtTime(tone.frequency, startAt);
-	oscillator.connect(gainNode);
+	supportingOscillator.frequency.setValueAtTime(tone.frequency, startAt);
+	oscillator.detune.setValueAtTime(tone.detuneCents ?? 0, startAt);
+	supportingOscillator.detune.setValueAtTime((tone.detuneCents ?? 0) * -0.6, startAt);
+
+	if (tone.toFrequency) {
+		oscillator.frequency.exponentialRampToValueAtTime(Math.max(40, tone.toFrequency), endAt);
+		supportingOscillator.frequency.exponentialRampToValueAtTime(
+			Math.max(40, tone.toFrequency),
+			endAt
+		);
+	}
+
+	filter.type = 'lowpass';
+	const filterStartHz = Math.max(160, tone.filterStartHz ?? tone.frequency * 2.8);
+	const filterEndHz = Math.max(120, tone.filterEndHz ?? Math.max(180, tone.frequency * 1.2));
+	filter.frequency.setValueAtTime(filterStartHz, startAt);
+	filter.frequency.exponentialRampToValueAtTime(filterEndHz, endAt);
+	filter.Q.setValueAtTime(0.8, startAt);
+
+	oscillator.connect(filter);
+	supportingOscillator.connect(filter);
+	filter.connect(gainNode);
 	gainNode.connect(ctx.destination);
 
 	gainNode.gain.setValueAtTime(0.0001, startAt);
-	gainNode.gain.exponentialRampToValueAtTime(Math.max(0.0001, tone.gain), startAt + 0.01);
-	gainNode.gain.exponentialRampToValueAtTime(0.0001, startAt + tone.duration);
+	gainNode.gain.exponentialRampToValueAtTime(peakGain, startAt + attack);
+	gainNode.gain.exponentialRampToValueAtTime(
+		0.0001,
+		Math.max(startAt + attack + 0.01, endAt + release)
+	);
 
 	oscillator.start(startAt);
-	oscillator.stop(startAt + tone.duration + 0.02);
+	supportingOscillator.start(startAt);
+	oscillator.stop(endAt + release + 0.02);
+	supportingOscillator.stop(endAt + release + 0.02);
 };
 
 /**
@@ -101,8 +202,8 @@ const playTone = (ctx: AudioContext, tone: Tone, startAt: number) => {
  * @param {GameplaySoundType} sound Symbolic key for the tone pattern to schedule.
  * @returns {void}
  */
-export const playGameplaySound = (sound: GameplaySoundType) => {
-	const ctx = getAudioContext();
+export const playGameplaySound = (sound: GameplaySoundType, options?: PlaySoundOptions) => {
+	const ctx = getAudioContext(options);
 	if (!ctx) return;
 
 	if (ctx.state === 'suspended') {

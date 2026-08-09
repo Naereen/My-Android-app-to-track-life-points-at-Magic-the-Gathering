@@ -1,6 +1,7 @@
 import { get, writable } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { vibrate } from '$lib/utils/haptics';
+import { playGameplaySound } from '$lib/utils/gameplaySound';
 
 type MinutePulseKind = 'positive' | 'negative';
 
@@ -44,14 +45,13 @@ const createGlobalGameTimer = () => {
 
 	const persisted = readPersistedState();
 	let lastTickEpochMs = persisted?.lastTickEpochMs || Date.now();
-	let initialState: GlobalGameTimerState =
-		persisted?.state || {
-			remaining: initialDuration,
-			total: initialDuration,
-			running: false,
-			minutePulseId: 0,
-			minutePulseKind: 'positive'
-		};
+	let initialState: GlobalGameTimerState = persisted?.state || {
+		remaining: initialDuration,
+		total: initialDuration,
+		running: false,
+		minutePulseId: 0,
+		minutePulseKind: 'positive'
+	};
 
 	if (initialState.running) {
 		const elapsed = Math.max(0, Math.floor((Date.now() - lastTickEpochMs) / 1000));
@@ -118,32 +118,17 @@ const createGlobalGameTimer = () => {
 
 		if (settings.soundEffectsEnabled && isBrowser) {
 			try {
-				const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-				const o = ctx.createOscillator();
-				const g = ctx.createGain();
-				o.type = 'sawtooth';
-				o.frequency.value = 220;
-				o.connect(g);
-				g.connect(ctx.destination);
-				g.gain.value = 0.0001;
-				o.start();
-				g.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.05);
-				g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.8);
-				setTimeout(() => {
-					o.stop();
-					try {
-						ctx.close();
-					} catch {
-						// ignore
-					}
-				}, 1900);
+				playGameplaySound('matchTimeout');
 			} catch {
 				// ignore
 			}
 		}
 	};
 
-	const advanceByElapsed = (s: GlobalGameTimerState, elapsedSeconds: number): GlobalGameTimerState => {
+	const advanceByElapsed = (
+		s: GlobalGameTimerState,
+		elapsedSeconds: number
+	): GlobalGameTimerState => {
 		if (!s.running || elapsedSeconds <= 0) return s;
 
 		const nextRemaining = s.remaining - elapsedSeconds;

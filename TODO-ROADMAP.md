@@ -2,7 +2,7 @@
 
 This file is a life list of features to implement, bugs to fix, and improvements to make to the app.
 
-Instead of using a proper issue tracker (e.g. GitHub Issues), I prefer to keep everything in this single file, easier to manage offline for a small personal project like this one.
+Instead of using a proper issue tracker (e.g. GitHub Issues), at first I preferred to keep everything in this single file, easier to manage offline for a small personal project like this one.
 
 ---
 
