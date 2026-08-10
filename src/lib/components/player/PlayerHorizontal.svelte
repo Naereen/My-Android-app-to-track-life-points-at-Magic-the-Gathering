@@ -117,7 +117,7 @@
 					? '210%'
 				: isCompactTable
 					? '175%'
-					: '125%';
+					: '120%';
 		const height = !mobile
 			? '260%'
 			: isDuel
@@ -128,7 +128,7 @@
 					? '185%'
 				: isCompactTable
 					? '145%'
-					: '100%';
+					: '130%';
 
 		return {
 			rotation: (seatOrientation === 'left') ? '-90deg' : (seatOrientation === 'right') ? '90deg' : '0deg',
@@ -161,6 +161,8 @@
 			const imageLeft = `url('${two[0]}')`;
 			const imageRight = `url('${two[1]}')`;
 
+			// FIXME: The split background is currently hard-coded for my smartphone, but it bugs even on my tablet...
+			// TODO: Make the split background responsive to screen size and screen aspect ratio, so it looks good on all devices.
 			return `--bg-fallback-color: ${bg}; --bg-image-left: ${imageLeft}; --bg-image-right: ${imageRight}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-left: 25%; --bg-right: 93.5%; --bg-top: 50%; --bg-split-width: 100%; --bg-split-height: 100%; --bg-size: cover; --bg-positionx: center; --bg-positiony: center; --bg-repeat: no-repeat; --bg-clip: padding-box; --bg-origin: padding-box; --pos-left: 35%; --pos-right: 65%;`;
 		}
 
