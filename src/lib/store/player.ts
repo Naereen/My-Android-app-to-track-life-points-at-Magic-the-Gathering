@@ -1857,6 +1857,64 @@ const normalizeSeatIds = (list: App.Player.Data[]) => {
 	}));
 };
 
+/**
+ * Remaps commander-damage arrays when two seat indices are swapped.
+ * Damage entries are indexed by source seat, so they must be swapped globally too.
+ * @param {App.Player.Data[]} list Player array after seat swap.
+ * @param {number} fromIndex Source seat index (0-based).
+ * @param {number} toIndex Target seat index (0-based).
+ * @param {number} activeCount Number of active seats.
+ * @returns {App.Player.Data[]} Players with remapped commander damage data.
+ */
+const remapCommanderDamageForSeatSwap = (
+	list: App.Player.Data[],
+	fromIndex: number,
+	toIndex: number,
+	activeCount: number
+) => {
+	return list.map((player) => {
+		const statusEffects = player.statusEffects;
+		if (!statusEffects) return player;
+
+		let changed = false;
+		const nextStatusEffects = { ...statusEffects };
+
+		if (Array.isArray(statusEffects.commanderDamageBySource)) {
+			const targetLength = Math.max(activeCount, statusEffects.commanderDamageBySource.length);
+			const remappedBySource = Array.from({ length: targetLength }, (_, index) =>
+				normalizeCommanderDamagePair(statusEffects.commanderDamageBySource?.[index])
+			);
+			[remappedBySource[fromIndex], remappedBySource[toIndex]] = [
+				remappedBySource[toIndex],
+				remappedBySource[fromIndex]
+			];
+
+			nextStatusEffects.commanderDamageBySource = remappedBySource;
+			nextStatusEffects.commanderDamage = remappedBySource.map((pair) => pair[0] + pair[1]);
+			changed = true;
+		} else if (Array.isArray(statusEffects.commanderDamage)) {
+			const targetLength = Math.max(activeCount, statusEffects.commanderDamage.length);
+			const remappedLegacy = Array.from({ length: targetLength }, (_, index) =>
+				clampCommanderDamageAmount(Number(statusEffects.commanderDamage?.[index] ?? 0))
+			);
+			[remappedLegacy[fromIndex], remappedLegacy[toIndex]] = [
+				remappedLegacy[toIndex],
+				remappedLegacy[fromIndex]
+			];
+
+			nextStatusEffects.commanderDamage = remappedLegacy;
+			changed = true;
+		}
+
+		if (!changed) return player;
+
+		return {
+			...player,
+			statusEffects: nextStatusEffects
+		};
+	});
+};
+
 // Swap exactly two player seats (0-based indices).
 // This keeps seat-based ids consistent with visual positions.
 /**
@@ -1876,7 +1934,13 @@ export const swapPlayersSeats = (fromIndex: number, toIndex: number) => {
 
 		const newPlayers = currentPlayers.slice();
 		[newPlayers[fromIndex], newPlayers[toIndex]] = [newPlayers[toIndex], newPlayers[fromIndex]];
-		return normalizeSeatIds(newPlayers);
+		const remappedPlayers = remapCommanderDamageForSeatSwap(
+			newPlayers,
+			fromIndex,
+			toIndex,
+			activeCount
+		);
+		return normalizeSeatIds(remappedPlayers);
 	});
 };
 
