@@ -66,6 +66,7 @@
 	const isLikelySyntheticMouseEvent = () =>
 		(Date.now() - lastTouchAt) < MOUSE_AFTER_TOUCH_GUARD_MS;
 	$: innerWidth = 0;
+	$: innerHeight = 0;
 	$: isMobile = isMobileDevice(innerWidth);
 	$: numberOfPlayers = $appSettings.playerCount;
 	$: index = id - 1;
@@ -146,6 +147,52 @@
 
 	$: horizontalBackgroundFrame = getHorizontalBackgroundFrame(numberOfPlayers, isMobile, orientation);
 
+	const toPercentNumber = (value: string, fallback: number): number => {
+		const parsed = Number.parseFloat(value);
+		return Number.isFinite(parsed) ? parsed : fallback;
+	};
+
+	const getHorizontalPartnerSplitVars = (
+		frame: BackgroundFrame,
+		viewportWidth: number,
+		viewportHeight: number
+	): {
+		splitCenterX: string;
+		splitCenterY: string;
+		splitTopY: string;
+		splitBottomY: string;
+		splitWidth: string;
+		splitHeight: string;
+		splitPosTop: string;
+		splitPosBottom: string;
+	} => {
+		const safeHeight = Math.max(viewportHeight, 1);
+		const viewportRatio = viewportWidth / safeHeight;
+		const frameWidthPercent = toPercentNumber(frame.width, 120);
+		const frameHeightPercent = toPercentNumber(frame.height, 130);
+
+		// 90deg rotations swap perceived width/height. Using frame-height for split width
+		// keeps coverage stable across phones/tablets while preserving artwork ratio.
+		const splitWidthPercent = Math.max(frameHeightPercent, 120);
+		const splitHeightPercent = Math.max(frameWidthPercent * 0.5, 90);
+
+		const isVeryWide = viewportRatio >= 1.8;
+		const isTabletLike = viewportWidth >= 768;
+		const topAnchor = isVeryWide ? 24 : isTabletLike ? 25 : 25;
+		const bottomAnchor = isVeryWide ? 76 : isTabletLike ? 75 : 105;
+
+		return {
+			splitCenterX: '50%',
+			splitCenterY: '50%',
+			splitTopY: `${topAnchor}%`,
+			splitBottomY: `${bottomAnchor}%`,
+			splitWidth: `${splitWidthPercent}%`,
+			splitHeight: `${splitHeightPercent}%`,
+			splitPosTop: '50%',
+			splitPosBottom: (orientation === 'left') ? '-150%' : '100%',
+		};
+	};
+
 	// Combine all these background-related variables into a single style string for easier application to the player container
 	$: styleVars = (() => {
 		const bgValue = $players[index].backgroundImage;
@@ -160,10 +207,13 @@
 			const two = bgValue.slice(0, 2);
 			const imageLeft = `url('${two[0]}')`;
 			const imageRight = `url('${two[1]}')`;
+			const splitVars = getHorizontalPartnerSplitVars(
+				horizontalBackgroundFrame,
+				innerWidth,
+				innerHeight
+			);
 
-			// FIXME: The split background is currently hard-coded for my smartphone, but it bugs even on my tablet...
-			// TODO: Make the split background responsive to screen size and screen aspect ratio, so it looks good on all devices.
-			return `--bg-fallback-color: ${bg}; --bg-image-left: ${imageLeft}; --bg-image-right: ${imageRight}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-left: 25%; --bg-right: 93.5%; --bg-top: 50%; --bg-split-width: 100%; --bg-split-height: 100%; --bg-size: cover; --bg-positionx: center; --bg-positiony: center; --bg-repeat: no-repeat; --bg-clip: padding-box; --bg-origin: padding-box; --pos-left: 35%; --pos-right: 65%;`;
+			return `--bg-fallback-color: ${bg}; --bg-image-left: ${imageLeft}; --bg-image-right: ${imageRight}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-size: cover; --bg-positionx: center; --bg-positiony: center; --bg-repeat: no-repeat; --bg-clip: padding-box; --bg-origin: padding-box; --bg-split-center-x: ${splitVars.splitCenterX}; --bg-split-center-y: ${splitVars.splitCenterY}; --bg-split-top-y: ${splitVars.splitTopY}; --bg-split-bottom-y: ${splitVars.splitBottomY}; --bg-split-width: ${splitVars.splitWidth}; --bg-split-height: ${splitVars.splitHeight}; --bg-split-pos-top: ${splitVars.splitPosTop}; --bg-split-pos-bottom: ${splitVars.splitPosBottom};`;
 		}
 
 		// single string image
@@ -425,7 +475,7 @@
 	}
 </script>
 
-<svelte:window bind:innerWidth />
+<svelte:window bind:innerWidth bind:innerHeight />
 
 <div
 	class="relative isolate flex w-full rounded-3xl flex-grow h-6"

@@ -255,7 +255,7 @@
 	/* Horizontal partner mode: before/after render left and right halves. */
 	.bg-rotated-horizontal.bg-split::before,
 	.bg-rotated-horizontal.bg-split::after {
-		left: var(--bg-top, 50%);
+		top: var(--bg-split-center-y, 50%);
 		width: var(--bg-split-width, 50%);
 		height: var(--bg-split-height, 100%);
 		background-size: var(--bg-size, cover);
@@ -267,15 +267,19 @@
 	}
 
 	.bg-rotated-horizontal.bg-split::before {
-		top: var(--bg-left, 25%);
+		top: var(--bg-split-top-y, 25%);
 		background-image: var(--bg-image-left, var(--bg-image));
-		background-position: center var(--pos-left, 50%);
+		background-position: var(--bg-split-pos-top, 50%) center;
+		background-clip: content-box;
+		background-origin: content-box;
 	}
 
 	.bg-rotated-horizontal.bg-split::after {
-		top: var(--bg-right, 75%);
+		top: var(--bg-split-bottom-y, 75%);
 		background-image: var(--bg-image-right, var(--bg-image));
-		background-position: center var(--pos-right, 50%);
+		background-position: var(--bg-split-pos-bottom, 50%) center;
+		background-clip: content-box;
+		background-origin: content-box;
 	}
 
 	/*
