@@ -119,7 +119,7 @@
 					? '210%'
 				: isCompactTable
 					? '175%'
-					: '120%';
+					: '165%';
 		const height = !mobile
 			? '260%'
 			: isDuel

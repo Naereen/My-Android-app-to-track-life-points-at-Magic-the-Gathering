@@ -69,7 +69,7 @@
 	onMount(() => {
 		if (slotEl) {
 			slotEl.addEventListener('dragstart', handleDragStart as EventListener);
-			slotEl.addEventListener('dragover', handleDragMove as EventListener);
+			slotEl.addEventListener('dragmove', handleDragMove as EventListener);
 			slotEl.addEventListener('dragend', handleDragEnd as EventListener);
 		}
 
@@ -79,7 +79,7 @@
 		return () => {
 			if (slotEl) {
 				slotEl.removeEventListener('dragstart', handleDragStart as EventListener);
-				slotEl.removeEventListener('dragover', handleDragMove as EventListener);
+				slotEl.removeEventListener('dragmove', handleDragMove as EventListener);
 				slotEl.removeEventListener('dragend', handleDragEnd as EventListener);
 			}
 			window.removeEventListener(DRAG_STATE_EVENT, onGlobalDragState as EventListener);
@@ -190,7 +190,7 @@
 		class:dnd-drop-target={isDropTarget}
 		class:dnd-drag-source={isDragSource}
 		data-player-seat-index={seatIndex}
-		use:touchDrag={{ handle: '.beleren', longPressMs }}
+		use:touchDrag={{ handle: '[data-player-seat-index]', longPressMs }}
 	>
 		<slot />
 	</div>

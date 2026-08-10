@@ -1,5 +1,5 @@
 <script lang="ts">
-	import touchDrag from '$lib/actions/touchDrag';
+	import touchDragMeeple from '$lib/actions/touchDragMeeple';
 	import { appSettings } from '$lib/store/appSettings';
 	import { players } from '$lib/store/player';
 	import {
@@ -337,7 +337,7 @@
 						<img
 							src={currentFace.image}
 							alt={currentFace.name}
-							class="max-h-[80vh] w-auto max-w-full object-contain rounded-xl"
+							class="max-h-[60vh] w-auto max-w-full object-contain rounded-xl"
 							draggable="false"
 						/>
 
@@ -355,7 +355,7 @@
 											draggable="false"
 											class="meeple-marker"
 											class:meeple-marker--new={isUnplacedMeeple}
-											use:touchDrag={{ handle: '.meeple-handle', longPressMs: 240, ghost: true, ghostOpacity: 0.9, ghostScale: 1.08 }}
+											use:touchDragMeeple={{ handle: '.meeple-handle', longPressMs: 240, ghost: true, ghostOpacity: 0.9, ghostScale: 1.08 }}
 											on:click|stopPropagation={swallowClick}
 											on:dragstart={buildMeepleTouchStartHandler(player.id)}
 											on:dragover={buildMeepleTouchMoveHandler(player.id)}
@@ -385,6 +385,8 @@
 					{#if selectedDungeonId && activePlayers.length > 0}
 						<div class="mt-1 w-full rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-center text-[11px] leading-snug text-gray-200">
 							{$_('emblem_dungeon_drag_hint')}
+							<!-- TODO: add a full legend showing which player is using which meeple marker, shape and color. -->
+							 
 						</div>
 					{/if}
 				</div>
