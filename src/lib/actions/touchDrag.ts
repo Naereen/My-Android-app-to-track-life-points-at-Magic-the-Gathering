@@ -5,7 +5,7 @@ export type TouchDragOptions = {
 
 // Svelte action for touch-only long-press drag that dispatches custom events:
 // 'dragstart' { x, y }
-// 'dragmove'  { x, y }
+// 'dragover'  { x, y }
 // 'dragend'   { x, y }
 // The action only starts if the initial touch target matches the handle selector (or is a child of it).
 export default function touchDrag(node: HTMLElement, options: TouchDragOptions = {}) {
@@ -117,7 +117,7 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
 
     /**
      * Handles movement during pending long-press or active drag gesture.
-     * Cancels if user moves too far before activation; otherwise emits `dragmove` while dragging.
+    * Cancels if user moves too far before activation; otherwise emits `dragover` while dragging.
      * @param {TouchEvent} e Touch move event.
      * @returns {void}
      */
@@ -138,7 +138,7 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
             e.preventDefault();
             lastX = t.clientX - ((cloneEl && cloneEl.getBoundingClientRect().width) || 0) / 2;
             lastY = t.clientY - ((cloneEl && cloneEl.getBoundingClientRect().height) || 0) / 2;
-            node.dispatchEvent(new CustomEvent('dragmove', {
+            node.dispatchEvent(new CustomEvent('dragover', {
                 detail: { x: t.clientX, y: t.clientY }
             }));
         }

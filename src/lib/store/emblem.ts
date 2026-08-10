@@ -2,14 +2,23 @@ import { get, writable } from 'svelte/store';
 import { persist } from './persist';
 import type { ScryfallEmblemCard } from '$lib/utils/scryfall';
 
+export type DungeonMeeplePosition = {
+	x: number;
+	y: number;
+};
+
+type DungeonMeeplePositionsByDungeon = Record<string, Record<number, DungeonMeeplePosition>>;
+
 type EmblemState = {
 	selected: ScryfallEmblemCard | null;
 	recent: ScryfallEmblemCard[];
+	dungeonMeeples: DungeonMeeplePositionsByDungeon;
 };
 
 const initialEmblemState: EmblemState = {
 	selected: null,
-	recent: []
+	recent: [],
+	dungeonMeeples: {}
 };
 
 const numberOfPreviousEmblemsToStore = 5;
@@ -24,6 +33,52 @@ export const emblemModalOpen = writable(false);
  */
 export const setSelectedEmblem = (emblem: ScryfallEmblemCard | null) => {
 	emblemState.update((data) => ({ ...data, selected: emblem }));
+};
+
+/**
+ * Returns the stored meeple position for one player in one dungeon, if it exists.
+ * @param {string | null | undefined} dungeonId Dungeon card identifier.
+ * @param {number} playerId Player identifier.
+ * @returns {DungeonMeeplePosition | null} Stored normalized position or `null`.
+ */
+export const getDungeonMeeplePosition = (
+	dungeonId: string | null | undefined,
+	playerId: number
+) => {
+	if (!dungeonId) return null;
+	const positions = get(emblemState).dungeonMeeples?.[dungeonId];
+	return positions?.[playerId] ?? null;
+};
+
+/**
+ * Persists one meeple position for one player in one dungeon.
+ * Positions are stored as normalized coordinates in the `[0, 1]` range.
+ * @param {string} dungeonId Dungeon card identifier.
+ * @param {number} playerId Player identifier.
+ * @param {DungeonMeeplePosition} position Normalized board position.
+ * @returns {void}
+ */
+export const setDungeonMeeplePosition = (
+	dungeonId: string,
+	playerId: number,
+	position: DungeonMeeplePosition
+) => {
+	emblemState.update((data) => {
+		const existingForDungeon = data.dungeonMeeples?.[dungeonId] ?? {};
+		return {
+			...data,
+			dungeonMeeples: {
+				...(data.dungeonMeeples ?? {}),
+				[dungeonId]: {
+					...existingForDungeon,
+					[playerId]: {
+						x: Math.min(1, Math.max(0, position.x)),
+						y: Math.min(1, Math.max(0, position.y))
+					}
+				}
+			}
+		};
+	});
 };
 
 /**

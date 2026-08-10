@@ -199,6 +199,7 @@
 	"emblem_face_of": "Faccia",
 	"emblem_tap_next_face": "Tocca per mostrare il retro.",
 	"emblem_tap_close": "Tocca per chiudere.",
+	"emblem_dungeon_drag_hint": "Tieni premuto un segnalino, poi trascinalo sull'immagine del dungeon. Se non è mai stato spostato, parte già da una posizione predefinita. La posizione viene salvata per giocatore e per dungeon.",
 	"emblem_no_image": "Nessuna immagine disponibile per questo emblema.",
 	"emblem_recent_title": "Mostrati di recente",
 	"emblem_recent_empty": "Nessun emblema mostrato finora.",

@@ -15,6 +15,7 @@ export type GameplaySoundType =
 	| 'gameReset'
 	| 'ko'
 	| 'victory'
+	| 'dungeonMove'
 	| 'timerTimeout'
 	| 'matchTimeout';
 
@@ -150,6 +151,12 @@ const SOUND_PATTERNS: Record<GameplaySoundType, Tone[]> = {
 		{ frequency: 523.25, duration: 0.09, wave: 'triangle', gain: 0.025, gap: 0.015 },
 		{ frequency: 659.25, duration: 0.09, wave: 'triangle', gain: 0.025, gap: 0.015 },
 		{ frequency: 783.99, duration: 0.13, wave: 'triangle', gain: 0.028 }
+	],
+	dungeonMove: [
+		{ frequency: 210, duration: 0.18, wave: 'sawtooth', gain: 0.018, gap: 0.05, filterStartHz: 900, filterEndHz: 420, detuneCents: -8, attack: 0.015, release: 0.22 },
+		{ frequency: 176, duration: 0.22, wave: 'triangle', gain: 0.016, gap: 0.05, filterStartHz: 760, filterEndHz: 330, detuneCents: 5, attack: 0.014, release: 0.24 },
+		{ frequency: 246.94, duration: 0.2, wave: 'square', gain: 0.012, gap: 0.05, filterStartHz: 1200, filterEndHz: 520, detuneCents: -4, attack: 0.012, release: 0.2 },
+		{ frequency: 164.81, duration: 0.34, wave: 'sine', gain: 0.014, filterStartHz: 820, filterEndHz: 240, detuneCents: 3, attack: 0.02, release: 0.28 }
 	],
 	timerTimeout: [
 		{
