@@ -478,6 +478,8 @@ export const setPlayerCommandTax = (
 			}
 		});
 	}
+
+	playGameplaySound(nextValue > oldValue ? 'statusUp' : 'statusDown');
 };
 
 export const isPartnerModeEnabledForPlayer = (playerId: number): boolean => {
@@ -1003,10 +1005,6 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 	const beforePlayers = get(players);
 	const targetBefore = beforePlayers.find((player) => player.id === playerId);
 	const previous = !!targetBefore?.statusEffects?.[key];
-	if (key === 'commandTax') {
-		setPlayerCommandTax(playerId, value, 0, mergeKey);
-		return;
-	}
 	const snapshot = getPlayerSnapshot(playerId);
 
 	updatePlayersAndPlayEliminationSounds((currentPlayers) => {
@@ -1079,6 +1077,9 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
 				to: value
 			}
 		});
+
+		const isPositive = key === 'ko' ? !value : value;
+		playGameplaySound(isPositive ? 'statusUp' : 'statusDown');
 	}
 };
 
@@ -1087,11 +1088,13 @@ export const setPlayerStatusBoolean = (playerId: number, key: string, value: boo
  * @returns {void}
  */
 export const clearDayNightStatus = () => {
+	let hadDayNight = false;
 	players.update((currentPlayers) => {
 		return currentPlayers.map((player) => {
 			if (!player.statusEffects?.dayNight) {
 				return player;
 			}
+			hadDayNight = true;
 			return {
 				...player,
 				statusEffects: {
@@ -1103,6 +1106,9 @@ export const clearDayNightStatus = () => {
 	});
 
 	setDayNightCycleEnabled(false);
+	if (hadDayNight) {
+		playGameplaySound('statusDown');
+	}
 };
 
 export const setPlayerStatusNumeric = (
@@ -1149,6 +1155,8 @@ export const setPlayerStatusNumeric = (
 				to: value
 			}
 		});
+
+		playGameplaySound(value > previous ? 'statusUp' : 'statusDown');
 	}
 };
 
@@ -1213,6 +1221,8 @@ export const setPlayerPoison = (playerId: number, amount: number, mergeKey?: str
 				to: amount
 			}
 		});
+
+		playGameplaySound(amount > previous ? 'statusUp' : 'statusDown');
 	}
 };
 
@@ -1588,6 +1598,8 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	} else {
 		spinToSelectFirstPlayer();
 	}
+
+	playGameplaySound('gameReset');
 
 	recordImmediateSnapshot(get(players));
 };

@@ -6,6 +6,13 @@ export type GameplaySoundType =
 	| 'bigLifeDown'
 	| 'bigCommanderUp'
 	| 'bigCommanderDown'
+	| 'statusUp'
+	| 'statusDown'
+	| 'randomNeutral'
+	| 'randomSuccess'
+	| 'randomFail'
+	| 'randomJackpot'
+	| 'gameReset'
 	| 'ko'
 	| 'victory'
 	| 'timerTimeout'
@@ -52,6 +59,88 @@ const SOUND_PATTERNS: Record<GameplaySoundType, Tone[]> = {
 		{ frequency: 730, duration: 0.07, wave: 'square', gain: 0.017, gap: 0.01 },
 		{ frequency: 560, duration: 0.07, wave: 'square', gain: 0.019, gap: 0.01 },
 		{ frequency: 380, duration: 0.09, wave: 'square', gain: 0.021 }
+	],
+	statusUp: [
+		{ frequency: 680, duration: 0.055, wave: 'triangle', gain: 0.013, gap: 0.01 },
+		{ frequency: 910, duration: 0.07, wave: 'triangle', gain: 0.014 }
+	],
+	statusDown: [
+		{ frequency: 640, duration: 0.055, wave: 'square', gain: 0.012, gap: 0.01 },
+		{ frequency: 430, duration: 0.075, wave: 'square', gain: 0.014 }
+	],
+	randomNeutral: [
+		{
+			frequency: 540,
+			toFrequency: 620,
+			duration: 0.09,
+			wave: 'triangle',
+			gain: 0.015,
+			filterStartHz: 2100,
+			filterEndHz: 1500,
+			detuneCents: -2
+		}
+	],
+	randomSuccess: [
+		{ frequency: 700, duration: 0.055, wave: 'triangle', gain: 0.015, gap: 0.01 },
+		{ frequency: 960, duration: 0.065, wave: 'triangle', gain: 0.016, gap: 0.01 },
+		{ frequency: 1280, duration: 0.085, wave: 'triangle', gain: 0.017 }
+	],
+	randomFail: [
+		{
+			frequency: 520,
+			toFrequency: 380,
+			duration: 0.1,
+			wave: 'sawtooth',
+			gain: 0.016,
+			filterStartHz: 1900,
+			filterEndHz: 700,
+			detuneCents: 4
+		},
+		{
+			frequency: 300,
+			duration: 0.07,
+			wave: 'square',
+			gain: 0.012,
+			filterStartHz: 1200,
+			filterEndHz: 520
+		}
+	],
+	randomJackpot: [
+		{ frequency: 784, duration: 0.05, wave: 'triangle', gain: 0.016, gap: 0.008 },
+		{ frequency: 988, duration: 0.05, wave: 'triangle', gain: 0.017, gap: 0.008 },
+		{ frequency: 1318, duration: 0.06, wave: 'triangle', gain: 0.017, gap: 0.008 },
+		{
+			frequency: 1661,
+			toFrequency: 1760,
+			duration: 0.1,
+			wave: 'triangle',
+			gain: 0.018,
+			filterStartHz: 3200,
+			filterEndHz: 2200,
+			detuneCents: -3
+		}
+	],
+	gameReset: [
+		{
+			frequency: 260,
+			toFrequency: 350,
+			duration: 0.14,
+			wave: 'triangle',
+			gain: 0.018,
+			gap: 0.02,
+			filterStartHz: 1200,
+			filterEndHz: 1800
+		},
+		{
+			frequency: 392,
+			toFrequency: 523,
+			duration: 0.16,
+			wave: 'triangle',
+			gain: 0.02,
+			filterStartHz: 1700,
+			filterEndHz: 2500,
+			detuneCents: -2
+		}
 	],
 	ko: [
 		{ frequency: 300, duration: 0.1, wave: 'sine', gain: 0.03, gap: 0.012 },
@@ -140,6 +229,19 @@ const getAudioContext = (options?: PlaySoundOptions): AudioContext | null => {
 	if (!Ctx) return null;
 	audioContext = new Ctx();
 	return audioContext;
+};
+
+/**
+ * Primes WebAudio during a trusted user gesture so delayed cues can play later.
+ * Useful for flows where the audible cue occurs after async animations.
+ * @returns {void}
+ */
+export const primeGameplayAudio = (options?: PlaySoundOptions) => {
+	const ctx = getAudioContext(options);
+	if (!ctx) return;
+	if (ctx.state === 'suspended') {
+		void ctx.resume();
+	}
 };
 
 /**

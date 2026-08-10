@@ -7,6 +7,7 @@ import { players } from './player';
 import { vibrate } from '../utils/haptics';
 import { persist } from './persist';
 import { pickWeightedIndex } from '$lib/utils/weightedRandom';
+import { primeGameplayAudio } from '$lib/utils/gameplaySound';
 
 type RandomizerModalState = {
 	isOpen: boolean;
@@ -88,6 +89,9 @@ const rollPlanarDie = () => {
  */
 export const generateRandomNumber = (type: string) => {
 	vibrate(20);
+	// Prime audio while we're still inside the click/gesture event that triggered the roll.
+	// This prevents delayed end-of-roll cues from being dropped on stricter mobile browsers.
+	primeGameplayAudio();
 	const dieTypes: { [key: string]: number | null } = {
 		d2: 2,
 		d4: 4,

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	// Icons are rendered dynamically via dicefont classes so the face can change during the rolling animation.
-	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
 	import Dplanar from '$lib/assets/icons/Dplanar.svelte';
 	import { resetRandomizer, randomizerModalData } from '$lib/store/modal';
 	import { appSettings } from '$lib/store/appSettings';
+	import { playGameplaySound } from '$lib/utils/gameplaySound';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
@@ -72,14 +72,57 @@
 	}
 
 	/**
+	 * Plays a short semantic cue once the roll animation settles.
+	 * Higher rolls are treated as positive outcomes, low rolls as negative.
+	 * @param {string} type Die type key.
+	 * @param {number} result Final rolled value.
+	 * @param {number} max Die max value (for normalization).
+	 * @returns {void}
+	 */
+	const playRandomizerCompletionCue = (type: string, result: number, max: number) => {
+		if (type === 'dplanar') {
+			if (result === 2) {
+				playGameplaySound('randomJackpot');
+				return;
+			}
+			if (result === 1) {
+				playGameplaySound('randomSuccess');
+				return;
+			}
+			playGameplaySound('randomFail');
+			return;
+		}
+
+		if (max <= 0) return;
+		const ratio = result / max;
+
+		if (result === max || ratio >= 0.9) {
+			playGameplaySound('randomJackpot');
+			return;
+		}
+		if (ratio >= 0.6) {
+			playGameplaySound('randomSuccess');
+			return;
+		}
+		if (ratio <= 0.2) {
+			playGameplaySound('randomFail');
+			return;
+		}
+
+		playGameplaySound('randomNeutral');
+	};
+
+	/**
 	 * Runs timed rolling animation and lands on precomputed randomizer result.
 	 * @returns {unknown} Result produced by startRollAnimation.
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	async function startRollAnimation() {
+		const type = $randomizerModalData.type;
+		const max = getMaxSides(type);
 		abort = false;
 		rolling = true;
-		if ($randomizerModalData.type === 'dplanar') {
+		if (type === 'dplanar') {
 			// Planar dice are animated through semantic faces rather than numeric pips so the
 			// user sees the magic-specific state transitions before the final result settles.
 			const final = $randomizerModalData.result;
@@ -98,13 +141,15 @@
 				await new Promise((r) => setTimeout(r, step));
 			}
 
-			if (!abort) displayResult = final;
+			if (!abort) {
+				displayResult = final;
+				playRandomizerCompletionCue(type, final, 6);
+			}
 			rolling = false;
 			rollingMs = 0;
 			return;
 		}
 
-		const max = getMaxSides($randomizerModalData.type);
 		const final = $randomizerModalData.result;
 		const rounds = Math.floor(Math.random() * 5 + 5); // Number of times the face changes during the animation
 		const totalMs = 1000;
@@ -121,7 +166,10 @@
 			await new Promise((r) => setTimeout(r, step));
 		}
 
-		if (!abort) displayResult = final;
+		if (!abort) {
+			displayResult = final;
+			playRandomizerCompletionCue(type, final, max);
+		}
 		rolling = false;
 		rollingMs = 0;
 	}
