@@ -404,14 +404,22 @@
             }
         }
 
+        // DONE: layout non-inversé (classique 2-1) pour 3 joueurs, bien traité
         if (numberOfPlayers === 3) {
-            if (playerIndex === 1 || playerIndex === 2) {
+            if (playerIndex === 1) {
+                if (seatOrientation === 'left') { return '180deg'; }
+                else if (seatOrientation === 'right') { return '0deg'; }
+				// else if (seatOrientation === 'up') { return '90deg'; }
+                return '0deg';
+			} else  if (playerIndex === 2) {
                 if (seatOrientation === 'left') { return '0deg'; }
                 else if (seatOrientation === 'right') { return '180deg'; }
-                return '90deg';
+				// else if (seatOrientation === 'up') { return '90deg'; }
+                return '0deg';
             } else if (playerIndex === 0) {
-                if (seatOrientation === 'left') { return '0deg'; }
-                else if (seatOrientation === 'right') { return '-180deg'; }
+                if (seatOrientation === 'left') { return '-90deg'; }
+                else if (seatOrientation === 'right') { return '90deg'; }
+				// else if (seatOrientation === 'up') { return '90deg'; }
                 return '0deg';
             }
         }
@@ -506,10 +514,10 @@
 	};
 
 	$: minimapWidthRem = fromPlayerDataModal
-		? Math.max((orientation === 'right' || orientation === 'left') ? 8.5 : 5.0, minimapColCount * 1.6)
+		? Math.max((orientation === 'right' || orientation === 'left') ? 8.5 : 6.0, minimapColCount * 1.6)
 		: Math.max( (orientation === 'right' || orientation === 'left') ? 4 : 5.5, minimapColCount * 1.0);
 	$: minimapHeightRem = fromPlayerDataModal
-		? Math.max((orientation === 'right' || orientation === 'left') ? 5.5 : 5.0, minimapRowCount * 1.45)
+		? Math.max((orientation === 'right' || orientation === 'left') ? 5.5 : 8.5, minimapRowCount * 1.45)
 		: Math.max( (orientation === 'right' || orientation === 'left') ? 5.5 : 4.5, minimapRowCount * 1.25);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: minimapGridStyle = `grid-template-rows: repeat(${minimapRowCount}, minmax(0, 1fr)); grid-template-columns: repeat(${minimapColCount}, minmax(0, 1fr));`;

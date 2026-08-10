@@ -192,20 +192,20 @@
 				: '';
 	let commanderMinimapScale = 3.5;
 	$: commanderMinimapScale =
-		$appSettings.playerCount <= 2 ? 5.5
-		: $appSettings.playerCount === 3 ? 3.5
+		$appSettings.playerCount <= 2 ? 5.5  // FIXME: no Minimap for 2 players!
+		: $appSettings.playerCount === 3 ? 3.0
 		: $appSettings.playerCount === 4 ? 3.0
 		: $appSettings.playerCount === 5 ? 3.75
 		: $appSettings.playerCount === 6 ? 3.25
 		: 2.25;
-	let commanderMinimapHeightRem = 24;
-	$: commanderMinimapHeightRem =
-		$appSettings.playerCount <= 2 ? 24
-		: $appSettings.playerCount === 3 ? 22
-		: $appSettings.playerCount === 4 ? 20
-		: $appSettings.playerCount === 5 ? 18
-		: $appSettings.playerCount === 6 ? 16
-		: 14;
+	let commanderMinimapHeightRem = 25;
+	// $: commanderMinimapHeightRem =
+	// 	$appSettings.playerCount <= 2 ? 25
+	// 	: $appSettings.playerCount === 3 ? 25
+	// 	: $appSettings.playerCount === 4 ? 25
+	// 	: $appSettings.playerCount === 5 ? 25
+	// 	: $appSettings.playerCount === 6 ? 25
+	// 	: 25;
 	// The commander minimap is rotated around the selected seat so directional cues
 	// stay useful even when the modal itself is opened from another player's perspective.
 	let commanderMinimapRotation = '0deg';

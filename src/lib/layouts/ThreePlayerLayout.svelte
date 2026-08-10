@@ -7,7 +7,7 @@
 </script>
 
 <!-- The classic three-player layout reserves the lower seat for the active player and
-     spreads the two top seats laterally so the triangle formation stays readable. -->
+    spreads the two top seats laterally so the triangle formation stays readable. -->
 
 <div class="flex flex-col h-full justify-between" data-dnd-layout>
 	{#if !$appState.isMenuOpen}

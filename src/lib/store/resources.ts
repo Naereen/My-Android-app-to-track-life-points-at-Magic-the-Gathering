@@ -1,6 +1,7 @@
 import { type Writable } from 'svelte/store';
 import { persist } from './persist';
 import { addGameHistoryEntry } from './gameHistory';
+import { playGameplaySound } from '$lib/utils/gameplaySound';
 
 export const resourceCounter: Writable<{ [key in App.Resources.Resource]: number }> = persist(
 	'resourceCounter',
@@ -40,6 +41,7 @@ export const setResource = (resourceType: App.Resources.Resource, count: number)
 	});
 
 	if (changed) {
+		playGameplaySound(nextCount > previousCount ? 'statusUp' : 'statusDown');
 		addGameHistoryEntry({
 			playerId: 0,
 			playerName: '',

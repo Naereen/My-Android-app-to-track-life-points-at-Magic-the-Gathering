@@ -1506,6 +1506,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	if (!shouldKeepGlobalTimerRunning) {
 		globalGameTimer.resetForNewGame();
 	}
+	setDayNightCycleEnabled(false);
 	appState.update((data) => ({
 		...data,
 		currentTurn: -1,

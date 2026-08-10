@@ -790,7 +790,7 @@
 									<div class="bg-gray-700 w-1/2" />
 								</div>
 							</div>
-							<div class="mt-1 text-sm">1 / 2 (exp.)</div>
+							<div class="mt-1 text-sm">1 / 2 (experimental)</div>
 						</button>
 					</div>
 				</div>
