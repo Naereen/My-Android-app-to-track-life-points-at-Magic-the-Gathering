@@ -105,20 +105,10 @@
 		}
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
-			const images = two.map((u: string) => `url('${u}')`).join(', ');
-			const image_left = `url('${two[0]}')`;
-			const image_right = `url('${two[1]}')`;
-			const bgSize = 'cover';
-			// const bgSize = '50% 100%, 50% 100%'; // each image takes half the width and full height
-			const bgLeft = (numberOfPlayers <= 3) ? '100%' : '100%';
-			const bgRight = (numberOfPlayers <= 3) ? '25%' : '25%';
-			const posLeft = (numberOfPlayers === 3) ? '-200%' :
-							(numberOfPlayers === 2) ? '-100%' :
-							'50%';
-			const posRight = (numberOfPlayers === 3) ? '200%' :
-							(numberOfPlayers === 2) ? '100%' :
-							'50%';
-			return `--bg-image: ${images}; --bg-image-left: ${image_left}; --bg-image-right: ${image_right}; --bg-rotation: ${verticalBackgroundFrame.rotation}; --bg-top: ${verticalBackgroundFrame.top}; --bg-left: ${bgLeft}; --bg-right: ${bgRight}; --pos-left: ${posLeft}; --pos-right: ${posRight}; --bg-width: ${verticalBackgroundFrame.width}; --bg-height: ${verticalBackgroundFrame.height}; --bg-size: ${bgSize}; background-clip: padding-box; background-origin: padding-box`;
+			const imageLeft = `url('${two[0]}')`;
+			const imageRight = `url('${two[1]}')`;
+
+			return `--bg-fallback-color: ${bg}; --bg-image-left: ${imageLeft}; --bg-image-right: ${imageRight}; --bg-rotation: ${verticalBackgroundFrame.rotation}; --bg-top: 50%; --bg-left: 25%; --bg-right: 75%; --pos-left: 50%; --pos-right: 50%; --bg-width: 50%; --bg-height: 100%; --bg-size: cover; --bg-positionx: center; --bg-positiony: center; --bg-repeat: no-repeat; --bg-clip: padding-box; --bg-origin: padding-box;`;
 		}
 
 		// single string image

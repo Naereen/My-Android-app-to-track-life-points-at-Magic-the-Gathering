@@ -91,8 +91,6 @@
 		bottom: string;
 		right: string;
 		size: string;
-		splitTop: string;
-		splitBottom: string;
 	};
 
 	const getHorizontalBackgroundFrame = (
@@ -133,18 +131,16 @@
 					: '125%';
 
 		return {
-			rotation: seatOrientation === 'left' ? '-90deg' : seatOrientation === 'right' ? '90deg' : '0deg',
+			rotation: (seatOrientation === 'left') ? '-90deg' : (seatOrientation === 'right') ? '90deg' : '0deg',
 			positionX: 'center',
 			positionY: 'center',
-			width,
-			height,
+			width: '100%',
+			height: '100%',
 			top: '50%',
 			bottom: '50%',
 			left: '50%',
 			right: '50%',
-			size: 'contain',  // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
-			splitTop: '25%',
-			splitBottom: '75%',
+			size: 'cover',  // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
 		};
 	};
 
@@ -162,11 +158,10 @@
 		// support array of images (e.g. partners / double commanders)
 		if (Array.isArray(bgValue) && bgValue.length > 1) {
 			const two = bgValue.slice(0, 2);
-			const images = two.map((u: string) => `url('${u}')`).join(', ');
-			const imageTop = `url('${two[0]}')`;
-			const imageBottom = `url('${two[1]}')`;
+			const imageLeft = `url('${two[0]}')`;
+			const imageRight = `url('${two[1]}')`;
 
-			return `--bg-fallback-color: ${bg}; --bg-image: ${images}; --bg-image-top: ${imageTop}; --bg-image-bottom: ${imageBottom}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-top: ${horizontalBackgroundFrame.top}; --bg-left: ${horizontalBackgroundFrame.left}; --pos-left: 50%; --bg-top-split: ${horizontalBackgroundFrame.splitTop}; --bg-bottom-split: ${horizontalBackgroundFrame.splitBottom}; --pos-top: 50%; --pos-bottom: 50%; --bg-width: ${horizontalBackgroundFrame.width}; --bg-height: ${horizontalBackgroundFrame.height}; --bg-size: ${horizontalBackgroundFrame.size};`;
+			return `--bg-fallback-color: ${bg}; --bg-image-left: ${imageLeft}; --bg-image-right: ${imageRight}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-left: 25%; --bg-right: 75%; --bg-top:25%; --bg-width: 50%; --bg-height: 100%; --bg-size: cover; --bg-positionx: center; --bg-positiony: center; --bg-repeat: no-repeat; --bg-clip: padding-box; --bg-origin: padding-box; --pos-left: 50%; --pos-right: 50%;`;
 		}
 
 		// single string image

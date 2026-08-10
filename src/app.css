@@ -211,52 +211,71 @@
 	}
 
 	.bg-rotated::before {
-		left: 0;
 		background-image: var(--bg-image-left, var(--bg-image));
 		background-position: var(--pos-left, 50%) center;
-		/* border-right: 1px solid rgba(255, 255, 255, 0.5); */
 	}
 	.bg-rotated::after {
-		right: 0;
 		background-image: var(--bg-image-right, var(--bg-image));
 		background-position: var(--pos-right, 50%) center;
 	}
 
 	.bg-rotated-horizontal::before {
-		left: var(--pos-left, 50%);
-		top: var(--bg-top-split, 25%);
-		background-image: var(--bg-image-top, var(--bg-image-left, var(--bg-image)));
-		background-position: var(--pos-top, 50%) center;
+		background-image: var(--bg-image-left, var(--bg-image));
+		background-position: var(--pos-left, 50%) center;
 	}
 	.bg-rotated-horizontal::after {
-		left: var(--pos-left, 50%);
-		top: var(--bg-bottom-split, 75%);
-		bottom: auto;
-		background-image: var(--bg-image-bottom, var(--bg-image-right, var(--bg-image)));
-		background-position: var(--pos-bottom, 50%) center;
+		background-image: var(--bg-image-right, var(--bg-image));
+		background-position: var(--pos-right, 50%) center;
 	}
 
-	/*
-		Partner mode on horizontal seats: keep a true top/bottom split even when the card
-		is rotated left/right. Each pseudo-element keeps its own anchor and full artwork.
-	*/
-	.bg-rotated-horizontal.bg-split::before,
-	.bg-rotated-horizontal.bg-split::after {
-		left: var(--bg-left, 50%);
+	/* Vertical partner mode: before/after render left and right halves. */
+	.bg-rotated.bg-split::before,
+	.bg-rotated.bg-split::after {
+		top: var(--bg-top, 50%);
+		width: var(--bg-width, 50%);
+		height: var(--bg-height, 100%);
+		background-size: var(--bg-size, cover);
+		background-position: center;
+		background-repeat: var(--bg-repeat, no-repeat);
 		bottom: auto;
 		-webkit-clip-path: none;
 		clip-path: none;
 	}
+
+	.bg-rotated.bg-split::before {
+		left: var(--bg-left, 25%);
+		background-image: var(--bg-image-left, var(--bg-image));
+	}
+
+	.bg-rotated.bg-split::after {
+		left: var(--bg-right, 75%);
+		background-image: var(--bg-image-right, var(--bg-image));
+	}
+
+	/* Horizontal partner mode: before/after render left and right halves. */
+	.bg-rotated-horizontal.bg-split::before,
 	.bg-rotated-horizontal.bg-split::after {
-		right: var(--bg-right, 50%);
+		top: var(--bg-top, 50%);
+		width: var(--bg-split-width, 50%);
+		height: var(--bg-split-height, 100%);
+		background-size: var(--bg-size, cover);
+		background-position: center;
+		background-repeat: var(--bg-repeat, no-repeat);
+		bottom: auto;
+		-webkit-clip-path: none;
+		clip-path: none;
 	}
 
 	.bg-rotated-horizontal.bg-split::before {
-		top: var(--bg-top-split, 25%);
+		top: var(--bg-left, 25%);
+		background-image: var(--bg-image-left, var(--bg-image));
+		background-position: var(--pos-left, 50%) center;
 	}
 
 	.bg-rotated-horizontal.bg-split::after {
-		top: var(--bg-bottom-split, 75%);
+		top: var(--bg-right, 75%);
+		background-image: var(--bg-image-right, var(--bg-image));
+		background-position: var(--pos-right, 50%) center;
 	}
 
 	/*
