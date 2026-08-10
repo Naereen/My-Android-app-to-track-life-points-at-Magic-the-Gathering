@@ -32,7 +32,6 @@
 
 	$: seatIndex = Math.max(0, seatId - 1);
 	$: isDropTarget = isDragging && hoveredSeatIndex === seatIndex && dragFromSeatIndex !== seatIndex;
-	$: isDragSource = isDragging && dragFromSeatIndex === seatIndex;
 
 	const publishDragState = (
 		active: boolean,
@@ -188,7 +187,6 @@
 		bind:this={slotEl}
 		class={className}
 		class:dnd-drop-target={isDropTarget}
-		class:dnd-drag-source={isDragSource}
 		data-player-seat-index={seatIndex}
 		use:touchDrag={{ handle: '[data-player-seat-index]', longPressMs }}
 	>
@@ -199,7 +197,6 @@
 		bind:this={slotEl}
 		class={className}
 		class:dnd-drop-target={isDropTarget}
-		class:dnd-drag-source={isDragSource}
 		data-player-seat-index={seatIndex}
 	>
 		<slot />
@@ -224,10 +221,6 @@
 			0 0 44px rgba(14, 165, 233, 0.25);
 		border-radius: 12px;
 		animation: dndTargetPulse 360ms ease-in-out infinite alternate;
-	}
-
-	.dnd-drag-source {
-		opacity: 0.93;
 	}
 
 	@keyframes dndTargetPulse {
