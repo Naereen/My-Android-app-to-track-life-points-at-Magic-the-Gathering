@@ -6,9 +6,12 @@
 		emblemModalOpen,
 		emblemState,
 		closeSelectedEmblem,
-		getDungeonMeeplePosition,
 		setDungeonMeeplePosition,
-		type DungeonMeeplePosition
+		type DungeonMeeplePosition,
+
+		forceDungeonMeeplesRedraw
+
+
 	} from '$lib/store/emblem';
 	import { LIFE_HISTORY_CHART_COLORS } from '$lib/store/lifeHistory';
 	import { playGameplaySound } from '$lib/utils/gameplaySound';
@@ -20,6 +23,9 @@
 	let dungeonBoardEl: HTMLDivElement | null = null;
 	let activeDungeonDragPlayerId: number | null = null;
 	let activeDungeonDragPosition: DungeonMeeplePosition | null = null;
+	let activeDungeonDragStartPosition: DungeonMeeplePosition | null = null;
+	let activeDungeonDragOffsetPx: { x: number; y: number } | null = null;
+	let selectedDungeonMeeples: Record<number, DungeonMeeplePosition> = {};
 
 	const markerStroke = '#e5e7eb';
 
@@ -29,6 +35,9 @@
 	$: activePlayers = ($players ?? []).slice(0, $appSettings.playerCount);
 	$: isDungeonCard = Boolean(selected?.faces?.some((face) => /dungeon/i.test(face.typeLine ?? '')));
 	$: selectedDungeonId = isDungeonCard ? selected?.id ?? null : null;
+	$: selectedDungeonMeeples = selectedDungeonId
+		? ($emblemState.dungeonMeeples?.[selectedDungeonId] ?? {})
+		: {};
 
 	$: if ($emblemModalOpen && !wasOpen) {
 		currentFaceIndex = 0;
@@ -38,6 +47,8 @@
 	$: if (!selectedDungeonId) {
 		activeDungeonDragPlayerId = null;
 		activeDungeonDragPosition = null;
+		activeDungeonDragStartPosition = null;
+		activeDungeonDragOffsetPx = null;
 	}
 
 	$: if (!$emblemModalOpen && wasOpen) {
@@ -76,14 +87,17 @@
 	 * @returns {DungeonMeeplePosition} Normalized fallback position.
 	 */
 	const getDefaultMeeplePosition = (index: number, total: number): DungeonMeeplePosition => {
-		const columns = total <= 2 ? total : total <= 4 ? 2 : 3;
-		const rows = Math.max(1, Math.ceil(total / Math.max(1, columns)));
-		const column = columns > 0 ? index % columns : 0;
-		const row = columns > 0 ? Math.floor(index / columns) : 0;
+		if (total <= 0) {
+			return { x: 0.5, y: 1 / 7 };
+		}
+
+		// First-time positions: one horizontal row at 1/7 from top, evenly spaced.
+		const x = (index + 1) / (total + 1);
+		const y = 1 / 7;
 
 		return {
-			x: (column + 1) / (columns + 1),
-			y: (row + 1) / (rows + 1)
+			x,
+			y
 		};
 	};
 
@@ -98,17 +112,14 @@
 			return activeDungeonDragPosition;
 		}
 
-		if (selectedDungeonId) {
-			const stored = getDungeonMeeplePosition(selectedDungeonId, playerId);
-			if (stored) return stored;
-		}
+		const stored = selectedDungeonMeeples[playerId];
+		if (stored) return stored;
 
 		return getDefaultMeeplePosition(index, activePlayers.length);
 	};
 
 	const hasStoredMeeplePosition = (playerId: number) => {
-		if (!selectedDungeonId) return false;
-		return getDungeonMeeplePosition(selectedDungeonId, playerId) !== null;
+		return playerId in selectedDungeonMeeples;
 	};
 
 	/**
@@ -131,15 +142,59 @@
 	/**
 	 * Starts tracking a meeple drag at a given client position.
 	 * @param {number} playerId Player identifier.
-	 * @param {number} clientX Pointer X coordinate.
-	 * @param {number} clientY Pointer Y coordinate.
 	 * @returns {void}
 	 */
 	const beginMeepleDrag = (playerId: number, clientX: number, clientY: number) => {
-		const normalized = getNormalizedBoardPosition(clientX, clientY);
-		if (!normalized) return;
+		const playerIndex = activePlayers.findIndex((player) => player.id === playerId);
+		if (playerIndex < 0) return;
+
+		const startPosition = getMeeplePosition(playerId, playerIndex);
 		activeDungeonDragPlayerId = playerId;
-		activeDungeonDragPosition = normalized;
+		activeDungeonDragPosition = startPosition;
+		activeDungeonDragStartPosition = startPosition;
+
+		if (dungeonBoardEl) {
+			const rect = dungeonBoardEl.getBoundingClientRect();
+			activeDungeonDragOffsetPx = {
+				x: startPosition.x * rect.width - (clientX - rect.left),
+				y: startPosition.y * rect.height - (clientY - rect.top)
+			};
+		} else {
+			activeDungeonDragOffsetPx = null;
+		}
+	};
+
+	/**
+	 * Resets all visible players' meeples to their default positions for this dungeon.
+	 * @returns {void}
+	 */
+	const resetMeeplesToDefault = () => {
+		if (!selectedDungeonId) return;
+		activePlayers.forEach((player, index) => {
+			setDungeonMeeplePosition(selectedDungeonId, player.id, getDefaultMeeplePosition(index, activePlayers.length));
+		});
+		activeDungeonDragPlayerId = null;
+		activeDungeonDragPosition = null;
+		activeDungeonDragStartPosition = null;
+		activeDungeonDragOffsetPx = null;
+		vibrate(20);
+	};
+
+	/**
+	 * Applies the captured pointer-to-marker offset to keep movement faithful.
+	 * @param {number} clientX Pointer X coordinate.
+	 * @param {number} clientY Pointer Y coordinate.
+	 * @returns {{ x: number; y: number }} Adjusted client-space point.
+	 */
+	const applyDragOffset = (clientX: number, clientY: number) => {
+		if (!dungeonBoardEl || !activeDungeonDragOffsetPx) {
+			return { x: clientX, y: clientY };
+		}
+
+		return {
+			x: clientX + activeDungeonDragOffsetPx.x,
+			y: clientY + activeDungeonDragOffsetPx.y
+		};
 	};
 
 	/**
@@ -151,7 +206,8 @@
 	 */
 	const updateMeepleDrag = (playerId: number, clientX: number, clientY: number) => {
 		if (activeDungeonDragPlayerId !== playerId) return;
-		const normalized = getNormalizedBoardPosition(clientX, clientY);
+		const adjusted = applyDragOffset(clientX, clientY);
+		const normalized = getNormalizedBoardPosition(adjusted.x, adjusted.y);
 		if (!normalized) return;
 		activeDungeonDragPosition = normalized;
 	};
@@ -166,22 +222,30 @@
 	const finishMeepleDrag = (playerId: number, clientX: number, clientY: number) => {
 		if (activeDungeonDragPlayerId !== playerId || !selectedDungeonId) return;
 
-		const normalized = getNormalizedBoardPosition(clientX, clientY);
+		const adjusted = applyDragOffset(clientX, clientY);
+		const normalized = getNormalizedBoardPosition(adjusted.x, adjusted.y);
 		if (!normalized) {
 			activeDungeonDragPlayerId = null;
 			activeDungeonDragPosition = null;
+			activeDungeonDragStartPosition = null;
+			activeDungeonDragOffsetPx = null;
 			return;
 		}
 
-		const previous = getDungeonMeeplePosition(selectedDungeonId, playerId);
+		const previous = activeDungeonDragStartPosition;
 		const positionChanged =
 			!previous ||
 			Math.abs(previous.x - normalized.x) > 0.002 ||
 			Math.abs(previous.y - normalized.y) > 0.002;
 
+		// Persist final drop first so rendered position immediately reflects store state.
 		setDungeonMeeplePosition(selectedDungeonId, playerId, normalized);
+		forceDungeonMeeplesRedraw(selectedDungeonId);
+
 		activeDungeonDragPlayerId = null;
 		activeDungeonDragPosition = null;
+		activeDungeonDragStartPosition = null;
+		activeDungeonDragOffsetPx = null;
 
 		if (positionChanged) {
 			vibrate(20);
@@ -242,6 +306,16 @@
 	>
 		<button
 			type="button"
+			class="absolute left-3 top-3 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-slate-600/95 text-2xl text-white shadow-lg transition-transform hover:scale-105 hover:bg-slate-500 sm:left-4 sm:top-4 sm:h-14 sm:w-14"
+			on:click={resetMeeplesToDefault}
+			aria-label={$_('emblem_dungeon_reset')}
+			title={$_('emblem_dungeon_reset')}
+		>
+			🔝
+		</button>
+
+		<button
+			type="button"
 			class="absolute right-3 top-3 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-red-600/95 text-4xl font-black text-white shadow-xl transition-transform hover:scale-105 hover:bg-red-500 sm:right-4 sm:top-4 sm:h-16 sm:w-16 sm:text-5xl"
 			on:click={closeSelectedEmblem}
 			aria-label={$_('emblem_tap_close')}
@@ -262,56 +336,62 @@
 			</div>
 
 			{#if currentFace.image}
-				<div
-					bind:this={dungeonBoardEl}
-					class="relative w-full flex justify-center items-center overflow-hidden flex-1"
-					on:click={handleAdvanceFace}
-				>
-					<img
-						src={currentFace.image}
-						alt={currentFace.name}
-						class="max-h-[80vh] w-auto max-w-full object-contain rounded-xl"
-						draggable="false"
-					/>
+				<div class="w-full flex flex-col items-stretch gap-2">
+					<div
+						bind:this={dungeonBoardEl}
+						class="relative w-full flex justify-center items-center overflow-hidden flex-1"
+						on:click={handleAdvanceFace}
+					>
+						<img
+							src={currentFace.image}
+							alt={currentFace.name}
+							class="max-h-[80vh] w-auto max-w-full object-contain rounded-xl"
+							draggable="false"
+						/>
 
-					{#if selectedDungeonId && activePlayers.length > 0}
-						<div class="pointer-events-none absolute inset-0 rounded-xl">
-							{#each activePlayers as player, index (player.id)}
-								{@const markerPosition = getMeeplePosition(player.id, index)}
+						{#if selectedDungeonId && activePlayers.length > 0}
+							<div class="pointer-events-none absolute inset-0 rounded-xl">
+								{#each activePlayers as player, index (player.id)}
+									{@const markerPosition = getMeeplePosition(player.id, index)}
 									{@const isUnplacedMeeple = !hasStoredMeeplePosition(player.id)}
-								<div
-									class="pointer-events-auto absolute"
-									style={`left: ${markerPosition.x * 100}%; top: ${markerPosition.y * 100}%; transform: translate(-50%, -50%);`}
-								>
-									<button
-										type="button"
+									<div
+										class="pointer-events-auto absolute"
+										style={`left: ${markerPosition.x * 100}%; top: ${markerPosition.y * 100}%; transform: translate(-50%, -50%);`}
+									>
+										<button
+											type="button"
+											draggable="false"
 											class="meeple-marker"
 											class:meeple-marker--new={isUnplacedMeeple}
-										use:touchDrag={{ handle: '.meeple-handle', longPressMs: 240 }}
-										on:click|stopPropagation={swallowClick}
-										on:dragstart={buildMeepleTouchStartHandler(player.id)}
-										on:dragover={buildMeepleTouchMoveHandler(player.id)}
-										on:dragend={buildMeepleTouchEndHandler(player.id)}
-										aria-label={player.playerName}
-										title={player.playerName}
-									>
-										<svg viewBox="0 0 80 80" class="meeple-handle h-14 w-14 overflow-visible sm:h-16 sm:w-16" aria-hidden="true">
-											<g transform="translate(40 40)">
-												{#if index % 8 === 0}
-													<circle r="28" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" />
-												{:else if index % 8 === 1}
-													<rect x="-28" y="-28" width="56" height="56" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" rx="8" />
-												{:else}
-													<polygon points={markerPolygonPoints(index, 28)} fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" />
-												{/if}
-												<text x="0" y="11" text-anchor="middle" class="meeple-number">{index + 1}</text>
-											</g>
-										</svg>
-									</button>
-								</div>
-							{/each}
-						</div>
-						<div class="mt-1 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-center text-[11px] leading-snug text-gray-200">
+											use:touchDrag={{ handle: '.meeple-handle', longPressMs: 240, ghost: true, ghostOpacity: 0.9, ghostScale: 1.08 }}
+											on:click|stopPropagation={swallowClick}
+											on:dragstart={buildMeepleTouchStartHandler(player.id)}
+											on:dragover={buildMeepleTouchMoveHandler(player.id)}
+											on:dragend={buildMeepleTouchEndHandler(player.id)}
+											aria-label={player.playerName}
+											title={player.playerName}
+										>
+											<svg viewBox="0 0 80 80" class="meeple-handle h-14 w-14 overflow-visible sm:h-16 sm:w-16" aria-hidden="true">
+												<g transform="translate(40 40)">
+													{#if index % 8 === 0}
+														<circle r="28" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" />
+													{:else if index % 8 === 1}
+														<rect x="-28" y="-28" width="56" height="56" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" rx="8" />
+													{:else}
+														<polygon points={markerPolygonPoints(index, 28)} fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" />
+													{/if}
+													<text x="0" y="11" text-anchor="middle" class="meeple-number">{index + 1}</text>
+												</g>
+											</svg>
+										</button>
+									</div>
+								{/each}
+							</div>
+						{/if}
+					</div>
+
+					{#if selectedDungeonId && activePlayers.length > 0}
+						<div class="mt-1 w-full rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-center text-[11px] leading-snug text-gray-200">
 							{$_('emblem_dungeon_drag_hint')}
 						</div>
 					{/if}
@@ -336,6 +416,7 @@
 		cursor: grab;
 		touch-action: none;
 		user-select: none;
+		opacity: 0.68;
 		filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.55));
 		transition:
 			transform 140ms ease,

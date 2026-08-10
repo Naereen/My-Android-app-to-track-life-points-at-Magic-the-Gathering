@@ -197,6 +197,7 @@
 	"emblem_face_of": "Cara",
 	"emblem_tap_next_face": "Toca para ver el reverso.",
 	"emblem_tap_close": "Toca para cerrar.",
+	"emblem_dungeon_reset": "Reiniciar todos los marcadores",
 	"emblem_dungeon_drag_hint": "Mantén pulsado un marcador y arrástralo sobre la imagen de la mazmorra. Si nunca se ha movido, ya empieza en una posición predeterminada. La posición se guarda por jugador y por mazmorra.",
 	"emblem_no_image": "No hay imagen disponible para este emblema.",
 	"emblem_recent_title": "Mostrados recientemente",
