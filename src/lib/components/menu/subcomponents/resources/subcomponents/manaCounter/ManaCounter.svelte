@@ -25,7 +25,7 @@
 		<CircularButton
 			on:click={() => setResource(type, $resourceCounter[type] - 1)}
 			customText
-			highlight
+			highlight={$resourceCounter[type] > 0}
 			small><Minus light size="1.25rem" /></CircularButton
 		>
 	</div>

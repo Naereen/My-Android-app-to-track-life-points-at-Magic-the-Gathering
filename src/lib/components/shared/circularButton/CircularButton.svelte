@@ -6,13 +6,9 @@
 	export const light = false;
 	export let small = false;
 
-	let outline = 'bg-[#2d2f30]';
-	let outerSize = small ? 'h-7 w-7' : 'h-10 w-10';
-	let innerSize = small ? 'h-6 w-6' : 'h-8 w-8';
-
-	if (highlight) {
-		outline = 'bg-[#42d5ff]';
-	}
+	$: outline = highlight ? 'bg-[#42d5ff]' : 'bg-[#2d2f30]';
+	$: outerSize = small ? 'h-7 w-7' : 'h-10 w-10';
+	$: innerSize = small ? 'h-6 w-6' : 'h-8 w-8';
 </script>
 
 <button
