@@ -247,6 +247,9 @@
 		-webkit-clip-path: none;
 		clip-path: none;
 	}
+	.bg-rotated-horizontal.bg-split::after {
+		right: var(--bg-right, 50%);
+	}
 
 	.bg-rotated-horizontal.bg-split::before {
 		top: var(--bg-top-split, 25%);

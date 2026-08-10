@@ -399,6 +399,21 @@
 	$: minimapTiles = computeTilePlacements(minimapMatrix, numberOfPlayers);
 
 	const orientationToDegrees = (seatOrientation: SeatOrientation): string => {
+		if (numberOfPlayers === 4 && layout === 'two-by-two') {
+			if (playerIndex === 0 || playerIndex === 1) {
+				if (seatOrientation === 'left') { return '0deg'; }
+				else if (seatOrientation === 'right') { return '0deg'; }  // FIXME: bug!
+				else if (seatOrientation === 'up') { return '0deg'; }
+				else if (seatOrientation === 'down') { return '180deg'; }
+			}
+			else if (playerIndex === 2 || playerIndex === 3) {
+				if (seatOrientation === 'left') { return '180deg'; }  // FIXME: bug!
+				else if (seatOrientation === 'right') { return '0deg'; }
+				else if (seatOrientation === 'up') { return '0deg'; }
+				else if (seatOrientation === 'down') { return '180deg'; }
+			}
+		}
+
 		if (seatOrientation === 'left') {
             return '-90deg';
         }
@@ -410,19 +425,10 @@
         }
 		else if (seatOrientation === 'down') {
             if (numberOfPlayers === 4 && layout === 'one-two-one') {
-				if (playerIndex === 0) {
-					return '180deg';
-				}
-				else if (playerIndex === 1) {
-					return '90deg';
-				}
-				else if (playerIndex === 2) {
+				if (playerIndex === 2) {
 					return '0deg';
 				}
-				else if (playerIndex === 3) {
-					return '180deg';
-				}
-				return '0deg';
+				return '180deg';
             } else if (numberOfPlayers === 6 && playerIndex === 3 && layout === 'one-two-one') {
                 return '0deg';
             } else {
@@ -570,7 +576,7 @@
 		if (fromPlayerDataModal) {
 			return '0deg';
 		}
-		const viewerOrientation = orientation ?? seatOrientations[playerIndex] ?? 'up';
+		const viewerOrientation = orientation ?? seatOrientations[targetIndex] ?? 'up';
 		return orientationToDegreesForTileText(viewerOrientation);
 	};
 
@@ -586,55 +592,60 @@
 
 	$: getTileBackgroundRotation = (targetIndex: number, fromPlayerDataModal: boolean = false): string => {
 		const seatOrientation = seatOrientations[targetIndex] ?? 'up';
-        // if (fromPlayerDataModal) {
+        if (fromPlayerDataModal) {
             return orientationToDegreesFromDataModal(seatOrientation);
-        // } else {
-			// return orientationToDegrees(seatOrientation);
-        // }
+        } else {
+			return orientationToDegrees(seatOrientation);
+        }
 	};
 
 	$: getTileBackgroundLayerClass = (targetIndex: number): string => {
+		const bg = $players[targetIndex]?.backgroundImage;
 		const rotation = getTileBackgroundRotation(targetIndex, fromPlayerDataModal);
-		return rotation === '90deg' || rotation === '-90deg' ? 'absolute -inset-1/2' : 'absolute inset-0';
+		const isRotation90Deg = (rotation === '90deg' || rotation === '-90deg');
+		const baseClass = "relative h-full w-full overflow-hidden";
+
+		if (Array.isArray(bg) && bg.length >= 2) {
+			return `${baseClass} before:content-[''] before:absolute before:inset-y-0 before:left-0 before:w-1/2 before:bg-cover before:bg-center before:bg-no-repeat before:[background-image:var(--tile-bg-left)] before:[transform:rotate(var(--tile-bg-rotation))] before:[transform-origin:center] after:content-[''] after:absolute after:inset-y-0 after:right-0 after:w-1/2 after:bg-cover after:bg-center after:bg-no-repeat after:[background-image:var(--tile-bg-right)] after:[transform:rotate(var(--tile-bg-rotation))] after:[transform-origin:center]`;
+		}
+
+		return `${baseClass} before:content-[''] before:absolute before:inset-0 before:bg-center before:bg-no-repeat before:[background-image:var(--tile-bg-image)] before:[background-size:var(--tile-bg-size)] before:[transform:rotate(var(--tile-bg-rotation))] before:[transform-origin:center] after:hidden`;
 	};
 
-	$: getBgStyle = (j: number) => {
-		const orientation = seatOrientations[j] ?? 'up';
-		const isRotation90Deg = getTileBackgroundRotation(j, fromPlayerDataModal) === '90deg' || getTileBackgroundRotation(j, fromPlayerDataModal) === '-90deg';
-		const p = $players[j];
+	$: getBgStyle = (targetIndex: number) => {
+		const orientation = seatOrientations[targetIndex] ?? 'up';
+		const p = $players[targetIndex];
 		const bg = p.backgroundImage;
+		let rotation = getTileBackgroundRotation(targetIndex, fromPlayerDataModal);
+		if (!fromPlayerDataModal) {
+			if (rotation === '180deg') { rotation = '-90deg'; }
+			else if (rotation === '-90deg') { rotation = '0deg'; }
+			else if (rotation === '90deg') { rotation = '180deg'; }
+			else if (rotation === '0deg') { rotation = '90deg'; }
+		}
+		// const rotation = '0deg';
 		if (!p) return '';
 		else if (!bg && p.color) return `background: ${colorToBg(p.color)};`;
 		else if (Array.isArray(bg) && bg.length >= 2) {
-			const [leftImage, rightImage] = bg.slice(0, 2);
-			if (orientation === 'left' || orientation === 'right') {
-				return [
-					`background-image: url('${leftImage}'), url('${rightImage}');`,
-					'background-size: 50% 100%, 50% 100%;',
-					'background-clip: padding-box;',
-					'background-origin: padding-box;',
-					'background-position: left center, right center;',
-					'background-repeat: no-repeat;'
-				].join(' ');
-			} else {
-				return [
-					`background-image: url('${leftImage}'), url('${rightImage}');`,
-					'background-size: 50% 100%, 50% 100%;',
-					'background-clip: padding-box;',
-					'background-origin: padding-box;',
-					'background-position: left center, right center;',
-					'background-repeat: no-repeat;'
-				].join(' ');
+			let [leftImage, rightImage] = bg.slice(0, 2);
+			// FIXME: work on that!
+			if (
+				(orientation === 'up' && rotation === '180deg')
+				|| (orientation === 'down' && rotation === '180deg')
+			) {
+				// Exchange the two images, to fix a bug: their ordering was incorrect in some cases
+				[leftImage, rightImage] = [rightImage, leftImage];
 			}
+			return [
+				`--tile-bg-left: url('${leftImage}');`,
+				`--tile-bg-right: url('${rightImage}');`,
+				`--tile-bg-rotation: ${rotation};`,
+			].join(' ');
 		}
 		else if (Array.isArray(bg) && bg.length === 1)
-			return `background-image: url('${bg[0]}'); background-size: cover; background-repeat: no-repeat; background-position: center;`;
+			return `--tile-bg-image: url('${bg[0]}'); --tile-bg-size: cover; --tile-bg-rotation: ${rotation};`;
 		else if (bg && typeof bg === 'string') {
-			if (orientation === 'left' || orientation === 'right') {
-				return `background-image: url('${bg}'); background-size: cover; background-repeat: no-repeat; background-position: center;`;
-			} else {
-				return `background-image: url('${bg}'); background-size: 100%; background-repeat: no-repeat; background-position: center;`;
-			}
+			return `--tile-bg-image: url('${bg}'); --tile-bg-size: cover; --tile-bg-rotation: ${rotation};`;
 		}
 		return '';
 	};
@@ -825,34 +836,35 @@
 			>
 				<div
 					class={getTileBackgroundLayerClass(tile.targetIndex)}
-					style={`${getBgStyle(tile.targetIndex)} transform: rotate(${getTileBackgroundRotation(tile.targetIndex, fromPlayerDataModal)}); transform-origin: center;`}
-				></div>
-				{#if fromPlayerDataModal && isPartnerSourcePlayer(tile.targetIndex)}
-					<span
-						class="absolute right-0.5 top-0.5 z-20 rounded bg-black/70 px-0.5 py-0 text-[0.38rem] font-bold uppercase tracking-wide text-amber-200"
-						title={$_('partner_mode_label') ?? 'Partner mode'}
-					>
-						P
-					</span>
-				{/if}
-				<div
-					class="relative z-10 text-white text-[0.85rem] leading-none text-center font-semibold px-0.5"
-					style={`transform: rotate(${getTileTextRotation(tile.targetIndex)}); transform-origin: center;`}
+					style={getBgStyle(tile.targetIndex)}
 				>
-					{#if shouldShowMe(tile.targetIndex)}
-						<span class="text-[0.60rem]">
+					{#if fromPlayerDataModal && isPartnerSourcePlayer(tile.targetIndex)}
+						<span
+							class="absolute right-0.5 top-0.5 z-20 rounded bg-black/70 px-0.5 py-0 text-[0.38rem] font-bold uppercase tracking-wide text-amber-200"
+							title={$_('partner_mode_label') ?? 'Partner mode'}
+						>
+							P
+						</span>
+					{/if}
+					<div
+						class="relative z-10 flex h-full w-full items-center justify-center px-0.5 text-center text-[0.85rem] font-semibold leading-none text-white"
+						style={`transform: rotate(${getTileTextRotation(tile.targetIndex)}); transform-origin: center;`}
+					>
+						{#if shouldShowMe(tile.targetIndex)}
+							<span class="text-[0.60rem]">
                             {meString}
                         </span>
-					{:else}
-						{#if getEffectiveCommanderDamageIndicator(tile.targetIndex) === 'sum-with-max'}
-							<div class="flex flex-col items-center leading-none">
-								<span>{getCommanderDamageDisplay(tile.targetIndex)}</span>
-								<span class="text-[0.50rem] opacity-80 mt-[1px]">{getCommanderDamageMaxDisplay(tile.targetIndex)}</span>
-							</div>
 						{:else}
-							{getCommanderDamageDisplay(tile.targetIndex)}
+							{#if getEffectiveCommanderDamageIndicator(tile.targetIndex) === 'sum-with-max'}
+								<div class="flex flex-col items-center leading-none">
+									<span>{getCommanderDamageDisplay(tile.targetIndex)}</span>
+									<span class="mt-[1px] text-[0.50rem] opacity-80">{getCommanderDamageMaxDisplay(tile.targetIndex)}</span>
+								</div>
+							{:else}
+								{getCommanderDamageDisplay(tile.targetIndex)}
+							{/if}
 						{/if}
-					{/if}
+					</div>
 				</div>
 			</button>
 		{/each}
