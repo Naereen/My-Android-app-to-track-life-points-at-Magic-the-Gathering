@@ -327,7 +327,11 @@
 	 */
 	const showLifeChart = () => {
 		flushPendingSnapshot();
-		openHistoryModal();
+		openHistoryModal('life');
+	};
+
+	const showTurnTimeStats = () => {
+		openHistoryModal('turnTime');
 	};
 </script>
 
@@ -359,6 +363,12 @@
 				class="px-3 py-1 rounded-full border border-fuchsia-500/50 text-fuchsia-200 text-xl bg-fuchsia-950/30 hover:bg-fuchsia-950/50 disabled:opacity-40 disabled:cursor-not-allowed"
 			>
 				{$_('history_life_chart_open_button') || 'Open life chart'}
+			</button>
+			<button
+				on:click={showTurnTimeStats}
+				class="px-3 py-1 rounded-full border border-sky-500/50 text-sky-200 text-xl bg-sky-950/30 hover:bg-sky-950/50"
+			>
+				{$_('history_turn_time_open_button') || 'Turn time stats'}
 			</button>
 		</div>
 

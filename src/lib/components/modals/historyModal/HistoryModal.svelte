@@ -1,14 +1,19 @@
 <script lang="ts">
 	import { appSettings } from '$lib/store/appSettings';
 	import LifeChart from './LifeChart.svelte';
-	import { closeHistoryModal, handleHistoryModalBackNavigation, pushHistoryModalHistoryEntry } from '$lib/store/modal';
+	import TurnTimeStats from './TurnTimeStats.svelte';
+	import { closeHistoryModal, handleHistoryModalBackNavigation, historyModalData, pushHistoryModalHistoryEntry } from '$lib/store/modal';
 	import { lifeHistory } from '$lib/store/lifeHistory';
 	import { _ } from 'svelte-i18n';
 	import { onDestroy, onMount } from 'svelte';
 
+	$: activeTab = $historyModalData.tab ?? 'life';
+
 	$: latestSnapshot = $lifeHistory[$lifeHistory.length - 1];
 	$: legendEntries = [...(latestSnapshot?.players ?? [])].sort((left, right) => left.id - right.id);
-	$: chartTitle = String($_('history_life_chart_title') || 'Life total history');
+	$: chartTitle = activeTab === 'turnTime'
+		? String($_('history_turn_time_title') || 'Turn Time Statistics')
+		: String($_('history_life_chart_title') || 'Life total history');
 	$: emptyState = String($_('history_life_chart_empty') || 'No life snapshots recorded yet.');
 	$: closeLabel = String($_('close') || 'Close');
 	$: snapshotCountSuffix = String($_('history_life_chart_snapshot_count') || 'snapshots captured');
@@ -17,9 +22,15 @@
 		$_('history_life_chart_legend_hint') ||
 			'Click a player to isolate them. Click again to show all players.'
 	);
+	$: tabLifeLabel = String($_('history_life_chart_tab') || 'Life Chart');
+	$: tabTimeLabel = String($_('history_turn_time_tab') || 'Turn Times');
 	let selectedLegendPlayerId: number | null = null;
 
 	const legendMarkerStroke = '#e5e7eb';
+
+	const switchTab = (tab: 'life' | 'turnTime') => {
+		historyModalData.update((s) => ({ ...s, tab }));
+	};
 
 	/**
 	 * Returns SVG polygon points for non-circle/non-square legend markers.
@@ -119,20 +130,52 @@
 
 		<div class="border-b border-gray-700 px-6 pb-4 pt-6">
 			<h2 class="pr-14 text-2xl font-semibold text-white">{chartTitle}</h2>
-			<p class="mt-2 text-sm text-gray-400">
-				{#if $lifeHistory.length > 1}
-					{$lifeHistory.length}
-					{snapshotCountSuffix}
-					{#if startDateText}
-						· {startedOnLabel} {startDateText}
+			<!-- Tab switcher -->
+			<div class="mt-3 flex gap-2">
+				<button
+					type="button"
+					class="rounded-full px-3 py-1 text-sm transition-colors"
+					class:bg-fuchsia-700={activeTab === 'life'}
+					class:text-white={activeTab === 'life'}
+					class:bg-gray-700={activeTab !== 'life'}
+					class:text-gray-300={activeTab !== 'life'}
+					on:click={() => switchTab('life')}
+					aria-pressed={activeTab === 'life'}
+				>
+					{tabLifeLabel}
+				</button>
+				<button
+					type="button"
+					class="rounded-full px-3 py-1 text-sm transition-colors"
+					class:bg-fuchsia-700={activeTab === 'turnTime'}
+					class:text-white={activeTab === 'turnTime'}
+					class:bg-gray-700={activeTab !== 'turnTime'}
+					class:text-gray-300={activeTab !== 'turnTime'}
+					on:click={() => switchTab('turnTime')}
+					aria-pressed={activeTab === 'turnTime'}
+				>
+					{tabTimeLabel}
+				</button>
+			</div>
+			{#if activeTab === 'life'}
+				<p class="mt-2 text-sm text-gray-400">
+					{#if $lifeHistory.length > 1}
+						{$lifeHistory.length}
+						{snapshotCountSuffix}
+						{#if startDateText}
+							· {startedOnLabel} {startDateText}
+						{/if}
+					{:else}
+						{emptyState}
 					{/if}
-				{:else}
-					{emptyState}
-				{/if}
-			</p>
+				</p>
+			{/if}
 		</div>
 
 		<div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+			{#if activeTab === 'turnTime'}
+				<TurnTimeStats />
+			{:else}
 			<div class="w-full max-w-full">
 				<LifeChart
 					snapshots={$lifeHistory}
@@ -205,6 +248,7 @@
 					</div>
 				</div>
 			{/if}
+		{/if}
 		</div>
 	</div>
 </div>

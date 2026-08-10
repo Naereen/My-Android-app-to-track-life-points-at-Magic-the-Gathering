@@ -5,6 +5,7 @@ import { vibrate } from '$lib/utils/haptics';
 import { players } from './player';
 import { turnTimer } from './turnTimer';
 import { addGameHistoryEntry } from './gameHistory';
+import { startTurnFor, endCurrentTurn } from './turnTimeStats';
 
 const MAX_STREAM_PLAYERS = 8;
 
@@ -148,6 +149,17 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTi
 
 		return newData;
 	});
+
+	// Track cumulative time per player (independent of the turn timer setting)
+	try {
+		if (index >= 0) {
+			startTurnFor(index);
+		} else {
+			endCurrentTurn();
+		}
+	} catch (e) {
+		// ignore
+	}
 
 	// if turn timer enabled, reset/start timer for the new current turn
 	try {

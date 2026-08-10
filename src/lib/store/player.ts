@@ -29,6 +29,7 @@ import {
 	type TreacheryRole
 } from '$lib/utils/treachery';
 import { pickWeightedIndex } from '$lib/utils/weightedRandom';
+import { resetTurnTimeStats } from './turnTimeStats';
 // import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -1494,6 +1495,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	resetResources();
 	clearGameHistory();
 	clearLifeHistory();
+	resetTurnTimeStats();
 	addGameHistoryEntry({
 		playerId: 0,
 		playerName: '',
