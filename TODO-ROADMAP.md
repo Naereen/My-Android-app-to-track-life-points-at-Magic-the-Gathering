@@ -397,7 +397,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 ### Active turn indicator and statistics of which player spent the most time during their turns
 
-- [ ] even if the timer of the current turn is not shown (it should be possible to enable/disable it in the settings), the app could count the time of each turn in the background, and display some statistics at the end: Akroma played for 19% of the time of the game, while Cho-Manno played for 32% of the total time.
+- [x] even if the timer of the current turn is not shown (it should be possible to enable/disable it in the settings), the app could count the time of each turn in the background, and display some statistics at the end: Akroma played for 19% of the time of the game, while Cho-Manno played for 32% of the total time.
 - [x] implement a timer that can be shown and decreases / increases (which is best?). Add a discrete but long vibration when the timer reaches 0 seconds (if decreasing) or X minutes (if increasing).
 
 ### Nope
@@ -417,6 +417,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 - [ ] The "scry0 / scry1 scry1 / scry2" special rule for turn 1 in 4-player mode, or ".. scry 3" for 5-player mode
   - [ ] Implement a special button in the main menu, to track the scry number for each player, and show it on the player panel (e.g. "scry 0", "scry 1", "scry 2", "scry 3"), with a small icon for each scry number (e.g. a small eye icon with the number inside). This is a very specific rule for multiplayer games, and it can be useful to track it in the app, especially for players who are new to multiplayer games and may forget about this rule.
+  - [ ] Add a simple solution to display custom and pretty almost-full-screen notifications.
 
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
   - [ ] TODO: Ask @Julien about his files, to see if he would agree to let me use them and embed them in the app!

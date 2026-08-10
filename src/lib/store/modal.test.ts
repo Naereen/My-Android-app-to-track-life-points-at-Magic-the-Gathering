@@ -10,7 +10,7 @@ import {
 
 describe('history modal browser-back handling', () => {
 	beforeEach(() => {
-		historyModalData.set({ isOpen: false });
+		historyModalData.set({ isOpen: false, tab: 'life' });
 		vi.restoreAllMocks();
 		vi.stubGlobal('window', {
 			history: {
@@ -23,7 +23,7 @@ describe('history modal browser-back handling', () => {
 	});
 
 	it('pushes a synthetic browser-history entry and closes the modal on back navigation', () => {
-		historyModalData.set({ isOpen: true });
+		historyModalData.set({ isOpen: true, tab: 'life' });
 		pushHistoryModalHistoryEntry();
 
 		expect(window.history.pushState).toHaveBeenCalledWith(

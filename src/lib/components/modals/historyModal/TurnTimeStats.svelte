@@ -4,41 +4,7 @@
 	import { turnTimeStats, formatDuration } from '$lib/store/turnTimeStats';
 	import { players } from '$lib/store/player';
 	import { appSettings } from '$lib/store/appSettings';
-
-	const namedPlayerColors: Record<string, string> = {
-		mud: '#704214',
-		metalicgray: '#6e7f80',
-		gold: '#ffb700',
-		purple: '#6600ff',
-		pink: '#ff69b4',
-		orange: '#ff8c00',
-		lightgreen: '#90ee90',
-		blue: '#0000bb',
-		black: '#202020',
-		red: '#bb0000',
-		green: '#00bb00',
-		white: '#e8e8e8'
-	};
-
-	const fallbackPalette = [
-		'#38bdf8',
-		'#f472b6',
-		'#f59e0b',
-		'#34d399',
-		'#a78bfa',
-		'#f87171',
-		'#facc15',
-		'#22d3ee'
-	];
-
-	const resolveColor = (colorToken: string | undefined, playerIdx: number): string => {
-		if (!colorToken) return fallbackPalette[playerIdx % fallbackPalette.length];
-		const named = namedPlayerColors[colorToken];
-		if (named) return named;
-		// Already a CSS color value (hex, rgb, etc.)
-		if (colorToken.startsWith('#') || colorToken.startsWith('rgb')) return colorToken;
-		return fallbackPalette[playerIdx % fallbackPalette.length];
-	};
+	import { resolveChartColor } from '$lib/store/lifeHistory';
 
 	// Live tick – refreshes every second so the active player's bar grows in real time
 	let liveNow = Date.now();
@@ -72,13 +38,34 @@
 
 	$: rows = activePlayers.map((player, idx) => ({
 		name: player.playerName || `${$_('player') || 'Player'} ${idx + 1}`,
-		color: resolveColor(player.color, idx),
+		color: resolveChartColor(player.color, idx),
 		seconds: times[idx],
 		pct: totalSeconds > 0 ? (times[idx] / totalSeconds) * 100 : 0,
 		isActive: $turnTimeStats.currentPlayerIndex === idx
 	}));
 
 	$: emptyState = totalSeconds === 0;
+
+	const markerStroke = '#e5e7eb';
+
+	const markerPolygonPoints = (kind: number, size: number) => {
+		switch (kind % 8) {
+			case 2:
+				return `0,-${size} ${size},0 0,${size} -${size},0`;
+			case 3:
+				return `0,-${size} ${size},${size} -${size},${size}`;
+			case 4:
+				return `${-size},-${size / 2} ${size},-${size / 2} ${size},${size / 2} ${-size},${size / 2}`;
+			case 5:
+				return `0,-${size} ${size},-${size / 4} ${size / 2},${size} -${size / 2},${size} -${size},-${size / 4}`;
+			case 6:
+				return `0,-${size} ${size},-${size / 3} ${size},${size / 3} 0,${size} -${size},${size / 3} -${size},-${size / 3}`;
+			case 7:
+				return `0,-${size} ${size},0 ${size / 2},${size} -${size / 2},${size} -${size},0`;
+			default:
+				return '';
+		}
+	};
 
 	$: titleLabel = String($_('history_turn_time_title') || 'Turn Time Statistics');
 	$: emptyLabel = String($_('history_turn_time_empty') || 'No turns tracked yet.');
@@ -88,10 +75,10 @@
 
 <div class="flex flex-col gap-4">
 	<div class="flex items-center justify-between">
-		<h3 class="text-lg font-semibold text-white">{titleLabel}</h3>
+		<!-- <h3 class="text-lg font-semibold text-white">{titleLabel}</h3> -->
 		{#if !emptyState}
-			<span class="rounded-full bg-gray-700 px-3 py-1 text-sm text-gray-300">
-				{totalLabel}: <span class="font-mono font-semibold text-white">{formatDuration(totalSeconds)}</span>
+			<span class="rounded-full bg-gray-700 px-3 py-1 text-gray-300">
+				{totalLabel} : <span class="font-mono font-semibold text-white">{formatDuration(totalSeconds)}</span>
 			</span>
 		{/if}
 	</div>
@@ -104,11 +91,21 @@
 				<li class="flex flex-col gap-1">
 					<div class="flex items-center justify-between text-sm">
 						<div class="flex items-center gap-2">
-							<span
-								class="inline-block h-3 w-3 shrink-0 rounded-full"
-								style="background:{row.color};"
+							<svg
+								viewBox="0 0 16 16"
+								class="h-4 w-4 shrink-0 overflow-visible"
 								aria-hidden="true"
-							></span>
+							>
+								<g transform="translate(8 8)">
+									{#if idx % 8 === 0}
+										<circle r="4.6" fill={row.color} stroke={markerStroke} stroke-width="1.4" />
+									{:else if idx % 8 === 1}
+										<rect x="-4.25" y="-4.25" width="8.5" height="8.5" fill={row.color} stroke={markerStroke} stroke-width="1.4" rx="1.5" />
+									{:else}
+										<polygon points={markerPolygonPoints(idx, 5)} fill={row.color} stroke={markerStroke} stroke-width="1.4" />
+									{/if}
+								</g>
+							</svg>
 							<span class="font-medium text-white">{row.name}</span>
 							{#if row.isActive}
 								<span class="rounded-full bg-fuchsia-700/60 px-2 py-0.5 text-xs text-fuchsia-200">

@@ -46,6 +46,24 @@ const namedPlayerColors: Record<string, string> = {
 
 export const LIFE_HISTORY_CHART_COLORS = [...fallbackChartPalette];
 
+/**
+ * Resolves a player color token to a chart-safe CSS color string.
+ * Mirrors the logic used by the life-history snapshot builder so all views
+ * (life chart, emblem/dungeon pawns, turn-time stats) render consistent colors.
+ */
+export const resolveChartColor = (
+	colorToken: string | undefined | null,
+	playerIndex: number
+): string => {
+	const palette = LIFE_HISTORY_CHART_COLORS[playerIndex % LIFE_HISTORY_CHART_COLORS.length];
+	if (!colorToken || colorToken.includes(',')) return palette;
+	const clean = colorToken.trim().toLowerCase();
+	if (clean === '#ffffff' || clean === '#202020' || clean === 'white' || clean === 'black') return palette;
+	if (isHexColor(clean)) return clean;
+	const named = namedPlayerColors[clean];
+	return named ?? palette;
+};
+
 export const lifeHistory = persist<GameSnapshot[]>(LIFE_HISTORY_STORAGE_KEY, []);
 
 let recordTimer: ReturnType<typeof setTimeout> | null = null;
