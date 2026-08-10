@@ -562,14 +562,17 @@
 
 	$: getTileBackgroundLayerClass = (targetIndex: number): string => {
 		const bg = $players[targetIndex]?.backgroundImage;
-		// const rotation = getTileBackgroundRotation(targetIndex, fromPlayerDataModal);
+		const rotation = getTileBackgroundRotation(targetIndex, fromPlayerDataModal);
+		let isRotated90deg = false;
+		// isRotated90deg = (orientation === 'left' || orientation === 'right');
+		// isRotated90deg = (rotation === '90deg' || rotation === '-90deg');
 		const baseClass = `relative h-full w-full overflow-visible`;
 
 		if (Array.isArray(bg) && bg.length >= 2) {
 			return `${baseClass} before:content-[''] before:absolute before:inset-y-0 before:left-0 before:w-1/2 before:bg-cover before:bg-center before:bg-no-repeat before:[background-image:var(--tile-bg-left)] before:[transform:rotate(var(--tile-bg-rotation))] before:[transform-origin:center] after:content-[''] after:absolute after:inset-y-0 after:right-0 after:w-1/2 after:bg-cover after:bg-center after:bg-no-repeat after:[background-image:var(--tile-bg-right)] after:[transform:rotate(var(--tile-bg-rotation))] after:[transform-origin:center]`;
 		}
 
-		return `${baseClass} before:content-[''] before:absolute before:inset-0 before:bg-center before:bg-no-repeat before:[background-image:var(--tile-bg-image)] before:[background-size:var(--tile-bg-size)] before:[transform:rotate(var(--tile-bg-rotation))] before:[transform-origin:center] after:hidden`;
+		return `${baseClass} before:${isRotated90deg ? 'top-1/2' : 'top-0'} before:${isRotated90deg ? 'left-1/2' : 'left-0'} before:content-[''] before:absolute before:inset-0 before:bg-center before:bg-no-repeat before:[background-image:var(--tile-bg-image)] before:[background-size:var(--tile-bg-size)] before:[transform:rotate(var(--tile-bg-rotation))] before:[transform-origin:center] after:hidden`;
 	};
 
 	$: getBgStyle = (targetIndex: number) => {
@@ -622,26 +625,16 @@
 				else if (rotation === '-90deg') { rotation = '0deg'; }
 				else if (rotation === '90deg') { rotation = '180deg'; }
 				else if (rotation === '0deg') { rotation = '90deg'; }
-
 			}
 		}
 
-		if (Array.isArray(bg) && bg.length === 1)
+		if (Array.isArray(bg) && bg.length === 1) {
 			return `--tile-bg-image: url('${bg[0]}'); --tile-bg-size: cover; --tile-bg-rotation: ${rotation};`;
-		else if (bg && typeof bg === 'string') {
+		} else if (bg && typeof bg === 'string') {
 			return `--tile-bg-image: url('${bg}'); --tile-bg-size: cover; --tile-bg-rotation: ${rotation};`;
 		}
 		return '';
 	};
-
-	/*
-	$: getCommanderDamage = (targetIndex: number) =>
-		getCommanderDamageTotalFromPlayer(
-			$players[playerIndex],
-			targetIndex + 1,
-			$appSettings.playerCount
-		);
-	*/
 
 	$: getCommanderDamagePair = (targetIndex: number): [number, number] => {
 		const bySource = getCommanderDamageBySourceForPlayer($players[playerIndex], $appSettings.playerCount);
