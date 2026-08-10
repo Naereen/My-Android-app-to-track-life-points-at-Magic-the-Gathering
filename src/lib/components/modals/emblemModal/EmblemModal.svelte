@@ -7,8 +7,8 @@
 		emblemState,
 		closeSelectedEmblem,
 		setDungeonMeeplePosition,
+		getDungeonMeeplePosition,
 		type DungeonMeeplePosition,
-
 		forceDungeonMeeplesRedraw
 
 
@@ -88,17 +88,14 @@
 	 */
 	const getDefaultMeeplePosition = (index: number, total: number): DungeonMeeplePosition => {
 		if (total <= 0) {
-			return { x: 0.5, y: 1 / 7 };
+			return { x: 0.5, y: 1 / 6.5 };
 		}
 
 		// First-time positions: one horizontal row at 1/7 from top, evenly spaced.
 		const x = (index + 1) / (total + 1);
-		const y = 1 / 7;
+		const y = 1 / 6.5;
 
-		return {
-			x,
-			y
-		};
+		return { x, y };
 	};
 
 	/**
@@ -107,15 +104,8 @@
 	 * @param {number} index Position within the active player array.
 	 * @returns {DungeonMeeplePosition} Current preview or stored position.
 	 */
-	const getMeeplePosition = (playerId: number, index: number): DungeonMeeplePosition => {
-		if (activeDungeonDragPlayerId === playerId && activeDungeonDragPosition) {
-			return activeDungeonDragPosition;
-		}
-
-		const stored = selectedDungeonMeeples[playerId];
-		if (stored) return stored;
-
-		return getDefaultMeeplePosition(index, activePlayers.length);
+	$: getMeeplePosition = (playerId: number, index: number): DungeonMeeplePosition => {
+		return getDungeonMeeplePosition($emblemState, selectedDungeonId, playerId) ?? getDefaultMeeplePosition(index, activePlayers.length);
 	};
 
 	const hasStoredMeeplePosition = (playerId: number) => {
@@ -304,15 +294,17 @@
 		class="relative bg-[#2d2f30] rounded-[1.75rem] w-[94vw] max-h-[94vh] min-h-[84vh] p-4 sm:p-5 flex flex-col items-center"
 		role="dialog"
 	>
-		<button
-			type="button"
-			class="absolute left-3 top-3 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-slate-600/95 text-2xl text-white shadow-lg transition-transform hover:scale-105 hover:bg-slate-500 sm:left-4 sm:top-4 sm:h-14 sm:w-14"
-			on:click={resetMeeplesToDefault}
-			aria-label={$_('emblem_dungeon_reset')}
-			title={$_('emblem_dungeon_reset')}
-		>
-			🔝
-		</button>
+		{#if !!selectedDungeonId}
+			<button
+				type="button"
+				class="absolute left-3 top-3 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-slate-600/95 text-2xl text-white shadow-lg transition-transform hover:scale-105 hover:bg-slate-500 sm:left-4 sm:top-4 sm:h-14 sm:w-14"
+				on:click={resetMeeplesToDefault}
+				aria-label={$_('emblem_dungeon_reset')}
+				title={$_('emblem_dungeon_reset')}
+			>
+				🔝
+			</button>
+		{/if}
 
 		<button
 			type="button"
@@ -321,7 +313,7 @@
 			aria-label={$_('emblem_tap_close')}
 			title={$_('emblem_tap_close')}
 		>
-			×
+			❌
 		</button>
 
 		{#if selected && currentFace}
