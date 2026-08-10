@@ -104,33 +104,26 @@
 		// four-player grids, and very crowded six-to-eight player tables.
 		const isCompactTable = playerCount >= 5;
 		const isDuel = playerCount <= 2;
+		const isRotated90deg = (seatOrientation === 'left' || seatOrientation === 'right');
 		const isCrowdedSideSeat =
 			(playerCount === 6 || playerCount === 7 || playerCount === 8) &&
-			(seatOrientation === 'left' || seatOrientation === 'right');
+			isRotated90deg;
 		const isVeryCrowdedSideSeat =
-			(playerCount === 8) && (seatOrientation === 'left' || seatOrientation === 'right');
+			(playerCount === 8) && isRotated90deg;
 		const width = !mobile
-			? '200%'
-			: isDuel
-				? '160%'
-				: isVeryCrowdedSideSeat
-					? '220%'
-				: isCrowdedSideSeat
-					? '210%'
-				: isCompactTable
-					? '175%'
-					: '165%';
+			? '200%' : isDuel
+			? '160%' : isVeryCrowdedSideSeat
+			? '220%' : isCrowdedSideSeat
+			? '210%' : isCompactTable
+			? '175%' : isRotated90deg
+			? '145%' : '115%';
 		const height = !mobile
-			? '260%'
-			: isDuel
-				? '160%'
-				: isVeryCrowdedSideSeat
-					? '200%'
-				: isCrowdedSideSeat
-					? '185%'
-				: isCompactTable
-					? '145%'
-					: '130%';
+			? '180%' : isDuel
+			? '160%' : isVeryCrowdedSideSeat
+			? '200%' : isCrowdedSideSeat
+			? '185%' : isCompactTable
+			? '145%' : isRotated90deg
+			? '130%' : '115%';
 
 		return {
 			rotation: (seatOrientation === 'left') ? '-90deg' : (seatOrientation === 'right') ? '90deg' : '0deg',

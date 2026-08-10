@@ -338,6 +338,32 @@
 				if (seatOrientation === 'right') { return '90deg'; }
 			}
 		}
+		if (numberOfPlayers === 4 && layout === 'one-two-one') {
+			if (playerIndex === 0) {
+				if (seatOrientation === 'up') { return '0deg'; }
+				if (seatOrientation === 'left') { return '-90deg'; }  // FIXME: bug!
+				if (seatOrientation === 'down') { return '180deg'; }
+				if (seatOrientation === 'right') { return '90deg'; }  // FIXME: bug!
+			}
+			else if (playerIndex === 1) {
+				if (seatOrientation === 'up') { return '-90deg'; }
+				if (seatOrientation === 'left') { return '90deg'; }
+				if (seatOrientation === 'down') { return '90deg'; }
+				if (seatOrientation === 'right') { return '90deg'; }
+			}
+			else if (playerIndex === 2) {
+				if (seatOrientation === 'up') { return '0deg'; }
+				if (seatOrientation === 'left') { return '90deg'; }
+				if (seatOrientation === 'down') { return '180deg'; }
+				if (seatOrientation === 'right') { return '90deg'; }
+			}
+			else if (playerIndex === 3) {
+				if (seatOrientation === 'up') { return '-90deg'; }
+				if (seatOrientation === 'left') { return '90deg'; }
+				if (seatOrientation === 'down') { return '90deg'; }
+				if (seatOrientation === 'right') { return '90deg'; }
+			}
+		}
 
 		if (seatOrientation === 'left') {
             return '-90deg';
@@ -513,12 +539,14 @@
 		return orientationToDegreesForTileText(viewerOrientation);
 	};
 
+	const isRotated90deg = (orientation === 'right' || orientation === 'left');
+
 	$: minimapWidthRem = fromPlayerDataModal
-		? Math.max((orientation === 'right' || orientation === 'left') ? 8.5 : 6.0, minimapColCount * 1.6)
-		: Math.max( (orientation === 'right' || orientation === 'left') ? 4 : 5.5, minimapColCount * 1.0);
+		? Math.max( isRotated90deg ? 7.5 : 5.75, minimapColCount * 1.50)
+		: Math.max( isRotated90deg ? 4 : 5.5, minimapColCount * 1.0);
 	$: minimapHeightRem = fromPlayerDataModal
-		? Math.max((orientation === 'right' || orientation === 'left') ? 5.5 : 8.5, minimapRowCount * 1.45)
-		: Math.max( (orientation === 'right' || orientation === 'left') ? 5.5 : 4.5, minimapRowCount * 1.25);
+		? Math.max( isRotated90deg ? 5.5 : 8.5, minimapRowCount * 1.45)
+		: Math.max( isRotated90deg ? 5.5 : 4.5, minimapRowCount * 1.25);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: minimapGridStyle = `grid-template-rows: repeat(${minimapRowCount}, minmax(0, 1fr)); grid-template-columns: repeat(${minimapColCount}, minmax(0, 1fr));`;
 	$: minimapContainerClass = `pointer-events-auto overflow-hidden rounded-md border border-black/70 p-0.5 ${backgroundClass}`;
