@@ -981,11 +981,18 @@ export const setPlayerBackgroundImage = (
 					set_name = imageUrlOrPayload.set_name ?? null;
 				}
 
+				const shouldEnablePartnerMode = Array.isArray(image) && image.filter(Boolean).length >= 2;
+				const statusEffects = player.statusEffects ? { ...player.statusEffects } : {};
+				if (shouldEnablePartnerMode) {
+					statusEffects.partnerMode = true;
+				}
+
 				return {
 					...player,
 					backgroundImage: image,
 					backgroundArtist: artist,
-					backgroundSet: set_name
+					backgroundSet: set_name,
+					statusEffects
 				};
 			}
 			return player;

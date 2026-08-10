@@ -137,10 +137,10 @@
 			positionY: 'center',
 			width: width,
 			height: height,
-			top: '50%',
-			bottom: '50%',
-			left: '50%',
-			right: '50%',
+			top: (layout === 'two-by-two') ? '50%' : '25%',
+			bottom: (layout === 'two-by-two') ? '50%' : '25%',
+			left: (layout === 'two-by-two') ? '25%' : '50%',
+			right: (layout === 'two-by-two') ? '50%' : '50%',
 			size: 'cover',  // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
 		};
 	};

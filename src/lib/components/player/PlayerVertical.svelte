@@ -88,8 +88,8 @@
 		width: '100%',
 		height: '100%',
 		top: '50%',
-		left: '50%',
 		bottom: '50%',
+		left: '50%',
 		right: '50%',
 		size: 'cover',  // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
 	};
