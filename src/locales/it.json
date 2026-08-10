@@ -165,6 +165,7 @@
 	"history_life_chart_title": "Cronologia dei punti vita",
 	"history_life_chart_empty": "Nessuna istantanea dei punti vita registrata.",
 	"history_life_chart_legend": "Legenda",
+	"history_life_chart_legend_hint": "Fai clic su un giocatore per isolarlo. Fai di nuovo clic per mostrare tutti.",
 	"history_life_chart_snapshot_count": "istantanee catturate",
 	"history_life_chart_started_on": "Inizio",
 	"history_game_restarted": "Partita riavviata",

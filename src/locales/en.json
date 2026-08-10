@@ -165,6 +165,7 @@
 	"history_life_chart_title": "Life total history",
 	"history_life_chart_empty": "No life snapshots recorded yet.",
 	"history_life_chart_legend": "Legend",
+	"history_life_chart_legend_hint": "Click a player to isolate them. Click again to show all players.",
 	"history_life_chart_snapshot_count": "snapshots captured",
 	"history_life_chart_started_on": "Started",
 	"history_game_restarted": "Game restarted",

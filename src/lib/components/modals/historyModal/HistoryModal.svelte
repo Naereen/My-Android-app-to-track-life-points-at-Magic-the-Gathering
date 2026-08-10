@@ -13,6 +13,11 @@
 	$: closeLabel = String($_('close') || 'Close');
 	$: snapshotCountSuffix = String($_('history_life_chart_snapshot_count') || 'snapshots captured');
 	$: startedOnLabel = String($_('history_life_chart_started_on') || 'Started');
+	$: legendHintText = String(
+		$_('history_life_chart_legend_hint') ||
+			'Click a player to isolate them. Click again to show all players.'
+	);
+	let selectedLegendPlayerId: number | null = null;
 
 	const legendMarkerStroke = '#e5e7eb';
 
@@ -43,6 +48,14 @@
 	};
 
 	/**
+	 * Toggles chart focus on a single player from legend interaction.
+	 * @param {number} playerId - Player identifier.
+	 */
+	const toggleLegendFocus = (playerId: number) => {
+		selectedLegendPlayerId = selectedLegendPlayerId === playerId ? null : playerId;
+	};
+
+	/**
 	 * Formats first snapshot timestamp for chart header metadata.
 	 * @param {number | undefined} timestamp - Parameter used by formatStartDate.
 	 * @param {string} locale - Parameter used by formatStartDate.
@@ -62,6 +75,12 @@
 	};
 
 	$: startDateText = formatStartDate($lifeHistory[0]?.timestamp, $appSettings.locale);
+	$: if (
+		selectedLegendPlayerId !== null &&
+		!legendEntries.some((player) => player.id === selectedLegendPlayerId)
+	) {
+		selectedLegendPlayerId = null;
+	}
 
 	onMount(() => {
 		pushHistoryModalHistoryEntry();
@@ -118,6 +137,7 @@
 				<LifeChart
 					snapshots={$lifeHistory}
 					defaultStartingLife={$appSettings.startingLifeTotal}
+					focusedPlayerId={selectedLegendPlayerId}
 					emptyStateText={emptyState}
 				/>
 			</div>
@@ -127,10 +147,18 @@
 					<div class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
 						{$_('history_life_chart_legend') || 'Legend'}
 					</div>
+					<p class="mb-3 text-xs text-gray-400">{legendHintText}</p>
 					<div class="flex flex-wrap gap-3">
 						{#each legendEntries as player, index (player.id)}
-							<div
-								class="flex items-center gap-2 rounded-full bg-gray-900/70 px-3 py-1.5 text-sm text-gray-100"
+							<button
+								type="button"
+								class="flex items-center gap-2 rounded-full bg-gray-900/70 px-3 py-1.5 text-sm text-gray-100 transition-all"
+								class:opacity-45={selectedLegendPlayerId !== null && selectedLegendPlayerId !== player.id}
+								class:ring-2={selectedLegendPlayerId === player.id}
+								class:ring-fuchsia-500={selectedLegendPlayerId === player.id}
+								on:click={() => toggleLegendFocus(player.id)}
+								aria-pressed={selectedLegendPlayerId === player.id}
+								aria-label={`${player.name} (${player.life})`}
 							>
 								<svg
 									viewBox="0 0 16 16"
@@ -166,10 +194,13 @@
 										{/if}
 									</g>
 								</svg>
-									<span class="font-medium" style={`color: ${player.color};`}
+										<span
+											class="font-medium"
+											class:line-through={selectedLegendPlayerId !== null && selectedLegendPlayerId !== player.id}
+											style={`color: ${player.color};`}
 										>{player.name} ({player.life})</span
 									>
-							</div>
+								</button>
 						{/each}
 					</div>
 				</div>

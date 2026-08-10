@@ -5,6 +5,7 @@
 	export let snapshots: GameSnapshot[] = [];
 	export let defaultStartingLife = 40;
 	export let emptyStateText = 'No life history recorded yet.';
+	export let focusedPlayerId: number | null = null;
 
 	type ChartPoint = {
 		x: number;
@@ -293,7 +294,12 @@
 			};
 		});
 
-	const latestPoints = series
+	let renderedSeries: PlayerSeries[] = series;
+	$: renderedSeries =
+		focusedPlayerId === null ? series : series.filter((entry) => entry.id === focusedPlayerId);
+
+	let latestPoints: { id: number; name: string; color: string; point: ChartPoint }[] = [];
+	$: latestPoints = renderedSeries
 		.map((entry) => ({
 			id: entry.id,
 			name: entry.name,
@@ -308,7 +314,15 @@
 	/**
 	 * Computes collision-avoiding Y positions for end-of-line labels.
 	 */
-	const latestPointLabels = (() => {
+	let latestPointLabels: Array<{
+		id: number;
+		name: string;
+		color: string;
+		point: ChartPoint;
+		displayY: number;
+	}> = [];
+
+	$: latestPointLabels = (() => {
 		if (latestPoints.length === 0) return [];
 
 		const labelMinGap = 30;
@@ -354,7 +368,7 @@
 
 	afterUpdate(() => {
 		pathElements.forEach((element, index) => {
-			const path = series[index]?.path ?? '';
+			const path = renderedSeries[index]?.path ?? '';
 			if (!element || !path || lastAnimatedPathByIndex.get(index) === path) {
 				return;
 			}
@@ -461,7 +475,7 @@
 				{formatElapsed(lastTimestamp - firstTimestamp)}
 			</text>
 
-			{#each series as entry, index (entry.id)}
+			{#each renderedSeries as entry, index (entry.id)}
 				<path
 					bind:this={pathElements[index]}
 					d={entry.path}
