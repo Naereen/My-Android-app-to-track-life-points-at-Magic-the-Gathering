@@ -20,6 +20,8 @@ interface AppSettings {
 	threePlayerLayout: 'classic' | 'inverted';
 	// layout for 6-players games: 'one' ("3 x 2") or 'two' ("|::|")
 	sixPlayerLayout: 'one' | 'two';
+	// layout for 8-players games: 'classic' (top/bottom + sides) or 'sides' (4 on each side)
+	eightPlayerLayout: 'classic' | 'sides';
 	// whether to enable haptic feedback (vibration) for certain actions like incrementing/decrementing life totals (default is true)
 	hapticsEnabled: boolean;
 	// whether to enable gameplay sound effects for major game events (default is true)
@@ -127,6 +129,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	threePlayerLayout: 'classic',
 	// layout for 6-players games: 'one' ("3 x 2") or 'two' ("|::|")
 	sixPlayerLayout: 'one',
+	// layout for 8-players games: 'classic' (top/bottom + sides) or 'sides' (4 on each side)
+	eightPlayerLayout: 'classic',
 	// whether to enable haptic feedback (vibration) for certain actions like incrementing/decrementing life totals (default is true)
 	hapticsEnabled: true,
 	// whether to enable gameplay sound effects for major game events (default is true)
@@ -574,6 +578,7 @@ appSettings.update((data) => {
 		globalGameTimerEnabled: data.globalGameTimerEnabled ?? true,
 		globalGameTimerDuration:
 			data.globalGameTimerDuration ?? getDefaultGlobalGameTimerDuration(data.playerCount ?? 4),
+		eightPlayerLayout: data.eightPlayerLayout ?? 'classic',
 		useWeightedStartingPlayer: data.useWeightedStartingPlayer ?? false,
 		startingPlayerProbabilities: sanitizeStartingPlayerProbabilities(
 			data.startingPlayerProbabilities,
@@ -590,6 +595,15 @@ appSettings.update((data) => {
  */
 export const setSixPlayerLayout = (layout: 'one' | 'two') => {
 	appSettings.update((data) => ({ ...data, sixPlayerLayout: layout }));
+};
+
+/**
+ * Selects the 8-player board layout variant.
+ * @param {'classic' | 'sides'} layout 8-player layout key.
+ * @returns {void}
+ */
+export const setEightPlayerLayout = (layout: 'classic' | 'sides') => {
+	appSettings.update((data) => ({ ...data, eightPlayerLayout: layout }));
 };
 
 /**

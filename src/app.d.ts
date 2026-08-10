@@ -19,12 +19,14 @@ declare global {
 			type ThreePlayerLayout = 'classic' | 'inverted';
 			type FourPlayerLayout = 'matrix' | 'stacked';
 			type SixPlayerLayout = 'one' | 'two';
+			type EightPlayerLayout = 'classic' | 'sides';
 
 			type Data = {
 				playerCount: PlayerCount;
 				threePlayerLayout: ThreePlayerLayout;
 				fourPlayerLayout: FourPlayerLayout;
 				sixPlayerLayout: SixPlayerLayout;
+				eightPlayerLayout: EightPlayerLayout;
 
 				startingLife: number;
 				allowNegativeLife: boolean;

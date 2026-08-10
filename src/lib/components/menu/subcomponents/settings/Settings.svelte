@@ -9,6 +9,7 @@
 		setThreePlayerLayout,
 		setFourPlayerLayout,
 		setSixPlayerLayout,
+		setEightPlayerLayout,
 		setShowEmblemMenu,
 		setShowVanguardMenu,
 		setShowTreacheryMenu,
@@ -864,6 +865,49 @@
 									<div class="bg-gray-700 col-span-2" />
 								</div>
 								<div class="mt-1 text-sm">1 / 2 / 2 / 1</div>
+							</button>
+						</div>
+					</div>
+				{/if}
+
+				{#if $appSettings.playerCount === 8}
+					<div class="mt-4">
+						<div class="text-lg mb-2">{$_('choose_8players_layout')}</div>
+						<div class="flex gap-3 justify-center">
+							<button
+								class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+								class:border-blue-400={$appSettings.eightPlayerLayout === 'classic'}
+								on:click={() => setEightPlayerLayout('classic')}
+							>
+								<div class="w-full h-full grid grid-rows-5 grid-cols-2 gap-1">
+									<div class="bg-gray-700 col-span-2" />
+									<div class="bg-gray-700" /> <div class="bg-gray-700" />
+									<div class="bg-gray-700" /> <div class="bg-gray-700" />
+									<div class="bg-gray-700" /> <div class="bg-gray-700" />
+									<div class="bg-gray-700 col-span-2" />
+								</div>
+								<div class="mt-1 text-sm">1 / 2 / 2 / 2 / 1</div>
+							</button>
+							<button
+								class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+								class:border-blue-400={$appSettings.eightPlayerLayout === 'sides'}
+								on:click={() => setEightPlayerLayout('sides')}
+							>
+								<div class="w-full h-full flex gap-1">
+									<div class="flex w-1/2 flex-col gap-1">
+										<div class="bg-gray-700 h-1/4" />
+										<div class="bg-gray-700 h-1/4" />
+										<div class="bg-gray-700 h-1/4" />
+										<div class="bg-gray-700 h-1/4" />
+									</div>
+									<div class="flex w-1/2 flex-col gap-1">
+										<div class="bg-gray-700 h-1/4" />
+										<div class="bg-gray-700 h-1/4" />
+										<div class="bg-gray-700 h-1/4" />
+										<div class="bg-gray-700 h-1/4" />
+									</div>
+								</div>
+								<div class="mt-1 text-sm">4 | 4</div>
 							</button>
 						</div>
 					</div>

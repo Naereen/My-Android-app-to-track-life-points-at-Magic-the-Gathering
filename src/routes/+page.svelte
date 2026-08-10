@@ -12,6 +12,7 @@
 	import SixPlayerLayoutTwo from '$lib/layouts/SixPlayerLayoutTwo.svelte';
 	import SevenPlayerLayout from '$lib/layouts/SevenPlayerLayout.svelte';
 	import EightPlayerLayout from '$lib/layouts/EightPlayerLayout.svelte';
+	import EightPlayerLayoutSides from '$lib/layouts/EightPlayerLayoutSides.svelte';
 	import {
 		playerModalData,
 		randomizerModalData,
@@ -133,7 +134,9 @@
 	 */
 	const lockPortraitOrientation = async () => {
 		if (typeof window === 'undefined') return;
-		const orientationApi = window.screen?.orientation;
+		const orientationApi = window.screen?.orientation as
+			| ScreenOrientation
+			| (ScreenOrientation & { lock?: (orientation: string) => Promise<void> });
 		if (!orientationApi?.lock) return;
 
 		try {
@@ -267,7 +270,11 @@
 	{:else if $appSettings.playerCount === 7}
 		<SevenPlayerLayout />
 	{:else if $appSettings.playerCount === 8}
-		<EightPlayerLayout />
+		{#if $appSettings.eightPlayerLayout === 'sides'}
+			<EightPlayerLayoutSides />
+		{:else}
+			<EightPlayerLayout />
+		{/if}
 	{/if}
 	{#if $randomizerModalData.isOpen}
 		<RandomizerModal />
