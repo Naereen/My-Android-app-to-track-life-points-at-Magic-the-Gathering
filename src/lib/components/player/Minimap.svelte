@@ -1,77 +1,4 @@
 <script context="module" lang="ts">
-	export const getBackgroundViewerRotation = (
-		playerIndex: number,
-		numberOfPlayers: number,
-		layout: 'two-by-two' | 'one-two-one' | ''
-	): string => {
-		if (numberOfPlayers === 3) {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
-			return '0deg';
-		}
-
-		if (numberOfPlayers === 4 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '-90deg';
-			if (playerIndex === 3) return '-90deg';
-			return '90deg';
-		}
-		if (numberOfPlayers === 4 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '90deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '-90deg';
-			return '0deg';
-		}
-
-		if (numberOfPlayers === 5) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '180deg';
-			if (playerIndex === 4) return '180deg';
-			return '0deg';
-		}
-
-		if (numberOfPlayers === 6 && layout === 'two-by-two') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '0deg';
-			if (playerIndex === 5) return '0deg';
-			return '0deg';
-		}
-		if (numberOfPlayers === 6 && layout === 'one-two-one') {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			return '0deg';
-		}
-
-		if (numberOfPlayers === 7) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			if (playerIndex === 6) return '180deg';
-			return '0deg';
-		}
-
-		if (numberOfPlayers === 8) {
-			if (playerIndex === 1) return '0deg';
-			if (playerIndex === 2) return '0deg';
-			if (playerIndex === 3) return '0deg';
-			if (playerIndex === 4) return '180deg';
-			if (playerIndex === 5) return '180deg';
-			if (playerIndex === 6) return '180deg';
-			if (playerIndex === 7) return '180deg';
-			return '0deg';
-		}
-
-		return '0deg';
-	};
-
 	export const getBackgroundViewerRotationInCommanderDamage = (
 		playerIndex: number,
 		numberOfPlayers: number,
@@ -402,15 +329,11 @@
 		if (numberOfPlayers === 4 && layout === 'two-by-two') {
 			if (playerIndex === 0 || playerIndex === 1) {
 				if (seatOrientation === 'left') { return '90deg'; }
-				else if (seatOrientation === 'right') { return '90deg'; }  // FIXME: bug!
-				else if (seatOrientation === 'up') { return '0deg'; }
-				else if (seatOrientation === 'down') { return '180deg'; }
+				if (seatOrientation === 'right') { return '90deg'; }  // FIXME: bug!
 			}
 			else if (playerIndex === 2 || playerIndex === 3) {
 				if (seatOrientation === 'left') { return '90deg'; }  // FIXME: bug!
-				else if (seatOrientation === 'right') { return '90deg'; }
-				else if (seatOrientation === 'up') { return '0deg'; }
-				else if (seatOrientation === 'down') { return '180deg'; }
+				if (seatOrientation === 'right') { return '90deg'; }
 			}
 		}
 
@@ -566,8 +489,8 @@
 	$: seatOrientations = getSeatOrientations(numberOfPlayers, layout);
 
 	const orientationToDegreesForTileText = (seatOrientation: SeatOrientation): string => {
-		if (seatOrientation === 'left') return '180deg';
-		if (seatOrientation === 'right') return '0deg';
+		if (seatOrientation === 'left') return '90deg';
+		if (seatOrientation === 'right') return '-90deg';
 		if (seatOrientation === 'down') return '0deg';
 		return '0deg';
 	};
@@ -625,11 +548,12 @@
 		else if (Array.isArray(bg) && bg.length >= 2) {
 			let [leftImage, rightImage] = bg.slice(0, 2);
 			// FIXED: work on that! It seems to be alright now?
-			if (
+			if ( fromPlayerDataModal && (
 				(orientation === 'up' && rotation === '180deg')
 				|| (orientation === 'down' && rotation === '180deg')
-				|| (orientation === 'left' && rotation == '0deg')
-			) {
+				|| (orientation === 'left' && playerIndex >= numberOfPlayers/2)
+				|| (orientation === 'right' && playerIndex >= numberOfPlayers/2)
+			) ) {
 				// Exchange the two images, to fix a bug: their ordering was incorrect in some cases
 				[leftImage, rightImage] = [rightImage, leftImage];
 			}
@@ -846,9 +770,7 @@
 		{#each minimapTiles as tile}
 			<button
 				type="button"
-				class={`relative flex min-h-0 min-w-0 items-center justify-center overflow-hidden rounded-sm border border-black/80 ${backgroundClass}`}
-				class:h-full={fromPlayerDataModal || (!fromPlayerDataModal && (orientation === 'up' || orientation === 'down'))}
-				class:w-full={fromPlayerDataModal || (!fromPlayerDataModal && (orientation === 'left' || orientation === 'right'))}
+				class={`relative flex min-h-0 min-w-0 w-full h-full items-center justify-center overflow-hidden rounded-sm border border-black/80 ${backgroundClass}`}
 				style={`grid-row: ${tile.rowStart} / ${tile.rowEnd}; grid-column: ${tile.colStart} / ${tile.colEnd};`}
 				title={`${$players[tile.targetIndex]?.playerName ?? ''} (${getCommanderDamageDisplay(tile.targetIndex)}${getEffectiveCommanderDamageIndicator(tile.targetIndex) === 'sum-with-max' ? `, ${getCommanderDamageMaxDisplay(tile.targetIndex)}` : ''})`}
 				on:pointerdown={() => startSeatLongPress(tile.targetIndex)}
