@@ -117,7 +117,7 @@
 					? '210%'
 				: isCompactTable
 					? '175%'
-					: '210%';
+					: '125%';
 		const height = !mobile
 			? '260%'
 			: isDuel
@@ -128,14 +128,14 @@
 					? '185%'
 				: isCompactTable
 					? '145%'
-					: '125%';
+					: '100%';
 
 		return {
 			rotation: (seatOrientation === 'left') ? '-90deg' : (seatOrientation === 'right') ? '90deg' : '0deg',
 			positionX: 'center',
 			positionY: 'center',
-			width: '100%',
-			height: '100%',
+			width: width,
+			height: height,
 			top: '50%',
 			bottom: '50%',
 			left: '50%',
@@ -161,7 +161,7 @@
 			const imageLeft = `url('${two[0]}')`;
 			const imageRight = `url('${two[1]}')`;
 
-			return `--bg-fallback-color: ${bg}; --bg-image-left: ${imageLeft}; --bg-image-right: ${imageRight}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-left: 25%; --bg-right: 75%; --bg-top:25%; --bg-width: 50%; --bg-height: 100%; --bg-size: cover; --bg-positionx: center; --bg-positiony: center; --bg-repeat: no-repeat; --bg-clip: padding-box; --bg-origin: padding-box; --pos-left: 50%; --pos-right: 50%;`;
+			return `--bg-fallback-color: ${bg}; --bg-image-left: ${imageLeft}; --bg-image-right: ${imageRight}; --bg-rotation: ${horizontalBackgroundFrame.rotation}; --bg-left: 25%; --bg-right: 93.5%; --bg-top: 50%; --bg-split-width: 100%; --bg-split-height: 100%; --bg-size: cover; --bg-positionx: center; --bg-positiony: center; --bg-repeat: no-repeat; --bg-clip: padding-box; --bg-origin: padding-box; --pos-left: 35%; --pos-right: 65%;`;
 		}
 
 		// single string image
