@@ -168,8 +168,8 @@
 	} => {
 		const safeHeight = Math.max(viewportHeight, 1);
 		const viewportRatio = viewportWidth / safeHeight;
-		const frameWidthPercent = toPercentNumber(frame.width, 120);
-		const frameHeightPercent = toPercentNumber(frame.height, 130);
+		const frameWidthPercent = toPercentNumber(frame.width, 100);
+		const frameHeightPercent = toPercentNumber(frame.height, 100);
 
 		// 90deg rotations swap perceived width/height. Using frame-height for split width
 		// keeps coverage stable across phones/tablets while preserving artwork ratio.
