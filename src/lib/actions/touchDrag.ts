@@ -34,6 +34,9 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
     let dragging = false;
     let lastClientX = 0;
     let lastClientY = 0;
+    let pendingClientX = 0;
+    let pendingClientY = 0;
+    let rafId: number | null = null;
     let sourceOpacityBeforeDrag = '';
     let sourceTransformBeforeDrag = '';
     const ghostState: GhostState = {
@@ -60,6 +63,10 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
     };
 
     const removeGhost = () => {
+        if (rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        }
         if (ghostState.ghostEl && ghostState.ghostEl.parentElement) {
             ghostState.ghostEl.parentElement.removeChild(ghostState.ghostEl);
         }
@@ -73,6 +80,16 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
         const left = clientX - ghostState.halfWidth;
         const top = clientY - ghostState.halfHeight;
         ghostState.ghostEl.style.transform = `translate3d(${left}px, ${top}px, 0) scale(${ghostScale})`;
+    };
+
+    const scheduleGhostPosition = (clientX: number, clientY: number) => {
+        pendingClientX = clientX;
+        pendingClientY = clientY;
+        if (rafId !== null) return;
+        rafId = window.requestAnimationFrame(() => {
+            rafId = null;
+            positionGhost(pendingClientX, pendingClientY);
+        });
     };
 
     const createGhost = (clientX: number, clientY: number) => {
@@ -170,7 +187,7 @@ export default function touchDrag(node: HTMLElement, options: TouchDragOptions =
 
         if (dragging) {
             e.preventDefault();
-            positionGhost(t.clientX, t.clientY);
+            scheduleGhostPosition(t.clientX, t.clientY);
             node.dispatchEvent(
                 new CustomEvent('dragmove', {
                     detail: { x: t.clientX, y: t.clientY }

@@ -188,7 +188,7 @@
 		class={className}
 		class:dnd-drop-target={isDropTarget}
 		data-player-seat-index={seatIndex}
-		use:touchDrag={{ handle: '[data-player-seat-index]', longPressMs }}
+		use:touchDrag={{ handle: '.beleren', longPressMs }}
 	>
 		<slot />
 	</div>

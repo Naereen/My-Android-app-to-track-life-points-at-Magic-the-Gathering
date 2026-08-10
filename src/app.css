@@ -356,14 +356,14 @@
 	/* FIXME: this still does NOT work! */
 	/* état mort : voile gris clair au-dessus du fond sans masquer le contenu */
 	.bg-rotated-overlay.dead, .bg-rotated-horizontal-overlay.dead {
-		/* Always render above the dead player's panel content. */
-		z-index: 90;
+		/* Keep the veil above the artwork layer but still below the content layer. */
+		z-index: 15;
 		background:
-			radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0.02) 75%),
-			linear-gradient(160deg, rgba(240, 240, 240, 0.44) 0%, rgba(213, 213, 213, 0.38) 100%);
-		/* background-color: rgba(255, 0, 0, 0.65) !important; */
-		opacity: 0.92;
-		mix-blend-mode: screen;
+			radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.14) 42%, rgba(255, 255, 255, 0.04) 76%),
+			linear-gradient(160deg, rgba(240, 240, 240, 0.52) 0%, rgba(214, 214, 214, 0.40) 100%);
+		opacity: 0.88;
+		mix-blend-mode: normal;
+		backdrop-filter: saturate(0.75) brightness(1.08);
 	}
 
 	/* Assurer que le contenu reste au-dessus du background */
