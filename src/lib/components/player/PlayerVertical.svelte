@@ -575,7 +575,12 @@
 		>
 			{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
 				<div class="mr-2">
-					<Minimap playerIndex={index} orientation={orientation} layout={layout} />
+					<Minimap
+						playerIndex={index}
+						orientation={orientation}
+						layout={layout}
+						fromPlayerDataModal={false}
+					/>
 				</div>
 			{/if}
 			{#if commandTaxCount > 0}

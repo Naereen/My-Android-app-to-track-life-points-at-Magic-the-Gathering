@@ -735,7 +735,12 @@
 								class:mr-1={orientation === 'right'}
 								class:ml-1={orientation === 'left'}
 							>
-								<Minimap playerIndex={index} orientation={orientation} layout={layout} />
+								<Minimap
+									playerIndex={index}
+									orientation={orientation}
+									layout={layout}
+									fromPlayerDataModal={false}
+								/>
 							</div>
 						{/if}
 						{#if commandTaxCount > 0}

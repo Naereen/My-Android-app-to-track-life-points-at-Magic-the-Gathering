@@ -191,7 +191,6 @@
 					: 'two-by-two'
 				: '';
 	let commanderMinimapScale = 3.5;
-	let commanderMinimapHeightRem = 24;
 	$: commanderMinimapScale =
 		$appSettings.playerCount <= 2 ? 5.5
 		: $appSettings.playerCount === 3 ? 3.5
@@ -199,7 +198,7 @@
 		: $appSettings.playerCount === 5 ? 3.75
 		: $appSettings.playerCount === 6 ? 3.25
 		: 2.25;
-	let commanderMinimapRotation = '0deg';
+	let commanderMinimapHeightRem = 24;
 	$: commanderMinimapHeightRem =
 		$appSettings.playerCount <= 2 ? 24
 		: $appSettings.playerCount === 3 ? 22
@@ -209,6 +208,7 @@
 		: 14;
 	// The commander minimap is rotated around the selected seat so directional cues
 	// stay useful even when the modal itself is opened from another player's perspective.
+	let commanderMinimapRotation = '0deg';
 	$: commanderMinimapRotation = getBackgroundViewerRotationInCommanderDamage(
 		($playerModalData?.playerId ?? 1) - 1,
 		$appSettings.playerCount,
