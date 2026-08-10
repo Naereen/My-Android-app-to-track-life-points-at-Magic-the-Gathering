@@ -20,7 +20,7 @@
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
 	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
 	import { _, number } from 'svelte-i18n';
-	import { appSettings } from '$lib/store/appSettings';
+	import { appSettings, getPoisonLethalLimit } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
     import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
@@ -69,13 +69,14 @@
 	$: innerHeight = 0;
 	$: isMobile = isMobileDevice(innerWidth);
 	$: numberOfPlayers = $appSettings.playerCount;
+	$: poisonLethalLimit = getPoisonLethalLimit($appSettings.startingLifeTotal);
 	$: index = id - 1;
 	$: hasSplitBackground =
 		Array.isArray($players[index].backgroundImage) && $players[index].backgroundImage.length > 1;
 	$: isDead =
 		($players[index].lifeTotal <= 0 &&
 			!($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) ||
-		($players[index].poison ?? 0) >= 10 ||
+		($players[index].poison ?? 0) >= poisonLethalLimit ||
 		status?.ko === true ||
 		$players[index].isDead === true ||
 		maxCommanderDamage >= 21;

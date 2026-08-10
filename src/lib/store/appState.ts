@@ -1,6 +1,6 @@
 import { persist } from './persist';
 import { get, derived } from 'svelte/store';
-import { appSettings } from './appSettings';
+import { appSettings, getPoisonLethalLimit } from './appSettings';
 import { vibrate } from '$lib/utils/haptics';
 import { players } from './player';
 import { turnTimer } from './turnTimer';
@@ -167,6 +167,7 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTi
 export const nextTurn = () => {
 	vibrate(10);
 	const totalPlayers = get(appSettings).playerCount || 4;
+	const poisonLethalLimit = getPoisonLethalLimit(get(appSettings).startingLifeTotal);
 	// Advance to the next non-dead player. If all players are dead, set to -1.
 	const playersList = get(players);
 	const current = get(appState).currentTurn;
@@ -180,7 +181,7 @@ export const nextTurn = () => {
 		const isDead = candidate
 			? (candidate.lifeTotal <= 0 &&
 					!(get(appSettings).allowNegativeLife || candidate.allowNegativeLife)) ||
-				(candidate.poison ?? 0) >= 10 ||
+				(candidate.poison ?? 0) >= poisonLethalLimit ||
 				candidate.statusEffects?.ko === true ||
 				candidate.isDead === true
 			: true;
@@ -216,6 +217,7 @@ export const nextTurn = () => {
 export const prevTurn = () => {
 	vibrate(10);
 	const totalPlayers = get(appSettings).playerCount || 4;
+	const poisonLethalLimit = getPoisonLethalLimit(get(appSettings).startingLifeTotal);
 	// Advance to the next non-dead player. If all players are dead, set to -1.
 	const playersList = get(players);
 	const current = get(appState).currentTurn;
@@ -229,7 +231,7 @@ export const prevTurn = () => {
 		const isDead = candidate
 			? (candidate.lifeTotal <= 0 &&
 					!(get(appSettings).allowNegativeLife || candidate.allowNegativeLife)) ||
-				(candidate.poison ?? 0) >= 10 ||
+				(candidate.poison ?? 0) >= poisonLethalLimit ||
 				candidate.statusEffects?.ko === true ||
 				candidate.isDead === true
 			: true;

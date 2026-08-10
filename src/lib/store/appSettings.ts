@@ -196,6 +196,16 @@ export const getDefaultStartingLifeTotal = (playerCount: number): number => {
 };
 
 /**
+ * Returns the poison-counters defeat threshold for the current format baseline.
+ * 30-life restarts are treated as Two-Headed Giant defaults.
+ * @param {number} startingLifeTotal Starting life selected for the current game.
+ * @returns {number} Poison counters needed to lose.
+ */
+export const getPoisonLethalLimit = (startingLifeTotal: number): number => {
+	return startingLifeTotal === 30 ? 15 : 10;
+};
+
+/**
  * Applies a new player count and synchronizes dependent defaults.
  * Recomputes starting life, weighted probabilities, life-history visibility and default global timer.
  * @param {number} playerCount Number of active seats.

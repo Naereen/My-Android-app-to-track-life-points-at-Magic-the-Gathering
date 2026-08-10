@@ -383,7 +383,7 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 
 ### Add a way to be visualize the rooms of a dungeons and the players' positions in the dungeons!
 
-- [ ] TODO: implement a feature to be able (for each player!) to quickly move from one room to a next one, by clicking on the image of the current room, and showing the image of the next room (with a small transition animation), and keeping in memory the current room of each player, so that when opening again the dungeon menu, it shows the current room of each player. This can be a fun and visually appealing feature, as it allows to track the progress of each player in the dungeon, and to have a nice visual representation of it. It can also be useful for players who want to play with the Dungeons & Dragons adventures, which are pretty cool!
+- [x] implement a feature to be able (for each player!) to quickly move from one room to a next one, by clicking on the image of the current room, and showing the image of the next room (with a small transition animation), and keeping in memory the current room of each player, so that when opening again the dungeon menu, it shows the current room of each player. This can be a fun and visually appealing feature, as it allows to track the progress of each player in the dungeon, and to have a nice visual representation of it. It can also be useful for players who want to play with the Dungeons & Dragons adventures, which are pretty cool!
 
 ### Implement a very good feature to track successive Head/Tail coin flips, like in the "LifeLinked" MTG app
 

@@ -36,7 +36,7 @@
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { playCommanderDamageBurst } from '$lib/utils/gameplaySound';
 	import { _ } from 'svelte-i18n';
-	import { appSettings } from '$lib/store/appSettings';
+	import { appSettings, getPoisonLethalLimit } from '$lib/store/appSettings';
 	import { vibrate } from '$lib/utils/haptics';
 	import { onDestroy, onMount } from 'svelte';
 
@@ -883,7 +883,7 @@
 	};
 
 	// Status maxima used by the UI to hide + buttons when reached
-	const POISON_MAX = 10;
+	$: POISON_MAX = getPoisonLethalLimit($appSettings.startingLifeTotal);
 	const RING_BEARER_MAX = 4;
 	const SPEED_MAX = 4;
 
