@@ -1240,7 +1240,9 @@ export const setCommanderDamage = (
 	amount: number,
 	sourceIndex = 0,
 	options?: {
+		historyLifeDelta?: number;
 		playSound?: boolean;
+		recordSnapshot?: boolean;
 		updateLifeTotal?: boolean;
 	}
 ) => {
@@ -1305,11 +1307,13 @@ export const setCommanderDamage = (
 			sourceIndex: sourceSlot + 1,
 			from: oldCommanderDamage,
 			to: newAmount,
-			lifeDelta: actualLifeDelta
+			lifeDelta: options?.historyLifeDelta ?? actualLifeDelta
 		}
 	});
 
-	recordSnapshot(get(players));
+	if (options?.recordSnapshot !== false) {
+		recordSnapshot(get(players));
+	}
 };
 
 export const applyCommanderCombatDamage = (
@@ -1334,11 +1338,11 @@ export const applyCommanderCombatDamage = (
 	const minAllowed = canUseNegativeLife(target, projectedLifeTotal) ? -9999 : 0;
 	const nextLifeTotal = Math.max(minAllowed, Math.min(9999, projectedLifeTotal));
 	const actualLifeDelta = nextLifeTotal - target.lifeTotal;
-	// Commander-damage history stores sourceIndex as 1-based (slot + 1).
-	const historySourceIndex = sourceIndex + 1;
 
 	setCommanderDamage(playerId, fromPlayerId, nextCommanderDamage, sourceIndex, {
 		...options,
+		historyLifeDelta: actualLifeDelta,
+		recordSnapshot: false,
 		updateLifeTotal: false
 	});
 
@@ -1354,34 +1358,9 @@ export const applyCommanderCombatDamage = (
 			)
 		);
 		setTempLifeDiff(playerId, actualLifeDelta > 0 ? 'add' : 'subtract', Math.abs(actualLifeDelta));
-
-		gameHistory.update((entries) => {
-			const latestEntry = entries[entries.length - 1];
-			if (
-				!latestEntry ||
-				latestEntry.kind !== 'commanderDamage' ||
-				latestEntry.playerId !== playerId ||
-				latestEntry.payload.fromPlayerId !== fromPlayerId ||
-				latestEntry.payload.sourceIndex !== historySourceIndex ||
-				latestEntry.payload.to !== nextCommanderDamage
-			) {
-				return entries;
-			}
-
-			return [
-				...entries.slice(0, -1),
-				{
-					...latestEntry,
-					payload: {
-						...latestEntry.payload,
-						lifeDelta: (latestEntry.payload.lifeDelta ?? 0) + actualLifeDelta
-					}
-				}
-			];
-		});
-
-		recordSnapshot(get(players));
 	}
+
+	recordSnapshot(get(players));
 };
 
 /**

@@ -21,7 +21,7 @@ vi.stubGlobal('localStorage', {
 });
 
 vi.mock('svelte-i18n', () => {
-	const createStore = <T,>(value: T) => ({
+	const createStore = <T>(value: T) => ({
 		subscribe: (run: (value: T) => void) => {
 			run(value);
 			return () => undefined;
