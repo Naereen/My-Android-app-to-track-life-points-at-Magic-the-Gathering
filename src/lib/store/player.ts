@@ -10,7 +10,7 @@ import {
 	playLifeLongStepSound,
 	playLifeTapBurstSound
 } from '$lib/utils/gameplaySound';
-import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
+import { addGameHistoryEntry, clearGameHistory, gameHistory } from './gameHistory';
 import {
 	clearLifeHistory,
 	lifeHistory,
@@ -1240,11 +1240,12 @@ export const setCommanderDamage = (
 	amount: number,
 	sourceIndex = 0,
 	options?: {
+		historyLifeDelta?: number;
 		playSound?: boolean;
+		recordSnapshot?: boolean;
+		updateLifeTotal?: boolean;
 	}
 ) => {
-	// Commander damage editing tracks commander counters only.
-	// It must not directly modify life totals.
 	const currentPlayers = get(players);
 	const target = currentPlayers.find((p) => p.id === playerId);
 	if (!target) return;
@@ -1259,6 +1260,11 @@ export const setCommanderDamage = (
 	const newAmount = clampCommanderDamageAmount(amount);
 	const delta = newAmount - oldCommanderDamage;
 	if (delta === 0) return;
+	const shouldUpdateLifeTotal = options?.updateLifeTotal !== false;
+	const projectedLifeTotal = target.lifeTotal - delta;
+	const minAllowed = canUseNegativeLife(target, projectedLifeTotal) ? -9999 : 0;
+	const nextLifeTotal = Math.max(minAllowed, Math.min(9999, projectedLifeTotal));
+	const actualLifeDelta = shouldUpdateLifeTotal ? nextLifeTotal - target.lifeTotal : 0;
 
 	updatePlayersAndPlayEliminationSounds((existingPlayers) => {
 		return existingPlayers.map((player) => {
@@ -1273,6 +1279,7 @@ export const setCommanderDamage = (
 
 			return {
 				...player,
+				lifeTotal: shouldUpdateLifeTotal ? nextLifeTotal : player.lifeTotal,
 				statusEffects: {
 					...player.statusEffects,
 					commanderDamage,
@@ -1286,6 +1293,10 @@ export const setCommanderDamage = (
 		playGameplaySound(delta > 0 ? 'bigCommanderDown' : 'bigCommanderUp');
 	}
 
+	if (actualLifeDelta !== 0) {
+		setTempLifeDiff(playerId, actualLifeDelta > 0 ? 'add' : 'subtract', Math.abs(actualLifeDelta));
+	}
+
 	addGameHistoryEntry({
 		playerId: snapshot.id,
 		playerName: snapshot.playerName,
@@ -1295,9 +1306,59 @@ export const setCommanderDamage = (
 			fromPlayerName: sourcePlayerName,
 			sourceIndex: sourceSlot + 1,
 			from: oldCommanderDamage,
-			to: newAmount
+			to: newAmount,
+			lifeDelta: options?.historyLifeDelta ?? actualLifeDelta
 		}
 	});
+
+	if (options?.recordSnapshot !== false) {
+		recordSnapshot(get(players));
+	}
+};
+
+export const applyCommanderCombatDamage = (
+	playerId: number,
+	fromPlayerId: number,
+	amount: number,
+	sourceIndex = 0,
+	options?: {
+		playSound?: boolean;
+	}
+) => {
+	const currentPlayers = get(players);
+	const target = currentPlayers.find((player) => player.id === playerId);
+	if (!target) return;
+
+	const currentCommanderDamage = getCommanderDamageSourceValue(target, fromPlayerId, sourceIndex);
+	const nextCommanderDamage = clampCommanderDamageAmount(currentCommanderDamage + amount);
+	const appliedDamage = nextCommanderDamage - currentCommanderDamage;
+	if (appliedDamage === 0) return;
+
+	const projectedLifeTotal = target.lifeTotal - appliedDamage;
+	const minAllowed = canUseNegativeLife(target, projectedLifeTotal) ? -9999 : 0;
+	const nextLifeTotal = Math.max(minAllowed, Math.min(9999, projectedLifeTotal));
+	const actualLifeDelta = nextLifeTotal - target.lifeTotal;
+
+	setCommanderDamage(playerId, fromPlayerId, nextCommanderDamage, sourceIndex, {
+		...options,
+		historyLifeDelta: actualLifeDelta,
+		recordSnapshot: false,
+		updateLifeTotal: false
+	});
+
+	if (actualLifeDelta !== 0) {
+		updatePlayersAndPlayEliminationSounds((existingPlayers) =>
+			existingPlayers.map((player) =>
+				player.id === playerId
+					? {
+							...player,
+							lifeTotal: nextLifeTotal
+						}
+					: player
+			)
+		);
+		setTempLifeDiff(playerId, actualLifeDelta > 0 ? 'add' : 'subtract', Math.abs(actualLifeDelta));
+	}
 
 	recordSnapshot(get(players));
 };
