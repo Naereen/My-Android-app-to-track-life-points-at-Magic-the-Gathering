@@ -79,6 +79,8 @@ describe('game reset state', () => {
 			vanguardModeEnabled: false,
 			treacheryModeEnabled: false,
 			shogunVariantEnabled: false,
+			showBountyMenu: false,
+			bountyModeEnabled: false,
 			vanguardDraftThree: false,
 			showGameHistoryMenu: true,
 			enableAcornMode: false,

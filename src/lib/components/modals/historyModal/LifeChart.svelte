@@ -114,7 +114,13 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const getAdaptiveXTickInterval = (totalDurationMs: number) => {
-		const compactIntervals = [tenSecondsMs, thirtySecondsMs, oneMinuteMs, twoMinutesMs, fiveMinutesMs];
+		const compactIntervals = [
+			tenSecondsMs,
+			thirtySecondsMs,
+			oneMinuteMs,
+			twoMinutesMs,
+			fiveMinutesMs
+		];
 
 		for (const interval of compactIntervals) {
 			const tickCount = Math.max(0, Math.floor((totalDurationMs - 1) / interval));

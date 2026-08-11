@@ -6,7 +6,7 @@ This file provides guidance for AI coding agents (e.g., GitHub Copilot, Codex, C
 
 ## Repository Overview
 
-**Naereen's MTG Life Counter** is a web-based life point tracker for *Magic: The Gathering*, built with:
+**Naereen's MTG Life Counter** is a web-based life point tracker for _Magic: The Gathering_, built with:
 
 - **SvelteKit** (web framework)
 - **Svelte 4** (UI components)
@@ -150,10 +150,10 @@ The APK is built and signed via GitHub Actions (`.github/workflows/android_build
 
 ## CI / GitHub Actions
 
-| Workflow | Trigger | What it does |
-|---|---|---|
-| `deploy.yml` | Push to `main` | Builds static site and deploys to GitHub Pages |
-| `android_build.yml` | Release tag | Builds and signs the Android APK |
+| Workflow            | Trigger        | What it does                                   |
+| ------------------- | -------------- | ---------------------------------------------- |
+| `deploy.yml`        | Push to `main` | Builds static site and deploys to GitHub Pages |
+| `android_build.yml` | Release tag    | Builds and signs the Android APK               |
 
 Both workflows use `ubuntu-latest` and Node.js 18+.
 

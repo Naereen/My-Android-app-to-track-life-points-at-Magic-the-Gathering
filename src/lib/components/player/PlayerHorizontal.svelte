@@ -22,7 +22,7 @@
 	import { _, number } from 'svelte-i18n';
 	import { appSettings, getPoisonLethalLimit } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
-    import { turnTimer } from '$lib/store/turnTimer';
+	import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
 		getCommandTaxBySourceForPlayer,
@@ -63,8 +63,7 @@
 	 * @returns {unknown} Result produced by isLikelySyntheticMouseEvent.
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
-	const isLikelySyntheticMouseEvent = () =>
-		(Date.now() - lastTouchAt) < MOUSE_AFTER_TOUCH_GUARD_MS;
+	const isLikelySyntheticMouseEvent = () => Date.now() - lastTouchAt < MOUSE_AFTER_TOUCH_GUARD_MS;
 	$: innerWidth = 0;
 	$: innerHeight = 0;
 	$: isMobile = isMobileDevice(innerWidth);
@@ -104,29 +103,40 @@
 		// four-player grids, and very crowded six-to-eight player tables.
 		const isCompactTable = playerCount >= 5;
 		const isDuel = playerCount <= 2;
-		const isRotated90deg = (seatOrientation === 'left' || seatOrientation === 'right');
+		const isRotated90deg = seatOrientation === 'left' || seatOrientation === 'right';
 		const isCrowdedSideSeat =
-			(playerCount === 6 || playerCount === 7 || playerCount === 8) &&
-			isRotated90deg;
-		const isVeryCrowdedSideSeat =
-			(playerCount === 8) && isRotated90deg;
+			(playerCount === 6 || playerCount === 7 || playerCount === 8) && isRotated90deg;
+		const isVeryCrowdedSideSeat = playerCount === 8 && isRotated90deg;
 		const width = !mobile
-			? '200%' : isDuel
-			? '160%' : isVeryCrowdedSideSeat
-			? '220%' : isCrowdedSideSeat
-			? '210%' : isCompactTable
-			? '175%' : isRotated90deg
-			? '145%' : '115%';
+			? '200%'
+			: isDuel
+				? '160%'
+				: isVeryCrowdedSideSeat
+					? '220%'
+					: isCrowdedSideSeat
+						? '210%'
+						: isCompactTable
+							? '175%'
+							: isRotated90deg
+								? '145%'
+								: '115%';
 		const height = !mobile
-			? '180%' : isDuel
-			? '160%' : isVeryCrowdedSideSeat
-			? '200%' : isCrowdedSideSeat
-			? '185%' : isCompactTable
-			? '145%' : isRotated90deg
-			? '130%' : '115%';
+			? '180%'
+			: isDuel
+				? '160%'
+				: isVeryCrowdedSideSeat
+					? '200%'
+					: isCrowdedSideSeat
+						? '185%'
+						: isCompactTable
+							? '145%'
+							: isRotated90deg
+								? '130%'
+								: '115%';
 
 		return {
-			rotation: (seatOrientation === 'left') ? '-90deg' : (seatOrientation === 'right') ? '90deg' : '0deg',
+			rotation:
+				seatOrientation === 'left' ? '-90deg' : seatOrientation === 'right' ? '90deg' : '0deg',
 			positionX: 'center',
 			positionY: 'center',
 			width: width,
@@ -135,11 +145,15 @@
 			bottom: '50%',
 			left: '50%',
 			right: '50%',
-			size: 'cover',  // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
+			size: 'cover' // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
 		};
 	};
 
-	$: horizontalBackgroundFrame = getHorizontalBackgroundFrame(numberOfPlayers, isMobile, orientation);
+	$: horizontalBackgroundFrame = getHorizontalBackgroundFrame(
+		numberOfPlayers,
+		isMobile,
+		orientation
+	);
 
 	const toPercentNumber = (value: string, fallback: number): number => {
 		const parsed = Number.parseFloat(value);
@@ -183,7 +197,7 @@
 			splitWidth: `${splitWidthPercent}%`,
 			splitHeight: `${splitHeightPercent}%`,
 			splitPosTop: '50%',
-			splitPosBottom: (orientation === 'left') ? '-150%' : '100%',
+			splitPosBottom: orientation === 'left' ? '-150%' : '100%'
 		};
 	};
 
@@ -233,7 +247,10 @@
 		: `${commandTaxCount}`;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
-	$: commanderDamageArray = getCommanderDamageTotalsForPlayer($players[index], $appSettings.playerCount);
+	$: commanderDamageArray = getCommanderDamageTotalsForPlayer(
+		$players[index],
+		$appSettings.playerCount
+	);
 	$: commanderDamageVisibleCount = doNotShowMinimap
 		? commanderDamageArray.filter((dmg) => dmg > 0).length
 		: 0;
@@ -250,23 +267,27 @@
 			startYourEngineSpeedCount
 		].filter((count) => count > 0).length + commanderDamageVisibleCount;
 	$: shouldWrapStatusEffects = statusEffectItemCount > 5;
-	$: maxCommanderDamage = getMaxCommanderDamageSingleSource($players[index], $appSettings.playerCount);
+	$: maxCommanderDamage = getMaxCommanderDamageSingleSource(
+		$players[index],
+		$appSettings.playerCount
+	);
 
 	// Once the status badges become too numerous, the layout switches to wrapped mode so
 	// the value row remains readable on small screens.
 
 	$: statusRotation =
-		orientation === 'down' ? '180deg'
-		: orientation === 'left' ? '-90deg'
-		: orientation === 'right' ? '90deg'
-		: '0deg';
+		orientation === 'down'
+			? '180deg'
+			: orientation === 'left'
+				? '-90deg'
+				: orientation === 'right'
+					? '90deg'
+					: '0deg';
 
 	// Text rotation should be different for players on the right side (facing left)
 	// Players 4, 5, 6 with orientation="left" should have text rotated to face right (90deg)
 	$: statusTextRotation =
-		orientation === 'left' ? '-180deg'
-		: orientation === 'right' ? '0deg'
-		: statusRotation;
+		orientation === 'left' ? '-180deg' : orientation === 'right' ? '0deg' : statusRotation;
 
 	// Determine players that are physically on the right side in each player-count layout
 	$: isRightFacingPlayer =
@@ -444,7 +465,7 @@
 		editing = false;
 	};
 
-	$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
+	$: timerFraction = $turnTimer.total ? $turnTimer.remaining / $turnTimer.total : 0;
 	$: timerElapsed = Math.max(0, ($turnTimer.total || 0) - ($turnTimer.remaining || 0));
 	$: isTimerOvertime = ($turnTimer.remaining || 0) < 0;
 	$: overtimeElapsed = isTimerOvertime ? Math.abs($turnTimer.remaining || 0) : 0;
@@ -460,12 +481,20 @@
 
 	$: if ($appSettings.turnTimerEnabled && index === $appState.currentTurn) {
 		// start or reset timer for this player only when currentTurn or setting changes
-		try { turnTimer.startForPlayer(index); } catch (e) {}
+		try {
+			turnTimer.startForPlayer(index);
+		} catch (e) {}
 	}
 
 	// stop the timer for this player when the store indicates it's running for them but they're no longer the current turn
-	$: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && index !== $appState.currentTurn) {
-		try { turnTimer.stop(); } catch (e) {}
+	$: if (
+		$appSettings.turnTimerEnabled &&
+		$turnTimer?.playerIndex === index &&
+		index !== $appState.currentTurn
+	) {
+		try {
+			turnTimer.stop();
+		} catch (e) {}
 	}
 </script>
 
@@ -473,8 +502,16 @@
 
 <div
 	class="relative isolate flex w-full rounded-3xl flex-grow h-6"
-	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
-	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
+	class:player--active={index === $appState.currentTurn &&
+		$appSettings.enableCurrentPlayerGlow &&
+		!$spinning &&
+		!$appState.isMenuOpen &&
+		timerFraction > 0.03}
+	class:player--active-timer-over={index === $appState.currentTurn &&
+		$appSettings.enableCurrentPlayerGlow &&
+		!$spinning &&
+		!$appState.isMenuOpen &&
+		timerFraction <= 0.03}
 	class:bg-rotated-horizontal={!!$players[index].backgroundImage}
 	class:bg-split={hasSplitBackground}
 	class:overflow-hidden={!!$players[index].backgroundImage}
@@ -498,7 +535,8 @@
 			<div class="flex flex-col w-full relative">
 				<div class="h-full flex flex-col" class:flex-col-reverse={orientation === 'left'}>
 					{#if $appSettings.turnTimerEnabled && index === $appState.currentTurn}
-						<div class="absolute z-30 pointer-events-auto cursor-pointer status-rotate-wrapper"
+						<div
+							class="absolute z-30 pointer-events-auto cursor-pointer status-rotate-wrapper"
 							class:bottom-2={orientation === 'left'}
 							class:left-2={orientation === 'left'}
 							class:right-2={orientation === 'right'}
@@ -508,20 +546,35 @@
 									if ($turnTimer?.remaining <= 0) {
 										turnTimer.resetForCurrent();
 									}
-								} catch (e) { console.log(e); }
+								} catch (e) {
+									console.log(e);
+								}
 							}}
 							style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
 						>
-							<div class="w-10 h-10 flex items-center justify-center bg-black/40 rounded-full text-white text-sm">
+							<div
+								class="w-10 h-10 flex items-center justify-center bg-black/40 rounded-full text-white text-sm"
+							>
 								<svg viewBox="0 0 40 40" class="w-10 h-10">
 									<circle cx="20" cy="20" r="18" stroke="#444" stroke-width="3" fill="none" />
-									<circle cx="20" cy="20" r="18" stroke="#ffd54a" stroke-width="3" fill="none"
+									<circle
+										cx="20"
+										cy="20"
+										r="18"
+										stroke="#ffd54a"
+										stroke-width="3"
+										fill="none"
 										transform="rotate(-90 20 20)"
-										stroke-dasharray={timerCircumference} stroke-dashoffset={dashOffset}
+										stroke-dasharray={timerCircumference}
+										stroke-dashoffset={dashOffset}
 										stroke-linecap="round"
 									/>
 								</svg>
-								<div class="absolute text-xs">{timerPrefix}{String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}</div>
+								<div class="absolute text-xs">
+									{timerPrefix}{String(timerMinutes).padStart(2, '0')}:{String(
+										timerSeconds
+									).padStart(2, '0')}
+								</div>
 							</div>
 						</div>
 					{/if}
@@ -593,8 +646,10 @@
 									class="beleren mr-1"
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
-									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}
-									>{$players[index].playerName}</span>
+									class:overline={!$appSettings.enableCurrentPlayerGlow &&
+										$appSettings.showNextPlayerButton &&
+										index === $appState.currentTurn}>{$players[index].playerName}</span
+								>
 								<!-- Use the class:overline only if the glowing gold animation is disabled and if the next player button is enabled -->
 								{#each booleanStatuses as s}
 									{#if s === 'monarch'}
@@ -637,7 +692,7 @@
 								class:-left-[50%]={orientation === 'right'}
 								class:translate-y-[75%]={orientation === 'left'}
 								class:-translate-y-[175%]={orientation === 'right'}
-								>
+							>
 								{$players[index].tempLifeDiff < 0 ? `${$players[index].tempLifeDiff}` : ''}
 							</div>
 							{#if orientation === 'left'}
@@ -649,7 +704,7 @@
 									class:text-xl={$appSettings.playerCount === 2}
 									class:text-lg={$appSettings.playerCount > 2}
 								>
-									{#if $appSettings.showLifeChangeHistory }
+									{#if $appSettings.showLifeChangeHistory}
 										<LifeChangeHistory
 											score={$players[index].lifeTotal}
 											maxLines={6}
@@ -665,7 +720,7 @@
 									class:-translate-y-[225%]={$appSettings.playerCount <= 4}
 									class:-translate-y-[100%]={$appSettings.playerCount > 4}
 								>
-									{#if $appSettings.showLifeChangeHistory }
+									{#if $appSettings.showLifeChangeHistory}
 										<LifeChangeHistory
 											score={$players[index].lifeTotal}
 											maxLines={6}
@@ -681,13 +736,18 @@
 									class:-rotate-90={orientation === 'left'}
 									class:-translate-x-0={orientation === 'right'}
 									class:translate-x-0={orientation === 'left'}
-									style="width: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; height: {$appSettings.playerCount >= 5 ? '2.5rem' : '3.25rem'}; opacity: 1;"
+									style="width: {$appSettings.playerCount >= 5
+										? '2.5rem'
+										: '3.25rem'}; height: {$appSettings.playerCount >= 5
+										? '2.5rem'
+										: '3.25rem'}; opacity: 1;"
 								>
 									<Skull />
 									<br />
 								</div>
 							{/if}
-							<div class="absolute left-1/2 top-1/2  -translate-y-1/2 flex items-center justify-center pointer-events-none"
+							<div
+								class="absolute left-1/2 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none"
 								class:-translate-x-[33%]={orientation === 'left'}
 								class:-translate-x-[67%]={orientation === 'right'}
 							>
@@ -700,7 +760,8 @@
 										<span
 											class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center leading-none"
 											class:text-9xl={$appSettings.playerCount === 2}
-											class:text-8xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
+											class:text-8xl={$appSettings.playerCount >= 3 &&
+												$appSettings.playerCount <= 4}
 											class:text-6xl={$appSettings.playerCount >= 5}
 											class:-rotate-180={orientation === 'left'}
 											class:opacity-25={isDead}
@@ -722,12 +783,14 @@
 											placeholder={$_('enter_life_total_placeholder')}
 										/>
 										<div class="flex gap-2 mt-1 justify-center">
-											<button on:click={saveEdit}
+											<button
+												on:click={saveEdit}
 												class="px-2 py-1 bg-green-600 text-white rounded"
 												class:-rotate-180={orientation === 'left'}
 												>{$_('set_life_total_save')}</button
 											>
-											<button on:click={cancelEdit}
+											<button
+												on:click={cancelEdit}
 												class="px-2 py-1 bg-gray-600 text-white rounded"
 												class:-rotate-180={orientation === 'left'}
 												>{$_('set_life_total_cancel')}</button
@@ -745,7 +808,7 @@
 								class:translate-y-[75%]={orientation === 'right'}
 								class:translate-x-[100%]={orientation === 'left'}
 								class:-translate-x-[0%]={orientation === 'right'}
-								>
+							>
 								{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}
 							</div>
 						</div>
@@ -771,26 +834,23 @@
 						class:justify-center={shouldWrapStatusEffects}
 						class:max-h-[28rem]={shouldWrapStatusEffects}
 					>
-						{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
-							<div
-								class:mr-1={orientation === 'right'}
-								class:ml-1={orientation === 'left'}
-							>
-								<Minimap
-									playerIndex={index}
-									orientation={orientation}
-									layout={layout}
-									fromPlayerDataModal={false}
-								/>
+						{#if numberOfPlayers >= 3 && doNotShowMinimap === false}
+							<div class:mr-1={orientation === 'right'} class:ml-1={orientation === 'left'}>
+								<Minimap playerIndex={index} {orientation} {layout} fromPlayerDataModal={false} />
 							</div>
 						{/if}
 						{#if commandTaxCount > 0}
 							<div
 								title={$_('tooltip_status_command_tax')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{commandTaxDisplay}</span>
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{commandTaxDisplay}</span
+								>
 								<div
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -803,9 +863,14 @@
 							<div
 								title={$_('tooltip_status_poison')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{poisonCount}</span>
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{poisonCount}</span
+								>
 								<div
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -818,9 +883,14 @@
 							<div
 								title={$_('tooltip_status_energy')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{energyCount}</span>
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{energyCount}</span
+								>
 								<div
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -833,9 +903,14 @@
 							<div
 								title={$_('tooltip_status_experience')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{experienceCount}</span>
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{experienceCount}</span
+								>
 								<div
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -848,9 +923,14 @@
 							<div
 								title={$_('tooltip_status_rad')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{radCount}</span>
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{radCount}</span
+								>
 								<div
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -859,43 +939,58 @@
 								</div>
 							</div>
 						{/if}
-					{#if visibleAcornCount > 0}
-						<div
-							title={$_('tooltip_status_acorn')}
-							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-							on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
-						>
-							<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{visibleAcornCount}</span>
+						{#if visibleAcornCount > 0}
 							<div
-								class="status-rotate-wrapper"
-								style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								title={$_('tooltip_status_acorn')}
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<Acorn />
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{visibleAcornCount}</span
+								>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Acorn />
+								</div>
 							</div>
-						</div>
-					{/if}
-					{#if visibleTicketCount > 0}
-						<div
-							title={$_('tooltip_status_tickets')}
-							class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-							on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
-						>
-							<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{visibleTicketCount}</span>
+						{/if}
+						{#if visibleTicketCount > 0}
 							<div
-								class="status-rotate-wrapper"
-								style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								title={$_('tooltip_status_tickets')}
+								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<Ticket />
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{visibleTicketCount}</span
+								>
+								<div
+									class="status-rotate-wrapper"
+									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
+								>
+									<Ticket />
+								</div>
 							</div>
-						</div>
-					{/if}
+						{/if}
 						{#if ringBearerCount > 0}
 							<div
 								title={$_('tooltip_status_ring_bearer')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{ringBearerCount}</span>
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{ringBearerCount}</span
+								>
 								<div
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -908,9 +1003,14 @@
 							<div
 								title={$_('tooltip_status_start_your_engine_speed')}
 								class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0"
-								on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+								on:click={() => openPlayerModal(id, 'status_effects')}
+								role="button"
+								tabindex="0"
 							>
-								<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base leading-none">{startYourEngineSpeedCount}</span>
+								<span
+									style="transform: rotate({statusTextRotation}); display: inline-flex;"
+									class="text-base leading-none">{startYourEngineSpeedCount}</span
+								>
 								<div
 									class="status-rotate-wrapper"
 									style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -926,10 +1026,15 @@
 									<div
 										title={$_('tooltip_commander_damage')}
 										class="px-0.5 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5"
-										on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
+										on:click={() => openPlayerModal(id, 'commander')}
+										role="button"
+										tabindex="0"
 									>
 										{#if isRightFacingPlayer}
-											<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
+											<span
+												style="transform: rotate({statusTextRotation}); display: inline-flex;"
+												class="text-base">{dmg}</span
+											>
 											<div
 												class="status-rotate-wrapper"
 												style="transform: rotate({statusRotation}); transform-origin: center; display: inline-flex;"
@@ -943,7 +1048,10 @@
 											>
 												<!-- <CommanderDamage playerIndex={i} color="white" /> -->
 											</div>
-											<span style="transform: rotate({statusTextRotation}); display: inline-flex;" class="text-base">{dmg}</span>
+											<span
+												style="transform: rotate({statusTextRotation}); display: inline-flex;"
+												class="text-base">{dmg}</span
+											>
 										{/if}
 									</div>
 								{/if}

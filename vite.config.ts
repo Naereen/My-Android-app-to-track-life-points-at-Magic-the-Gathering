@@ -100,6 +100,6 @@ export default defineConfig({
 	},
 	define: {
 		// On définit une variable globale disponible dans le code Svelte
-		'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkg.version),
+		'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkg.version)
 	}
 });

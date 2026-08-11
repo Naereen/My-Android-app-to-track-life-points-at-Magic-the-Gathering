@@ -16,9 +16,9 @@
 		const def = $confirmModalData.checkboxDefaultValue;
 		if (Array.isArray(labels)) {
 			const defs = Array.isArray(def) ? def : [];
-			checkboxValues = labels.map((_, i) => (defs[i] ?? false));
+			checkboxValues = labels.map((_, i) => defs[i] ?? false);
 		} else {
-			checkboxValues = [Array.isArray(def) ? def[0] ?? false : def ?? false];
+			checkboxValues = [Array.isArray(def) ? (def[0] ?? false) : (def ?? false)];
 		}
 		radioValue = $confirmModalData.radioDefaultValue ?? 0;
 		previousIsOpen = true;
@@ -33,7 +33,9 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	function getCheckboxValue() {
-		return Array.isArray($confirmModalData.checkboxLabel) ? checkboxValues : (checkboxValues[0] ?? false);
+		return Array.isArray($confirmModalData.checkboxLabel)
+			? checkboxValues
+			: (checkboxValues[0] ?? false);
 	}
 </script>
 
@@ -76,15 +78,20 @@
 						<div class="mb-4 flex flex-col items-start gap-2">
 							{#each $confirmModalData.checkboxLabel as label, i}
 								<div class="flex items-center gap-2">
-									<input type="checkbox" id={"confirm-checkbox-" + i} bind:checked={checkboxValues[i]} />
-									<label for={"confirm-checkbox-" + i} class="text-sm">{label}</label>
+									<input
+										type="checkbox"
+										id={'confirm-checkbox-' + i}
+										bind:checked={checkboxValues[i]}
+									/>
+									<label for={'confirm-checkbox-' + i} class="text-sm">{label}</label>
 								</div>
 							{/each}
 						</div>
 					{:else}
 						<div class="mb-4 flex items-center justify-center gap-2">
 							<input type="checkbox" id="confirm-checkbox" bind:checked={checkboxValues[0]} />
-							<label for="confirm-checkbox" class="text-sm">{$confirmModalData.checkboxLabel}</label>
+							<label for="confirm-checkbox" class="text-sm">{$confirmModalData.checkboxLabel}</label
+							>
 						</div>
 					{/if}
 				{/if}
@@ -97,12 +104,12 @@
 							<div class="flex items-center gap-2">
 								<input
 									type="radio"
-									id={"confirm-radio-" + i}
+									id={'confirm-radio-' + i}
 									name="confirm-radio-group"
 									value={i}
 									bind:group={radioValue}
 								/>
-								<label for={"confirm-radio-" + i} class="text-sm">{option}</label>
+								<label for={'confirm-radio-' + i} class="text-sm">{option}</label>
 							</div>
 						{/each}
 					</div>
@@ -110,11 +117,13 @@
 				<div class="flex gap-4 justify-center">
 					<button
 						class="px-4 py-2 rounded-lg text-lg bg-gray-200"
-						on:click={() => respondConfirm(false, getCheckboxValue(), radioValue)}>{cancelText}</button
+						on:click={() => respondConfirm(false, getCheckboxValue(), radioValue)}
+						>{cancelText}</button
 					>
 					<button
 						class="px-4 py-2 rounded-lg text-lg bg-cyan-600 text-white"
-						on:click={() => respondConfirm(true, getCheckboxValue(), radioValue)}>{confirmText}</button
+						on:click={() => respondConfirm(true, getCheckboxValue(), radioValue)}
+						>{confirmText}</button
 					>
 				</div>
 			</div>

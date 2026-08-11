@@ -148,7 +148,8 @@
 				<Arrow />
 			</button>
 			<span class="text-white text-center text-3xl">{$_('vanguard_menu')}</span>
-			<span class="text-gray-400 text-center text-base mt-2 w-90">{$_('vanguard_explanation')}</span>
+			<span class="text-gray-400 text-center text-base mt-2 w-90">{$_('vanguard_explanation')}</span
+			>
 			<a
 				class="text-blue-400 underline text-sm mt-2"
 				href="https://mtg.wiki/page/Vanguard"
@@ -164,8 +165,14 @@
 				<div class="bg-[#2d2f30] rounded-2xl p-4">
 					<div class="flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
 						<div>
-							<div class="text-white text-lg font-semibold">{$_('vanguard_mode_settings_title')}</div>
-							<div class="text-gray-300 text-sm">{$_('vanguard_mode_status')}: {$appSettings.vanguardModeEnabled ? $_('history_state_on') : $_('history_state_off')}</div>
+							<div class="text-white text-lg font-semibold">
+								{$_('vanguard_mode_settings_title')}
+							</div>
+							<div class="text-gray-300 text-sm">
+								{$_('vanguard_mode_status')}: {$appSettings.vanguardModeEnabled
+									? $_('history_state_on')
+									: $_('history_state_off')}
+							</div>
 							<div class="text-gray-400 text-xs mt-1">{$_('vanguard_random_rule')}</div>
 						</div>
 						<button
@@ -256,7 +263,9 @@
 					{#if vanguardResults.length > 0}
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-1">
 							{#each vanguardResults as vanguard}
-								<div class="bg-black/40 rounded-xl p-3 text-left text-white flex items-center gap-3">
+								<div
+									class="bg-black/40 rounded-xl p-3 text-left text-white flex items-center gap-3"
+								>
 									{#if vanguard.faces[0]?.image}
 										<img
 											src={vanguard.faces[0].image}

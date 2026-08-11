@@ -274,7 +274,11 @@ export const pushHistoryModalHistoryEntry = () => {
 	try {
 		const currentState =
 			window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
-		window.history.pushState({ ...currentState, __mtgHistoryModalOpen: true }, '', window.location.href);
+		window.history.pushState(
+			{ ...currentState, __mtgHistoryModalOpen: true },
+			'',
+			window.location.href
+		);
 		hasHistoryModalHistoryEntry = true;
 	} catch {
 		// ignore
@@ -310,7 +314,11 @@ export const openHistoryModal = (tab: 'life' | 'turnTime' = 'life') => {
  * @returns {void}
  */
 export const closeHistoryModal = () => {
-	if (typeof window !== 'undefined' && hasHistoryModalHistoryEntry && !isSyncingHistoryModalHistory) {
+	if (
+		typeof window !== 'undefined' &&
+		hasHistoryModalHistoryEntry &&
+		!isSyncingHistoryModalHistory
+	) {
 		isSyncingHistoryModalHistory = true;
 		window.history.back();
 		return;

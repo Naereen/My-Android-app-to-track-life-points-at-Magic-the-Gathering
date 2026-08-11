@@ -21,18 +21,18 @@
 	</div>
 
 	{#if !$appState.isMenuOpen}
-	<div class="pt-2 flex gap-2 bg-black sticky top-0 h-[32%]">
-		<div class="w-1/2 h-full">
-			<DraggablePlayerSlot className="w-full h-full" seatId={2}>
-				<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
-			</DraggablePlayerSlot>
+		<div class="pt-2 flex gap-2 bg-black sticky top-0 h-[32%]">
+			<div class="w-1/2 h-full">
+				<DraggablePlayerSlot className="w-full h-full" seatId={2}>
+					<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
+				</DraggablePlayerSlot>
+			</div>
+			<div class="w-1/2 h-full">
+				<DraggablePlayerSlot className="w-full h-full" seatId={4}>
+					<PlayerHorizontal orientation="left" layout="one-two-one" id={4} />
+				</DraggablePlayerSlot>
+			</div>
 		</div>
-		<div class="w-1/2 h-full">
-			<DraggablePlayerSlot className="w-full h-full" seatId={4}>
-				<PlayerHorizontal orientation="left" layout="one-two-one" id={4} />
-			</DraggablePlayerSlot>
-		</div>
-	</div>
 	{/if}
 
 	<div class="flex-grow">

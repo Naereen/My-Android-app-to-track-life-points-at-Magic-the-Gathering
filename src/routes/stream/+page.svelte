@@ -85,7 +85,10 @@
 		if (endpointFromQuery) {
 			try {
 				const endpointUrl = new URL(endpointFromQuery);
-				return `${endpointUrl.origin}${endpointUrl.pathname.replace(/\/api\/stream\/?$/, '')}`.replace(/\/$/, '');
+				return `${endpointUrl.origin}${endpointUrl.pathname.replace(/\/api\/stream\/?$/, '')}`.replace(
+					/\/$/,
+					''
+				);
 			} catch {
 				// ignore
 			}
@@ -120,14 +123,19 @@
 	 */
 	const normalizePayload = (payload: unknown): StreamGameState | null => {
 		if (!payload || typeof payload !== 'object') {
-            // console.warn('Invalid payload format: not an object', payload);
-            return null;
-        }
+			// console.warn('Invalid payload format: not an object', payload);
+			return null;
+		}
 
 		const candidate = payload as Partial<StreamGameState> & Record<string, unknown>;
-		const playerCount = Math.max(2, Math.min(8, Number(candidate.playerCount ?? state.playerCount ?? 2)));
+		const playerCount = Math.max(
+			2,
+			Math.min(8, Number(candidate.playerCount ?? state.playerCount ?? 2))
+		);
 
-		const namesFromArray = Array.isArray(candidate.names) ? candidate.names.map((name) => String(name ?? '')) : [];
+		const namesFromArray = Array.isArray(candidate.names)
+			? candidate.names.map((name) => String(name ?? ''))
+			: [];
 		const livesFromArray = Array.isArray(candidate.lifeTotals)
 			? candidate.lifeTotals.map((life) => Number(life ?? 0))
 			: [];
@@ -147,7 +155,7 @@
 			return Number.isFinite(fromFlat) ? fromFlat : 0;
 		});
 
-        // console.warn('Normalized payload', { candidate, normalized: { playerCount, names, lifeTotals } });
+		// console.warn('Normalized payload', { candidate, normalized: { playerCount, names, lifeTotals } });
 
 		return {
 			playerCount,
@@ -220,7 +228,8 @@
 
 		if (isMixedContentBlocked(baseUrl)) {
 			status = 'error';
-			errorDetail = 'Connexion bloquée : page HTTPS vers relais HTTP (mixed content). Ouvre l\'overlay en HTTP local ou expose le relais en HTTPS.';
+			errorDetail =
+				"Connexion bloquée : page HTTPS vers relais HTTP (mixed content). Ouvre l'overlay en HTTP local ou expose le relais en HTTPS.";
 			return;
 		}
 
@@ -278,8 +287,10 @@
 			previousBodyColor = document.body.style.color;
 			previousHtmlBackground = document.documentElement.style.backgroundColor;
 			previousHtmlColor = document.documentElement.style.color;
-			previousLayoutBackground = document.documentElement.style.getPropertyValue('--stream-layout-bg');
-			previousLayoutForeground = document.documentElement.style.getPropertyValue('--stream-layout-fg');
+			previousLayoutBackground =
+				document.documentElement.style.getPropertyValue('--stream-layout-bg');
+			previousLayoutForeground =
+				document.documentElement.style.getPropertyValue('--stream-layout-fg');
 		}
 		applyDocumentTheme();
 		connectToStream();
@@ -308,25 +319,31 @@
 	style="width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);"
 	class:bg-black={isDarkTheme}
 	class:text-white={isDarkTheme}
-	class:bg-slate-100={ !isDarkTheme }
-	class:text-slate-900={ !isDarkTheme }
+	class:bg-slate-100={!isDarkTheme}
+	class:text-slate-900={!isDarkTheme}
 >
 	<div class="flex items-center justify-between text-3xl font-black tracking-widest">
 		<div>
-            <h1 class="text-4xl">Naereen's MTG Life Tracker</h1>
-            <h2 class="text-lg" class:opacity-80={isDarkTheme} class:opacity-70={!isDarkTheme}>Stream Overlay</h2>
-        </div>
-		<div class="tabular-nums"
-            class:text-green-300={status === 'connected'}
-            class:text-green-700={status === 'connected' && !isDarkTheme}
-            class:text-red-300={status === 'error'}
-            class:text-red-700={status === 'error' && !isDarkTheme}
-        >
+			<h1 class="text-4xl">Naereen's MTG Life Tracker</h1>
+			<h2 class="text-lg" class:opacity-80={isDarkTheme} class:opacity-70={!isDarkTheme}>
+				Stream Overlay
+			</h2>
+		</div>
+		<div
+			class="tabular-nums"
+			class:text-green-300={status === 'connected'}
+			class:text-green-700={status === 'connected' && !isDarkTheme}
+			class:text-red-300={status === 'error'}
+			class:text-red-700={status === 'error' && !isDarkTheme}
+		>
 			{status}
 		</div>
 	</div>
 
-	<div class="grid content-center gap-6" style={`grid-template-columns: repeat(${Math.min(3, visiblePlayers().length)}, minmax(0, 1fr)); container-type: size;`}>
+	<div
+		class="grid content-center gap-6"
+		style={`grid-template-columns: repeat(${Math.min(3, visiblePlayers().length)}, minmax(0, 1fr)); container-type: size;`}
+	>
 		{#each visiblePlayers() as player}
 			<div
 				class={`rounded-2xl border px-8 py-8 text-center transition-colors duration-300 ${
@@ -340,19 +357,26 @@
 				}`}
 			>
 				<div class="text-4xl font-bold truncate">
-                    {player.name}
-                </div>
-				<div class="mt-2 font-black tabular-nums leading-none"
+					{player.name}
+				</div>
+				<div
+					class="mt-2 font-black tabular-nums leading-none"
 					style="font-size: clamp(5rem, min(15cqw, 20cqh), 14rem); text-align: center; white-space: nowrap;"
-                >
-                    {player.life}
-                </div>
+				>
+					{player.life}
+				</div>
 			</div>
 		{/each}
 	</div>
 
-    {#if errorDetail}
-		<div class="mt-4 mb-2 text-base" class:text-red-300={isDarkTheme} class:text-red-700={!isDarkTheme}>{errorDetail}</div>
+	{#if errorDetail}
+		<div
+			class="mt-4 mb-2 text-base"
+			class:text-red-300={isDarkTheme}
+			class:text-red-700={!isDarkTheme}
+		>
+			{errorDetail}
+		</div>
 	{/if}
 
 	<div class="mt-2 flex items-center justify-between gap-4 text-sm">
@@ -365,8 +389,8 @@
 					rel="noopener noreferrer"
 					class="underline decoration-1"
 					class:text-blue-300={isDarkTheme}
-					class:text-blue-700={!isDarkTheme}
-				>{endpoint}</a>
+					class:text-blue-700={!isDarkTheme}>{endpoint}</a
+				>
 			{/if}
 		</div>
 		<button

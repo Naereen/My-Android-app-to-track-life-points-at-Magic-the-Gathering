@@ -11,12 +11,12 @@
 	export let extraRotationEffect: string = '';
 	// Map player index to icon set
 	const iconSets = [
-		'ss-brb',  // Battle Royale
-		'ss-van',  // Vanguard
-		'ss-mom',  // March of the Machines
-		'ss-ulg',  // Urza's Legacy
-		'ss-mrd',  // Mirrodin
-		'ss-nms'   // Nemesis
+		'ss-brb', // Battle Royale
+		'ss-van', // Vanguard
+		'ss-mom', // March of the Machines
+		'ss-ulg', // Urza's Legacy
+		'ss-mrd', // Mirrodin
+		'ss-nms' // Nemesis
 	];
 	$: iconSet = iconSets[playerIndex % iconSets.length];
 	const effects = [
@@ -24,8 +24,7 @@
 		// 'ss-uncommon ',
 		// 'ss-rare ',
 		// 'ss-timeshifted ',
-		'ss-mythic '
-		+ 'ss-grad '
+		'ss-mythic ' + 'ss-grad '
 		// + 'ss-foil '
 	];
 	const rotationEffects = [
@@ -39,10 +38,12 @@
 		'transform: rotate(0deg);'
 	];
 	$: effect = effects[playerIndex % effects.length];
-	$: rotationEffect = extraRotationEffect ? extraRotationEffect : rotationEffects[playerIndex % rotationEffects.length];
+	$: rotationEffect = extraRotationEffect
+		? extraRotationEffect
+		: rotationEffects[playerIndex % rotationEffects.length];
 </script>
 
 <!-- The outer span only establishes sizing and inherits the caller's text color. -->
 <span style="font-size: 1.25rem; color: {color}; display: inline-grid; align-items: center;">
-	<i class="ss {iconSet} ss-1x ss-fw {effect} {extraEffects}" style="{rotationEffect}"></i>
+	<i class="ss {iconSet} ss-1x ss-fw {effect} {extraEffects}" style={rotationEffect}></i>
 </span>

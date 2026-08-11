@@ -50,6 +50,10 @@ interface AppSettings {
 	treacheryModeEnabled: boolean;
 	// simpler Treachery variant with hidden roles only (no cards/images)
 	shogunVariantEnabled: boolean;
+	// show bounty menu button in the main menu
+	showBountyMenu: boolean;
+	// enable bounty mode (Outlaws of Thunder Junction variant)
+	bountyModeEnabled: boolean;
 	// optional paper variant: each player gets 3 random vanguards and keeps one
 	vanguardDraftThree: boolean;
 	// show game history menu button in the main menu
@@ -159,6 +163,10 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	treacheryModeEnabled: false,
 	// simpler Treachery variant with hidden roles only (no cards/images)
 	shogunVariantEnabled: false,
+	// show bounty menu button in the main menu
+	showBountyMenu: false,
+	// enable bounty mode (Outlaws of Thunder Junction variant)
+	bountyModeEnabled: false,
 	// optional paper variant: each player gets 3 random vanguards and keeps one
 	vanguardDraftThree: false,
 	// show game history menu button in the main menu
@@ -391,6 +399,24 @@ export const setShowVanguardMenu = (show: boolean) => {
  */
 export const setShowTreacheryMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showTreacheryMenu: show }));
+};
+
+/**
+ * Controls visibility of the Bounty menu section.
+ * @param {boolean} show Whether Bounty menu entry is displayed.
+ * @returns {void}
+ */
+export const setShowBountyMenu = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showBountyMenu: show }));
+};
+
+/**
+ * Enables/disables Bounty mode (Outlaws of Thunder Junction variant).
+ * @param {boolean} enabled Whether Bounty mode is active.
+ * @returns {void}
+ */
+export const setBountyModeEnabled = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, bountyModeEnabled: enabled }));
 };
 
 /**

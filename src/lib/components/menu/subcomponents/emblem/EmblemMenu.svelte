@@ -105,7 +105,9 @@
 				<Arrow />
 			</button>
 			<span class="text-white text-center text-3xl">{$_('emblems_and_dungeons')}</span>
-			<span class="text-gray-400 text-center text-sm mt-2 w-90">{$_('explanation_emblems_and_dungeons')}</span>
+			<span class="text-gray-400 text-center text-sm mt-2 w-90"
+				>{$_('explanation_emblems_and_dungeons')}</span
+			>
 		</div>
 
 		<div class="w-full px-4 mt-1 mb-1">
@@ -136,9 +138,9 @@
 						disabled={isSearchingEmblems}
 					>
 						<span class="mt-1 text-base text-center">
-                            <TheRingerBearer isMax={true}/>
-                            {$_('emblem_ring_preset')}
-                        </span>
+							<TheRingerBearer isMax={true} />
+							{$_('emblem_ring_preset')}
+						</span>
 					</button>
 					<button
 						class="bg-[#2d2f30] rounded-2xl px-4 py-3 text-white flex flex-col items-center"
@@ -146,9 +148,9 @@
 						disabled={isSearchingEmblems}
 					>
 						<span class="mt-1 text-base text-center">
-                            <Initiative />
-                            {$_('emblem_initiative_preset')}
-                        </span>
+							<Initiative />
+							{$_('emblem_initiative_preset')}
+						</span>
 					</button>
 					<button
 						class="bg-[#2d2f30] rounded-2xl px-4 py-3 text-white flex flex-col items-center"
@@ -156,9 +158,9 @@
 						disabled={isSearchingEmblems}
 					>
 						<span class="mt-1 text-base text-center">
-                            <StartYourEngineSpeed isMax={true} />
-                            {$_('emblem_speed_preset')}
-                        </span>
+							<StartYourEngineSpeed isMax={true} />
+							{$_('emblem_speed_preset')}
+						</span>
 					</button>
 				</div>
 

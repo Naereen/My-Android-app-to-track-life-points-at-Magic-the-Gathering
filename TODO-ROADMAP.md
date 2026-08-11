@@ -28,6 +28,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), at first I preferr
 - [x] When showing the playerName, truncate it to max 20 characters, in order to be sure that it will not be too large?
 
 - [x] Add an animation showing the dice D6/D8/D10/etc rolling a little bit (like for 1 seconds, 6 different results appearing one after the other, before showing the final result).
+
   - [x] the animation is implemented, but so far it shows the maximum face of the dice (eg. a face showing 20 for a D20), and a number moving randomly, below this face of the dice.
   - [x] What I want is more subtle and more interesting: I want the face of the dice to change during the animation, showing different faces of the dice, and not only the maximum face. I also want to completely remove the number being displayed below the face of the dice, as it is not very useful and it can be confusing, especially for D20 dice, where the maximum face is 20, but the result can be 1, which is very different from 20. So I want to show only the face of the dice during the animation, and not the number below it.
   - [x] J'aimerais que le texte qui affiche la face du dé soit mis dans une couleur bien flashy (e.g. doré) quand l'animation de rotation du dé se termine. Pourquoi ? J'aimerais que cela montre bien la fin de l'animation.
@@ -112,7 +113,7 @@ Instead of using a proper issue tracker (e.g. GitHub Issues), at first I preferr
 
 ### The image background
 
-- [x] The card search form seems to be broken sometimes: for instance, searching for *Jace Beleren* fails completely, even though there are many cards with this name in the Scryfall database.
+- [x] The card search form seems to be broken sometimes: for instance, searching for _Jace Beleren_ fails completely, even though there are many cards with this name in the Scryfall database.
 
 - [x] The card search form is kinda broken, because it constantly tries to fill its content with the playerName. Fix this, by removing this default feature as soon as the <input> form is being edited!
 
@@ -240,6 +241,7 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
   - [x] When clicking on the "golden circle" timer SVG element, if it currently finished, reset it and start it again, for the current player's turn. This can be useful for players to manually reset the timer if they want to, without having to wait for the "next turn" button to be clicked enough times to get back to the initial starting player.
 
 - [x] Improve the visibility of the "current player" (the one whose turn it is), maybe a glowing/golden border around their panel. DONE!
+
   - [x] Add a setting in the global setting menu, to enable/disable this glowing border for the current player, as it can be too much for some people, especially on mobile devices (it can be too much visual noise, especially with image backgrounds, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to know whose turn it is, but it should be possible to disable it from the settings.
   - [x] Also add a setting to enable/disable the "next player" button from the main menu, as it can be too much for some people, especially on mobile devices (it can consume more screen space, and it can consume more battery on mobile devices). By default, this feature should be enabled, as it is very useful to have a button to advance to the next player's turn, but it should be possible to disable it from the settings.
   - [x] Added logging for time and current number of turns in game history (see PR: #44, issue: #43).
@@ -260,10 +262,12 @@ Fixing this is going to be hard, but crucial! I need to find a way to make the d
 
 - [x] Configure the build process to generate a working apk file
 - [ ] Test it regularly, on my devices:
+
   - [x] first on my Android smartphone
   - [x] then on my Android tablet
 
 - [ ] Set up deployment to GitHub Releases so that the latest apk file is always available for download: this seems to be hard! I need to find a way to automate the build process, and to upload the generated apk file to GitHub Releases, with a proper versioning system (e.g. using the app version from the `manifest.json` file). This is a crucial step, as it will allow me to easily share the latest version of the app with my friends, and to get feedback from them.
+
   - [x] See <https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.2/app-release-signed.apk> for an example of a generated apk file, that is available for download on GitHub Releases.
 
 - [ ] Publish it as a beta on the Google Play Store
@@ -307,14 +311,16 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
   - [x] Add a "clear background" button to go back to default background; also when picking a color, if clicking again on a color while an image background had been selected before, remove the image background and go back to the color background
   - [x] When loading the app without any settings saved (new fresh session) or when resetting the settings, randomly assign a background to each player (a simple random choice of two colors)
     - [x] NOPE: Later? Randomly assign a background image from a predefined list of cards (e.g. the Planeswalker from MTG) - I already added a "random background" button!
-  - [x] Allow partners and backgrounds and all pairs of legendary commanders (actually, any pair of cards). Be careful, it is probably quite complicated to manage a background with two illustrations *side by side* properly.
+  - [x] Allow partners and backgrounds and all pairs of legendary commanders (actually, any pair of cards). Be careful, it is probably quite complicated to manage a background with two illustrations _side by side_ properly.
 
 - [x] Improve the "search background" feature: after searching and choosing a background image, the "search background" dialog should keep in memory the chosen image, and display its status of "chosen image" in the result list.
+
   - [x] This information about the chosen background should always be display in the "search background" tab: if player number 1/2/3/4/5/6 has already chosen a background, when opening again the "search background" tab, the chosen background should be displayed (and indicated as "chosen") in the search result list by default, and also when searching for another card, if the chosen background is in the search result, it should be indicated as "chosen" in the search result list.
     - [x] Improve this feature of the "memory aware" "search background" panel, it should keep in memory the `artist` name and the `set_name` of the last chosen background image, to display it when the "search background" panel is opened again
   - [x] By default, when opening the "search background" panel, the search button/input form should be filled with the name of the player! That's fun, and it can help to find a card that matches the player's name (e.g. if the player is named "Jace", they can search for "Jace" and find all the Jace planeswalkers, which are pretty cool as backgrounds!)
 
 - [x] Commander damage type tracking, in a simple and visual way, with a small icon for each opponent, and a number for the commander damage received from this opponent. It is a new feature from the Lifetap app, and it is very useful for Commander games!
+
   - [x] For the "Commander damage" panel, try as much as possible to keep the same layout and design as the Lifetap app, as it is already very good and optimized for mobile devices, so it can be a good inspiration for this feature. The "Commander damage" panel should be located in the "Status effects" tab of the PlayerDataModal.svelte, as it is a status effect that can be tracked for each player, and it is not related to the background of the player panel. This part of the status effects should look like a "minimap" of the entire screen, showing tiny areas with the same image backgrounds/color-gradients as the player panels, with small icons for each opponent, and a number for the commander damage received from this opponent. It should be very visual and easy to understand at a glance, especially on mobile devices. See the attached screenshot, in the middle on the bottom of the screen, for an example of how it looks in the Lifetap app.
 
   - [x] When clicking +1/-1 on the EDH Commander damage, the life total of the player should also get updated accordingly.
@@ -329,6 +335,7 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
 - [x] For each of the status effect, do NOT display the "-" (MINUS) button if the value is currently 0, and do not display the "+" (PLUS) button if the value is currently at its maximum (e.g. 10 for poison counter, 4 for the Ring Bearer and Speed status effects, etc.). This is a nice visual feedback to show that the value cannot be decreased/increased anymore, and it can prevent some mistakes of clicking on the +1/-1 buttons when the value is already at its minimum/maximum.
 
 - [ ] Multiplayer game modes outside EDH mode (Two-Headed Giant, etc.)
+
   - [ ] Add a setting in the global setting, to switch to Two-Headed Giant mode, which will change the layout to a "1 vs 1" layout, with max Poison counters changing from 10 to 15. This is a very popular multiplayer format, and it is NOT supported by the Lifetap app, and not yet implemented here.
 
 - [x] (improve the UX) TODO: allow to « drag-and-drop » each of the entire player panel, to change their position around the table, and thus change the layout of the app. This is a very cool feature, but it can be hard to implement, especially on mobile devices, so it is a "nice to have" feature for later.
@@ -361,11 +368,13 @@ I've also tried using the [PWA Builder website](https://www.pwabuilder.com/repor
 For instance, this menu could help to display the "Ring Bearer" emblem, the "Start Your Engines" emblem, the "Undercity // The Initiative" emblem, or any other emblem from Scryfall (especially the ones from Dungeons & Dragons adventures, which are pretty cool and have a lot of features that could later be tracked inside my app, like the "dungeons" emblem, etc).
 
 By default, it should offer to display:
+
 - [x] ["The Ring // The Ring Tempts You" emblem](https://scryfall.com/card/tltr/H13/the-ring-the-ring-tempts-you) ;
 - [x] ["Start Your Engines! // Max Speed" emblem](https://scryfall.com/card/tdft/14/start-your-engines!-max-speed) ;
 - [x] ["Undercity // The Initiative" emblem](https://scryfall.com/card/tclb/20/undercity-the-initiative) ;
 
 A search button for any emblem, using Scryfall and what is already available for the Scryfall search.
+
 - [x] A search button for any dungeon or emblem ;
 - [x] This search should embed the `"type=emblem"` filter, to only show emblems in the search results.
 
@@ -416,21 +425,22 @@ Clicking on this (almost full-screen) display of that emblem should close the mo
 ## Variants to implement here, not existing in Lifetap or other apps
 
 - [ ] The "scry0 / scry1 scry1 / scry2" special rule for turn 1 in 4-player mode, or ".. scry 3" for 5-player mode
+
   - [ ] Implement a special button in the main menu, to track the scry number for each player, and show it on the player panel (e.g. "scry 0", "scry 1", "scry 2", "scry 3"), with a small icon for each scry number (e.g. a small eye icon with the number inside). This is a very specific rule for multiplayer games, and it can be useful to track it in the app, especially for players who are new to multiplayer games and may forget about this rule.
   - [ ] Add a simple solution to display custom and pretty almost-full-screen notifications.
 
 - [ ] 4 Seasons emblems support (track the common emblem, and show it on the board somewhere)
+
   - [ ] TODO: Ask @Julien about his files, to see if he would agree to let me use them and embed them in the app!
 
 - [x] Vanguard support (special cards that modify starting life total and starting hand, and give static abilities). See [issue #21](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/21)
-  Pretty much like what I did for the "Emblems & Dungeons" menu, add an optional Vanguard menu and mode.
-  If enabled, at the beginning, each player receives a randomly chosen Vanguard (random choice, uniform without replacement).
-  Then, in this Vanguard menu, each player can see the name of the role he/she had received, and also open in large view (like `EmblemModal`) his/her current Vanguard role.
+      Pretty much like what I did for the "Emblems & Dungeons" menu, add an optional Vanguard menu and mode.
+      If enabled, at the beginning, each player receives a randomly chosen Vanguard (random choice, uniform without replacement).
+      Then, in this Vanguard menu, each player can see the name of the role he/she had received, and also open in large view (like `EmblemModal`) his/her current Vanguard role.
 
   - [x] Include a link to <https://mtg.wiki/page/Vanguard> ?
   - [x] Also include a way to search for a specific Vanguard card? Exactly like in the Emblems/Dungeons panel menu.
   - [x] Optionally: maybe receive 3 Vanguard cards at first, and keep only one? It's what I do, when I play this mode in paper myself. I like this variant.
-
 
 - [x] Treachery support (hidden role to check once when the game starts, and hidden after that)
 - [x] Shogun support (hidden role to check once when the game starts, and hidden after that). Shogun is very close to the Treachery mode, except there is no role card, just the role status effect, that is "Shogun" (Leader), Assassin, Treater, or Guardian. So it can be implemented in a similar way as the Treachery mode, but without the need to search for a specific card in the Scryfall database, as the "Shogun" role is not represented by a card, but just by a status effect. Actually, don't implement yet another variant, simply add a parameter in the main settings, "Enable Shogun variant (simpler)", that can be enabled to have the same hidden role mechanics as the Treachery mode, but with the Shogun roles instead of the Treachery roles. This way, we can have both variants (Treachery and Shogun) without having to implement two separate modes, and it can be a fun and interesting variant for players who want to try something different from the classic multiplayer mode. TL;DR: Shogun = Treachery without any image and data about the role (name, slug, rules' text, etc.).

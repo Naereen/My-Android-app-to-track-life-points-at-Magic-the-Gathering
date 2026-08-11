@@ -2,7 +2,10 @@ import type { ScryfallEmblemCard } from './scryfall';
 
 export type TreacheryRole = 'leader' | 'guardian' | 'assassin' | 'traitor';
 
-type TreacheryCatalogJson = Record<TreacheryRole, Array<{ id: number; slug: string; name: string }>>;
+type TreacheryCatalogJson = Record<
+	TreacheryRole,
+	Array<{ id: number; slug: string; name: string }>
+>;
 
 export type TreacheryCatalogEntry = {
 	id: number;
@@ -118,7 +121,11 @@ export const getTreacheryImageCandidates = (
 	slug: string
 ): string[] => {
 	const candidates: string[] = [];
-	const strategies: Array<'encode-all' | 'space-only' | 'raw'> = ['encode-all', 'space-only', 'raw'];
+	const strategies: Array<'encode-all' | 'space-only' | 'raw'> = [
+		'encode-all',
+		'space-only',
+		'raw'
+	];
 
 	// Upstream card images are not perfectly consistent in URL encoding and apostrophe usage.
 	// We generate deterministic candidates in priority order and let the UI pick the first

@@ -22,7 +22,7 @@
 	import { _ } from 'svelte-i18n';
 	import { appSettings, getPoisonLethalLimit } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
-    import { turnTimer } from '$lib/store/turnTimer';
+	import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
 		getCommandTaxBySourceForPlayer,
@@ -63,8 +63,7 @@
 	 * @returns {unknown} Result produced by isLikelySyntheticMouseEvent.
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
-	const isLikelySyntheticMouseEvent = () =>
-		(Date.now() - lastTouchAt) < MOUSE_AFTER_TOUCH_GUARD_MS;
+	const isLikelySyntheticMouseEvent = () => Date.now() - lastTouchAt < MOUSE_AFTER_TOUCH_GUARD_MS;
 
 	$: innerWidth = 0;
 	$: isMobile = isMobileDevice(innerWidth);
@@ -92,7 +91,7 @@
 		bottom: '50%',
 		left: '50%',
 		right: '50%',
-		size: 'cover',  // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
+		size: 'cover' // FIXME: chose between 'cover' and 'contain', and then commit to that choice...
 	};
 
 	// Combine all these background-related variables into a single style string for easier application to the player container
@@ -135,7 +134,10 @@
 		: `${commandTaxCount}`;
 	$: ringBearerCount = status.ringBearer ?? 0;
 	$: startYourEngineSpeedCount = status.startYourEngineSpeed ?? 0;
-	$: commanderDamageArray = getCommanderDamageTotalsForPlayer($players[index], $appSettings.playerCount);
+	$: commanderDamageArray = getCommanderDamageTotalsForPlayer(
+		$players[index],
+		$appSettings.playerCount
+	);
 	$: commanderDamageVisibleCount = doNotShowMinimap
 		? commanderDamageArray.filter((dmg) => dmg > 0).length
 		: 0;
@@ -152,7 +154,10 @@
 			startYourEngineSpeedCount
 		].filter((count) => count > 0).length + commanderDamageVisibleCount;
 	$: shouldWrapStatusEffects = statusEffectItemCount > 10;
-	$: maxCommanderDamage = getMaxCommanderDamageSingleSource($players[index], $appSettings.playerCount);
+	$: maxCommanderDamage = getMaxCommanderDamageSingleSource(
+		$players[index],
+		$appSettings.playerCount
+	);
 
 	// Vertical slots can hold more content before wrapping, so the threshold is higher than
 	// on horizontal seats.
@@ -321,7 +326,7 @@
 		editing = false;
 	};
 
-	$: timerFraction = $turnTimer.total ? ($turnTimer.remaining / $turnTimer.total) : 0;
+	$: timerFraction = $turnTimer.total ? $turnTimer.remaining / $turnTimer.total : 0;
 	$: timerElapsed = Math.max(0, ($turnTimer.total || 0) - ($turnTimer.remaining || 0));
 	$: isTimerOvertime = ($turnTimer.remaining || 0) < 0;
 	$: overtimeElapsed = isTimerOvertime ? Math.abs($turnTimer.remaining || 0) : 0;
@@ -336,14 +341,24 @@
 	$: dashOffset = timerCircumference * (1 - Math.max(0, Math.min(1, timerFraction)));
 
 	$: if ($appSettings.turnTimerEnabled && index === $appState.currentTurn) {
-		try { turnTimer.startForPlayer(index); }
-		catch (e) { console.log(e); }
+		try {
+			turnTimer.startForPlayer(index);
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	// stop timer for this player when the store indicates it's running for them but they're no longer the current turn
-	$: if ($appSettings.turnTimerEnabled && $turnTimer?.playerIndex === index && index !== $appState.currentTurn) {
-		try { turnTimer.stop(); }
-		catch (e) { console.log(e); }
+	$: if (
+		$appSettings.turnTimerEnabled &&
+		$turnTimer?.playerIndex === index &&
+		index !== $appState.currentTurn
+	) {
+		try {
+			turnTimer.stop();
+		} catch (e) {
+			console.log(e);
+		}
 	}
 </script>
 
@@ -351,8 +366,16 @@
 
 <div
 	class="relative isolate flex w-full rounded-3xl flex-grow h-6"
-	class:player--active={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction > 0.03}
-	class:player--active-timer-over={index === $appState.currentTurn && $appSettings.enableCurrentPlayerGlow && !$spinning && !$appState.isMenuOpen && timerFraction <= 0.03}
+	class:player--active={index === $appState.currentTurn &&
+		$appSettings.enableCurrentPlayerGlow &&
+		!$spinning &&
+		!$appState.isMenuOpen &&
+		timerFraction > 0.03}
+	class:player--active-timer-over={index === $appState.currentTurn &&
+		$appSettings.enableCurrentPlayerGlow &&
+		!$spinning &&
+		!$appState.isMenuOpen &&
+		timerFraction <= 0.03}
 	class:bg-rotated={!!$players[index].backgroundImage}
 	class:bg-split={hasSplitBackground}
 	class:overflow-hidden={!!$players[index].backgroundImage}
@@ -376,26 +399,43 @@
 		{#if !$appState.isMenuOpen}
 			<div class="flex w-full relative">
 				{#if $appSettings.turnTimerEnabled && index === $appState.currentTurn}
-					<div class="absolute top-2 left-2 z-30 pointer-events-auto cursor-pointer"
+					<div
+						class="absolute top-2 left-2 z-30 pointer-events-auto cursor-pointer"
 						on:click={() => {
 							try {
 								// If the timer is finished (no remaining seconds), reset/start it for the current player
 								if ($turnTimer?.remaining <= 0) {
 									turnTimer.resetForCurrent();
 								}
-							} catch (e) { console.log(e); }
+							} catch (e) {
+								console.log(e);
+							}
 						}}
 					>
-						<div class="w-10 h-10 flex items-center justify-center bg-black/40 rounded-full text-white text-sm">
+						<div
+							class="w-10 h-10 flex items-center justify-center bg-black/40 rounded-full text-white text-sm"
+						>
 							<svg viewBox="0 0 40 40" class="w-10 h-10">
 								<circle cx="20" cy="20" r="18" stroke="#444" stroke-width="3" fill="none" />
-								<circle cx="20" cy="20" r="18" stroke="#ffd54a" stroke-width="3" fill="none"
+								<circle
+									cx="20"
+									cy="20"
+									r="18"
+									stroke="#ffd54a"
+									stroke-width="3"
+									fill="none"
 									transform="rotate(-90 20 20)"
-									stroke-dasharray={timerCircumference} stroke-dashoffset={dashOffset}
+									stroke-dasharray={timerCircumference}
+									stroke-dashoffset={dashOffset}
 									stroke-linecap="round"
 								/>
 							</svg>
-							<div class="absolute text-xs">{timerPrefix}{String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(2, '0')}</div>
+							<div class="absolute text-xs">
+								{timerPrefix}{String(timerMinutes).padStart(2, '0')}:{String(timerSeconds).padStart(
+									2,
+									'0'
+								)}
+							</div>
 						</div>
 					</div>
 				{/if}
@@ -452,7 +492,10 @@
 									class="beleren mt-1"
 									style="font-size: x-large; color: white;"
 									style:text-decoration={isDead ? 'line-through' : ''}
-									class:overline={!$appSettings.enableCurrentPlayerGlow && $appSettings.showNextPlayerButton && index === $appState.currentTurn}>{$players[index].playerName}</span>
+									class:overline={!$appSettings.enableCurrentPlayerGlow &&
+										$appSettings.showNextPlayerButton &&
+										index === $appState.currentTurn}>{$players[index].playerName}</span
+								>
 								{#each booleanStatuses as s}
 									{#if s === 'monarch'}
 										<Crown />
@@ -477,7 +520,8 @@
 							{$players[index].tempLifeDiff < 0 ? `${$players[index].tempLifeDiff}` : ''}
 						</div>
 						{#if $appSettings.showLifeChangeHistory}
-							<div class="absolute left-0 top-1/2 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2"
+							<div
+								class="absolute left-0 top-1/2 -translate-y-1/2 w-24 flex justify-start items-center pointer-events-none pl-2"
 								class:translate-x-28={numberOfPlayers >= 3}
 								class:translate-x-20={numberOfPlayers === 2}
 							>
@@ -514,8 +558,9 @@
 										class:text-8xl={$appSettings.playerCount >= 3 && $appSettings.playerCount <= 4}
 										class:text-6xl={$appSettings.playerCount === 5}
 										class:text-5xl={$appSettings.playerCount >= 6}
-										class:-translate-y-5={ $appSettings.playerCount === 6 || $appSettings.playerCount === 5 }
-										class:-translate-y-4={ $appSettings.playerCount === 4 }
+										class:-translate-y-5={$appSettings.playerCount === 6 ||
+											$appSettings.playerCount === 5}
+										class:-translate-y-4={$appSettings.playerCount === 4}
 										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
 									>
 								</button>
@@ -556,7 +601,10 @@
 		{/if}
 	</div>
 	<!-- Minimap & Status effects bar -->
-	<div class="absolute z-20 left-0 right-0 bottom-1 flex justify-center pointer-events-none" class:hidden={$appState.isMenuOpen}>
+	<div
+		class="absolute z-20 left-0 right-0 bottom-1 flex justify-center pointer-events-none"
+		class:hidden={$appState.isMenuOpen}
+	>
 		<div
 			class="text-white text-xs rounded-full px-1 py-0 flex gap-0.5 items-center pointer-events-auto"
 			class:flex-wrap={shouldWrapStatusEffects}
@@ -564,21 +612,18 @@
 			class:justify-center={shouldWrapStatusEffects}
 			class:max-w-[17rem]={shouldWrapStatusEffects}
 		>
-			{#if numberOfPlayers >= 3 && doNotShowMinimap === false }
+			{#if numberOfPlayers >= 3 && doNotShowMinimap === false}
 				<div class="mr-2">
-					<Minimap
-						playerIndex={index}
-						orientation={orientation}
-						layout={layout}
-						fromPlayerDataModal={false}
-					/>
+					<Minimap playerIndex={index} {orientation} {layout} fromPlayerDataModal={false} />
 				</div>
 			{/if}
 			{#if commandTaxCount > 0}
 				<div
 					title={$_('tooltip_status_command_tax')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
 					<CommandTax />
 					<span class="leading-none">{commandTaxDisplay}</span>
@@ -588,7 +633,9 @@
 				<div
 					title={$_('tooltip_status_poison')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
 					<PoisonIcon />
 					<span class="leading-none">{poisonCount}</span>
@@ -598,7 +645,9 @@
 				<div
 					title={$_('tooltip_status_energy')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
 					<Energy />
 					<span class="leading-none">{energyCount}</span>
@@ -608,7 +657,9 @@
 				<div
 					title={$_('tooltip_status_experience')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
 					<Experience />
 					<span class="leading-none">{experienceCount}</span>
@@ -618,7 +669,9 @@
 				<div
 					title={$_('tooltip_status_rad')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
 					<Rad />
 					<span class="leading-none">{radCount}</span>
@@ -628,7 +681,9 @@
 				<div
 					title={$_('tooltip_status_acorn')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
 					<Acorn />
 					<span class="leading-none">{visibleAcornCount}</span>
@@ -638,7 +693,9 @@
 				<div
 					title={$_('tooltip_status_tickets')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
 					<Ticket />
 					<span class="leading-none">{visibleTicketCount}</span>
@@ -648,20 +705,24 @@
 				<div
 					title={$_('tooltip_status_ring_bearer')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
-						<TheRingerBearer isMax={ringBearerCount === 4} />
-						<span class="leading-none">{ringBearerCount}</span>
+					<TheRingerBearer isMax={ringBearerCount === 4} />
+					<span class="leading-none">{ringBearerCount}</span>
 				</div>
 			{/if}
 			{#if startYourEngineSpeedCount > 0}
 				<div
 					title={$_('tooltip_status_start_your_engine_speed')}
 					class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex flex-col items-center justify-center gap-0 text-base"
-					on:click={() => openPlayerModal(id, 'status_effects')} role="button" tabindex="0"
+					on:click={() => openPlayerModal(id, 'status_effects')}
+					role="button"
+					tabindex="0"
 				>
-						<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
-						<span class="leading-none">{startYourEngineSpeedCount}</span>
+					<StartYourEngineSpeed isMax={startYourEngineSpeedCount === 4} />
+					<span class="leading-none">{startYourEngineSpeedCount}</span>
 				</div>
 			{/if}
 			{#if doNotShowMinimap}
@@ -671,7 +732,9 @@
 						<div
 							title={$_('tooltip_commander_damage')}
 							class="px-1 py-0.5 rounded-full bg-gray-800/50 text-white flex items-center gap-0.5 text-base"
-							on:click={() => openPlayerModal(id, 'commander')} role="button" tabindex="0"
+							on:click={() => openPlayerModal(id, 'commander')}
+							role="button"
+							tabindex="0"
 						>
 							<!-- <CommanderDamage playerIndex={i} color="white" /> -->
 							<span>{dmg}</span>

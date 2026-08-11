@@ -79,7 +79,7 @@ jobs:
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
         env:
           # override default build-tools version (33.0.0) -- optional
-          BUILD_TOOLS_VERSION: "34.0.0"
+          BUILD_TOOLS_VERSION: '34.0.0'
 
       - name: Rename signed APK
         id: rename_apk
@@ -93,10 +93,10 @@ jobs:
       - name: Create Release and Upload APK
         uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ github.ref_name }}.${{ github.run_number }}  # Optionnel : donne un titre à la release
+          name: Release ${{ github.ref_name }}.${{ github.run_number }} # Optionnel : donne un titre à la release
           draft: false
           prerelease: false
-          tag_name: "${{ github.ref_name }}.${{ github.run_number }}"   # Utilise le numéro de run comme version
+          tag_name: '${{ github.ref_name }}.${{ github.run_number }}' # Utilise le numéro de run comme version
           generate_release_notes: true
           files: ${{ steps.rename_apk.outputs.renamed_file }}
         env:

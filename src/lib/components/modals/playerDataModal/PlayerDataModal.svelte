@@ -33,7 +33,10 @@
 	import CommandTax from '$lib/assets/icons/CommandTax.svelte';
 	import TheRingerBearer from '$lib/assets/icons/TheRingerBearer.svelte';
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
-	import Minimap, { getBackgroundViewerRotationInCommanderDamage, getSeatOrientations } from '$lib/components/player/Minimap.svelte';
+	import Minimap, {
+		getBackgroundViewerRotationInCommanderDamage,
+		getSeatOrientations
+	} from '$lib/components/player/Minimap.svelte';
 	import { colorToBg } from '$lib/components/colorToBg';
 	import { playCommanderDamageBurst } from '$lib/utils/gameplaySound';
 	import { _ } from 'svelte-i18n';
@@ -131,8 +134,14 @@
 		if (typeof window === 'undefined' || hasModalHistoryEntry) return;
 		try {
 			const currentState =
-				window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
-			window.history.pushState({ ...currentState, __mtgPlayerModalOpen: true }, '', window.location.href);
+				window.history.state && typeof window.history.state === 'object'
+					? window.history.state
+					: {};
+			window.history.pushState(
+				{ ...currentState, __mtgPlayerModalOpen: true },
+				'',
+				window.location.href
+			);
 			hasModalHistoryEntry = true;
 		} catch {
 			// ignore
@@ -193,12 +202,17 @@
 				: '';
 	let commanderMinimapScale = 3.5;
 	$: commanderMinimapScale =
-		$appSettings.playerCount <= 2 ? 5.5  // FIXME: no Minimap for 2 players!
-		: $appSettings.playerCount === 3 ? 3.0
-		: $appSettings.playerCount === 4 ? 3.0
-		: $appSettings.playerCount === 5 ? 3.75
-		: $appSettings.playerCount === 6 ? 3.25
-		: 2.25;
+		$appSettings.playerCount <= 2
+			? 5.5 // FIXME: no Minimap for 2 players!
+			: $appSettings.playerCount === 3
+				? 3.0
+				: $appSettings.playerCount === 4
+					? 3.0
+					: $appSettings.playerCount === 5
+						? 3.75
+						: $appSettings.playerCount === 6
+							? 3.25
+							: 2.25;
 	let commanderMinimapHeightRem = 25;
 	// $: commanderMinimapHeightRem =
 	// 	$appSettings.playerCount <= 2 ? 25
@@ -225,8 +239,7 @@
 	};
 
 	$: modalSeatOrientations = getSeatOrientations($appSettings.playerCount, commanderMinimapLayout);
-	$: modalPlayerOrientation =
-		modalSeatOrientations[($playerModalData?.playerId ?? 1) - 1] ?? 'up';
+	$: modalPlayerOrientation = modalSeatOrientations[($playerModalData?.playerId ?? 1) - 1] ?? 'up';
 	$: modalPlayer =
 		$players.find((player) => player.id === $playerModalData.playerId) ??
 		$players[$playerModalData.playerId - 1];
@@ -240,10 +253,12 @@
 	let commanderMinimapSoundBursts = new Map<string, CommanderMinimapBurstState>();
 
 	const isEditableElement = (element: Element | null): element is HTMLElement => {
-		return !!element && element instanceof HTMLElement && (
-			element instanceof HTMLInputElement ||
-			element instanceof HTMLTextAreaElement ||
-			element.isContentEditable
+		return (
+			!!element &&
+			element instanceof HTMLElement &&
+			(element instanceof HTMLInputElement ||
+				element instanceof HTMLTextAreaElement ||
+				element.isContentEditable)
 		);
 	};
 
@@ -253,7 +268,7 @@
 	 * It uses the Visual Viewport API if available, otherwise it falls back to window.innerHeight.
 	 *
 	 * @returns {number} The height of the visible viewport in pixels.
-	*/
+	 */
 	const getVisibleViewportHeight = () => {
 		if (typeof window === 'undefined') return 0;
 		const viewport = window.visualViewport;
@@ -308,7 +323,8 @@
 	$: shouldNeutralizeModalRotation =
 		$playerModalData?.isOpen &&
 		modalPlayerOrientation !== 'up' &&
-		(isMobileKeyboardOpen || (mode === 'commander' && editingCommanderFrom !== null && hasEditableFocusInModal));
+		(isMobileKeyboardOpen ||
+			(mode === 'commander' && editingCommanderFrom !== null && hasEditableFocusInModal));
 	$: modalRotation = shouldNeutralizeModalRotation
 		? '0deg'
 		: orientationToModalRotation(modalPlayerOrientation);
@@ -345,7 +361,10 @@
 		const scrollToBottomRight = () => {
 			// This corner anchors the commander damage grid where the player expects it,
 			// especially after the minimap has rotated away from the default reading order.
-			scrollElement.scrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+			scrollElement.scrollTop = Math.max(
+				0,
+				scrollElement.scrollHeight - scrollElement.clientHeight
+			);
 			scrollElement.scrollLeft = Math.max(0, scrollElement.scrollWidth - scrollElement.clientWidth);
 		};
 
@@ -356,7 +375,8 @@
 
 	$: {
 		const shouldAutoScroll =
-			$playerModalData?.isOpen && mode === 'commander' &&
+			$playerModalData?.isOpen &&
+			mode === 'commander' &&
 			(modalPlayerOrientation === 'left' || modalPlayerOrientation === 'right');
 		const autoScrollKey = shouldAutoScroll
 			? `${$playerModalData.playerId}:${modalPlayerOrientation}`
@@ -420,7 +440,11 @@
 	// The init logic is inside a regular function so that searchQuery, searchResults,
 	// and bgSelections are NOT reactive dependencies of this $: block.
 	// This prevents the block from re-running on every keystroke in the search input.
-	$: if (mode === 'background' && $playerModalData && _bgInitPlayerId !== $playerModalData.playerId) {
+	$: if (
+		mode === 'background' &&
+		$playerModalData &&
+		_bgInitPlayerId !== $playerModalData.playerId
+	) {
 		_bgInitPlayerId = $playerModalData.playerId;
 		_initBackgroundTab();
 	}
@@ -470,7 +494,8 @@
 
 		// initialize bgSelections from player data (keep first two if array)
 		if (!p) bgSelections = [];
-		else if (Array.isArray(p.backgroundImage)) bgSelections = p.backgroundImage.slice(0, 2).filter(Boolean) as string[];
+		else if (Array.isArray(p.backgroundImage))
+			bgSelections = p.backgroundImage.slice(0, 2).filter(Boolean) as string[];
 		else if (p.backgroundImage) bgSelections = [p.backgroundImage];
 		else bgSelections = [];
 	}
@@ -507,7 +532,9 @@
 		if (normalizedCandidates.length === 0) return false;
 
 		if (Array.isArray(stored)) {
-			const normalizedStored = stored.map((entry) => normalizeImageUrl(entry)).filter(Boolean) as string[];
+			const normalizedStored = stored
+				.map((entry) => normalizeImageUrl(entry))
+				.filter(Boolean) as string[];
 			return normalizedStored.some((entry) => normalizedCandidates.includes(entry));
 		}
 
@@ -634,12 +661,12 @@
 		isSearching = true;
 		if (gifMode) {
 			const gifs = await searchGifs(searchQuery);
-			searchResults = gifs.map(g => ({
+			searchResults = gifs.map((g) => ({
 				id: g.id,
 				name: g.title,
 				cardImage: g.preview ?? null,
 				image: g.url ?? null,
-				artist: "Klipy GIF"
+				artist: 'Klipy GIF'
 			}));
 		} else {
 			searchResults = await searchCards(searchQuery);
@@ -671,7 +698,7 @@
 				const gifs = await searchGifs(searchQuery || 'random');
 				if (gifs && gifs.length > 0) {
 					const g = gifs[Math.floor(Math.random() * gifs.length)];
-					chooseBackground(playerId, g.url ?? null, "Klipy GIF", null);
+					chooseBackground(playerId, g.url ?? null, 'Klipy GIF', null);
 				}
 			} else {
 				// use a broad query so the util can return a random art card
@@ -713,7 +740,8 @@
 			setPlayerBackgroundImage(playerId, payload);
 		} else {
 			const player = getModalPlayer();
-			const isSameAsCurrentSingle = !!imageUrl && isStoredBackgroundInCandidates(player?.backgroundImage, [imageUrl]);
+			const isSameAsCurrentSingle =
+				!!imageUrl && isStoredBackgroundInCandidates(player?.backgroundImage, [imageUrl]);
 
 			if (!imageUrl || isSameAsCurrentSingle) {
 				bgSelections = [];
@@ -789,7 +817,9 @@
 		editingCommanderFrom = fromPlayerId;
 		syncCommanderEditorValues(playerId, fromPlayerId);
 		await tick();
-		const el = document.getElementById(`commander-input-${fromPlayerId}-1`) as HTMLInputElement | null;
+		const el = document.getElementById(
+			`commander-input-${fromPlayerId}-1`
+		) as HTMLInputElement | null;
 		el?.focus();
 		el?.select();
 	};
@@ -899,7 +929,12 @@
 		fromPlayerId: number,
 		sourceIndex = 0
 	): number => {
-		return getCommanderDamageSourceValue($players[playerId - 1], fromPlayerId, sourceIndex, $appSettings.playerCount);
+		return getCommanderDamageSourceValue(
+			$players[playerId - 1],
+			fromPlayerId,
+			sourceIndex,
+			$appSettings.playerCount
+		);
 	};
 
 	$: getCommanderSourceCountForPlayer = (playerId: number): number => {
@@ -1201,7 +1236,11 @@
 						<div class="pointer-events-none"><Pen /></div>
 						<button
 							type="button"
-							on:click={() => players.update(ps => { ps[$playerModalData.playerId - 1].playerName = ''; return ps; })}
+							on:click={() =>
+								players.update((ps) => {
+									ps[$playerModalData.playerId - 1].playerName = '';
+									return ps;
+								})}
 							class="ml-2 px-2 py-1 bg-gray-200 text-black rounded text-sm"
 							title="Effacer le nom"
 							aria-label="Effacer le nom"
@@ -1211,91 +1250,108 @@
 					</div>
 				</div>
 				<div class="mt-2 flex flex-col justify-center items-center px-2 sm:px-3">
-						<div class="w-full flex justify-center gap-1 mb-0">
+					<div class="w-full flex justify-center gap-1 mb-0">
+						<button
+							class="px-1 py-1 rounded-full border"
+							on:click={() => (mode = 'background')}
+							class:underline={mode === 'background'}
+							class:font-bold={mode === 'background'}>{$_('open_customize_backgrounds')}</button
+						>
+						<button
+							class="px-1 py-1 rounded-full border"
+							on:click={() => (mode = 'status_effects')}
+							class:underline={mode === 'status_effects'}
+							class:font-bold={mode === 'status_effects'}>{$_('status_effects')}</button
+						>
+						{#if $appSettings.playerCount !== 2}
 							<button
 								class="px-1 py-1 rounded-full border"
-								on:click={() => (mode = 'background')}
-								class:underline={mode === 'background'}
-								class:font-bold={mode === 'background'}>{$_('open_customize_backgrounds')}</button
+								on:click={() => (mode = 'commander')}
+								class:underline={mode === 'commander'}
+								class:font-bold={mode === 'commander'}>{$_('commander_damage_short')}</button
 							>
-							<button
-								class="px-1 py-1 rounded-full border"
-								on:click={() => (mode = 'status_effects')}
-								class:underline={mode === 'status_effects'}
-								class:font-bold={mode === 'status_effects'}>{$_('status_effects')}</button
-							>
-							{#if $appSettings.playerCount !== 2}
-								<button
-									class="px-1 py-1 rounded-full border"
-									on:click={() => (mode = 'commander')}
-									class:underline={mode === 'commander'}
-									class:font-bold={mode === 'commander'}>{$_('commander_damage_short')}</button
-								>
-							{/if}
-						</div>
+						{/if}
+					</div>
 
 					{#if mode === 'background'}
-					{#if hasSearched || searchOptionActive}
-						<div class="w-8/10 mb-3">
-							<div class="gap-4">
-								<div class="relative w-full">
-									<input
-										type="text"
-										class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black w-full"
-										bind:value={searchQuery}
-										on:input={() => (searchEdited = true)}
-										on:keypress={handleOnKeyPressScryfallSearch}
-										placeholder={$_('scryfall_search') + ' (Scryfall)...'}
-									/>
-									<div class="absolute right-3 top-2 flex items-center">
-										<button
-											type="button"
-											on:click={() => { searchQuery = ''; searchEdited = true; }}
-											class="ml-2 px-2 py-1 bg-gray-200 text-black rounded text-sm"
-											title="Effacer la recherche"
-											aria-label="Effacer la recherche"
-										>
-											✕
-										</button>
+						{#if hasSearched || searchOptionActive}
+							<div class="w-8/10 mb-3">
+								<div class="gap-4">
+									<div class="relative w-full">
+										<input
+											type="text"
+											class="flex-1 py-2 px-3 rounded-lg outline outline-1 outline-black w-full"
+											bind:value={searchQuery}
+											on:input={() => (searchEdited = true)}
+											on:keypress={handleOnKeyPressScryfallSearch}
+											placeholder={$_('scryfall_search') + ' (Scryfall)...'}
+										/>
+										<div class="absolute right-3 top-2 flex items-center">
+											<button
+												type="button"
+												on:click={() => {
+													searchQuery = '';
+													searchEdited = true;
+												}}
+												class="ml-2 px-2 py-1 bg-gray-200 text-black rounded text-sm"
+												title="Effacer la recherche"
+												aria-label="Effacer la recherche"
+											>
+												✕
+											</button>
+										</div>
 									</div>
+									<button
+										class="px-3 py-2 mt-2 bg-blue-500 text-white text-sm rounded-lg"
+										on:click={doSearch}
+										disabled={isSearching || (gifMode && !klipyKeyPresent)}
+										>{isSearching
+											? $_('scryfall_searching')
+											: gifMode
+												? $_('klipy_search')
+												: $_('scryfall_search')}</button
+									>
+									<button
+										class="px-3 py-2 bg-purple-600 text-white text-sm rounded-lg"
+										on:click={() => chooseRandom($playerModalData.playerId)}
+										disabled={isSearching || (gifMode && !klipyKeyPresent)}
+										>{gifMode
+											? $_('klipy_search_choose_random')
+											: $_('scryfall_search_choose_random')}</button
+									>
+									<button
+										class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg"
+										on:click={() => {
+											hasSearched = false;
+											searchOptionActive = false;
+											bgSelections = [];
+											setPlayerBackgroundImage($playerModalData.playerId, null);
+										}}>{$_('clear_background')}</button
+									>
 								</div>
-								<button
-									class="px-3 py-2 mt-2 bg-blue-500 text-white text-sm rounded-lg"
-									on:click={doSearch}
-									disabled={isSearching || (gifMode && !klipyKeyPresent)}
-									>{isSearching ? $_('scryfall_searching') : gifMode ? $_('klipy_search') : $_('scryfall_search')}</button
-								>
-								<button
-									class="px-3 py-2 bg-purple-600 text-white text-sm rounded-lg"
-									on:click={() => chooseRandom($playerModalData.playerId)}
-									disabled={isSearching || (gifMode && !klipyKeyPresent)}>{gifMode ? $_('klipy_search_choose_random') : $_('scryfall_search_choose_random')}</button
-								>
-								<button
-									class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg"
-									on:click={() => { hasSearched = false; searchOptionActive = false; bgSelections = []; setPlayerBackgroundImage($playerModalData.playerId, null); }}
-									>{$_('clear_background')}</button
-								>
+								<div class="mt-2">
+									<label class="flex items-center gap-2 text-sm">
+										<input type="checkbox" bind:checked={doubleBackground} />
+										{$_('double_background_mode') ?? 'Double background (choose up to 2)'}
+									</label>
+								</div>
 							</div>
-							<div class="mt-2">
-								<label class="flex items-center gap-2 text-sm">
-									<input type="checkbox" bind:checked={doubleBackground} /> {$_('double_background_mode') ?? 'Double background (choose up to 2)'}
-								</label>
-							</div>
-						</div>
 						{/if}
 						<div class="w-full max-h-60 overflow-auto">
 							{#if gifMode && !klipyKeyPresent}
 								<div class="text-sm text-red-600">
-									No Klipy API key found. Create `static/klipy_api.key` with your key, or set `VITE_KLIPY_API_KEY` in your environment.
+									No Klipy API key found. Create `static/klipy_api.key` with your key, or set
+									`VITE_KLIPY_API_KEY` in your environment.
 									<!-- FIXME: translate this message! -->
 								</div>
-							{:else}
-								{#if searchResults.length === 0}
-									<div class="text-sm text-gray-500">{$_('scryfall_search_noresult')}</div>
-								{/if}
+							{:else if searchResults.length === 0}
+								<div class="text-sm text-gray-500">{$_('scryfall_search_noresult')}</div>
 							{/if}
 							{#each searchResults as r (r.id + '|' + (getSelectableImage(r) ?? 'no-image'))}
-								{@const imgSelected = isStoredBackgroundInCandidates(bgSelections, [r.image, r.cardImage])}
+								{@const imgSelected = isStoredBackgroundInCandidates(bgSelections, [
+									r.image,
+									r.cardImage
+								])}
 								<div class="flex gap-2 mb-3 p-2 border rounded-lg bg-white">
 									<div class="flex-1 text-left">
 										<div class="font-semibold text-xl">{r.name}</div>
@@ -1307,7 +1363,16 @@
 												class="px-3 py-1 text-white text-sm rounded"
 												class:bg-gray-500={imgSelected}
 												class:bg-green-600={!imgSelected}
-												on:click={() => { const img = getSelectableImage(r); if (img) chooseBackground($playerModalData.playerId, img, r.artist ?? null, r.set_name ?? null); }}
+												on:click={() => {
+													const img = getSelectableImage(r);
+													if (img)
+														chooseBackground(
+															$playerModalData.playerId,
+															img,
+															r.artist ?? null,
+															r.set_name ?? null
+														);
+												}}
 											>
 												{imgSelected ? $_('scryfall_search_chosen') : $_('scryfall_search_choose')}
 											</button>
@@ -1315,7 +1380,11 @@
 									</div>
 									<div class="w-32 flex-shrink-0">
 										{#if r.cardImage || r.image}
-											<img src={r.cardImage ?? r.image} alt={r.name} class="w-full h-auto object-cover" />
+											<img
+												src={r.cardImage ?? r.image}
+												alt={r.name}
+												class="w-full h-auto object-cover"
+											/>
 										{:else}
 											<div class="w-full h-40 bg-gray-200 flex items-center justify-center text-sm">
 												No image
@@ -1327,13 +1396,24 @@
 						</div>
 						{#if doubleBackground && bgSelections.length > 0}
 							<div class="mt-3 flex gap-2 items-center">
-								<label class="font-semibold">{$_('selected_backgrounds') ?? 'Selected backgrounds:'}</label>
+								<label class="font-semibold"
+									>{$_('selected_backgrounds') ?? 'Selected backgrounds:'}</label
+								>
 								{#each bgSelections as s, i}
 									<div class="w-20 h-28 border rounded overflow-hidden relative">
 										{#if s}
 											<img src={s} alt={`bg-${i}`} class="w-full h-full object-cover" />
 										{/if}
-										<button class="absolute top-1 right-1 bg-black/50 text-white rounded px-1 text-xs" on:click={() => { bgSelections = bgSelections.filter((x) => x !== s); setPlayerBackgroundImage($playerModalData.playerId, bgSelections.length ? bgSelections : null); }}>{$_('remove_button') ?? 'Remove'}</button>
+										<button
+											class="absolute top-1 right-1 bg-black/50 text-white rounded px-1 text-xs"
+											on:click={() => {
+												bgSelections = bgSelections.filter((x) => x !== s);
+												setPlayerBackgroundImage(
+													$playerModalData.playerId,
+													bgSelections.length ? bgSelections : null
+												);
+											}}>{$_('remove_button') ?? 'Remove'}</button
+										>
 									</div>
 								{/each}
 							</div>
@@ -1342,25 +1422,30 @@
 
 					<!-- Always show the Gradient title; only hide the controls when a search option is active or search has happened -->
 					{#if mode === 'background'}
-
-					<!-- {#if searchOptionActive} -->
+						<!-- {#if searchOptionActive} -->
 						<div class="mt-2 flex gap-2 items-center">
 							<button
 								class="px-3 py-1 rounded-full border"
-								on:click={() => { gifMode = false; searchOptionActive = true; }}
+								on:click={() => {
+									gifMode = false;
+									searchOptionActive = true;
+								}}
 								class:font-bold={(searchOptionActive || hasSearched) && !gifMode}
 							>
 								{$_('scryfall_search')}
 							</button>
 							<button
 								class="px-3 py-1 rounded-full border"
-								on:click={() => { gifMode = true; searchOptionActive = true; }}
+								on:click={() => {
+									gifMode = true;
+									searchOptionActive = true;
+								}}
 								class:font-bold={(searchOptionActive || hasSearched) && gifMode}
 							>
 								GIFs
 							</button>
 						</div>
-					<!-- {/if} -->
+						<!-- {/if} -->
 
 						<label
 							class="block mb-2 rounded-full border"
@@ -1383,13 +1468,14 @@
 									searchQuery = '';
 									searchResults = [];
 								}
-							}}
-						>{ $_('player_background_color') }</label>
+							}}>{$_('player_background_color')}</label
+						>
 
 						{#if !hasSearched && !searchOptionActive}
 							<div class="flex items-center gap-3 mb-2">
 								<label class="flex items-center gap-2 text-sm"
-									><input type="checkbox" bind:checked={gradientMode} /> {$_('gradient_mode')}</label
+									><input type="checkbox" bind:checked={gradientMode} />
+									{$_('gradient_mode')}</label
 								>
 								<button
 									on:click={() => clearSelection($playerModalData.playerId)}
@@ -1498,7 +1584,8 @@
 								<label class="flex items-center gap-1"
 									><input
 										type="checkbox"
-										checked={$players[$playerModalData.playerId - 1].statusEffects?.storied ?? false}
+										checked={$players[$playerModalData.playerId - 1].statusEffects?.storied ??
+											false}
 										on:change={() =>
 											setPlayerStatusBoolean(
 												$playerModalData.playerId,
@@ -1523,11 +1610,13 @@
 									<StatusSkull />
 									{String($_('ko'))}</label
 								>
-								<label class="flex items-center gap-1"
+								<label
+									class="flex items-center gap-1"
 									title={$_('tooltip_status_day_night') ?? 'Activate Day / Night Cycle'}
 									><input
 										type="checkbox"
-										checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ?? false}
+										checked={$players[$playerModalData.playerId - 1].statusEffects?.dayNight ??
+											false}
 										on:change={() =>
 											setPlayerStatusBoolean(
 												$playerModalData.playerId,
@@ -1538,8 +1627,10 @@
 									<DayNight />
 									{String($_('day_night'))}
 								</label>
-								<label class="flex items-center gap-1"
-									title={$_('partner_mode_help') ?? 'Activate two sources of Commander Damage for this player.'}
+								<label
+									class="flex items-center gap-1"
+									title={$_('partner_mode_help') ??
+										'Activate two sources of Commander Damage for this player.'}
 								>
 									<input
 										type="checkbox"
@@ -1553,32 +1644,46 @@
 							<div class="w-full grid grid-cols-1 items-center text-center border-t pt-4">
 								{#if modalPlayerPartnerMode}
 									<div class="flex items-center gap-2">
-										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} #1/2</span>
+										<span class="w-60 text-left"
+											><CommandTax /> {String($_('command_tax'))} #1/2</span
+										>
 										{#if getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
-												on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, -1)}>-</button>
-										{/if}
-											<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
-												>{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span
+												on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, -1)}
+												>-</button
 											>
+										{/if}
+										<span
+											class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+											class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
+											>{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span
+										>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
-											on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, 1)}>+</button>
+											on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, 1)}>+</button
+										>
 									</div>
 									<div class="flex items-center gap-2">
-										<span class="w-60 text-left"><CommandTax /> {String($_('command_tax'))} #2/2</span>
+										<span class="w-60 text-left"
+											><CommandTax /> {String($_('command_tax'))} #2/2</span
+										>
 										{#if getCommandTaxSourceValue($playerModalData.playerId, 1) > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
-												on:click={() => setCommandTaxDelta($playerModalData.playerId, 1, -1)}>-</button>
-										{/if}
-											<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 1) > 0}
-												>{getCommandTaxSourceValue($playerModalData.playerId, 1)}</span
+												on:click={() => setCommandTaxDelta($playerModalData.playerId, 1, -1)}
+												>-</button
 											>
+										{/if}
+										<span
+											class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+											class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 1) > 0}
+											>{getCommandTaxSourceValue($playerModalData.playerId, 1)}</span
+										>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
-											on:click={() => setCommandTaxDelta($playerModalData.playerId, 1, 1)}>+</button>
+											on:click={() => setCommandTaxDelta($playerModalData.playerId, 1, 1)}>+</button
+										>
 									</div>
 								{:else}
 									<div class="flex items-center gap-2">
@@ -1586,14 +1691,19 @@
 										{#if getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
 											<button
 												class="px-2 py-1 bg-gray-200 rounded"
-												on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, -1)}>-</button>
-										{/if}
-											<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
-												>{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span
+												on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, -1)}
+												>-</button
 											>
+										{/if}
+										<span
+											class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+											class:font-bold={getCommandTaxSourceValue($playerModalData.playerId, 0) > 0}
+											>{getCommandTaxSourceValue($playerModalData.playerId, 0)}</span
+										>
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
-											on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, 1)}>+</button>
+											on:click={() => setCommandTaxDelta($playerModalData.playerId, 0, 1)}>+</button
+										>
 									</div>
 								{/if}
 								<div class="flex items-center gap-2">
@@ -1605,9 +1715,14 @@
 												setPlayerPoison(
 													$playerModalData.playerId,
 													Math.max(0, ($players[$playerModalData.playerId - 1].poison ?? 0) - 1)
-													)}>-</button>
+												)}>-</button
+										>
 									{/if}
-									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].poison ?? 0) > 0}>{$players[$playerModalData.playerId - 1].poison ?? 0}</span>
+									<span
+										class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+										class:font-bold={($players[$playerModalData.playerId - 1].poison ?? 0) > 0}
+										>{$players[$playerModalData.playerId - 1].poison ?? 0}</span
+									>
 									{#if ($players[$playerModalData.playerId - 1].poison ?? 0) < POISON_MAX}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1615,13 +1730,13 @@
 												setPlayerPoison(
 													$playerModalData.playerId,
 													Math.min(99, ($players[$playerModalData.playerId - 1].poison ?? 0) + 1)
-												)}>+</button>
+												)}>+</button
+										>
 									{/if}
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><Energy /> {String($_('energy'))}</span
-									>
+									<span class="w-60 text-left"><Energy /> {String($_('energy'))}</span>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) > 0}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1633,7 +1748,8 @@
 														0,
 														($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) - 1
 													)
-												)}>-</button>
+												)}>-</button
+										>
 									{/if}
 									{#if editingStat === 'energy'}
 										<div class="pointer-events-auto flex items-center gap-2">
@@ -1649,12 +1765,31 @@
 												placeholder={enterLifeTotalPlaceholder}
 											/>
 											<div class="flex gap-2">
-												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+												<button
+													on:click={saveEditStat}
+													class="px-2 py-1 bg-green-600 text-white text-sm rounded"
+													>{setLifeTotalSave}</button
+												>
+												<button
+													on:click={cancelEditStat}
+													class="px-2 py-1 bg-gray-400 text-white text-sm rounded"
+													>{setLifeTotalCancel}</button
+												>
 											</div>
 										</div>
 									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) > 0} on:dblclick={() => startEditStat('energy', $players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span>
+										<span
+											class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+											class:font-bold={($players[$playerModalData.playerId - 1].statusEffects
+												?.energy ?? 0) > 0}
+											on:dblclick={() =>
+												startEditStat(
+													'energy',
+													$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0
+												)}
+											title={setLifeTotalSave}
+											>{$players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0}</span
+										>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -1663,12 +1798,12 @@
 												$playerModalData.playerId,
 												'energy',
 												($players[$playerModalData.playerId - 1].statusEffects?.energy ?? 0) + 1
-												)}>+</button>
+											)}>+</button
+									>
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><Experience /> {String($_('experience'))}</span
-									>
+									<span class="w-60 text-left"><Experience /> {String($_('experience'))}</span>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) > 0}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1678,10 +1813,11 @@
 													'experience',
 													Math.max(
 														0,
-														($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) -
-															1
+														($players[$playerModalData.playerId - 1].statusEffects?.experience ??
+															0) - 1
 													)
-												)}>-</button>
+												)}>-</button
+										>
 									{/if}
 									{#if editingStat === 'experience'}
 										<div class="pointer-events-auto flex items-center gap-2">
@@ -1697,12 +1833,32 @@
 												placeholder={enterLifeTotalPlaceholder}
 											/>
 											<div class="flex gap-2">
-												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+												<button
+													on:click={saveEditStat}
+													class="px-2 py-1 bg-green-600 text-white text-sm rounded"
+													>{setLifeTotalSave}</button
+												>
+												<button
+													on:click={cancelEditStat}
+													class="px-2 py-1 bg-gray-400 text-white text-sm rounded"
+													>{setLifeTotalCancel}</button
+												>
 											</div>
 										</div>
 									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) > 0} on:dblclick={() => startEditStat('experience', $players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0}</span>
+										<span
+											class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+											class:font-bold={($players[$playerModalData.playerId - 1].statusEffects
+												?.experience ?? 0) > 0}
+											on:dblclick={() =>
+												startEditStat(
+													'experience',
+													$players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0
+												)}
+											title={setLifeTotalSave}
+											>{$players[$playerModalData.playerId - 1].statusEffects?.experience ??
+												0}</span
+										>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -1711,7 +1867,8 @@
 												$playerModalData.playerId,
 												'experience',
 												($players[$playerModalData.playerId - 1].statusEffects?.experience ?? 0) + 1
-												)}>+</button>
+											)}>+</button
+									>
 								</div>
 
 								<div class="flex items-center gap-2">
@@ -1727,7 +1884,8 @@
 														0,
 														($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) - 1
 													)
-												)}>-</button>
+												)}>-</button
+										>
 									{/if}
 									{#if editingStat === 'rad'}
 										<div class="pointer-events-auto flex items-center gap-2">
@@ -1743,12 +1901,31 @@
 												placeholder={enterLifeTotalPlaceholder}
 											/>
 											<div class="flex gap-2">
-												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
+												<button
+													on:click={saveEditStat}
+													class="px-2 py-1 bg-green-600 text-white text-sm rounded"
+													>{setLifeTotalSave}</button
+												>
+												<button
+													on:click={cancelEditStat}
+													class="px-2 py-1 bg-gray-400 text-white text-sm rounded"
+													>{setLifeTotalCancel}</button
+												>
 											</div>
 										</div>
 									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) > 0} on:dblclick={() => startEditStat('rad', $players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span>
+										<span
+											class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+											class:font-bold={($players[$playerModalData.playerId - 1].statusEffects
+												?.rad ?? 0) > 0}
+											on:dblclick={() =>
+												startEditStat(
+													'rad',
+													$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0
+												)}
+											title={setLifeTotalSave}
+											>{$players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0}</span
+										>
 									{/if}
 									<button
 										class="px-2 py-1 bg-gray-200 rounded"
@@ -1757,107 +1934,158 @@
 												$playerModalData.playerId,
 												'rad',
 												($players[$playerModalData.playerId - 1].statusEffects?.rad ?? 0) + 1
-											)}>+</button>
+											)}>+</button
+									>
 								</div>
 
 								{#if $appSettings.enableAcornMode}
-								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><Acorn /> {String($_('acorn'))}</span>
-									{#if ($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) > 0}
+									<div class="flex items-center gap-2">
+										<span class="w-60 text-left"><Acorn /> {String($_('acorn'))}</span>
+										{#if ($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) > 0}
+											<button
+												class="px-2 py-1 bg-gray-200 rounded"
+												on:click={() =>
+													setPlayerStatusNumeric(
+														$playerModalData.playerId,
+														'acorn',
+														Math.max(
+															0,
+															($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) -
+																1
+														)
+													)}>-</button
+											>
+										{/if}
+										{#if editingStat === 'acorn'}
+											<div class="pointer-events-auto flex items-center gap-2">
+												<input
+													id="stat-input-acorn"
+													type="number"
+													bind:value={editingStatValue}
+													on:keydown={(e) => {
+														if (e.key === 'Enter') saveEditStat();
+														if (e.key === 'Escape') cancelEditStat();
+													}}
+													class="w-20 text-center rounded-md px-1 py-0.5"
+													placeholder={enterLifeTotalPlaceholder}
+												/>
+												<div class="flex gap-2">
+													<button
+														on:click={saveEditStat}
+														class="px-2 py-1 bg-green-600 text-white text-sm rounded"
+														>{setLifeTotalSave}</button
+													>
+													<button
+														on:click={cancelEditStat}
+														class="px-2 py-1 bg-gray-400 text-white text-sm rounded"
+														>{setLifeTotalCancel}</button
+													>
+												</div>
+											</div>
+										{:else}
+											<span
+												class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+												class:font-bold={($players[$playerModalData.playerId - 1].statusEffects
+													?.acorn ?? 0) > 0}
+												on:dblclick={() =>
+													startEditStat(
+														'acorn',
+														$players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0
+													)}
+												title={setLifeTotalSave}
+												>{$players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0}</span
+											>
+										{/if}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
 											on:click={() =>
 												setPlayerStatusNumeric(
 													$playerModalData.playerId,
 													'acorn',
-													Math.max(
-														0,
-														($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) - 1
-													)
-												)}>-</button>
-									{/if}
-									{#if editingStat === 'acorn'}
-										<div class="pointer-events-auto flex items-center gap-2">
-											<input
-												id="stat-input-acorn"
-												type="number"
-												bind:value={editingStatValue}
-												on:keydown={(e) => {
-													if (e.key === 'Enter') saveEditStat();
-													if (e.key === 'Escape') cancelEditStat();
-												}}
-												class="w-20 text-center rounded-md px-1 py-0.5"
-												placeholder={enterLifeTotalPlaceholder}
-											/>
-											<div class="flex gap-2">
-												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
-											</div>
-										</div>
-									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) > 0} on:dblclick={() => startEditStat('acorn', $players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0}</span>
-									{/if}
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'acorn',
-												($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) + 1
-											)}>+</button>
-								</div>
+													($players[$playerModalData.playerId - 1].statusEffects?.acorn ?? 0) + 1
+												)}>+</button
+										>
+									</div>
 								{/if}
 
 								{#if $appSettings.enableTicketMode}
-								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><Ticket /> {String($_('ticket'))}</span>
-									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) > 0}
+									<div class="flex items-center gap-2">
+										<span class="w-60 text-left"><Ticket /> {String($_('ticket'))}</span>
+										{#if ($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) > 0}
+											<button
+												class="px-2 py-1 bg-gray-200 rounded"
+												on:click={() =>
+													setPlayerStatusNumeric(
+														$playerModalData.playerId,
+														'ticket',
+														Math.max(
+															0,
+															($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) -
+																1
+														)
+													)}>-</button
+											>
+										{/if}
+										{#if editingStat === 'ticket'}
+											<div class="pointer-events-auto flex items-center gap-2">
+												<input
+													id="stat-input-ticket"
+													type="number"
+													bind:value={editingStatValue}
+													on:keydown={(e) => {
+														if (e.key === 'Enter') saveEditStat();
+														if (e.key === 'Escape') cancelEditStat();
+													}}
+													class="w-20 text-center rounded-md px-1 py-0.5"
+													placeholder={enterLifeTotalPlaceholder}
+												/>
+												<div class="flex gap-2">
+													<button
+														on:click={saveEditStat}
+														class="px-2 py-1 bg-green-600 text-white text-sm rounded"
+														>{setLifeTotalSave}</button
+													>
+													<button
+														on:click={cancelEditStat}
+														class="px-2 py-1 bg-gray-400 text-white text-sm rounded"
+														>{setLifeTotalCancel}</button
+													>
+												</div>
+											</div>
+										{:else}
+											<span
+												class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+												class:font-bold={($players[$playerModalData.playerId - 1].statusEffects
+													?.ticket ?? 0) > 0}
+												on:dblclick={() =>
+													startEditStat(
+														'ticket',
+														$players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0
+													)}
+												title={setLifeTotalSave}
+												>{$players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0}</span
+											>
+										{/if}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
 											on:click={() =>
 												setPlayerStatusNumeric(
 													$playerModalData.playerId,
 													'ticket',
-													Math.max(
-														0,
-														($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) - 1
-													)
-												)}>-</button>
-									{/if}
-									{#if editingStat === 'ticket'}
-										<div class="pointer-events-auto flex items-center gap-2">
-											<input
-												id="stat-input-ticket"
-												type="number"
-												bind:value={editingStatValue}
-												on:keydown={(e) => {
-													if (e.key === 'Enter') saveEditStat();
-													if (e.key === 'Escape') cancelEditStat();
-												}}
-												class="w-20 text-center rounded-md px-1 py-0.5"
-												placeholder={enterLifeTotalPlaceholder}
-											/>
-											<div class="flex gap-2">
-												<button on:click={saveEditStat} class="px-2 py-1 bg-green-600 text-white text-sm rounded">{setLifeTotalSave}</button>
-												<button on:click={cancelEditStat} class="px-2 py-1 bg-gray-400 text-white text-sm rounded">{setLifeTotalCancel}</button>
-											</div>
-										</div>
-									{:else}
-										<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) > 0} on:dblclick={() => startEditStat('ticket', $players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0)} title={setLifeTotalSave}>{$players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0}</span>
-									{/if}
-									<button
-										class="px-2 py-1 bg-gray-200 rounded"
-										on:click={() =>
-											setPlayerStatusNumeric(
-												$playerModalData.playerId,
-												'ticket',
-												($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) + 1
-											)}>+</button>
-								</div>
+													($players[$playerModalData.playerId - 1].statusEffects?.ticket ?? 0) + 1
+												)}>+</button
+										>
+									</div>
 								{/if}
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><TheRingerBearer isMax={$players[$playerModalData.playerId - 1].statusEffects?.ringBearer === 4} /> {String($_('ring_bearer'))}</span>
+									<span class="w-60 text-left"
+										><TheRingerBearer
+											isMax={$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ===
+												4}
+										/>
+										{String($_('ring_bearer'))}</span
+									>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) > 0}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1867,12 +2095,18 @@
 													'ringBearer',
 													Math.max(
 														0,
-														($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) -
-															1
+														($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ??
+															0) - 1
 													)
-												)}>-</button>
+												)}>-</button
+										>
 									{/if}
-									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) > 0}>{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span>
+									<span
+										class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+										class:font-bold={($players[$playerModalData.playerId - 1].statusEffects
+											?.ringBearer ?? 0) > 0}
+										>{$players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0}</span
+									>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) < RING_BEARER_MAX}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1882,15 +2116,22 @@
 													'ringBearer',
 													Math.min(
 														4,
-														($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ?? 0) +
-															1
+														($players[$playerModalData.playerId - 1].statusEffects?.ringBearer ??
+															0) + 1
 													)
-												)}>+</button>
+												)}>+</button
+										>
 									{/if}
 								</div>
 
 								<div class="flex items-center gap-2">
-									<span class="w-60 text-left"><StartYourEngineSpeed isMax={$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed === 4} /> {String($_('start_your_engine_speed'))}</span>
+									<span class="w-60 text-left"
+										><StartYourEngineSpeed
+											isMax={$players[$playerModalData.playerId - 1].statusEffects
+												?.startYourEngineSpeed === 4}
+										/>
+										{String($_('start_your_engine_speed'))}</span
+									>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) > 0}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1903,9 +2144,16 @@
 														($players[$playerModalData.playerId - 1].statusEffects
 															?.startYourEngineSpeed ?? 0) - 1
 													)
-												)}>-</button>
+												)}>-</button
+										>
 									{/if}
-									<span class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded" class:font-bold={($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) > 0}>{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0}</span>
+									<span
+										class="min-w-[2rem] px-2 py-1 bg-gray-100 rounded"
+										class:font-bold={($players[$playerModalData.playerId - 1].statusEffects
+											?.startYourEngineSpeed ?? 0) > 0}
+										>{$players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ??
+											0}</span
+									>
 									{#if ($players[$playerModalData.playerId - 1].statusEffects?.startYourEngineSpeed ?? 0) < SPEED_MAX}
 										<button
 											class="px-2 py-1 bg-gray-200 rounded"
@@ -1918,23 +2166,24 @@
 														($players[$playerModalData.playerId - 1].statusEffects
 															?.startYourEngineSpeed ?? 0) + 1
 													)
-												)}>+</button>
+												)}>+</button
+										>
 									{/if}
 								</div>
 							</div>
 
-						<!-- Allow negative life toggle placed after color options -->
-						<div class="mt-4 w-full flex flex-col items-center text-center">
-							<label class="flex items-center gap-2 justify-center"
-								><input
-									type="checkbox"
-									checked={$players[$playerModalData.playerId - 1].allowNegativeLife}
-									on:change={() =>
-										setPlayerAllowNegative(
-											$playerModalData.playerId,
-											!$players[$playerModalData.playerId - 1].allowNegativeLife
-										)}
-								/>
+							<!-- Allow negative life toggle placed after color options -->
+							<div class="mt-4 w-full flex flex-col items-center text-center">
+								<label class="flex items-center gap-2 justify-center"
+									><input
+										type="checkbox"
+										checked={$players[$playerModalData.playerId - 1].allowNegativeLife}
+										on:change={() =>
+											setPlayerAllowNegative(
+												$playerModalData.playerId,
+												!$players[$playerModalData.playerId - 1].allowNegativeLife
+											)}
+									/>
 									<span class="ml-1 block text-center">
 										{$_('allow_negative_life')}
 									</span>
@@ -1948,13 +2197,24 @@
 
 					{#if mode === 'commander' && $appSettings.playerCount > 2}
 						<!-- Commander Damage Section (now its own tab) -->
-						<div class="mt-2 flex flex-col items-center justify-center text-center border-t pt-2 pb-[-2] mb-[-2]">
-							<div class="flex items-center justify-center overflow-visible" style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}>
-								<div class="origin-center" style={`transform: scale(${commanderMinimapScale}); transform-origin: center;`}>
+						<div
+							class="mt-2 flex flex-col items-center justify-center text-center border-t pt-2 pb-[-2] mb-[-2]"
+						>
+							<div
+								class="flex items-center justify-center overflow-visible"
+								style={`min-height: ${commanderMinimapHeightRem}rem; transform: rotate(${commanderMinimapRotation}); transform-origin: center;`}
+							>
+								<div
+									class="origin-center"
+									style={`transform: scale(${commanderMinimapScale}); transform-origin: center;`}
+								>
 									<Minimap
 										playerIndex={$playerModalData.playerId - 1}
 										fromPlayerDataModal={true}
-										orientation={getSeatOrientations($appSettings.playerCount, commanderMinimapLayout)[$playerModalData.playerId - 1]}
+										orientation={getSeatOrientations(
+											$appSettings.playerCount,
+											commanderMinimapLayout
+										)[$playerModalData.playerId - 1]}
 										layout={commanderMinimapLayout}
 										backgroundClass="bg-transparent"
 										commanderDamageIndicator="sum"
@@ -1968,33 +2228,56 @@
 							</div>
 							{#if editingCommanderFrom !== null}
 								{@const editingFrom = editingCommanderFrom}
-								{@const editingFromName = $players[editingCommanderFrom - 1]?.playerName ?? `Player ${editingCommanderFrom}`}
-								<div class="relative mt-12 mb-2 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3">
+								{@const editingFromName =
+									$players[editingCommanderFrom - 1]?.playerName ??
+									`Player ${editingCommanderFrom}`}
+								<div
+									class="relative mt-12 mb-2 w-full max-w-xl rounded-lg border border-black/20 bg-white/70 p-3"
+								>
 									<div class="mb-3 text-xl font-semibold text-center">
-										{editingFromName} → {$players[$playerModalData.playerId - 1]?.playerName ?? `Player ${$playerModalData.playerId}`}
+										{editingFromName} → {$players[$playerModalData.playerId - 1]?.playerName ??
+											`Player ${$playerModalData.playerId}`}
 										<button
 											type="button"
 											on:pointerdown|preventDefault={handleCommanderSavePointerDown}
 											on:click={handleCommanderSaveClick}
 											class="px-2 py-1 bg-green-600 text-white text-sm rounded"
-										>{setLifeTotalSave}</button>
-										<button type="button" on:click={cancelEditCommander} class="px-2 py-1 bg-gray-500 text-white text-sm rounded">{setLifeTotalCancel}</button>
+											>{setLifeTotalSave}</button
+										>
+										<button
+											type="button"
+											on:click={cancelEditCommander}
+											class="px-2 py-1 bg-gray-500 text-white text-sm rounded"
+											>{setLifeTotalCancel}</button
+										>
 									</div>
 									<div class="flex flex-col items-center justify-center gap-2">
-										{#each Array.from({ length: getCommanderSourceCountForPlayer(editingFrom) }) as sourceMarker, sourceIndex}
+										{#each Array.from( { length: getCommanderSourceCountForPlayer(editingFrom) } ) as sourceMarker, sourceIndex}
 											<div class="flex flex-wrap items-center justify-center gap-2">
 												{#if getCommanderSourceCountForPlayer(editingFrom) >= 2}
-												<span class="w-30 text-sm font-semibold text-right">Commander {sourceIndex + 1}</span>
+													<span class="w-30 text-sm font-semibold text-right"
+														>Commander {sourceIndex + 1}</span
+													>
 												{/if}
 												<button
 													class="px-2 py-1 bg-gray-200 rounded"
 													on:pointerdown={() =>
-														startCommanderLongPress($playerModalData.playerId, editingFrom, -10, sourceIndex)}
+														startCommanderLongPress(
+															$playerModalData.playerId,
+															editingFrom,
+															-10,
+															sourceIndex
+														)}
 													on:pointerup={stopCommanderLongPress}
 													on:pointerleave={stopCommanderLongPress}
 													on:pointercancel={stopCommanderLongPress}
 													on:click={() =>
-														handleCommanderStepClick($playerModalData.playerId, editingFrom, -1, sourceIndex)}>-</button
+														handleCommanderStepClick(
+															$playerModalData.playerId,
+															editingFrom,
+															-1,
+															sourceIndex
+														)}>-</button
 												>
 												{#if sourceIndex === 0}
 													<input
@@ -2026,12 +2309,22 @@
 												<button
 													class="px-2 py-1 bg-gray-200 rounded"
 													on:pointerdown={() =>
-														startCommanderLongPress($playerModalData.playerId, editingFrom, 10, sourceIndex)}
+														startCommanderLongPress(
+															$playerModalData.playerId,
+															editingFrom,
+															10,
+															sourceIndex
+														)}
 													on:pointerup={stopCommanderLongPress}
 													on:pointerleave={stopCommanderLongPress}
 													on:pointercancel={stopCommanderLongPress}
 													on:click={() =>
-														handleCommanderStepClick($playerModalData.playerId, editingFrom, 1, sourceIndex)}>+</button
+														handleCommanderStepClick(
+															$playerModalData.playerId,
+															editingFrom,
+															1,
+															sourceIndex
+														)}>+</button
 												>
 											</div>
 										{/each}

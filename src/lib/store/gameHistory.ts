@@ -53,7 +53,10 @@ export const gameHistory = persist<GameHistoryEntry[]>('gameHistory', []);
  * @param {Omit<GameHistoryEntry, 'id' | 'timestamp'>} next Incoming event candidate.
  * @returns {boolean} `true` when entries should be collapsed into one.
  */
-const canMergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry, 'id' | 'timestamp'>) => {
+const canMergeEntries = (
+	previous: GameHistoryEntry,
+	next: Omit<GameHistoryEntry, 'id' | 'timestamp'>
+) => {
 	if (previous.playerId !== next.playerId) return false;
 	if (previous.kind !== next.kind) return false;
 	if (Date.now() - previous.timestamp > MERGE_WINDOW_MS) return false;
@@ -87,7 +90,10 @@ const canMergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry
 	return false;
 };
 
-const mergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry, 'id' | 'timestamp'>): GameHistoryEntry => {
+const mergeEntries = (
+	previous: GameHistoryEntry,
+	next: Omit<GameHistoryEntry, 'id' | 'timestamp'>
+): GameHistoryEntry => {
 	const nextLifeDelta = (previous.payload.lifeDelta ?? 0) + (next.payload.lifeDelta ?? 0);
 
 	return {
@@ -106,9 +112,7 @@ const mergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry, '
 	};
 };
 
-export const addGameHistoryEntry = (
-	entry: Omit<GameHistoryEntry, 'id' | 'timestamp'>
-) => {
+export const addGameHistoryEntry = (entry: Omit<GameHistoryEntry, 'id' | 'timestamp'>) => {
 	gameHistory.update((current) => {
 		const randomId =
 			typeof globalThis !== 'undefined' && globalThis.crypto?.randomUUID

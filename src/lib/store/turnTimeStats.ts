@@ -95,7 +95,7 @@ export const getLivePlayerSeconds = (playerIndex: number): number => {
 
 /** Formats a duration in seconds to mm:ss. */
 export const formatDuration = (totalSeconds: number): string => {
-    // also display HH:MM:SS if hour HH is > 0
+	// also display HH:MM:SS if hour HH is > 0
 	const s = Math.max(0, Math.floor(totalSeconds));
 	const hours = Math.floor(s / 3600);
 	const minutes = Math.floor((s % 3600) / 60);
