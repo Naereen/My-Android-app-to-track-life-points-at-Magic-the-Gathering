@@ -244,14 +244,17 @@
 	};
 
 	const handleMeepleTouchStart = (playerId: number, event: CustomEvent<{ x: number; y: number }>) => {
+		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number') return;
 		beginMeepleDrag(playerId, event.detail.x, event.detail.y);
 	};
 
 	const handleMeepleTouchMove = (playerId: number, event: CustomEvent<{ x: number; y: number }>) => {
+		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number') return;
 		updateMeepleDrag(playerId, event.detail.x, event.detail.y);
 	};
 
 	const handleMeepleTouchEnd = (playerId: number, event: CustomEvent<{ x: number; y: number }>) => {
+		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number') return;
 		finishMeepleDrag(playerId, event.detail.x, event.detail.y);
 	};
 
