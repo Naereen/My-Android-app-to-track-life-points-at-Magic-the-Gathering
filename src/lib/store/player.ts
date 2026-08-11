@@ -10,7 +10,7 @@ import {
 	playLifeLongStepSound,
 	playLifeTapBurstSound
 } from '$lib/utils/gameplaySound';
-import { addGameHistoryEntry, clearGameHistory } from './gameHistory';
+import { addGameHistoryEntry, clearGameHistory, gameHistory } from './gameHistory';
 import {
 	clearLifeHistory,
 	lifeHistory,
@@ -1300,6 +1300,84 @@ export const setCommanderDamage = (
 	});
 
 	recordSnapshot(get(players));
+};
+
+export const applyCommanderCombatDamage = (
+	playerId: number,
+	fromPlayerId: number,
+	amount: number,
+	sourceIndex = 0,
+	options?: {
+		playSound?: boolean;
+	}
+) => {
+	const currentPlayers = get(players);
+	const target = currentPlayers.find((player) => player.id === playerId);
+	if (!target) return;
+
+	const currentCommanderDamage = getCommanderDamageSourceValue(target, fromPlayerId, sourceIndex);
+	const nextCommanderDamage = clampCommanderDamageAmount(currentCommanderDamage + amount);
+	const appliedDamage = nextCommanderDamage - currentCommanderDamage;
+	if (appliedDamage === 0) return;
+
+	const projectedLifeTotal = target.lifeTotal - appliedDamage;
+	const minAllowed = canUseNegativeLife(target, projectedLifeTotal) ? -9999 : 0;
+	const nextLifeTotal = Math.max(minAllowed, Math.min(9999, projectedLifeTotal));
+	const actualLifeDelta = nextLifeTotal - target.lifeTotal;
+
+	setCommanderDamage(playerId, fromPlayerId, nextCommanderDamage, sourceIndex, options);
+
+	if (actualLifeDelta !== 0) {
+		updatePlayersAndPlayEliminationSounds((existingPlayers) =>
+			existingPlayers.map((player) =>
+				player.id === playerId
+					? {
+							...player,
+							lifeTotal: nextLifeTotal
+						}
+					: player
+			)
+		);
+		setTempLifeDiff(playerId, actualLifeDelta > 0 ? 'add' : 'subtract', Math.abs(actualLifeDelta));
+
+		const history = get(gameHistory);
+		const lastEntry = history[history.length - 1];
+		if (
+			lastEntry?.kind === 'commanderDamage' &&
+			lastEntry.playerId === playerId &&
+			lastEntry.payload.fromPlayerId === fromPlayerId &&
+			(lastEntry.payload.sourceIndex ?? 1) === (sourceIndex === 1 ? 2 : 1) &&
+			lastEntry.payload.to === nextCommanderDamage
+		) {
+			gameHistory.update((entries) => {
+				const latestEntry = entries[entries.length - 1];
+				if (
+					!latestEntry ||
+					latestEntry.id !== lastEntry.id ||
+					latestEntry.kind !== 'commanderDamage' ||
+					latestEntry.playerId !== playerId ||
+					latestEntry.payload.fromPlayerId !== fromPlayerId ||
+					(latestEntry.payload.sourceIndex ?? 1) !== (sourceIndex === 1 ? 2 : 1) ||
+					latestEntry.payload.to !== nextCommanderDamage
+				) {
+					return entries;
+				}
+
+				return [
+					...entries.slice(0, -1),
+					{
+						...latestEntry,
+						payload: {
+							...latestEntry.payload,
+							lifeDelta: (latestEntry.payload.lifeDelta ?? 0) + actualLifeDelta
+						}
+					}
+				];
+			});
+		}
+
+		recordSnapshot(get(players));
+	}
 };
 
 /**

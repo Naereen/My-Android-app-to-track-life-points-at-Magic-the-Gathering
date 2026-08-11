@@ -15,7 +15,8 @@
 		setPlayerStatusBoolean,
 		setPlayerStatusNumeric,
 		setPlayerPoison,
-		setCommanderDamage
+		setCommanderDamage,
+		applyCommanderCombatDamage
 	} from '$lib/store/player';
 	import StatusSkull from '$lib/assets/icons/StatusSkull.svelte';
 	import Crown from '$lib/assets/icons/Crown.svelte';
@@ -1090,7 +1091,9 @@
 	 */
 	const incrementCommanderFromMinimap = (targetIndex: number) => {
 		const fromPlayerId = targetIndex + 1;
-		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0, { playSound: false });
+		applyCommanderCombatDamage($playerModalData.playerId, fromPlayerId, 1, 0, {
+			playSound: false
+		});
 		queueCommanderMinimapBurstSound($playerModalData.playerId, fromPlayerId, 1, 0);
 	};
 
@@ -1104,13 +1107,15 @@
 	const incrementCommanderFromMinimapByHalf = (targetIndex: number, side: 'left' | 'right') => {
 		const fromPlayerId = targetIndex + 1;
 		if (getCommanderSourceCountForPlayer(fromPlayerId) <= 1) {
-			setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, 0, { playSound: false });
+			applyCommanderCombatDamage($playerModalData.playerId, fromPlayerId, 1, 0, {
+				playSound: false
+			});
 			queueCommanderMinimapBurstSound($playerModalData.playerId, fromPlayerId, 1, 0);
 			return;
 		}
 
 		const sourceIndex = side === 'right' ? 1 : 0;
-		setCommanderDamageDelta($playerModalData.playerId, fromPlayerId, 1, sourceIndex, {
+		applyCommanderCombatDamage($playerModalData.playerId, fromPlayerId, 1, sourceIndex, {
 			playSound: false
 		});
 		queueCommanderMinimapBurstSound($playerModalData.playerId, fromPlayerId, 1, sourceIndex);
