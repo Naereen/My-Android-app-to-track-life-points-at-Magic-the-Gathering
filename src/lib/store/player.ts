@@ -1241,10 +1241,9 @@ export const setCommanderDamage = (
 	sourceIndex = 0,
 	options?: {
 		playSound?: boolean;
+		updateLifeTotal?: boolean;
 	}
 ) => {
-	// Commander damage editing tracks commander counters only.
-	// It must not directly modify life totals.
 	const currentPlayers = get(players);
 	const target = currentPlayers.find((p) => p.id === playerId);
 	if (!target) return;
@@ -1259,6 +1258,11 @@ export const setCommanderDamage = (
 	const newAmount = clampCommanderDamageAmount(amount);
 	const delta = newAmount - oldCommanderDamage;
 	if (delta === 0) return;
+	const shouldUpdateLifeTotal = options?.updateLifeTotal !== false;
+	const projectedLifeTotal = target.lifeTotal - delta;
+	const minAllowed = canUseNegativeLife(target, projectedLifeTotal) ? -9999 : 0;
+	const nextLifeTotal = Math.max(minAllowed, Math.min(9999, projectedLifeTotal));
+	const actualLifeDelta = shouldUpdateLifeTotal ? nextLifeTotal - target.lifeTotal : 0;
 
 	updatePlayersAndPlayEliminationSounds((existingPlayers) => {
 		return existingPlayers.map((player) => {
@@ -1273,6 +1277,7 @@ export const setCommanderDamage = (
 
 			return {
 				...player,
+				lifeTotal: shouldUpdateLifeTotal ? nextLifeTotal : player.lifeTotal,
 				statusEffects: {
 					...player.statusEffects,
 					commanderDamage,
@@ -1286,6 +1291,10 @@ export const setCommanderDamage = (
 		playGameplaySound(delta > 0 ? 'bigCommanderDown' : 'bigCommanderUp');
 	}
 
+	if (actualLifeDelta !== 0) {
+		setTempLifeDiff(playerId, actualLifeDelta > 0 ? 'add' : 'subtract', Math.abs(actualLifeDelta));
+	}
+
 	addGameHistoryEntry({
 		playerId: snapshot.id,
 		playerName: snapshot.playerName,
@@ -1295,7 +1304,8 @@ export const setCommanderDamage = (
 			fromPlayerName: sourcePlayerName,
 			sourceIndex: sourceSlot + 1,
 			from: oldCommanderDamage,
-			to: newAmount
+			to: newAmount,
+			lifeDelta: actualLifeDelta
 		}
 	});
 
@@ -1327,7 +1337,10 @@ export const applyCommanderCombatDamage = (
 	// Commander-damage history stores sourceIndex as 1-based (slot + 1).
 	const historySourceIndex = sourceIndex + 1;
 
-	setCommanderDamage(playerId, fromPlayerId, nextCommanderDamage, sourceIndex, options);
+	setCommanderDamage(playerId, fromPlayerId, nextCommanderDamage, sourceIndex, {
+		...options,
+		updateLifeTotal: false
+	});
 
 	if (actualLifeDelta !== 0) {
 		updatePlayersAndPlayEliminationSounds((existingPlayers) =>

@@ -158,12 +158,37 @@ describe('game reset state', () => {
 		expect(get(appState).dayNightPhase).toBe('day');
 	});
 
-	it('keeps manual commander edits from changing life total', () => {
+	it('applies manual commander edits to both counters and life total', () => {
 		setCommanderDamage(1, 2, 3);
 
 		const [player] = get(players);
-		expect(player.lifeTotal).toBe(20);
+		expect(player.lifeTotal).toBe(17);
+		expect(player.tempLifeDiff).toBe(-3);
 		expect(player.statusEffects?.commanderDamageBySource?.[1]).toEqual([3, 0]);
+
+		const history = get(gameHistory);
+		expect(history).toHaveLength(1);
+		expect(history[0]).toMatchObject({
+			playerId: 1,
+			kind: 'commanderDamage',
+			payload: {
+				fromPlayerId: 2,
+				sourceIndex: 1,
+				from: 0,
+				to: 3,
+				lifeDelta: -3
+			}
+		});
+	});
+
+	it('restores life when manual commander edits reduce tracked damage', () => {
+		setCommanderDamage(1, 2, 5);
+		setCommanderDamage(1, 2, 2);
+
+		const [player] = get(players);
+		expect(player.lifeTotal).toBe(18);
+		expect(player.tempLifeDiff).toBe(-2);
+		expect(player.statusEffects?.commanderDamageBySource?.[1]).toEqual([2, 0]);
 	});
 
 	it('applies commander combat damage to both commander counters and life total', () => {
