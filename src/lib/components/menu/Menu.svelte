@@ -281,7 +281,7 @@
 				</button>
 			</div>
 		{/if}
-		{#if $appSettings.showBountyMenu}
+		{#if $appSettings.showBountyMenu || $appSettings.bountyModeEnabled}
 			<div class="flex justify-center items-center flex-grow">
 				<button
 					on:click={() => toggleIsMenuOpen('bounty')}

@@ -402,21 +402,23 @@ export const setShowTreacheryMenu = (show: boolean) => {
 };
 
 /**
- * Controls visibility of the Bounty menu section.
- * @param {boolean} show Whether Bounty menu entry is displayed.
+ * Legacy Bounty menu visibility toggle.
+ * Kept for backward compatibility, now synchronized with bountyModeEnabled.
+ * @param {boolean} show Whether Bounty mode is enabled.
  * @returns {void}
  */
 export const setShowBountyMenu = (show: boolean) => {
-	appSettings.update((data) => ({ ...data, showBountyMenu: show }));
+	appSettings.update((data) => ({ ...data, showBountyMenu: show, bountyModeEnabled: show }));
 };
 
 /**
  * Enables/disables Bounty mode (Outlaws of Thunder Junction variant).
+ * Also synchronizes legacy menu visibility flag.
  * @param {boolean} enabled Whether Bounty mode is active.
  * @returns {void}
  */
 export const setBountyModeEnabled = (enabled: boolean) => {
-	appSettings.update((data) => ({ ...data, bountyModeEnabled: enabled }));
+	appSettings.update((data) => ({ ...data, bountyModeEnabled: enabled, showBountyMenu: enabled }));
 };
 
 /**

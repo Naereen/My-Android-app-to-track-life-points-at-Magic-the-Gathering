@@ -1,26 +1,8 @@
 <script lang="ts">
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
-	import { appSettings } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
-
-	// The 12 Bounty cards from Outlaws of Thunder Junction (set: OTC / TOTC)
-	// Scryfall IDs for the bounty token cards (set=TOTC, type "Bounty")
-	const BOUNTY_CARD_IDS = [
-		'a4a507f3-cf9b-4af1-bdea-42d13bb66f50', // Bounty: Arcane Signet
-		'b1e74f2a-aee4-4e37-854c-deb5b9e56e58', // Bounty: Paq, Fleeting Filcher
-		'cd3a2e5e-b2b5-4bcd-a8d5-e6a8d62e3f50', // Bounty: Eriette, the Beguiler
-		'e9a3a7a3-b2b5-4bcd-a8d5-e6a8d62e3f51', // Bounty: Gonti, Lord of Luxury
-		'f1e74f2a-aee4-4e37-854c-deb5b9e56e59', // Bounty: Kaalia of the Vast
-		'a2e5ef14-b2b5-4bcd-a8d5-e6a8d62e3f52', // Bounty: Marchesa, the Black Rose
-		'b3e74f2a-aee4-4e37-854c-deb5b9e56e60', // Bounty: Olivia Voldaren
-		'c4a507f3-cf9b-4af1-bdea-42d13bb66f51', // Bounty: Prossh, Skyraider of Kher
-		'd5e74f2a-aee4-4e37-854c-deb5b9e56e61', // Bounty: Sheoldred, the Apocalypse
-		'e6a3a7a3-b2b5-4bcd-a8d5-e6a8d62e3f53', // Bounty: Sleepy Sovka
-		'f7e74f2a-aee4-4e37-854c-deb5b9e56e62', // Bounty: Tivit, Seller of Secrets
-		'a8a507f3-cf9b-4af1-bdea-42d13bb66f52' // Bounty: Vraska, Golgari Queen
-	];
 
 	// Scryfall search URL for all 12 bounty cards
 	const BOUNTY_SCRYFALL_URL =
@@ -44,7 +26,9 @@
 	let loading = false;
 	let showBack = false;
 	let showRulesModal = false;
-	let showBackImageModal = false;
+	let showImageZoomModal = false;
+	let zoomedImageSrc = '';
+	let zoomedImageAlt = '';
 	let errorMsg = '';
 
 	$: currentCard = cards[currentCardIndex] ?? null;
@@ -53,6 +37,22 @@
 	$: REWARDS[2] = $_('bounty_reward_2');
 	$: REWARDS[3] = $_('bounty_reward_3');
 	$: REWARDS[4] = $_('bounty_reward_4');
+
+	const trimWantedSuffix = (name: string) => name.replace(/\s\/\/ Wanted!$/, '');
+
+	const openImageZoomModal = (src: string, alt: string) => {
+		if (!src) return;
+		zoomedImageSrc = src;
+		zoomedImageAlt = alt;
+		showImageZoomModal = true;
+		vibrate(10);
+	};
+
+	const closeImageZoomModal = () => {
+		showImageZoomModal = false;
+		zoomedImageSrc = '';
+		zoomedImageAlt = '';
+	};
 
 	/**
 	 * Fetches the bounty card list from Scryfall and shuffles it.
@@ -71,7 +71,7 @@
 				card_faces?: Array<{ oracle_text: string; image_uris?: { normal: string } }>;
 			}> = json.data ?? [];
 			cards = raw.map((c) => ({
-				name: c.name,
+				name: trimWantedSuffix(c.name),
 				oracleText: c.oracle_text ?? c.card_faces?.[0]?.oracle_text ?? '',
 				imageUri: c.image_uris?.normal ?? c.card_faces?.[0]?.image_uris?.normal ?? ''
 			}));
@@ -148,12 +148,12 @@
 
 <div
 	class="w-full overflow-y-scroll h-full"
-	style="max-height: {innerHeight - 120}px; -webkit-overflow-scrolling: touch;"
+	style="max-height: {innerHeight - 112}px; -webkit-overflow-scrolling: touch;"
 >
 	<div class="flex flex-col">
 		<!-- Header -->
 		<div
-			class="w-full text-center flex px-4 flex-col justify-between items-center my-2 py-2 sticky top-[-1px] bg-black"
+			class="w-full text-center flex px-4 flex-col justify-between items-center my-1 py-1 sticky top-[-1px] bg-black"
 		>
 			<button
 				on:click={() => toggleIsMenuOpen('')}
@@ -164,25 +164,16 @@
 				<Arrow />
 			</button>
 			<span class="text-white text-center text-3xl">🎯 {$_('bounty_menu')}</span>
-			<span class="text-gray-400 text-center text-sm mt-2 w-90">{$_('bounty_explanation')}</span>
-			<a
-				class="text-blue-400 underline text-sm mt-2"
-				href="https://mtg.wiki/page/Outlaws_of_Thunder_Junction/Commander_decks#Bounty_cards"
-				target="_blank"
-				rel="noreferrer"
-			>
-				{$_('bounty_wiki_link')}
-			</a>
 		</div>
 
-		<div class="w-full px-4 mt-1 mb-4">
-			<div class="max-w-4xl mx-auto space-y-4">
+		<div class="w-full px-4 mt-1 mb-3">
+			<div class="max-w-4xl mx-auto space-y-3">
 				<!-- Load / Start -->
 				{#if cards.length === 0 && !loading}
-					<div class="bg-[#2d2f30] rounded-2xl p-4 text-center">
-						<p class="text-gray-300 text-sm mb-4">{$_('bounty_start_hint')}</p>
+					<div class="bg-[#2d2f30] rounded-2xl p-3 text-center">
+						<p class="text-gray-300 text-sm mb-3">{$_('bounty_start_hint')}</p>
 						<button
-							class="bg-amber-700 hover:bg-amber-800 rounded-xl px-6 py-3 text-white text-base"
+							class="bg-amber-700 hover:bg-amber-800 rounded-xl px-5 py-2 text-white text-sm"
 							on:click={loadCards}
 						>
 							{$_('bounty_load_cards')}
@@ -192,26 +183,32 @@
 						{/if}
 					</div>
 				{:else if loading}
-					<div class="bg-[#2d2f30] rounded-2xl p-4 text-center text-gray-300">
+					<div class="bg-[#2d2f30] rounded-2xl p-3 text-center text-gray-300">
 						{$_('scryfall_searching')}…
 					</div>
 				{:else}
 					<!-- Current bounty card -->
-					<div class="bg-[#2d2f30] rounded-2xl p-4">
+					<div class="bg-[#2d2f30] rounded-2xl p-3">
 						<div class="text-white text-base font-semibold mb-2 text-center">
 							{$_('bounty_current_card')} ({currentCardIndex + 1}/{cards.length})
 						</div>
 
 						{#if showBack}
 							<!-- Card back (face-down) -->
-							<div class="flex flex-col items-center gap-3">
-								<img
-									src={BOUNTY_BACK_IMAGE}
-									alt="Bounty card back"
-									class="rounded-xl max-h-64 object-contain bg-black/40"
-								/>
+							<div class="flex flex-col items-center gap-2">
 								<button
-									class="bg-amber-600 hover:bg-amber-700 rounded-xl px-5 py-2 text-white text-sm mt-2"
+									type="button"
+									class="rounded-xl cursor-zoom-in"
+									on:click={() => openImageZoomModal(BOUNTY_BACK_IMAGE, 'Bounty card back')}
+								>
+									<img
+										src={BOUNTY_BACK_IMAGE}
+										alt="Bounty card back"
+										class="rounded-xl w-full max-w-[17rem] max-h-[23rem] object-contain bg-black/40"
+									/>
+								</button>
+								<button
+									class="bg-amber-600 hover:bg-amber-700 rounded-xl px-5 py-2 text-white text-sm mt-1"
 									on:click={revealCard}
 								>
 									{$_('bounty_reveal')}
@@ -219,13 +216,19 @@
 							</div>
 						{:else if currentCard}
 							<!-- Card face-up -->
-							<div class="flex flex-col items-center gap-3">
+							<div class="flex flex-col items-center gap-2">
 								{#if currentCard.imageUri}
-									<img
-										src={currentCard.imageUri}
-										alt={currentCard.name}
-										class="rounded-xl max-h-72 object-contain bg-black/40"
-									/>
+									<button
+										type="button"
+										class="rounded-xl cursor-zoom-in"
+										on:click={() => openImageZoomModal(currentCard.imageUri, currentCard.name)}
+									>
+										<img
+											src={currentCard.imageUri}
+											alt={currentCard.name}
+											class="rounded-xl w-full max-w-[17rem] max-h-[23rem] object-contain bg-black/40"
+										/>
+									</button>
 								{/if}
 								<div class="text-white text-lg font-bold text-center">{currentCard.name}</div>
 								{#if currentCard.oracleText}
@@ -238,7 +241,7 @@
 					</div>
 
 					<!-- Reward level -->
-					<div class="bg-[#2d2f30] rounded-2xl p-4">
+					<div class="bg-[#2d2f30] rounded-2xl p-3">
 						<div class="text-white text-base font-semibold mb-3 text-center">
 							{$_('bounty_reward_level')}
 						</div>
@@ -279,8 +282,8 @@
 					</div>
 
 					<!-- Action buttons: Claim / Pass / Flip back -->
-					<div class="bg-[#2d2f30] rounded-2xl p-4">
-						<div class="text-white text-sm font-semibold mb-3 text-center">
+					<div class="bg-[#2d2f30] rounded-2xl p-3">
+						<div class="text-white text-base font-semibold mb-3 text-center">
 							{$_('bounty_actions')}
 						</div>
 						<div class="flex flex-wrap justify-center gap-3">
@@ -317,8 +320,20 @@
 					</div>
 				{/if}
 
+				<div class="bg-[#2d2f30] rounded-2xl p-3">
+					<p class="text-gray-400 text-sm">{$_('bounty_explanation')}</p>
+					<a
+						class="inline-block text-blue-400 underline text-sm mt-2"
+						href="https://mtg.wiki/page/Outlaws_of_Thunder_Junction/Commander_decks#Bounty_cards"
+						target="_blank"
+						rel="noreferrer"
+					>
+						{$_('bounty_wiki_link')}
+					</a>
+				</div>
+
 				<!-- Rules / Info section -->
-				<div class="bg-[#2d2f30] rounded-2xl p-4">
+				<div class="bg-[#2d2f30] rounded-2xl p-3">
 					<button
 						class="w-full text-left flex justify-between items-center text-white font-semibold"
 						on:click={() => {
@@ -347,8 +362,7 @@
 							<button
 								class="text-amber-400 underline text-xs mt-2"
 								on:click={() => {
-									showBackImageModal = true;
-									vibrate(10);
+									openImageZoomModal(BOUNTY_BACK_IMAGE, 'Bounty card back');
 								}}
 							>
 								{$_('bounty_show_back_image')}
@@ -361,25 +375,24 @@
 	</div>
 </div>
 
-<!-- Back image modal -->
-{#if showBackImageModal}
-	<div
-		class="fixed inset-0 z-[120] bg-black/90 flex items-center justify-center p-4"
-		on:click={() => {
-			showBackImageModal = false;
-		}}
-	>
-		<div class="flex flex-col items-center gap-4" on:click|stopPropagation>
+<!-- Image zoom modal -->
+{#if showImageZoomModal}
+	<div class="fixed inset-0 z-[120] bg-black/90 flex items-center justify-center p-4">
+		<button
+			type="button"
+			aria-label={$_('treachery_hide')}
+			class="absolute inset-0"
+			on:click={closeImageZoomModal}
+		></button>
+		<div class="relative z-10 flex flex-col items-center gap-4">
 			<img
-				src={BOUNTY_BACK_IMAGE}
-				alt="Bounty card back"
-				class="rounded-xl max-h-[70vh] object-contain"
+				src={zoomedImageSrc}
+				alt={zoomedImageAlt}
+				class="rounded-xl max-h-[78vh] max-w-[94vw] object-contain"
 			/>
 			<button
 				class="bg-gray-700 hover:bg-gray-600 rounded-lg px-4 py-2 text-white text-sm"
-				on:click={() => {
-					showBackImageModal = false;
-				}}
+				on:click={closeImageZoomModal}
 			>
 				{$_('treachery_hide')}
 			</button>
