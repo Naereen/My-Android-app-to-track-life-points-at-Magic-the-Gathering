@@ -29,7 +29,9 @@
 		void liveNow;
 		const committed = $turnTimeStats.playerSeconds[idx] ?? 0;
 		if ($turnTimeStats.currentPlayerIndex === idx && $turnTimeStats.currentTurnStartMs !== null) {
-			return committed + Math.max(0, Math.floor((liveNow - $turnTimeStats.currentTurnStartMs) / 1000));
+			return (
+				committed + Math.max(0, Math.floor((liveNow - $turnTimeStats.currentTurnStartMs) / 1000))
+			);
 		}
 		return committed;
 	});
@@ -78,7 +80,8 @@
 		<!-- <h3 class="text-lg font-semibold text-white">{titleLabel}</h3> -->
 		{#if !emptyState}
 			<span class="rounded-full bg-gray-700 px-3 py-1 text-gray-300">
-				{totalLabel} : <span class="font-mono font-semibold text-white">{formatDuration(totalSeconds)}</span>
+				{totalLabel} :
+				<span class="font-mono font-semibold text-white">{formatDuration(totalSeconds)}</span>
 			</span>
 		{/if}
 	</div>
@@ -91,18 +94,28 @@
 				<li class="flex flex-col gap-1">
 					<div class="flex items-center justify-between text-sm">
 						<div class="flex items-center gap-2">
-							<svg
-								viewBox="0 0 16 16"
-								class="h-4 w-4 shrink-0 overflow-visible"
-								aria-hidden="true"
-							>
+							<svg viewBox="0 0 16 16" class="h-4 w-4 shrink-0 overflow-visible" aria-hidden="true">
 								<g transform="translate(8 8)">
 									{#if idx % 8 === 0}
 										<circle r="4.6" fill={row.color} stroke={markerStroke} stroke-width="1.4" />
 									{:else if idx % 8 === 1}
-										<rect x="-4.25" y="-4.25" width="8.5" height="8.5" fill={row.color} stroke={markerStroke} stroke-width="1.4" rx="1.5" />
+										<rect
+											x="-4.25"
+											y="-4.25"
+											width="8.5"
+											height="8.5"
+											fill={row.color}
+											stroke={markerStroke}
+											stroke-width="1.4"
+											rx="1.5"
+										/>
 									{:else}
-										<polygon points={markerPolygonPoints(idx, 5)} fill={row.color} stroke={markerStroke} stroke-width="1.4" />
+										<polygon
+											points={markerPolygonPoints(idx, 5)}
+											fill={row.color}
+											stroke={markerStroke}
+											stroke-width="1.4"
+										/>
 									{/if}
 								</g>
 							</svg>

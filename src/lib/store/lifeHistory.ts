@@ -58,7 +58,8 @@ export const resolveChartColor = (
 	const palette = LIFE_HISTORY_CHART_COLORS[playerIndex % LIFE_HISTORY_CHART_COLORS.length];
 	if (!colorToken || colorToken.includes(',')) return palette;
 	const clean = colorToken.trim().toLowerCase();
-	if (clean === '#ffffff' || clean === '#202020' || clean === 'white' || clean === 'black') return palette;
+	if (clean === '#ffffff' || clean === '#202020' || clean === 'white' || clean === 'black')
+		return palette;
 	if (isHexColor(clean)) return clean;
 	const named = namedPlayerColors[clean];
 	return named ?? palette;

@@ -2,7 +2,12 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import LifeChart from './LifeChart.svelte';
 	import TurnTimeStats from './TurnTimeStats.svelte';
-	import { closeHistoryModal, handleHistoryModalBackNavigation, historyModalData, pushHistoryModalHistoryEntry } from '$lib/store/modal';
+	import {
+		closeHistoryModal,
+		handleHistoryModalBackNavigation,
+		historyModalData,
+		pushHistoryModalHistoryEntry
+	} from '$lib/store/modal';
 	import { lifeHistory } from '$lib/store/lifeHistory';
 	import { _ } from 'svelte-i18n';
 	import { onDestroy, onMount } from 'svelte';
@@ -11,9 +16,10 @@
 
 	$: latestSnapshot = $lifeHistory[$lifeHistory.length - 1];
 	$: legendEntries = [...(latestSnapshot?.players ?? [])].sort((left, right) => left.id - right.id);
-	$: chartTitle = activeTab === 'turnTime'
-		? String($_('history_turn_time_title') || 'Turn Time Statistics')
-		: String($_('history_life_chart_title') || 'Life total history');
+	$: chartTitle =
+		activeTab === 'turnTime'
+			? String($_('history_turn_time_title') || 'Turn Time Statistics')
+			: String($_('history_life_chart_title') || 'Life total history');
 	$: emptyState = String($_('history_life_chart_empty') || 'No life snapshots recorded yet.');
 	$: closeLabel = String($_('close') || 'Close');
 	$: snapshotCountSuffix = String($_('history_life_chart_snapshot_count') || 'snapshots captured');
@@ -176,79 +182,80 @@
 			{#if activeTab === 'turnTime'}
 				<TurnTimeStats />
 			{:else}
-			<div class="w-full max-w-full">
-				<LifeChart
-					snapshots={$lifeHistory}
-					defaultStartingLife={$appSettings.startingLifeTotal}
-					focusedPlayerId={selectedLegendPlayerId}
-					emptyStateText={emptyState}
-				/>
-			</div>
+				<div class="w-full max-w-full">
+					<LifeChart
+						snapshots={$lifeHistory}
+						defaultStartingLife={$appSettings.startingLifeTotal}
+						focusedPlayerId={selectedLegendPlayerId}
+						emptyStateText={emptyState}
+					/>
+				</div>
 
-			{#if legendEntries.length > 0}
-				<div class="mt-5 border-t border-gray-700 pt-4">
-					<div class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
-						{$_('history_life_chart_legend') || 'Legend'}
-					</div>
-					<p class="mb-3 text-xs text-gray-400">{legendHintText}</p>
-					<div class="flex flex-wrap gap-3">
-						{#each legendEntries as player, index (player.id)}
-							<button
-								type="button"
-								class="flex items-center gap-2 rounded-full bg-gray-900/70 px-3 py-1.5 text-sm text-gray-100 transition-all"
-								class:opacity-45={selectedLegendPlayerId !== null && selectedLegendPlayerId !== player.id}
-								class:ring-2={selectedLegendPlayerId === player.id}
-								class:ring-fuchsia-500={selectedLegendPlayerId === player.id}
-								on:click={() => toggleLegendFocus(player.id)}
-								aria-pressed={selectedLegendPlayerId === player.id}
-								aria-label={`${player.name} (${player.life})`}
-							>
-								<svg
-									viewBox="0 0 16 16"
-									class="h-4 w-4 shrink-0 overflow-visible"
-									aria-hidden="true"
+				{#if legendEntries.length > 0}
+					<div class="mt-5 border-t border-gray-700 pt-4">
+						<div class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+							{$_('history_life_chart_legend') || 'Legend'}
+						</div>
+						<p class="mb-3 text-xs text-gray-400">{legendHintText}</p>
+						<div class="flex flex-wrap gap-3">
+							{#each legendEntries as player, index (player.id)}
+								<button
+									type="button"
+									class="flex items-center gap-2 rounded-full bg-gray-900/70 px-3 py-1.5 text-sm text-gray-100 transition-all"
+									class:opacity-45={selectedLegendPlayerId !== null &&
+										selectedLegendPlayerId !== player.id}
+									class:ring-2={selectedLegendPlayerId === player.id}
+									class:ring-fuchsia-500={selectedLegendPlayerId === player.id}
+									on:click={() => toggleLegendFocus(player.id)}
+									aria-pressed={selectedLegendPlayerId === player.id}
+									aria-label={`${player.name} (${player.life})`}
 								>
-									<g transform="translate(8 8)">
-										{#if index % 8 === 0}
-											<circle
-												r="4.6"
-												fill={player.color}
-												stroke={legendMarkerStroke}
-												stroke-width="1.4"
-											/>
-										{:else if index % 8 === 1}
-											<rect
-												x="-4.25"
-												y="-4.25"
-												width="8.5"
-												height="8.5"
-												fill={player.color}
-												stroke={legendMarkerStroke}
-												stroke-width="1.4"
-												rx="1.5"
-											/>
-										{:else}
-											<polygon
-												points={markerPolygonPoints(index, 5)}
-												fill={player.color}
-												stroke={legendMarkerStroke}
-												stroke-width="1.4"
-											/>
-										{/if}
-									</g>
-								</svg>
-										<span
-											class="font-medium"
-											class:line-through={selectedLegendPlayerId !== null && selectedLegendPlayerId !== player.id}
-											style={`color: ${player.color};`}
-										>{player.name} ({player.life})</span
+									<svg
+										viewBox="0 0 16 16"
+										class="h-4 w-4 shrink-0 overflow-visible"
+										aria-hidden="true"
+									>
+										<g transform="translate(8 8)">
+											{#if index % 8 === 0}
+												<circle
+													r="4.6"
+													fill={player.color}
+													stroke={legendMarkerStroke}
+													stroke-width="1.4"
+												/>
+											{:else if index % 8 === 1}
+												<rect
+													x="-4.25"
+													y="-4.25"
+													width="8.5"
+													height="8.5"
+													fill={player.color}
+													stroke={legendMarkerStroke}
+													stroke-width="1.4"
+													rx="1.5"
+												/>
+											{:else}
+												<polygon
+													points={markerPolygonPoints(index, 5)}
+													fill={player.color}
+													stroke={legendMarkerStroke}
+													stroke-width="1.4"
+												/>
+											{/if}
+										</g>
+									</svg>
+									<span
+										class="font-medium"
+										class:line-through={selectedLegendPlayerId !== null &&
+											selectedLegendPlayerId !== player.id}
+										style={`color: ${player.color};`}>{player.name} ({player.life})</span
 									>
 								</button>
-						{/each}
+							{/each}
+						</div>
 					</div>
-				</div>
+				{/if}
 			{/if}
-		{/if}
 		</div>
 	</div>
 </div>

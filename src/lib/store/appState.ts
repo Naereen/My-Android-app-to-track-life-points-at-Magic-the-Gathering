@@ -62,13 +62,17 @@ export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
 		const wasOpen = get(appState).isMenuOpen;
 		if (!wasOpen) {
 			// opening
-			if ((get(appSettings)?.turnTimerEnabled)) {
-				try { (turnTimer as any).pause?.(); } catch (e) {}
+			if (get(appSettings)?.turnTimerEnabled) {
+				try {
+					(turnTimer as any).pause?.();
+				} catch (e) {}
 			}
 		} else {
 			// closing
-			if ((get(appSettings)?.turnTimerEnabled)) {
-				try { (turnTimer as any).resume?.(); } catch (e) {}
+			if (get(appSettings)?.turnTimerEnabled) {
+				try {
+					(turnTimer as any).resume?.();
+				} catch (e) {}
 			}
 		}
 	} catch (e) {
@@ -114,7 +118,11 @@ export const toggleDayNightPhase = () => {
  * @param {boolean} forceTimerReset Forces turn timer reset even when the same player remains active.
  * @returns {void}
  */
-export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTimerReset = false) => {
+export const setCurrentTurn = (
+	index: number,
+	updateIsPositive: boolean,
+	forceTimerReset = false
+) => {
 	appState.update((data) => {
 		const newData = { ...data, currentTurn: index } as any;
 
@@ -140,7 +148,12 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTi
 
 		// Reverse navigation semantics: moving "just before" the starting player means
 		// crossing a full turn boundary backward, so turnCount must decrease.
-		if (index === ((data.startingPlayerIndex - 1 + (get(appSettings).playerCount || 4)) % (get(appSettings).playerCount || 4)) && !updateIsPositive) {
+		if (
+			index ===
+				(data.startingPlayerIndex - 1 + (get(appSettings).playerCount || 4)) %
+					(get(appSettings).playerCount || 4) &&
+			!updateIsPositive
+		) {
 			vibrate(50);
 			const nextCount = Math.max(0, Math.min(99, (data.turnCount || 0) - 1));
 			newData.turnCount = nextCount;
@@ -163,7 +176,7 @@ export const setCurrentTurn = (index: number, updateIsPositive: boolean, forceTi
 
 	// if turn timer enabled, reset/start timer for the new current turn
 	try {
-		if ((get(appSettings)?.turnTimerEnabled)) {
+		if (get(appSettings)?.turnTimerEnabled) {
 			turnTimer.resetForCurrent(forceTimerReset);
 		}
 	} catch (e) {
@@ -272,46 +285,49 @@ export const prevTurn = () => {
 	appState.update((data) => ({ ...data, currentTurn: -1 }));
 };
 
-export const gameState = derived([players, appSettings, appState], ([$players, $appSettings, $appState]) => {
-	// Stream payload is always normalized to 8 slots. Keeping a fixed width simplifies
-	// consumer code and avoids schema churn when player count changes during a session.
-	const playerCount = $appSettings.playerCount ?? 4;
-	const activePlayers = $players.slice(0, playerCount);
+export const gameState = derived(
+	[players, appSettings, appState],
+	([$players, $appSettings, $appState]) => {
+		// Stream payload is always normalized to 8 slots. Keeping a fixed width simplifies
+		// consumer code and avoids schema churn when player count changes during a session.
+		const playerCount = $appSettings.playerCount ?? 4;
+		const activePlayers = $players.slice(0, playerCount);
 
-	const names = Array.from({ length: MAX_STREAM_PLAYERS }, (_, index) => {
-		const player = activePlayers[index];
-		return player?.playerName ?? `Player ${index + 1}`;
-	});
+		const names = Array.from({ length: MAX_STREAM_PLAYERS }, (_, index) => {
+			const player = activePlayers[index];
+			return player?.playerName ?? `Player ${index + 1}`;
+		});
 
-	const lifeTotals = Array.from({ length: MAX_STREAM_PLAYERS }, (_, index) => {
-		const player = activePlayers[index];
-		return player?.lifeTotal ?? 0;
-	});
+		const lifeTotals = Array.from({ length: MAX_STREAM_PLAYERS }, (_, index) => {
+			const player = activePlayers[index];
+			return player?.lifeTotal ?? 0;
+		});
 
-	return {
-		playerCount,
-		currentTurn: $appState.currentTurn,
-		updatedAt: Date.now(),
-		names,
-		lifeTotals,
-		namePlayer1: names[0] ?? '',
-		namePlayer2: names[1] ?? '',
-		namePlayer3: names[2] ?? '',
-		namePlayer4: names[3] ?? '',
-		namePlayer5: names[4] ?? '',
-		namePlayer6: names[5] ?? '',
-		namePlayer7: names[6] ?? '',
-		namePlayer8: names[7] ?? '',
-		lifePlayer1: lifeTotals[0] ?? 0,
-		lifePlayer2: lifeTotals[1] ?? 0,
-		lifePlayer3: lifeTotals[2] ?? 0,
-		lifePlayer4: lifeTotals[3] ?? 0,
-		lifePlayer5: lifeTotals[4] ?? 0,
-		lifePlayer6: lifeTotals[5] ?? 0,
-		lifePlayer7: lifeTotals[6] ?? 0,
-		lifePlayer8: lifeTotals[7] ?? 0
-	} satisfies StreamGameState;
-});
+		return {
+			playerCount,
+			currentTurn: $appState.currentTurn,
+			updatedAt: Date.now(),
+			names,
+			lifeTotals,
+			namePlayer1: names[0] ?? '',
+			namePlayer2: names[1] ?? '',
+			namePlayer3: names[2] ?? '',
+			namePlayer4: names[3] ?? '',
+			namePlayer5: names[4] ?? '',
+			namePlayer6: names[5] ?? '',
+			namePlayer7: names[6] ?? '',
+			namePlayer8: names[7] ?? '',
+			lifePlayer1: lifeTotals[0] ?? 0,
+			lifePlayer2: lifeTotals[1] ?? 0,
+			lifePlayer3: lifeTotals[2] ?? 0,
+			lifePlayer4: lifeTotals[3] ?? 0,
+			lifePlayer5: lifeTotals[4] ?? 0,
+			lifePlayer6: lifeTotals[5] ?? 0,
+			lifePlayer7: lifeTotals[6] ?? 0,
+			lifePlayer8: lifeTotals[7] ?? 0
+		} satisfies StreamGameState;
+	}
+);
 
 // Backward compatibility for existing localStorage payloads.
 appState.update((data) => {

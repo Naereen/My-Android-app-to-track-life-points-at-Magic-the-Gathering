@@ -3,13 +3,13 @@
 		playerIndex: number,
 		numberOfPlayers: number,
 		layout: 'two-by-two' | 'one-two-one' | '',
-        fromPlayerDataModal: boolean = false
+		fromPlayerDataModal: boolean = false
 	): string => {
-        if (fromPlayerDataModal) {
-            // FIXME: right now, I've disabled this function if the fromPlayerDataModal flag is enabled: all the cases return '0deg', ie. no rotation
-            // TODO: make the whole PlayerDataModal component rotate, instead of just the Minimap!
-            return '0deg';
-        }
+		if (fromPlayerDataModal) {
+			// FIXME: right now, I've disabled this function if the fromPlayerDataModal flag is enabled: all the cases return '0deg', ie. no rotation
+			// TODO: make the whole PlayerDataModal component rotate, instead of just the Minimap!
+			return '0deg';
+		}
 
 		if (numberOfPlayers === 3) {
 			if (playerIndex === 1) return '-90deg';
@@ -79,9 +79,9 @@
 		return '0deg';
 	};
 
-    // Orientation
+	// Orientation
 
-    type SeatOrientation = App.Player.Orientation;
+	type SeatOrientation = App.Player.Orientation;
 
 	export const getSeatOrientations = (
 		playerCount: number,
@@ -129,10 +129,11 @@
 	export let backgroundClass = 'bg-black/70';
 	export let rootClickable = true;
 	export let onSeatClick: ((targetIndex: number) => void) | null = null;
-	export let onSeatSplitClick: ((targetIndex: number, side: 'left' | 'right') => void) | null = null;
+	export let onSeatSplitClick: ((targetIndex: number, side: 'left' | 'right') => void) | null =
+		null;
 	export let onSeatLongPress: ((targetIndex: number) => void) | null = null;
 	export let seatLongPressMs = 1000;
-    export let fromPlayerDataModal = false;
+	export let fromPlayerDataModal = false;
 	export let commanderDamageIndicator: 'total' | 'sum' | 'max' | 'sum-with-max' = 'sum';
 
 	$: numberOfPlayers = $appSettings.playerCount;
@@ -156,25 +157,67 @@
 		// reuse one canonical structure for multiple orientations and modal modes.
 		switch (playerCount) {
 			case 2:
-				return [[1, 1], [0, 0]];
+				return [
+					[1, 1],
+					[0, 0]
+				];
 			case 3:
-				return [[1, 2], [0, 0]];
+				return [
+					[1, 2],
+					[0, 0]
+				];
 			case 4:
 				return currentLayout === 'two-by-two'
-					? [[0, 3], [1, 2]]
-					: [[2, 2], [1, 3], [0, 0]];
+					? [
+							[0, 3],
+							[1, 2]
+						]
+					: [
+							[2, 2],
+							[1, 3],
+							[0, 0]
+						];
 			case 5:
-				return [[2, 3], [1, 4], [0, 0]];
+				return [
+					[2, 3],
+					[1, 4],
+					[0, 0]
+				];
 			case 6:
 				return currentLayout === 'one-two-one'
-					? [[3, 3], [2, 4], [1, 5], [0, 0]]
-					: [[2, 3], [1, 4], [0, 5]];
+					? [
+							[3, 3],
+							[2, 4],
+							[1, 5],
+							[0, 0]
+						]
+					: [
+							[2, 3],
+							[1, 4],
+							[0, 5]
+						];
 			case 7:
-				return [[3, 4], [2, 5], [1, 6], [0, 0]];
+				return [
+					[3, 4],
+					[2, 5],
+					[1, 6],
+					[0, 0]
+				];
 			case 8:
 				return currentLayout === 'one-two-one'
-					? [[4, 4], [3, 5], [2, 6], [1, 7], [0, 0]]
-					: [[3, 4], [2, 5], [1, 6], [0, 7]];
+					? [
+							[4, 4],
+							[3, 5],
+							[2, 6],
+							[1, 7],
+							[0, 0]
+						]
+					: [
+							[3, 4],
+							[2, 5],
+							[1, 6],
+							[0, 7]
+						];
 			default:
 				return [[0, 0]];
 		}
@@ -232,51 +275,57 @@
 		// Commander modal uses the selected player's perspective as the reference frame,
 		// while the in-game minimap uses the board's global orientation.
 		if (isCommanderModal) {
-            if (viewerOrientation === 'down') {
-                return rotate180(matrix);
-            }
-            else if (viewerOrientation === 'right') {
-                if (layout === 'two-by-two' && numberOfPlayers <= 5) {
-                    return applySymetryByYAxis(rotateCounterClockwise(matrix));
-                } else {
-                    return rotateCounterClockwise(matrix);
-                }
-            }
-            else if (viewerOrientation === 'left') {
-                if (layout === 'two-by-two' && numberOfPlayers <= 5) {
-                    return applySymetryByYAxis(rotateClockwise(matrix));
-                } else {
-                    return rotateClockwise(matrix);
-                }
-            }
-            return matrix;
-        }
-		else {
-            if (viewerOrientation === 'down') {
-                return rotate180(matrix);
-            }
-            else if (viewerOrientation === 'right') {
-                if (layout === 'two-by-two' && numberOfPlayers <= 5) {
-                    return rotateClockwise(matrix);
-                } else {
-                    return applySymetryByYAxis(rotateClockwise(matrix));
-                }
-            }
-            else if (viewerOrientation === 'left') {
-                if (layout === 'two-by-two' && numberOfPlayers <= 5) {
-                    return applySymetryByYAxis(rotateCounterClockwise(matrix));
-                } else {
-                    return rotateCounterClockwise(matrix);
-                }
-            }
-            return matrix;
-        }
+			if (viewerOrientation === 'down') {
+				return rotate180(matrix);
+			} else if (viewerOrientation === 'right') {
+				if (layout === 'two-by-two' && numberOfPlayers <= 5) {
+					return applySymetryByYAxis(rotateCounterClockwise(matrix));
+				} else {
+					return rotateCounterClockwise(matrix);
+				}
+			} else if (viewerOrientation === 'left') {
+				if (layout === 'two-by-two' && numberOfPlayers <= 5) {
+					return applySymetryByYAxis(rotateClockwise(matrix));
+				} else {
+					return rotateClockwise(matrix);
+				}
+			}
+			return matrix;
+		} else {
+			if (viewerOrientation === 'down') {
+				return rotate180(matrix);
+			} else if (viewerOrientation === 'right') {
+				if (layout === 'two-by-two' && numberOfPlayers <= 5) {
+					return rotateClockwise(matrix);
+				} else {
+					return applySymetryByYAxis(rotateClockwise(matrix));
+				}
+			} else if (viewerOrientation === 'left') {
+				if (layout === 'two-by-two' && numberOfPlayers <= 5) {
+					return applySymetryByYAxis(rotateCounterClockwise(matrix));
+				} else {
+					return rotateCounterClockwise(matrix);
+				}
+			}
+			return matrix;
+		}
 	};
 
 	const getThreePlayerViewerMatrix = (viewerIndex: number): MinimapMatrix => {
-		if (viewerIndex === 1) return [[1, 0], [2, 0]];
-		if (viewerIndex === 2) return [[2, 0], [1, 0]];
-		return [[1, 2], [0, 0]];
+		if (viewerIndex === 1)
+			return [
+				[1, 0],
+				[2, 0]
+			];
+		if (viewerIndex === 2)
+			return [
+				[2, 0],
+				[1, 0]
+			];
+		return [
+			[1, 2],
+			[0, 0]
+		];
 	};
 
 	const computeTilePlacements = (
@@ -320,7 +369,7 @@
 
 	$: canonicalMatrix = getCanonicalSeatMatrix(numberOfPlayers, layout);
 	$: minimapMatrix =
-		(numberOfPlayers === 3 && !fromPlayerDataModal)
+		numberOfPlayers === 3 && !fromPlayerDataModal
 			? getThreePlayerViewerMatrix(playerIndex)
 			: rotateForViewer(canonicalMatrix, orientation, fromPlayerDataModal);
 	$: minimapRowCount = minimapMatrix.length;
@@ -330,197 +379,297 @@
 	const orientationToDegrees = (seatOrientation: SeatOrientation): string => {
 		if (numberOfPlayers === 4 && layout === 'two-by-two') {
 			if (playerIndex === 0 || playerIndex === 1) {
-				if (seatOrientation === 'left') { return '90deg'; }
-				if (seatOrientation === 'right') { return '90deg'; }  // FIXME: bug!
-			}
-			else if (playerIndex === 2 || playerIndex === 3) {
-				if (seatOrientation === 'left') { return '90deg'; }  // FIXME: bug!
-				if (seatOrientation === 'right') { return '90deg'; }
+				if (seatOrientation === 'left') {
+					return '90deg';
+				}
+				if (seatOrientation === 'right') {
+					return '90deg';
+				} // FIXME: bug!
+			} else if (playerIndex === 2 || playerIndex === 3) {
+				if (seatOrientation === 'left') {
+					return '90deg';
+				} // FIXME: bug!
+				if (seatOrientation === 'right') {
+					return '90deg';
+				}
 			}
 		}
 		if (numberOfPlayers === 4 && layout === 'one-two-one') {
 			if (playerIndex === 0) {
-				if (seatOrientation === 'up') { return '0deg'; }
-				if (seatOrientation === 'left') { return '-90deg'; }  // FIXME: bug!
-				if (seatOrientation === 'down') { return '180deg'; }
-				if (seatOrientation === 'right') { return '90deg'; }  // FIXME: bug!
-			}
-			else if (playerIndex === 1) {
-				if (seatOrientation === 'up') { return '-90deg'; }
-				if (seatOrientation === 'left') { return '90deg'; }
-				if (seatOrientation === 'down') { return '90deg'; }
-				if (seatOrientation === 'right') { return '90deg'; }
-			}
-			else if (playerIndex === 2) {
-				if (seatOrientation === 'up') { return '0deg'; }
-				if (seatOrientation === 'left') { return '90deg'; }
-				if (seatOrientation === 'down') { return '180deg'; }
-				if (seatOrientation === 'right') { return '90deg'; }
-			}
-			else if (playerIndex === 3) {
-				if (seatOrientation === 'up') { return '-90deg'; }
-				if (seatOrientation === 'left') { return '90deg'; }
-				if (seatOrientation === 'down') { return '90deg'; }
-				if (seatOrientation === 'right') { return '90deg'; }
+				if (seatOrientation === 'up') {
+					return '0deg';
+				}
+				if (seatOrientation === 'left') {
+					return '-90deg';
+				} // FIXME: bug!
+				if (seatOrientation === 'down') {
+					return '180deg';
+				}
+				if (seatOrientation === 'right') {
+					return '90deg';
+				} // FIXME: bug!
+			} else if (playerIndex === 1) {
+				if (seatOrientation === 'up') {
+					return '-90deg';
+				}
+				if (seatOrientation === 'left') {
+					return '90deg';
+				}
+				if (seatOrientation === 'down') {
+					return '90deg';
+				}
+				if (seatOrientation === 'right') {
+					return '90deg';
+				}
+			} else if (playerIndex === 2) {
+				if (seatOrientation === 'up') {
+					return '0deg';
+				}
+				if (seatOrientation === 'left') {
+					return '90deg';
+				}
+				if (seatOrientation === 'down') {
+					return '180deg';
+				}
+				if (seatOrientation === 'right') {
+					return '90deg';
+				}
+			} else if (playerIndex === 3) {
+				if (seatOrientation === 'up') {
+					return '-90deg';
+				}
+				if (seatOrientation === 'left') {
+					return '90deg';
+				}
+				if (seatOrientation === 'down') {
+					return '90deg';
+				}
+				if (seatOrientation === 'right') {
+					return '90deg';
+				}
 			}
 		}
 
 		if (seatOrientation === 'left') {
-            return '-90deg';
-        }
-		else if (seatOrientation === 'right') {
-            return '90deg';
-        }
-        else if (seatOrientation === 'up') {
-            return '0deg';
-        }
-		else if (seatOrientation === 'down') {
-            if (numberOfPlayers === 4 && layout === 'one-two-one') {
+			return '-90deg';
+		} else if (seatOrientation === 'right') {
+			return '90deg';
+		} else if (seatOrientation === 'up') {
+			return '0deg';
+		} else if (seatOrientation === 'down') {
+			if (numberOfPlayers === 4 && layout === 'one-two-one') {
 				if (playerIndex === 2) {
 					return '0deg';
 				}
 				return '180deg';
-            } else if (numberOfPlayers === 6 && playerIndex === 3 && layout === 'one-two-one') {
-                return '0deg';
-            } else {
-                return '180deg';
-            }
-        }
+			} else if (numberOfPlayers === 6 && playerIndex === 3 && layout === 'one-two-one') {
+				return '0deg';
+			} else {
+				return '180deg';
+			}
+		}
 		return '0deg';
 	};
 
 	const orientationToDegreesFromDataModal = (seatOrientation: SeatOrientation): string => {
-        if (numberOfPlayers === 4 && layout === 'one-two-one') {
-            if (playerIndex === 0) {
-                if (seatOrientation === 'down') { return '180deg'; }
-                else if (seatOrientation === 'up') { return '0deg'; }
-                else if (seatOrientation === 'left') { return '-90deg'; }
-                else if (seatOrientation === 'right') { return '90deg'; }
-                return '0deg';
-            } else if (playerIndex === 1) {
-                if (seatOrientation === 'down') { return '90deg'; }
-                else if (seatOrientation === 'up') { return '-90deg'; }
-                else if (seatOrientation === 'left') { return '180deg'; }
-                else if (seatOrientation === 'right') { return '0deg'; }
-                return '0deg';
-            } else if (playerIndex === 2) {
-                if (seatOrientation === 'down') { return '0deg'; }
-                else if (seatOrientation === 'up') { return '180deg'; }
-                else if (seatOrientation === 'left') { return '90deg'; }
-                else if (seatOrientation === 'right') { return '-90deg'; }
-                return '0deg';
-            } else if (playerIndex === 3) {
-                if (seatOrientation === 'down') { return '-90deg'; }
-                else if (seatOrientation === 'up') { return '90deg'; }
-                else if (seatOrientation === 'left') { return '0deg'; }
-                else if (seatOrientation === 'right') { return '180deg'; }
-                return '0deg';
-            }
-        }
+		if (numberOfPlayers === 4 && layout === 'one-two-one') {
+			if (playerIndex === 0) {
+				if (seatOrientation === 'down') {
+					return '180deg';
+				} else if (seatOrientation === 'up') {
+					return '0deg';
+				} else if (seatOrientation === 'left') {
+					return '-90deg';
+				} else if (seatOrientation === 'right') {
+					return '90deg';
+				}
+				return '0deg';
+			} else if (playerIndex === 1) {
+				if (seatOrientation === 'down') {
+					return '90deg';
+				} else if (seatOrientation === 'up') {
+					return '-90deg';
+				} else if (seatOrientation === 'left') {
+					return '180deg';
+				} else if (seatOrientation === 'right') {
+					return '0deg';
+				}
+				return '0deg';
+			} else if (playerIndex === 2) {
+				if (seatOrientation === 'down') {
+					return '0deg';
+				} else if (seatOrientation === 'up') {
+					return '180deg';
+				} else if (seatOrientation === 'left') {
+					return '90deg';
+				} else if (seatOrientation === 'right') {
+					return '-90deg';
+				}
+				return '0deg';
+			} else if (playerIndex === 3) {
+				if (seatOrientation === 'down') {
+					return '-90deg';
+				} else if (seatOrientation === 'up') {
+					return '90deg';
+				} else if (seatOrientation === 'left') {
+					return '0deg';
+				} else if (seatOrientation === 'right') {
+					return '180deg';
+				}
+				return '0deg';
+			}
+		}
 
-        if (numberOfPlayers === 4 && layout === 'two-by-two') {
-            if (playerIndex === 0 || playerIndex === 1) {
-                if (seatOrientation === 'left') { return '180deg'; }
-                else if (seatOrientation === 'right') { return '0deg'; }
-                return '0deg';
-            } else if (playerIndex === 2 || playerIndex === 3) {
-                if (seatOrientation === 'left') { return '0deg'; }
-                else if (seatOrientation === 'right') { return '-180deg'; }
-                return '0deg';
-            }
-        }
+		if (numberOfPlayers === 4 && layout === 'two-by-two') {
+			if (playerIndex === 0 || playerIndex === 1) {
+				if (seatOrientation === 'left') {
+					return '180deg';
+				} else if (seatOrientation === 'right') {
+					return '0deg';
+				}
+				return '0deg';
+			} else if (playerIndex === 2 || playerIndex === 3) {
+				if (seatOrientation === 'left') {
+					return '0deg';
+				} else if (seatOrientation === 'right') {
+					return '-180deg';
+				}
+				return '0deg';
+			}
+		}
 
-        // DONE: layout non-inversé (classique 2-1) pour 3 joueurs, bien traité
-        if (numberOfPlayers === 3) {
-            if (playerIndex === 1) {
-                if (seatOrientation === 'left') { return '180deg'; }
-                else if (seatOrientation === 'right') { return '0deg'; }
+		// DONE: layout non-inversé (classique 2-1) pour 3 joueurs, bien traité
+		if (numberOfPlayers === 3) {
+			if (playerIndex === 1) {
+				if (seatOrientation === 'left') {
+					return '180deg';
+				} else if (seatOrientation === 'right') {
+					return '0deg';
+				}
 				// else if (seatOrientation === 'up') { return '90deg'; }
-                return '0deg';
-			} else  if (playerIndex === 2) {
-                if (seatOrientation === 'left') { return '0deg'; }
-                else if (seatOrientation === 'right') { return '180deg'; }
+				return '0deg';
+			} else if (playerIndex === 2) {
+				if (seatOrientation === 'left') {
+					return '0deg';
+				} else if (seatOrientation === 'right') {
+					return '180deg';
+				}
 				// else if (seatOrientation === 'up') { return '90deg'; }
-                return '0deg';
-            } else if (playerIndex === 0) {
-                if (seatOrientation === 'left') { return '-90deg'; }
-                else if (seatOrientation === 'right') { return '90deg'; }
+				return '0deg';
+			} else if (playerIndex === 0) {
+				if (seatOrientation === 'left') {
+					return '-90deg';
+				} else if (seatOrientation === 'right') {
+					return '90deg';
+				}
 				// else if (seatOrientation === 'up') { return '90deg'; }
-                return '0deg';
-            }
-        }
+				return '0deg';
+			}
+		}
 
-        // TODO: layout inversé pour 3 joueurs, à traiter !
+		// TODO: layout inversé pour 3 joueurs, à traiter !
 
-        if (numberOfPlayers === 5) {
-            if (playerIndex === 1 || playerIndex === 2) {
-                if (seatOrientation === 'left') { return '180deg'; }
-                else if (seatOrientation === 'right') { return '0deg'; }
-                return '-90deg';
-            } else if (playerIndex === 3 || playerIndex === 4) {
-                if (seatOrientation === 'left') { return '0deg'; }
-                else if (seatOrientation === 'right') { return '180deg'; }
-                return '90deg';
-            } else if (playerIndex === 0) {
-                if (seatOrientation === 'up') { return '0deg'; }
-                else if (seatOrientation === 'down') { return '-180deg'; }
-                return '0deg';
-            }
-        }
+		if (numberOfPlayers === 5) {
+			if (playerIndex === 1 || playerIndex === 2) {
+				if (seatOrientation === 'left') {
+					return '180deg';
+				} else if (seatOrientation === 'right') {
+					return '0deg';
+				}
+				return '-90deg';
+			} else if (playerIndex === 3 || playerIndex === 4) {
+				if (seatOrientation === 'left') {
+					return '0deg';
+				} else if (seatOrientation === 'right') {
+					return '180deg';
+				}
+				return '90deg';
+			} else if (playerIndex === 0) {
+				if (seatOrientation === 'up') {
+					return '0deg';
+				} else if (seatOrientation === 'down') {
+					return '-180deg';
+				}
+				return '0deg';
+			}
+		}
 
-        if (numberOfPlayers === 6 && layout === 'two-by-two') {
-            if (playerIndex === 0 || playerIndex === 1 || playerIndex === 2) {
-                if (seatOrientation === 'left') { return '180deg'; }
-                else if (seatOrientation === 'right') { return '0deg'; }
-                return '-90deg';
-            } else if (playerIndex === 3 || playerIndex === 4 || playerIndex === 5) {
-                if (seatOrientation === 'left') { return '0deg'; }
-                else if (seatOrientation === 'right') { return '180deg'; }
-                return '90deg';
-            }
-        }
+		if (numberOfPlayers === 6 && layout === 'two-by-two') {
+			if (playerIndex === 0 || playerIndex === 1 || playerIndex === 2) {
+				if (seatOrientation === 'left') {
+					return '180deg';
+				} else if (seatOrientation === 'right') {
+					return '0deg';
+				}
+				return '-90deg';
+			} else if (playerIndex === 3 || playerIndex === 4 || playerIndex === 5) {
+				if (seatOrientation === 'left') {
+					return '0deg';
+				} else if (seatOrientation === 'right') {
+					return '180deg';
+				}
+				return '90deg';
+			}
+		}
 
-        if (numberOfPlayers === 6 && layout === 'one-two-one') {
-            if (playerIndex === 0) {
-                if (seatOrientation === 'up') { return '0deg'; }
-                else if (seatOrientation === 'down' ) { return '180deg'; }
-                else if (seatOrientation === 'left') { return '-90deg'; }
-                else if (seatOrientation === 'right') { return '90deg'; }
-                return '0deg';
-            } else if (playerIndex === 1 || playerIndex === 2) {
-                if (seatOrientation === 'left') { return '180deg'; }
-                else if (seatOrientation === 'right') { return '0deg'; }
-                else if (seatOrientation === 'up') { return '0deg'; }  // XXX: wrong angle by choice
-                else if (seatOrientation === 'down') { return '0deg'; }  // XXX: wrong angle by choice
-                return '-90deg';
-            } else if (playerIndex === 3) {
-                if (seatOrientation === 'left') { return '180deg'; }
-                else if (seatOrientation === 'right') { return '0deg'; }
-                return '90deg';
-            } else if (playerIndex === 4 || playerIndex === 5) {
-                if (seatOrientation === 'left') { return '0deg'; }
-                else if (seatOrientation === 'right') { return '180deg'; }
-                else if (seatOrientation === 'up') { return '0deg'; }  // XXX: wrong angle by choice
-                else if (seatOrientation === 'down') { return '0deg'; }  // XXX: wrong angle by choice
-                return '90deg';
-            }
-        }
+		if (numberOfPlayers === 6 && layout === 'one-two-one') {
+			if (playerIndex === 0) {
+				if (seatOrientation === 'up') {
+					return '0deg';
+				} else if (seatOrientation === 'down') {
+					return '180deg';
+				} else if (seatOrientation === 'left') {
+					return '-90deg';
+				} else if (seatOrientation === 'right') {
+					return '90deg';
+				}
+				return '0deg';
+			} else if (playerIndex === 1 || playerIndex === 2) {
+				if (seatOrientation === 'left') {
+					return '180deg';
+				} else if (seatOrientation === 'right') {
+					return '0deg';
+				} else if (seatOrientation === 'up') {
+					return '0deg';
+				} // XXX: wrong angle by choice
+				else if (seatOrientation === 'down') {
+					return '0deg';
+				} // XXX: wrong angle by choice
+				return '-90deg';
+			} else if (playerIndex === 3) {
+				if (seatOrientation === 'left') {
+					return '180deg';
+				} else if (seatOrientation === 'right') {
+					return '0deg';
+				}
+				return '90deg';
+			} else if (playerIndex === 4 || playerIndex === 5) {
+				if (seatOrientation === 'left') {
+					return '0deg';
+				} else if (seatOrientation === 'right') {
+					return '180deg';
+				} else if (seatOrientation === 'up') {
+					return '0deg';
+				} // XXX: wrong angle by choice
+				else if (seatOrientation === 'down') {
+					return '0deg';
+				} // XXX: wrong angle by choice
+				return '90deg';
+			}
+		}
 
-        // XXX: maybe we should clean-up this old code
+		// XXX: maybe we should clean-up this old code
 		if (seatOrientation === 'left') {
-            return '-90deg';
-        }
-		else if (seatOrientation === 'right') {
-            return '90deg';
-        }
-        else if (seatOrientation === 'up') {
-            return '0deg';
-        }
-		else if (seatOrientation === 'down') {
-            return '180deg';
-        }
-        return '0deg';
-};
+			return '-90deg';
+		} else if (seatOrientation === 'right') {
+			return '90deg';
+		} else if (seatOrientation === 'up') {
+			return '0deg';
+		} else if (seatOrientation === 'down') {
+			return '180deg';
+		}
+		return '0deg';
+	};
 
 	$: seatOrientations = getSeatOrientations(numberOfPlayers, layout);
 
@@ -539,25 +688,28 @@
 		return orientationToDegreesForTileText(viewerOrientation);
 	};
 
-	const isRotated90deg = (orientation === 'right' || orientation === 'left');
+	const isRotated90deg = orientation === 'right' || orientation === 'left';
 
 	$: minimapWidthRem = fromPlayerDataModal
-		? Math.max( isRotated90deg ? 7.5 : 5.75, minimapColCount * 1.50)
-		: Math.max( isRotated90deg ? 4 : 5.5, minimapColCount * 1.0);
+		? Math.max(isRotated90deg ? 7.5 : 5.75, minimapColCount * 1.5)
+		: Math.max(isRotated90deg ? 4 : 5.5, minimapColCount * 1.0);
 	$: minimapHeightRem = fromPlayerDataModal
-		? Math.max( isRotated90deg ? 5.5 : 8.5, minimapRowCount * 1.45)
-		: Math.max( isRotated90deg ? 5.5 : 4.5, minimapRowCount * 1.25);
+		? Math.max(isRotated90deg ? 5.5 : 8.5, minimapRowCount * 1.45)
+		: Math.max(isRotated90deg ? 5.5 : 4.5, minimapRowCount * 1.25);
 	$: minimapStyle = `width: ${minimapWidthRem}rem; height: ${minimapHeightRem}rem;`;
 	$: minimapGridStyle = `grid-template-rows: repeat(${minimapRowCount}, minmax(0, 1fr)); grid-template-columns: repeat(${minimapColCount}, minmax(0, 1fr));`;
 	$: minimapContainerClass = `pointer-events-auto overflow-hidden rounded-md border border-black/70 p-0.5 ${backgroundClass}`;
 
-	$: getTileBackgroundRotation = (targetIndex: number, fromPlayerDataModal: boolean = false): string => {
+	$: getTileBackgroundRotation = (
+		targetIndex: number,
+		fromPlayerDataModal: boolean = false
+	): string => {
 		const seatOrientation = seatOrientations[targetIndex] ?? 'up';
-        if (fromPlayerDataModal) {
-            return orientationToDegreesFromDataModal(seatOrientation);
-        } else {
+		if (fromPlayerDataModal) {
+			return orientationToDegreesFromDataModal(seatOrientation);
+		} else {
 			return orientationToDegrees(seatOrientation);
-        }
+		}
 	};
 
 	$: getTileBackgroundLayerClass = (targetIndex: number): string => {
@@ -582,49 +734,63 @@
 		let rotation = getTileBackgroundRotation(targetIndex, fromPlayerDataModal);
 		if (!p) {
 			return '';
-		}
-		else if (!bg && p.color) {
+		} else if (!bg && p.color) {
 			return `background: ${colorToBg(p.color)};`;
-		}
-		else if (Array.isArray(bg) && bg.length >= 2) {
+		} else if (Array.isArray(bg) && bg.length >= 2) {
 			let [leftImage, rightImage] = bg.slice(0, 2);
 			// FIXED: work on that! It seems to be alright now?
-			if ( fromPlayerDataModal && (
-				(orientation === 'up' && rotation === '180deg')
-				|| (orientation === 'down' && rotation === '180deg')
-				|| (orientation === 'left' && playerIndex >= numberOfPlayers/2)
-				|| (orientation === 'right' && playerIndex >= numberOfPlayers/2)
-			) ) {
+			if (
+				fromPlayerDataModal &&
+				((orientation === 'up' && rotation === '180deg') ||
+					(orientation === 'down' && rotation === '180deg') ||
+					(orientation === 'left' && playerIndex >= numberOfPlayers / 2) ||
+					(orientation === 'right' && playerIndex >= numberOfPlayers / 2))
+			) {
 				// Exchange the two images, to fix a bug: their ordering was incorrect in some cases
 				[leftImage, rightImage] = [rightImage, leftImage];
 			}
 			if (!fromPlayerDataModal) {
 				// FIXME: apply -90deg to the rotation, I don't know why
-				if (rotation === '180deg') { rotation = '90deg'; }
-				else if (rotation === '-90deg') { rotation = '180deg'; }
-				else if (rotation === '90deg') { rotation = '0deg'; }
-				else if (rotation === '0deg') { rotation = '-90deg'; }
+				if (rotation === '180deg') {
+					rotation = '90deg';
+				} else if (rotation === '-90deg') {
+					rotation = '180deg';
+				} else if (rotation === '90deg') {
+					rotation = '0deg';
+				} else if (rotation === '0deg') {
+					rotation = '-90deg';
+				}
 			}
 			return [
 				`--tile-bg-left: url('${leftImage}');`,
 				`--tile-bg-right: url('${rightImage}');`,
-				`--tile-bg-rotation: ${rotation};`,
+				`--tile-bg-rotation: ${rotation};`
 			].join(' ');
 		}
 
 		if (!fromPlayerDataModal) {
 			if (orientation === 'right') {
 				// FIXME: apply +90deg to the rotation, I don't know why
-				if (rotation === '180deg') { rotation = '90deg'; }
-				else if (rotation === '-90deg') { rotation = '180deg'; }
-				else if (rotation === '90deg') { rotation = '0deg'; }
-				else if (rotation === '0deg') { rotation = '-90deg'; }
+				if (rotation === '180deg') {
+					rotation = '90deg';
+				} else if (rotation === '-90deg') {
+					rotation = '180deg';
+				} else if (rotation === '90deg') {
+					rotation = '0deg';
+				} else if (rotation === '0deg') {
+					rotation = '-90deg';
+				}
 			} else if (orientation === 'left') {
 				// FIXME: apply -90deg to the rotation, I don't know why
-				if (rotation === '180deg') { rotation = '-90deg'; }
-				else if (rotation === '-90deg') { rotation = '0deg'; }
-				else if (rotation === '90deg') { rotation = '180deg'; }
-				else if (rotation === '0deg') { rotation = '90deg'; }
+				if (rotation === '180deg') {
+					rotation = '-90deg';
+				} else if (rotation === '-90deg') {
+					rotation = '0deg';
+				} else if (rotation === '90deg') {
+					rotation = '180deg';
+				} else if (rotation === '0deg') {
+					rotation = '90deg';
+				}
 			}
 		}
 
@@ -637,7 +803,10 @@
 	};
 
 	$: getCommanderDamagePair = (targetIndex: number): [number, number] => {
-		const bySource = getCommanderDamageBySourceForPlayer($players[playerIndex], $appSettings.playerCount);
+		const bySource = getCommanderDamageBySourceForPlayer(
+			$players[playerIndex],
+			$appSettings.playerCount
+		);
 		const pair = bySource[targetIndex] ?? [0, 0];
 		return [pair[0] ?? 0, pair[1] ?? 0];
 	};
@@ -645,7 +814,9 @@
 	$: isPartnerSourcePlayer = (targetIndex: number): boolean =>
 		!!$players[targetIndex]?.statusEffects?.partnerMode;
 
-	$: getEffectiveCommanderDamageIndicator = (targetIndex: number): 'total' | 'sum' | 'max' | 'sum-with-max' => {
+	$: getEffectiveCommanderDamageIndicator = (
+		targetIndex: number
+	): 'total' | 'sum' | 'max' | 'sum-with-max' => {
 		if (
 			commanderDamageIndicator === 'sum' &&
 			fromPlayerDataModal &&
@@ -814,7 +985,8 @@
 				<div
 					class={getTileBackgroundLayerClass(tile.targetIndex)}
 					style={getBgStyle(tile.targetIndex)}
-					class:rotate-90={!fromPlayerDataModal && (orientation === 'left' || orientation === 'right')}
+					class:rotate-90={!fromPlayerDataModal &&
+						(orientation === 'left' || orientation === 'right')}
 				>
 					{#if fromPlayerDataModal && isPartnerSourcePlayer(tile.targetIndex)}
 						<span
@@ -830,17 +1002,17 @@
 					>
 						{#if shouldShowMe(tile.targetIndex)}
 							<span class="text-[0.60rem]">
-                            {meString}
-                        </span>
+								{meString}
+							</span>
+						{:else if getEffectiveCommanderDamageIndicator(tile.targetIndex) === 'sum-with-max'}
+							<div class="flex flex-col items-center leading-none">
+								<span>{getCommanderDamageDisplay(tile.targetIndex)}</span>
+								<span class="mt-[1px] text-[0.50rem] opacity-80"
+									>{getCommanderDamageMaxDisplay(tile.targetIndex)}</span
+								>
+							</div>
 						{:else}
-							{#if getEffectiveCommanderDamageIndicator(tile.targetIndex) === 'sum-with-max'}
-								<div class="flex flex-col items-center leading-none">
-									<span>{getCommanderDamageDisplay(tile.targetIndex)}</span>
-									<span class="mt-[1px] text-[0.50rem] opacity-80">{getCommanderDamageMaxDisplay(tile.targetIndex)}</span>
-								</div>
-							{:else}
-								{getCommanderDamageDisplay(tile.targetIndex)}
-							{/if}
+							{getCommanderDamageDisplay(tile.targetIndex)}
 						{/if}
 					</div>
 				</div>

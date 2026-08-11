@@ -92,7 +92,9 @@
 				<Arrow />
 			</button>
 			<span class="text-white text-center text-3xl">{$_('dice_misc')}</span>
-			<span class="text-gray-400 text-center text-sm mt-2 w-80">{$_('long_click_random_player')}</span>
+			<span class="text-gray-400 text-center text-sm mt-2 w-80"
+				>{$_('long_click_random_player')}</span
+			>
 			<!-- <span class="text-gray-400 text-center text-base mt-2 w-80"></span> -->
 		</div>
 
@@ -137,7 +139,7 @@
 						on:click={() => {
 							generateRandomNumber('dplanar');
 						}}
-						text="{$_('roll-planar-die')}"><Dplanar size="5rem" /></DiceCard
+						text={$_('roll-planar-die')}><Dplanar size="5rem" /></DiceCard
 					>
 				</div>
 				<div class="col-span-2">
@@ -193,7 +195,7 @@
 						on:click={() => {
 							selectRandomPlayer();
 						}}
-						text="{ $_('random_player') }"><RandomPlayer size="4rem" /></DiceCard
+						text={$_('random_player')}><RandomPlayer size="4rem" /></DiceCard
 					>
 				</div>
 				{#if $appSettings.playerCount > 2}
@@ -202,7 +204,7 @@
 							on:click={() => {
 								handleRandomOpponent();
 							}}
-							text="{ $_('random_opponent') }"><RandomPlayer size="4rem" /></DiceCard
+							text={$_('random_opponent')}><RandomPlayer size="4rem" /></DiceCard
 						>
 					</div>
 				{/if}
@@ -210,27 +212,45 @@
 		</div>
 
 		{#if showOpponentSelector}
-		<div class="fixed inset-0 bg-black/70 flex justify-center items-center z-50" on:click={() => { vibrate(20); showOpponentSelector = false; }} role="button" on:keydown={() => null} tabindex="0">
-			<div class="bg-[#2d2f30] rounded-[2rem] p-6 max-w-md" on:click|stopPropagation role="button" on:keydown={() => null} tabindex="0">
-				<h2 class="text-white text-2xl mb-4 text-center">{ $_('select_active_player') }</h2>
-				<div class="grid grid-cols-2 gap-4">
-					{#each $players.slice(0, $appSettings.playerCount) as player}
-						<button
-							class="bg-black/50 text-white p-4 rounded-xl hover:bg-black/70 transition-colors"
-							on:click={() => selectPlayerAsActive(player.id)}
-						>
-							<div class="text-lg font-bold">{player.playerName}</div>
-						</button>
-					{/each}
-				</div>
-				<button
-					class="mt-4 w-full bg-red-600 text-white p-2 rounded-xl"
-					on:click={() => { vibrate(20); showOpponentSelector = false; }}
+			<div
+				class="fixed inset-0 bg-black/70 flex justify-center items-center z-50"
+				on:click={() => {
+					vibrate(20);
+					showOpponentSelector = false;
+				}}
+				role="button"
+				on:keydown={() => null}
+				tabindex="0"
+			>
+				<div
+					class="bg-[#2d2f30] rounded-[2rem] p-6 max-w-md"
+					on:click|stopPropagation
+					role="button"
+					on:keydown={() => null}
+					tabindex="0"
 				>
-					{ $_('set_life_total_cancel') }
-				</button>
+					<h2 class="text-white text-2xl mb-4 text-center">{$_('select_active_player')}</h2>
+					<div class="grid grid-cols-2 gap-4">
+						{#each $players.slice(0, $appSettings.playerCount) as player}
+							<button
+								class="bg-black/50 text-white p-4 rounded-xl hover:bg-black/70 transition-colors"
+								on:click={() => selectPlayerAsActive(player.id)}
+							>
+								<div class="text-lg font-bold">{player.playerName}</div>
+							</button>
+						{/each}
+					</div>
+					<button
+						class="mt-4 w-full bg-red-600 text-white p-2 rounded-xl"
+						on:click={() => {
+							vibrate(20);
+							showOpponentSelector = false;
+						}}
+					>
+						{$_('set_life_total_cancel')}
+					</button>
+				</div>
 			</div>
-		</div>
 		{/if}
 	</div>
 </div>

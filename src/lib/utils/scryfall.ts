@@ -108,7 +108,10 @@ export async function searchCards(query: string, limit = 256): Promise<ScryfallC
 			} else if (c.card_faces && c.card_faces.length > 0) {
 				const face = c.card_faces[0];
 				image = (face.image_uris && (face.image_uris.art_crop || face.image_uris.large)) || null;
-				cardImage = (face.image_uris && (face.image_uris.large || face.image_uris.normal || face.image_uris.small)) || null;
+				cardImage =
+					(face.image_uris &&
+						(face.image_uris.large || face.image_uris.normal || face.image_uris.small)) ||
+					null;
 			}
 
 			return {
@@ -162,7 +165,10 @@ export async function randomCards(query: string, limit = 256): Promise<ScryfallC
 			} else if (c.card_faces && c.card_faces.length > 0) {
 				const face = c.card_faces[0];
 				image = (face.image_uris && (face.image_uris.art_crop || face.image_uris.large)) || null;
-				cardImage = (face.image_uris && (face.image_uris.large || face.image_uris.normal || face.image_uris.small)) || null;
+				cardImage =
+					(face.image_uris &&
+						(face.image_uris.large || face.image_uris.normal || face.image_uris.small)) ||
+					null;
 			}
 
 			return {
@@ -200,9 +206,13 @@ export async function searchEmblemCards(
 
 	let composed = clean;
 	if (filter === 'emblem') {
-		composed = clean.length > 0 ? `(${clean}) (t:emblem or t:dungeon)` : '(type:emblem -type:dungeon)';
+		composed =
+			clean.length > 0 ? `(${clean}) (t:emblem or t:dungeon)` : '(type:emblem -type:dungeon)';
 	} else if (filter === 'dungeon') {
-		composed = clean.length > 0 ? `(${clean}) t:dungeon -t:planeswalker unique:card` : 't:dungeon -t:planeswalker unique:card -(set:oafr or set:oclb)';
+		composed =
+			clean.length > 0
+				? `(${clean}) t:dungeon -t:planeswalker unique:card`
+				: 't:dungeon -t:planeswalker unique:card -(set:oafr or set:oclb)';
 	}
 
 	if (!composed || composed.trim().length === 0) return [];
@@ -239,8 +249,7 @@ export async function searchVanguardCards(
 	const clean = query?.trim() ?? '';
 	// Paper-only vanguards avoid digital-only printings and keep the modal aligned with the
 	// physical variant of the game.
-	const composed =
-		clean.length > 0 ? `(${clean}) t:vanguard game:paper` : 't:vanguard game:paper';
+	const composed = clean.length > 0 ? `(${clean}) t:vanguard game:paper` : 't:vanguard game:paper';
 
 	if (!composed || composed.trim().length === 0) return [];
 

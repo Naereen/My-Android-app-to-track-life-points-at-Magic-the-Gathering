@@ -6,5 +6,5 @@
 
 <!-- The icon stays tiny because it is usually paired with a numeric counter. -->
 <span style="font-size: 1.25rem;">
-	<i class={"ss ss-ltr ss-1x ss-fw " + (isMax ? 'ss-mythic ss-grad' : 'ss-rare')}></i>
+	<i class={'ss ss-ltr ss-1x ss-fw ' + (isMax ? 'ss-mythic ss-grad' : 'ss-rare')}></i>
 </span>

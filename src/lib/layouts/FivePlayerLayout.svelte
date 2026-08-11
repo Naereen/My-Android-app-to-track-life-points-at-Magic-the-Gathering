@@ -8,32 +8,32 @@
 
 <div class="flex flex-col h-full justify-between" data-dnd-layout>
 	{#if !$appState.isMenuOpen}
-	<div class="flex flex-col gap-2 bg-black sticky top-0" class:h-[70%]={!$appState.isMenuOpen}>
-		<div class="h-full w-full flex justify-between gap-2">
-			<div class="w-1/2">
-				<DraggablePlayerSlot className="w-full h-full" seatId={3}>
-					<PlayerHorizontal orientation="right" id={3} />
-				</DraggablePlayerSlot>
+		<div class="flex flex-col gap-2 bg-black sticky top-0" class:h-[70%]={!$appState.isMenuOpen}>
+			<div class="h-full w-full flex justify-between gap-2">
+				<div class="w-1/2">
+					<DraggablePlayerSlot className="w-full h-full" seatId={3}>
+						<PlayerHorizontal orientation="right" id={3} />
+					</DraggablePlayerSlot>
+				</div>
+				<div class="w-1/2">
+					<DraggablePlayerSlot className="w-full h-full" seatId={4}>
+						<PlayerHorizontal orientation="left" id={4} />
+					</DraggablePlayerSlot>
+				</div>
 			</div>
-			<div class="w-1/2">
-				<DraggablePlayerSlot className="w-full h-full" seatId={4}>
-					<PlayerHorizontal orientation="left" id={4} />
-				</DraggablePlayerSlot>
+			<div class="h-full w-full flex justify-between gap-2">
+				<div class="w-1/2">
+					<DraggablePlayerSlot className="w-full h-full" seatId={2}>
+						<PlayerHorizontal orientation="right" id={2} />
+					</DraggablePlayerSlot>
+				</div>
+				<div class="w-1/2">
+					<DraggablePlayerSlot className="w-full h-full" seatId={5}>
+						<PlayerHorizontal orientation="left" id={5} />
+					</DraggablePlayerSlot>
+				</div>
 			</div>
 		</div>
-		<div class="h-full w-full flex justify-between gap-2">
-			<div class="w-1/2">
-				<DraggablePlayerSlot className="w-full h-full" seatId={2}>
-					<PlayerHorizontal orientation="right" id={2} />
-				</DraggablePlayerSlot>
-			</div>
-			<div class="w-1/2">
-				<DraggablePlayerSlot className="w-full h-full" seatId={5}>
-					<PlayerHorizontal orientation="left" id={5} />
-				</DraggablePlayerSlot>
-			</div>
-		</div>
-	</div>
 	{/if}
 	<div class="flex-grow">
 		<Menu />

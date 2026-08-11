@@ -11,13 +11,14 @@
 	import EmblemMenu from './subcomponents/emblem/EmblemMenu.svelte';
 	import VanguardMenu from './subcomponents/vanguard/VanguardMenu.svelte';
 	import TreacheryMenu from './subcomponents/treachery/TreacheryMenu.svelte';
+	import BountyMenu from './subcomponents/bounty/BountyMenu.svelte';
 	import HistoryMenu from './subcomponents/history/HistoryMenu.svelte';
 	import DayNightCycle from './subcomponents/dayNight/DayNightCycle.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
 	import { vibrate } from '$lib/utils/haptics';
 	import { _ } from 'svelte-i18n';
-    import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { globalGameTimer } from '$lib/store/globalGameTimer';
 
 	// Animation state for turn counter badge
@@ -178,7 +179,10 @@
 
 	$: if ($globalGameTimer.minutePulseId !== previousMinutePulseId) {
 		previousMinutePulseId = $globalGameTimer.minutePulseId;
-		timerGlowClass = $globalGameTimer.minutePulseKind === 'negative' ? 'global-timer-glow-negative' : 'global-timer-glow-positive';
+		timerGlowClass =
+			$globalGameTimer.minutePulseKind === 'negative'
+				? 'global-timer-glow-negative'
+				: 'global-timer-glow-positive';
 		if (timerGlowTimeout) clearTimeout(timerGlowTimeout);
 		timerGlowTimeout = setTimeout(() => {
 			timerGlowClass = '';
@@ -186,18 +190,18 @@
 		}, 2800);
 	}
 
-// Watch for changes to the turn count and trigger animation when it changes
-$: if ($appState.turnCount !== prevTurnCount) {
-	if (prevTurnCount !== 0) {
-		animateTurn = true;
-		if (animateTimeout) clearTimeout(animateTimeout);
-		animateTimeout = setTimeout(() => {
-			animateTurn = false;
-			animateTimeout = null;
-		}, 2000);
+	// Watch for changes to the turn count and trigger animation when it changes
+	$: if ($appState.turnCount !== prevTurnCount) {
+		if (prevTurnCount !== 0) {
+			animateTurn = true;
+			if (animateTimeout) clearTimeout(animateTimeout);
+			animateTimeout = setTimeout(() => {
+				animateTurn = false;
+				animateTimeout = null;
+			}, 2000);
+		}
+		prevTurnCount = $appState.turnCount || 0;
 	}
-	prevTurnCount = $appState.turnCount || 0;
-}
 </script>
 
 {#if !$appState.isMenuOpen}
@@ -226,7 +230,9 @@ $: if ($appState.turnCount !== prevTurnCount) {
 					title={$globalGameTimer.running ? 'Pause timer' : 'Resume timer'}
 				>
 					{#if $globalGameTimer.running}
-						<span class="global-game-timer-text">{formatGlobalTimer($globalGameTimer.remaining)}</span>
+						<span class="global-game-timer-text"
+							>{formatGlobalTimer($globalGameTimer.remaining)}</span
+						>
 					{:else}
 						<span class="global-game-timer-overlay" aria-hidden="true">
 							⏯️
@@ -275,6 +281,19 @@ $: if ($appState.turnCount !== prevTurnCount) {
 				</button>
 			</div>
 		{/if}
+		{#if $appSettings.showBountyMenu}
+			<div class="flex justify-center items-center flex-grow">
+				<button
+					on:click={() => toggleIsMenuOpen('bounty')}
+					on:contextmenu|preventDefault
+					draggable="false"
+					title={$_('bounty_menu')}
+					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+				>
+					<span class="text-large">🎯</span>
+				</button>
+			</div>
+		{/if}
 		{#if $appSettings.showGameHistoryMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
@@ -320,15 +339,17 @@ $: if ($appState.turnCount !== prevTurnCount) {
 						<!-- <span>↩</span> -->
 						<span>🔂</span>
 						{#if $appState.turnCount > 0}
-							<span class="ml-1 w-6 h-6 rounded-full text-xl flex items-center justify-center turn-badge" class:animate={animateTurn}>T{$appState.turnCount}</span>
+							<span
+								class="ml-1 w-6 h-6 rounded-full text-xl flex items-center justify-center turn-badge"
+								class:animate={animateTurn}>T{$appState.turnCount}</span
+							>
 						{/if}
 					</span>
 				</button>
 			</div>
 		{/if}
 		{#if $appSettings.showRandomizerButton}
-			<div class="flex justify-center items-center flex-grow text-sm"
-			>
+			<div class="flex justify-center items-center flex-grow text-sm">
 				<button
 					on:click={handleRandomizerClick}
 					on:mousedown={handleRandomPlayerDown}
@@ -357,6 +378,8 @@ $: if ($appState.turnCount !== prevTurnCount) {
 	<VanguardMenu />
 {:else if $appState.activeMenu === 'treachery'}
 	<TreacheryMenu />
+{:else if $appState.activeMenu === 'bounty'}
+	<BountyMenu />
 {:else if $appState.activeMenu === 'history'}
 	<HistoryMenu />
 {/if}

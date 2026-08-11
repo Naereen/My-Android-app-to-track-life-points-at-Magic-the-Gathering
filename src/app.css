@@ -113,13 +113,12 @@
 		font-display: swap;
 	}
 	:root {
-		--font-beleren: 'Beleren2016', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+		--font-beleren: 'Beleren2016', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+			Arial, sans-serif;
 	}
 	.beleren {
 		font-family: var(--font-beleren);
 	}
-
-
 
 	/* Style for the active player: a golden glow around the card */
 	.player--active {
@@ -127,7 +126,9 @@
 		   turn remains obvious even when many overlays are visible. */
 		/* above the background and overlay but below the content (content uses z-index:10) */
 		z-index: 20;
-		box-shadow: 0 0 0 4px rgba(212,175,55,0.18), 0 0 30px rgba(212,175,55,0.6);
+		box-shadow:
+			0 0 0 4px rgba(212, 175, 55, 0.18),
+			0 0 30px rgba(212, 175, 55, 0.6);
 		animation: player-glow 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
 		border-radius: 1rem;
@@ -135,13 +136,19 @@
 
 	@keyframes player-glow {
 		0% {
-			box-shadow: 0 0 0 0 rgba(212,175,55,0.0), 0 0 10px rgba(212,175,55,0.2);
+			box-shadow:
+				0 0 0 0 rgba(212, 175, 55, 0),
+				0 0 10px rgba(212, 175, 55, 0.2);
 		}
 		50% {
-			box-shadow: 0 0 0 6px rgba(212,175,55,0.25), 0 0 40px rgba(212,175,55,1.0);
+			box-shadow:
+				0 0 0 6px rgba(212, 175, 55, 0.25),
+				0 0 40px rgba(212, 175, 55, 1);
 		}
 		100% {
-			box-shadow: 0 0 0 0 rgba(212,175,55,0.0), 0 0 10px rgba(212,175,55,0.2);
+			box-shadow:
+				0 0 0 0 rgba(212, 175, 55, 0),
+				0 0 10px rgba(212, 175, 55, 0.2);
 		}
 	}
 
@@ -151,7 +158,9 @@
 		   red so urgency can be distinguished from ordinary turn ownership. */
 		/* above the background and overlay but below the content (content uses z-index:10) */
 		z-index: 20;
-		box-shadow: 0 0 0 4px rgba(255,0,0,0.2), 0 0 30px rgba(255,0,0,0.4);
+		box-shadow:
+			0 0 0 4px rgba(255, 0, 0, 0.2),
+			0 0 30px rgba(255, 0, 0, 0.4);
 		animation: player-glow-timer-over 1s ease-in-out infinite;
 		/* keep rounded corners consistent with .rounded-2xl */
 		border-radius: 1rem;
@@ -159,17 +168,24 @@
 
 	@keyframes player-glow-timer-over {
 		0% {
-			box-shadow: 0 0 0 0 rgba(255,0,0,0.0), 0 0 10px rgba(255,0,0,0.2);
+			box-shadow:
+				0 0 0 0 rgba(255, 0, 0, 0),
+				0 0 10px rgba(255, 0, 0, 0.2);
 		}
 		50% {
-			box-shadow: 0 0 0 6px rgba(255,0,0,0.25), 0 0 40px rgba(255,0,0,1.0);
+			box-shadow:
+				0 0 0 6px rgba(255, 0, 0, 0.25),
+				0 0 40px rgba(255, 0, 0, 1);
 		}
 		100% {
-			box-shadow: 0 0 0 0 rgba(255,0,0,0.0), 0 0 10px rgba(255,0,0,0.2);
+			box-shadow:
+				0 0 0 0 rgba(255, 0, 0, 0),
+				0 0 10px rgba(255, 0, 0, 0.2);
 		}
 	}
 
-	.bg-rotated, .bg-rotated-horizontal {
+	.bg-rotated,
+	.bg-rotated-horizontal {
 		position: relative;
 		overflow: hidden;
 		border-radius: inherit;
@@ -180,8 +196,10 @@
 	}
 
 	/* Pseudo-élément plus grand pour couvrir correctement après rotation */
-	.bg-rotated::before, .bg-rotated::after,
-	.bg-rotated-horizontal::before, .bg-rotated-horizontal::after {
+	.bg-rotated::before,
+	.bg-rotated::after,
+	.bg-rotated-horizontal::before,
+	.bg-rotated-horizontal::after {
 		/*
 			Backgrounds are rendered on pseudo-elements so artwork can rotate independently
 			of interactive content. This avoids transform side effects on hit-testing.
@@ -301,7 +319,8 @@
 	}
 
 	/* Overlay qui apparaît au-dessus du background (non interactif) */
-	.bg-rotated-overlay, .bg-rotated-horizontal-overlay {
+	.bg-rotated-overlay,
+	.bg-rotated-horizontal-overlay {
 		/*
 			Overlay sits above artwork but below controls. Keeping it non-interactive prevents
 			accidental tap blocking while still allowing dynamic visual emphasis.
@@ -321,8 +340,10 @@
 	}
 
 	/* Prevent default mobile tap highlight (white flash) inside rotated backgrounds */
-	.bg-rotated, .bg-rotated *,
-	.bg-rotated-horizontal, .bg-rotated-horizontal * {
+	.bg-rotated,
+	.bg-rotated *,
+	.bg-rotated-horizontal,
+	.bg-rotated-horizontal * {
 		-webkit-tap-highlight-color: transparent;
 		-webkit-touch-callout: none;
 		-touch-action: manipulation;
@@ -349,25 +370,32 @@
 	}
 
 	/* overlay moins opaque (0.70) lorsqu'on met en avant */
-	.bg-rotated-overlay.highlight, .bg-rotated-horizontal-overlay.highlight {
+	.bg-rotated-overlay.highlight,
+	.bg-rotated-horizontal-overlay.highlight {
 		opacity: 0.7;
 	}
 
 	/* FIXME: this still does NOT work! */
 	/* état mort : voile gris clair au-dessus du fond sans masquer le contenu */
-	.bg-rotated-overlay.dead, .bg-rotated-horizontal-overlay.dead {
+	.bg-rotated-overlay.dead,
+	.bg-rotated-horizontal-overlay.dead {
 		/* Keep the veil above the artwork layer but still below the content layer. */
 		z-index: 15;
-		background:
-			radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.14) 42%, rgba(255, 255, 255, 0.04) 76%),
-			linear-gradient(160deg, rgba(240, 240, 240, 0.52) 0%, rgba(214, 214, 214, 0.40) 100%);
+		background: radial-gradient(
+				circle at 20% 18%,
+				rgba(255, 255, 255, 0.28) 0%,
+				rgba(255, 255, 255, 0.14) 42%,
+				rgba(255, 255, 255, 0.04) 76%
+			),
+			linear-gradient(160deg, rgba(240, 240, 240, 0.52) 0%, rgba(214, 214, 214, 0.4) 100%);
 		opacity: 0.88;
 		mix-blend-mode: normal;
 		backdrop-filter: saturate(0.75) brightness(1.08);
 	}
 
 	/* Assurer que le contenu reste au-dessus du background */
-	.bg-rotated > *, .bg-rotated-horizontal > * {
+	.bg-rotated > *,
+	.bg-rotated-horizontal > * {
 		position: relative;
 		z-index: 50;
 	}
@@ -425,11 +453,21 @@
 
 	/* The dice-rolling animation is a simple rotation with some scaling to give a dynamic effect. */
 	@keyframes dice-rotate {
-		0% { transform: rotate(0deg) scale(1); }
-		25% { transform: rotate(40deg) scale(1.05); }
-		50% { transform: rotate(-40deg) scale(0.93); }
-		75% { transform: rotate(20deg) scale(1.05); }
-		100% { transform: rotate(0deg) scale(1); }
+		0% {
+			transform: rotate(0deg) scale(1);
+		}
+		25% {
+			transform: rotate(40deg) scale(1.05);
+		}
+		50% {
+			transform: rotate(-40deg) scale(0.93);
+		}
+		75% {
+			transform: rotate(20deg) scale(1.05);
+		}
+		100% {
+			transform: rotate(0deg) scale(1);
+		}
 	}
 	.dice-rolling {
 		display: inline-block;
@@ -438,15 +476,23 @@
 		animation-duration: var(--dice-rolling-duration, 2000ms);
 	}
 	@keyframes final-pop {
-		0% { transform: scale(0.96); }
-		60% { transform: scale(1.08); }
-		100% { transform: scale(1); }
+		0% {
+			transform: scale(0.96);
+		}
+		60% {
+			transform: scale(1.08);
+		}
+		100% {
+			transform: scale(1);
+		}
 	}
 	.dice-final {
 		color: #ffd700 !important;
-		text-shadow: 0 0 10px rgba(255,215,0,0.9) !important;
+		text-shadow: 0 0 10px rgba(255, 215, 0, 0.9) !important;
 		animation: final-pop 260ms ease forwards;
-		transition: color 200ms ease, text-shadow 200ms ease;
+		transition:
+			color 200ms ease,
+			text-shadow 200ms ease;
 	}
 
 	/* The animation for the turn counter badge */
@@ -513,7 +559,7 @@
 		align-items: center;
 		justify-content: left;
 		font-size: 1rem;
-		background: rgba(9, 11, 20, 0.20);
+		background: rgba(9, 11, 20, 0.2);
 		color: #a0a0a0;
 		border-radius: 0.65rem;
 		text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
@@ -530,30 +576,44 @@
 
 	@keyframes minute-glow-positive {
 		0% {
-			box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05), 0 0 0 rgba(16, 185, 129, 0);
+			box-shadow:
+				inset 0 0 12px rgba(255, 255, 255, 0.05),
+				0 0 0 rgba(16, 185, 129, 0);
 			transform: scale(1);
 		}
 		25% {
-			box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.08), 0 0 18px rgba(16, 185, 129, 0.9), 0 0 30px rgba(16, 185, 129, 0.45);
+			box-shadow:
+				inset 0 0 12px rgba(255, 255, 255, 0.08),
+				0 0 18px rgba(16, 185, 129, 0.9),
+				0 0 30px rgba(16, 185, 129, 0.45);
 			transform: scale(1.05);
 		}
 		100% {
-			box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05), 0 0 0 rgba(16, 185, 129, 0);
+			box-shadow:
+				inset 0 0 12px rgba(255, 255, 255, 0.05),
+				0 0 0 rgba(16, 185, 129, 0);
 			transform: scale(1);
 		}
 	}
 
 	@keyframes minute-glow-negative {
 		0% {
-			box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05), 0 0 0 rgba(127, 29, 29, 0);
+			box-shadow:
+				inset 0 0 12px rgba(255, 255, 255, 0.05),
+				0 0 0 rgba(127, 29, 29, 0);
 			transform: scale(1);
 		}
 		25% {
-			box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.08), 0 0 18px rgba(127, 29, 29, 0.95), 0 0 34px rgba(127, 29, 29, 0.6);
+			box-shadow:
+				inset 0 0 12px rgba(255, 255, 255, 0.08),
+				0 0 18px rgba(127, 29, 29, 0.95),
+				0 0 34px rgba(127, 29, 29, 0.6);
 			transform: scale(1.05);
 		}
 		100% {
-			box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05), 0 0 0 rgba(127, 29, 29, 0);
+			box-shadow:
+				inset 0 0 12px rgba(255, 255, 255, 0.05),
+				0 0 0 rgba(127, 29, 29, 0);
 			transform: scale(1);
 		}
 	}
@@ -584,7 +644,7 @@
 	.old-score {
 		position: relative;
 		display: inline-block;
-		font-size: 1.0rem;
+		font-size: 1rem;
 		opacity: 0.95;
 		text-decoration-line: line-through;
 		text-decoration-color: transparent;

@@ -45,7 +45,7 @@ The latest stable release is here: <https://github.com/Naereen/My-Android-app-to
 The apk file is named [`naereen-mtg-life-counter-VERSION.apk`](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.12.20/naereen-mtg-life-counter-v0.4.12.20.apk). You can download it and install it on your Android device.
 It is [now](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/issues/22) automatically built at every release (not every commit), and you can find it in the "Assets" section of [the release page](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/latest).
 
-==> 🤖 [naereen-mtg-life-counter-v0.4.12.20.apk](<https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.12.20/naereen-mtg-life-counter-v0.4.12.20.apk>) 🤖 <==
+==> 🤖 [naereen-mtg-life-counter-v0.4.12.20.apk](https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/releases/download/v0.4.12.20/naereen-mtg-life-counter-v0.4.12.20.apk) 🤖 <==
 
 > Note: that you may need to allow installation from unknown sources in your device settings.
 

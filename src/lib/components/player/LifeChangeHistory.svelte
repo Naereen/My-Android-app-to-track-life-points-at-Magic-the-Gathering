@@ -146,7 +146,10 @@
 			{#if entry.delta !== 0}
 				<div class="history-row">
 					<span class="old-score">{entry.oldScore}</span>
-					<span class="delta" class:delta-positive={entry.delta > 0} class:delta-negative={entry.delta < 0}
+					<span
+						class="delta"
+						class:delta-positive={entry.delta > 0}
+						class:delta-negative={entry.delta < 0}
 						>{entry.delta > 0 ? `+${entry.delta}` : `${entry.delta}`}</span
 					>
 				</div>

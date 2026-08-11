@@ -174,7 +174,11 @@
 		rollingMs = 0;
 	}
 
-	$: if ($randomizerModalData.isOpen && $randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent') {
+	$: if (
+		$randomizerModalData.isOpen &&
+		$randomizerModalData.type !== 'randomPlayer' &&
+		$randomizerModalData.type !== 'randomOpponent'
+	) {
 		// Re-entering the modal should restart the visual suspense effect from a clean state.
 		// When modal opens for a die, start the rolling animation
 		startRollAnimation();
@@ -206,21 +210,23 @@
 	<div
 		on:click|stopPropagation
 		class="bg-[#2d2f30] opacity-100 rounded-[2.5rem] flex justify-center items-center"
-		class:w-40={$randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent'}
-		class:h-40={$randomizerModalData.type !== 'randomPlayer' && $randomizerModalData.type !== 'randomOpponent'}
-		class:w-80={$randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
-		class:h-60={$randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
+		class:w-40={$randomizerModalData.type !== 'randomPlayer' &&
+			$randomizerModalData.type !== 'randomOpponent'}
+		class:h-40={$randomizerModalData.type !== 'randomPlayer' &&
+			$randomizerModalData.type !== 'randomOpponent'}
+		class:w-80={$randomizerModalData.type === 'randomPlayer' ||
+			$randomizerModalData.type === 'randomOpponent'}
+		class:h-60={$randomizerModalData.type === 'randomPlayer' ||
+			$randomizerModalData.type === 'randomOpponent'}
 		role="button"
 		on:keydown={() => null}
 		tabindex="0"
 		style="background-image: url({$randomizerModalData.backgroundImage}); background-size: cover; background-position: center;"
 	>
 		<!-- FIXME: this style above should also include the backgroundGratient if the player has no backgroundImage but has an active backgroundGradient! -->
-		<div
-			class="flex flex-col justify-center items-center"
-		>
+		<div class="flex flex-col justify-center items-center">
 			{#if $randomizerModalData.type === 'randomPlayer' || $randomizerModalData.type === 'randomOpponent'}
-				<div class="flex flex-col items-center p-4" >
+				<div class="flex flex-col items-center p-4">
 					<span class="text-white text-5xl font-bold text-center mt-24 mb-0 beleren">
 						<!-- Show the commanderDamage icon (one of the six set icons showing a random weapon) -->
 						<!-- {#if $randomizerModalData.playerId !== null}
@@ -236,12 +242,12 @@
 					{#if $randomizerModalData.type === 'custom'}
 						<div class="grid grid-cols-1 items-center justify-items-center">
 							<div class="text-large text-white relative -mt-8">
-								{ $_('sided_die_before') }
-								{ $appSettings.customRandomNumber || 0}
-								{ $_('sided_die') }
+								{$_('sided_die_before')}
+								{$appSettings.customRandomNumber || 0}
+								{$_('sided_die')}
 							</div>
 							<div class="text-5xl text-white mt-6 relative -bottom-2">
-								{ $randomizerModalData.result}
+								{$randomizerModalData.result}
 							</div>
 						</div>
 					{:else if $randomizerModalData.type === 'dplanar'}
@@ -266,11 +272,11 @@
 							</div>
 							<div class="text-white text-sm text-center">
 								{#if displayResult === 1}
-									{ $_('planar_result_planeswalk') }
+									{$_('planar_result_planeswalk')}
 								{:else if displayResult === 2}
-									{ $_('planar_result_chaos') }
+									{$_('planar_result_chaos')}
 								{:else}
-									{ $_('planar_result_blank') }
+									{$_('planar_result_blank')}
 								{/if}
 							</div>
 						</div>
@@ -278,7 +284,9 @@
 						<i
 							class="{diceClass} text-white"
 							class:dice-rolling={rolling}
-							class:dice-final={!rolling && displayResult > 0 && $randomizerModalData.type !== 'custom'}
+							class:dice-final={!rolling &&
+								displayResult > 0 &&
+								$randomizerModalData.type !== 'custom'}
 							style="font-size: {iconSize}; --dice-rolling-duration: {rollingMs}ms;"
 						></i>
 					{/if}

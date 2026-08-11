@@ -25,22 +25,22 @@
 	</div>
 
 	{#if !$appState.isMenuOpen}
-	<div
-		class="pt-1 flex gap-2 bg-black sticky top-0"
-		class:h-[24%]={!$appState.isMenuOpen}
-		class:pt-2={$appState.isMenuOpen}
-	>
-        <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-			<DraggablePlayerSlot className="w-full h-full" seatId={3}>
-				<PlayerHorizontal orientation="right" layout="one-two-one" id={3} />
-			</DraggablePlayerSlot>
-        </div>
-        <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-			<DraggablePlayerSlot className="w-full h-full" seatId={5}>
-				<PlayerHorizontal orientation="left" layout="one-two-one" id={5} />
-			</DraggablePlayerSlot>
+		<div
+			class="pt-1 flex gap-2 bg-black sticky top-0"
+			class:h-[24%]={!$appState.isMenuOpen}
+			class:pt-2={$appState.isMenuOpen}
+		>
+			<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
+				<DraggablePlayerSlot className="w-full h-full" seatId={3}>
+					<PlayerHorizontal orientation="right" layout="one-two-one" id={3} />
+				</DraggablePlayerSlot>
+			</div>
+			<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
+				<DraggablePlayerSlot className="w-full h-full" seatId={5}>
+					<PlayerHorizontal orientation="left" layout="one-two-one" id={5} />
+				</DraggablePlayerSlot>
+			</div>
 		</div>
-	</div>
 	{/if}
 
 	<div class="flex-grow">
@@ -48,22 +48,22 @@
 	</div>
 
 	{#if !$appState.isMenuOpen}
-	<div
-		class="pt-1 flex gap-2 bg-black sticky top-0 mb-2"
-		class:h-[24%]={!$appState.isMenuOpen}
-		class:pt-2={$appState.isMenuOpen}
-	>
-        <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-			<DraggablePlayerSlot className="w-full h-full" seatId={2}>
-				<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
-			</DraggablePlayerSlot>
-        </div>
-        <div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
-			<DraggablePlayerSlot className="w-full h-full" seatId={6}>
-				<PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
-			</DraggablePlayerSlot>
-        </div>
-	</div>
+		<div
+			class="pt-1 flex gap-2 bg-black sticky top-0 mb-2"
+			class:h-[24%]={!$appState.isMenuOpen}
+			class:pt-2={$appState.isMenuOpen}
+		>
+			<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
+				<DraggablePlayerSlot className="w-full h-full" seatId={2}>
+					<PlayerHorizontal orientation="right" layout="one-two-one" id={2} />
+				</DraggablePlayerSlot>
+			</div>
+			<div class="w-1/2" class:h-full={!$appState.isMenuOpen}>
+				<DraggablePlayerSlot className="w-full h-full" seatId={6}>
+					<PlayerHorizontal orientation="left" layout="one-two-one" id={6} />
+				</DraggablePlayerSlot>
+			</div>
+		</div>
 	{/if}
 
 	<div

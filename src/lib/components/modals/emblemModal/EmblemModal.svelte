@@ -10,8 +10,6 @@
 		getDungeonMeeplePosition,
 		type DungeonMeeplePosition,
 		forceDungeonMeeplesRedraw
-
-
 	} from '$lib/store/emblem';
 	import { LIFE_HISTORY_CHART_COLORS } from '$lib/store/lifeHistory';
 	import { playGameplaySound } from '$lib/utils/gameplaySound';
@@ -34,7 +32,7 @@
 	$: currentFace = faces[currentFaceIndex] ?? null;
 	$: activePlayers = ($players ?? []).slice(0, $appSettings.playerCount);
 	$: isDungeonCard = Boolean(selected?.faces?.some((face) => /dungeon/i.test(face.typeLine ?? '')));
-	$: selectedDungeonId = isDungeonCard ? selected?.id ?? null : null;
+	$: selectedDungeonId = isDungeonCard ? (selected?.id ?? null) : null;
 	$: selectedDungeonMeeples = selectedDungeonId
 		? ($emblemState.dungeonMeeples?.[selectedDungeonId] ?? {})
 		: {};
@@ -105,7 +103,10 @@
 	 * @returns {DungeonMeeplePosition} Current preview or stored position.
 	 */
 	$: getMeeplePosition = (playerId: number, index: number): DungeonMeeplePosition => {
-		return getDungeonMeeplePosition($emblemState, selectedDungeonId, playerId) ?? getDefaultMeeplePosition(index, activePlayers.length);
+		return (
+			getDungeonMeeplePosition($emblemState, selectedDungeonId, playerId) ??
+			getDefaultMeeplePosition(index, activePlayers.length)
+		);
 	};
 
 	const hasStoredMeeplePosition = (playerId: number) => {
@@ -161,7 +162,11 @@
 	const resetMeeplesToDefault = () => {
 		if (!selectedDungeonId) return;
 		activePlayers.forEach((player, index) => {
-			setDungeonMeeplePosition(selectedDungeonId, player.id, getDefaultMeeplePosition(index, activePlayers.length));
+			setDungeonMeeplePosition(
+				selectedDungeonId,
+				player.id,
+				getDefaultMeeplePosition(index, activePlayers.length)
+			);
 		});
 		activeDungeonDragPlayerId = null;
 		activeDungeonDragPosition = null;
@@ -243,18 +248,27 @@
 		}
 	};
 
-	const handleMeepleTouchStart = (playerId: number, event: CustomEvent<{ x: number; y: number }>) => {
-		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number') return;
+	const handleMeepleTouchStart = (
+		playerId: number,
+		event: CustomEvent<{ x: number; y: number }>
+	) => {
+		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number')
+			return;
 		beginMeepleDrag(playerId, event.detail.x, event.detail.y);
 	};
 
-	const handleMeepleTouchMove = (playerId: number, event: CustomEvent<{ x: number; y: number }>) => {
-		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number') return;
+	const handleMeepleTouchMove = (
+		playerId: number,
+		event: CustomEvent<{ x: number; y: number }>
+	) => {
+		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number')
+			return;
 		updateMeepleDrag(playerId, event.detail.x, event.detail.y);
 	};
 
 	const handleMeepleTouchEnd = (playerId: number, event: CustomEvent<{ x: number; y: number }>) => {
-		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number') return;
+		if (!event.detail || typeof event.detail.x !== 'number' || typeof event.detail.y !== 'number')
+			return;
 		finishMeepleDrag(playerId, event.detail.x, event.detail.y);
 	};
 
@@ -290,9 +304,7 @@
 	};
 </script>
 
-<div
-	class="bg-black/80 absolute w-full h-full top-0 left-0 flex justify-center items-center z-50"
->
+<div class="bg-black/80 absolute w-full h-full top-0 left-0 flex justify-center items-center z-50">
 	<div
 		class="relative bg-[#2d2f30] rounded-[1.75rem] w-[94vw] max-h-[94vh] min-h-[84vh] p-4 sm:p-5 flex flex-col items-center"
 		role="dialog"
@@ -326,7 +338,8 @@
 					<div class="text-xs text-gray-300">{selected.set_name}</div>
 				{/if}
 				<div class="text-xs text-gray-400 mt-1">
-					{$_('emblem_face_of')} {currentFaceIndex + 1}/{faces.length}
+					{$_('emblem_face_of')}
+					{currentFaceIndex + 1}/{faces.length}
 				</div>
 			</div>
 
@@ -358,7 +371,13 @@
 											draggable="false"
 											class="meeple-marker"
 											class:meeple-marker--new={isUnplacedMeeple}
-											use:touchDragMeeple={{ handle: '.meeple-handle', longPressMs: 240, ghost: true, ghostOpacity: 0.9, ghostScale: 1.08 }}
+											use:touchDragMeeple={{
+												handle: '.meeple-handle',
+												longPressMs: 240,
+												ghost: true,
+												ghostOpacity: 0.9,
+												ghostScale: 1.08
+											}}
 											on:click|stopPropagation={swallowClick}
 											on:dragstart={buildMeepleTouchStartHandler(player.id)}
 											on:dragover={buildMeepleTouchMoveHandler(player.id)}
@@ -366,16 +385,41 @@
 											aria-label={player.playerName}
 											title={player.playerName}
 										>
-											<svg viewBox="0 0 80 80" class="meeple-handle h-14 w-14 overflow-visible sm:h-16 sm:w-16" aria-hidden="true">
+											<svg
+												viewBox="0 0 80 80"
+												class="meeple-handle h-14 w-14 overflow-visible sm:h-16 sm:w-16"
+												aria-hidden="true"
+											>
 												<g transform="translate(40 40)">
 													{#if index % 8 === 0}
-														<circle r="28" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" />
+														<circle
+															r="28"
+															fill={getMarkerColor(player.color, index)}
+															stroke={markerStroke}
+															stroke-width="3.2"
+														/>
 													{:else if index % 8 === 1}
-														<rect x="-28" y="-28" width="56" height="56" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" rx="8" />
+														<rect
+															x="-28"
+															y="-28"
+															width="56"
+															height="56"
+															fill={getMarkerColor(player.color, index)}
+															stroke={markerStroke}
+															stroke-width="3.2"
+															rx="8"
+														/>
 													{:else}
-														<polygon points={markerPolygonPoints(index, 28)} fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="3.2" />
+														<polygon
+															points={markerPolygonPoints(index, 28)}
+															fill={getMarkerColor(player.color, index)}
+															stroke={markerStroke}
+															stroke-width="3.2"
+														/>
 													{/if}
-													<text x="0" y="11" text-anchor="middle" class="meeple-number">{index + 1}</text>
+													<text x="0" y="11" text-anchor="middle" class="meeple-number"
+														>{index + 1}</text
+													>
 												</g>
 											</svg>
 										</button>
@@ -386,10 +430,11 @@
 					</div>
 
 					{#if selectedDungeonId && activePlayers.length > 0}
-						<div class="mt-1 w-full rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-center text-[11px] leading-snug text-gray-200">
+						<div
+							class="mt-1 w-full rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-center text-[11px] leading-snug text-gray-200"
+						>
 							{$_('emblem_dungeon_drag_hint')}
 							<!-- TODO: add a full legend showing which player is using which meeple marker, shape and color. -->
-							 
 						</div>
 					{/if}
 				</div>

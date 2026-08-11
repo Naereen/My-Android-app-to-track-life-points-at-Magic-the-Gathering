@@ -13,6 +13,8 @@
 		setShowEmblemMenu,
 		setShowVanguardMenu,
 		setShowTreacheryMenu,
+		setShowBountyMenu,
+		setBountyModeEnabled,
 		setShowLifeChangeHistory,
 		setVanguardModeEnabled,
 		setTreacheryModeEnabled,
@@ -29,9 +31,9 @@
 		setAppLocale
 	} from '$lib/store/appSettings';
 	import {
-	    setTurnTimerEnabled,
-	    setTurnTimerDuration,
-	    setTurnTimerSound,
+		setTurnTimerEnabled,
+		setTurnTimerDuration,
+		setTurnTimerSound,
 		setGlobalGameTimerEnabled,
 		setGlobalGameTimerDuration
 	} from '$lib/store/appSettings';
@@ -70,9 +72,15 @@
 		const confirmReset = await showConfirm($_('window_confirm_reset_local_storage'));
 		if (!confirmReset) return;
 		try {
-			['appSettings', 'resourceCounter', 'appState', 'players', 'emblemState', 'vanguardState', 'gameHistory'].forEach((k) =>
-				localStorage.removeItem(k)
-			);
+			[
+				'appSettings',
+				'resourceCounter',
+				'appState',
+				'players',
+				'emblemState',
+				'vanguardState',
+				'gameHistory'
+			].forEach((k) => localStorage.removeItem(k));
 		} catch (e) {
 			// ignore
 		}
@@ -157,7 +165,9 @@
 	const setLifeTotal = async (startingLifeTotal: number) => {
 		// Changing starting life resets the board because most game-state calculations derive
 		// from that baseline and would otherwise remain inconsistent.
-		const confirm = await showConfirm( `${ $_('window_confirm_change_life_total').replace('{lifeTotal}', startingLifeTotal.toString() ) }`);
+		const confirm = await showConfirm(
+			`${$_('window_confirm_change_life_total').replace('{lifeTotal}', startingLifeTotal.toString())}`
+		);
 		if (confirm) {
 			const nextLife = clampCustomStartingLifeTotal(startingLifeTotal);
 			setStartingLifeTotal(nextLife);
@@ -178,7 +188,9 @@
 	const setNewPlayerCount = async (playerCount: number) => {
 		// Player count is one of the most structurally important settings, so the app asks for
 		// confirmation before reshaping seat layout and dependent defaults.
-		const confirm = await showConfirm($_('window_confirm_change_player_count').replace('{playerCount}', playerCount.toString()));
+		const confirm = await showConfirm(
+			$_('window_confirm_change_player_count').replace('{playerCount}', playerCount.toString())
+		);
 		if (confirm) {
 			setPlayerCount(playerCount);
 			toggleIsMenuOpen('');
@@ -474,6 +486,28 @@
 	};
 
 	/**
+	 * Persists Bounty menu visibility toggle.
+	 * @param {Event} e - Parameter used by handleShowBountyMenuChange.
+	 * @returns {unknown} Result produced by handleShowBountyMenuChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
+	const handleShowBountyMenuChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setShowBountyMenu(!!target.checked);
+	};
+
+	/**
+	 * Persists Bounty mode activation toggle.
+	 * @param {Event} e - Parameter used by handleBountyModeEnabledChange.
+	 * @returns {unknown} Result produced by handleBountyModeEnabledChange.
+	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
+	 */
+	const handleBountyModeEnabledChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setBountyModeEnabled(!!target.checked);
+	};
+
+	/**
 	 * Persists Vanguard draft-three setup toggle.
 	 * @param {Event} e - Parameter used by handleVanguardDraftThreeChange.
 	 * @returns {unknown} Result produced by handleVanguardDraftThreeChange.
@@ -517,7 +551,6 @@
 		// input is minutes; enforce integer between 1 and 10
 		let minutes = Math.round(Number(target.value) || 1);
 		minutes = Math.max(1, Math.min(10, minutes));
-
 
 		if (typeof document !== 'undefined') {
 			const ae = document.activeElement as HTMLElement | null;
@@ -669,9 +702,10 @@
 			relayHealthMessage = '';
 		} catch (error) {
 			relayHealthStatus = 'ko';
-			relayHealthMessage = (error as Error).name === 'AbortError'
-				? $_('stream_mode_status_timeout') || 'Connection timeout'
-				: $_('stream_mode_status_unreachable') || 'Server unreachable';
+			relayHealthMessage =
+				(error as Error).name === 'AbortError'
+					? $_('stream_mode_status_timeout') || 'Connection timeout'
+					: $_('stream_mode_status_unreachable') || 'Server unreachable';
 		} finally {
 			clearTimeout(timeoutId);
 		}
@@ -832,86 +866,89 @@
 				</div>
 			{/if}
 
-				{#if $appSettings.playerCount === 6}
-					<div class="mt-4">
-						<div class="text-lg mb-2">{$_('choose_6players_layout')}</div>
-						<div class="flex gap-3 justify-center">
-							<button
-								class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-								class:border-blue-400={$appSettings.sixPlayerLayout === 'one'}
-								on:click={() => setSixPlayerLayout('one')}
-							>
-								<div class="w-full h-full grid grid-rows-3 grid-cols-2 gap-1">
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700" />
-								</div>
-								<div class="mt-1 text-sm">3 x 2</div>
-							</button>
-							<button
-								class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-								class:border-blue-400={$appSettings.sixPlayerLayout === 'two'}
-								on:click={() => setSixPlayerLayout('two')}
-							>
-								<div class="w-full h-full grid grid-rows-4 grid-cols-2 gap-1">
-									<div class="bg-gray-700 col-span-2" />
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700" />
-									<div class="bg-gray-700 col-span-2" />
-								</div>
-								<div class="mt-1 text-sm">1 / 2 / 2 / 1</div>
-							</button>
-						</div>
+			{#if $appSettings.playerCount === 6}
+				<div class="mt-4">
+					<div class="text-lg mb-2">{$_('choose_6players_layout')}</div>
+					<div class="flex gap-3 justify-center">
+						<button
+							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+							class:border-blue-400={$appSettings.sixPlayerLayout === 'one'}
+							on:click={() => setSixPlayerLayout('one')}
+						>
+							<div class="w-full h-full grid grid-rows-3 grid-cols-2 gap-1">
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+							</div>
+							<div class="mt-1 text-sm">3 x 2</div>
+						</button>
+						<button
+							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+							class:border-blue-400={$appSettings.sixPlayerLayout === 'two'}
+							on:click={() => setSixPlayerLayout('two')}
+						>
+							<div class="w-full h-full grid grid-rows-4 grid-cols-2 gap-1">
+								<div class="bg-gray-700 col-span-2" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700 col-span-2" />
+							</div>
+							<div class="mt-1 text-sm">1 / 2 / 2 / 1</div>
+						</button>
 					</div>
-				{/if}
+				</div>
+			{/if}
 
-				{#if $appSettings.playerCount === 8}
-					<div class="mt-4">
-						<div class="text-lg mb-2">{$_('choose_8players_layout')}</div>
-						<div class="flex gap-3 justify-center">
-							<button
-								class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-								class:border-blue-400={$appSettings.eightPlayerLayout === 'classic'}
-								on:click={() => setEightPlayerLayout('classic')}
-							>
-								<div class="w-full h-full grid grid-rows-5 grid-cols-2 gap-1">
-									<div class="bg-gray-700 col-span-2" />
-									<div class="bg-gray-700" /> <div class="bg-gray-700" />
-									<div class="bg-gray-700" /> <div class="bg-gray-700" />
-									<div class="bg-gray-700" /> <div class="bg-gray-700" />
-									<div class="bg-gray-700 col-span-2" />
+			{#if $appSettings.playerCount === 8}
+				<div class="mt-4">
+					<div class="text-lg mb-2">{$_('choose_8players_layout')}</div>
+					<div class="flex gap-3 justify-center">
+						<button
+							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+							class:border-blue-400={$appSettings.eightPlayerLayout === 'classic'}
+							on:click={() => setEightPlayerLayout('classic')}
+						>
+							<div class="w-full h-full grid grid-rows-5 grid-cols-2 gap-1">
+								<div class="bg-gray-700 col-span-2" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700" />
+								<div class="bg-gray-700 col-span-2" />
+							</div>
+							<div class="mt-1 text-sm">1 / 2 / 2 / 2 / 1</div>
+						</button>
+						<button
+							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+							class:border-blue-400={$appSettings.eightPlayerLayout === 'sides'}
+							on:click={() => setEightPlayerLayout('sides')}
+						>
+							<div class="w-full h-full flex gap-1">
+								<div class="flex w-1/2 flex-col gap-1">
+									<div class="bg-gray-700 h-1/4" />
+									<div class="bg-gray-700 h-1/4" />
+									<div class="bg-gray-700 h-1/4" />
+									<div class="bg-gray-700 h-1/4" />
 								</div>
-								<div class="mt-1 text-sm">1 / 2 / 2 / 2 / 1</div>
-							</button>
-							<button
-								class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-								class:border-blue-400={$appSettings.eightPlayerLayout === 'sides'}
-								on:click={() => setEightPlayerLayout('sides')}
-							>
-								<div class="w-full h-full flex gap-1">
-									<div class="flex w-1/2 flex-col gap-1">
-										<div class="bg-gray-700 h-1/4" />
-										<div class="bg-gray-700 h-1/4" />
-										<div class="bg-gray-700 h-1/4" />
-										<div class="bg-gray-700 h-1/4" />
-									</div>
-									<div class="flex w-1/2 flex-col gap-1">
-										<div class="bg-gray-700 h-1/4" />
-										<div class="bg-gray-700 h-1/4" />
-										<div class="bg-gray-700 h-1/4" />
-										<div class="bg-gray-700 h-1/4" />
-									</div>
+								<div class="flex w-1/2 flex-col gap-1">
+									<div class="bg-gray-700 h-1/4" />
+									<div class="bg-gray-700 h-1/4" />
+									<div class="bg-gray-700 h-1/4" />
+									<div class="bg-gray-700 h-1/4" />
 								</div>
-								<div class="mt-1 text-sm">4 | 4</div>
-							</button>
-						</div>
+							</div>
+							<div class="mt-1 text-sm">4 | 4</div>
+						</button>
 					</div>
-				{/if}
+				</div>
+			{/if}
 		</div>
 
 		<!-- Starting Life Total -->
@@ -969,9 +1006,11 @@
 					</div>
 					<div class="text-xs text-gray-400 mt-2">
 						{#if isCustomStartingLife()}
-							{$_('starting_life_current_custom') || 'Current starting life: custom'} {$appSettings.startingLifeTotal}
+							{$_('starting_life_current_custom') || 'Current starting life: custom'}
+							{$appSettings.startingLifeTotal}
 						{:else}
-							{$_('starting_life_current_preset') || 'Current starting life: preset'} {$appSettings.startingLifeTotal}
+							{$_('starting_life_current_preset') || 'Current starting life: preset'}
+							{$appSettings.startingLifeTotal}
 						{/if}
 					</div>
 				</div>
@@ -996,7 +1035,9 @@
 					on:change={handlePreventSleepChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('prevent_screen_sleep') || 'Prevent screen sleep'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('prevent_screen_sleep') || 'Prevent screen sleep'}</span
+				>
 			</label>
 		</div>
 		<div class="w-full flex justify-start mt-0 mb-0">
@@ -1010,7 +1051,9 @@
 					on:change={handleHapticsChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('haptic_feedback') || 'Enable haptic feedback'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('haptic_feedback') || 'Enable haptic feedback'}</span
+				>
 			</label>
 		</div>
 		<div class="w-full flex justify-start mt-0 mb-0">
@@ -1039,14 +1082,18 @@
 					on:change={handleShowLifeChangeHistoryChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_life_change_history') || 'Show life change history'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_life_change_history') || 'Show life change history'}</span
+				>
 			</label>
 		</div>
 
 		<!-- Main optional buttons -->
 		<div class="w-full flex justify-center mt-2 mb-0">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">{$_('main_optional_buttons_settings_title') || 'Main Optional Buttons'}</div>
+				<div class="text-2xl font-bold">
+					{$_('main_optional_buttons_settings_title') || 'Main Optional Buttons'}
+				</div>
 			</div>
 		</div>
 
@@ -1061,7 +1108,9 @@
 					on:change={handleShowNextButtonChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_next_player_button') || 'Show next-player button'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_next_player_button') || 'Show next-player button'}</span
+				>
 			</label>
 		</div>
 		<div class="w-full flex justify-start mt-0 mb-0">
@@ -1076,7 +1125,9 @@
 					class="h-5 w-5"
 					disabled={!$appSettings.showNextPlayerButton}
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('enable_current_player_glow') || 'Enable current player glow'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('enable_current_player_glow') || 'Enable current player glow'}</span
+				>
 			</label>
 		</div>
 
@@ -1091,7 +1142,9 @@
 					on:change={handleShowResourcesButtonChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_resources_button') || 'Show resources button'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_resources_button') || 'Show resources button'}</span
+				>
 			</label>
 		</div>
 
@@ -1106,7 +1159,9 @@
 					on:change={handleShowRandomizerButtonChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_randomizer_button') || 'Show randomizer button'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_randomizer_button') || 'Show randomizer button'}</span
+				>
 			</label>
 		</div>
 
@@ -1121,7 +1176,9 @@
 					on:change={handleShowEmblemMenuChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_emblem_menu_button') || 'Show emblem menu button'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_emblem_menu_button') || 'Show emblem menu button'}</span
+				>
 			</label>
 		</div>
 		<div class="w-full flex justify-start mt-0 mb-0">
@@ -1135,52 +1192,51 @@
 					on:change={handleShowGameHistoryMenuChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_game_history_menu_button') || 'Show game history menu button'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_game_history_menu_button') || 'Show game history menu button'}</span
+				>
 			</label>
 		</div>
 
 		<!-- EDH variants settings -->
 		<div class="w-full flex justify-center mt-2 mb-0">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">{$_('edh_variants_settings_title') || 'EDH Variants (experimental)'}</div>
+				<div class="text-2xl font-bold">
+					{$_('edh_variants_settings_title') || 'EDH Variants (experimental)'}
+				</div>
 			</div>
 		</div>
 
 		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
 					checked={$appSettings.showVanguardMenu}
 					on:change={handleShowVanguardMenuChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_vanguard_menu_button') || 'Show Vanguard menu button'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_vanguard_menu_button') || 'Show Vanguard menu button'}</span
+				>
 			</label>
 		</div>
 
 		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
 					checked={$appSettings.vanguardModeEnabled}
 					on:change={handleVanguardModeEnabledChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('vanguard_mode_enabled') || 'Enable Vanguard mode on new game'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('vanguard_mode_enabled') || 'Enable Vanguard mode on new game'}</span
+				>
 			</label>
 		</div>
 
 		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
 					checked={$appSettings.vanguardDraftThree}
@@ -1188,37 +1244,37 @@
 					class="h-5 w-5"
 					disabled={!$appSettings.vanguardModeEnabled}
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('vanguard_draft_three') || 'Variant: 3 Vanguard cards then keep one'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('vanguard_draft_three') || 'Variant: 3 Vanguard cards then keep one'}</span
+				>
 			</label>
 		</div>
 
 		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
 					checked={$appSettings.showTreacheryMenu}
 					on:change={handleShowTreacheryMenuChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('show_treachery_menu_button') || 'Show Treachery menu button'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_treachery_menu_button') || 'Show Treachery menu button'}</span
+				>
 			</label>
 		</div>
 
 		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
 					checked={$appSettings.treacheryModeEnabled}
 					on:change={handleTreacheryModeEnabledChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('treachery_mode_enabled') || 'Enable Treachery mode on new game'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('treachery_mode_enabled') || 'Enable Treachery mode on new game'}</span
+				>
 			</label>
 		</div>
 
@@ -1234,7 +1290,38 @@
 					class="h-5 w-5"
 					disabled={!$appSettings.treacheryModeEnabled}
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('shogun_variant_enabled') || 'Enable Shogun variant (simpler)'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('shogun_variant_enabled') || 'Enable Shogun variant (simpler)'}</span
+				>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+				<input
+					type="checkbox"
+					checked={$appSettings.showBountyMenu}
+					on:change={handleShowBountyMenuChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_bounty_menu_button') || '🎯 Show Bounty menu button'}</span
+				>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+				<input
+					type="checkbox"
+					checked={$appSettings.bountyModeEnabled}
+					on:change={handleBountyModeEnabledChange}
+					class="h-5 w-5"
+					disabled={!$appSettings.showBountyMenu}
+				/>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('bounty_mode_enabled') || 'Enable Bounty mode (Thunder Junction)'}</span
+				>
 			</label>
 		</div>
 
@@ -1246,10 +1333,7 @@
 		</div>
 
 		<div class="w-full flex text-left justify-start mt-0 mb-0">
-			<label
-				class="flex gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<div class="ml-2">
 					<div class="text-lg font-semibold">
 						<input
@@ -1260,18 +1344,20 @@
 						/>
 						{$_('global_game_timer_enabled') || 'Enable global game timer'}
 					</div>
-					<div class="text-sm text-gray-400">{$_('global_game_timer_enabled_help') || 'When enabled, a game-wide countdown appears in the center menu bar.'}</div>
+					<div class="text-sm text-gray-400">
+						{$_('global_game_timer_enabled_help') ||
+							'When enabled, a game-wide countdown appears in the center menu bar.'}
+					</div>
 				</div>
 			</label>
 		</div>
 
 		{#if $appSettings.globalGameTimerEnabled}
 			<div class="w-full flex justify-end mt-0 mb-0">
-				<label
-					class="flex gap-2 text-sm px-4 py-2 rounded-full"
-					style="min-width: 12rem;"
-				>
-					<span class="ml-2 text-lg font-semibold">{$_('global_game_timer_duration') || 'Global timer duration (minutes)'}</span>
+				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+					<span class="ml-2 text-lg font-semibold"
+						>{$_('global_game_timer_duration') || 'Global timer duration (minutes)'}</span
+					>
 					<input
 						type="number"
 						min="1"
@@ -1287,10 +1373,7 @@
 
 		<!-- Turn timer settings -->
 		<div class="w-full flex text-left justify-start mt-0 mb-0">
-			<label
-				class="flex gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<div class="ml-2">
 					<div class="text-lg font-semibold">
 						<input
@@ -1301,18 +1384,20 @@
 						/>
 						{$_('turn_timer_enabled') || 'Enable per-turn timer'}
 					</div>
-					<div class="text-sm text-gray-400">{$_('turn_timer_enabled_help') || 'When enabled, a per-turn countdown is shown for the active player.'}</div>
+					<div class="text-sm text-gray-400">
+						{$_('turn_timer_enabled_help') ||
+							'When enabled, a per-turn countdown is shown for the active player.'}
+					</div>
 				</div>
 			</label>
 		</div>
 
 		{#if $appSettings.turnTimerEnabled}
 			<div class="w-full flex justify-end mt-0 mb-0">
-				<label
-					class="flex gap-2 text-sm px-4 py-2 rounded-full"
-					style="min-width: 12rem;"
-				>
-					<span class="ml-2 text-lg font-semibold">{$_('turn_timer_duration') || 'Turn duration (minutes)'}</span>
+				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+					<span class="ml-2 text-lg font-semibold"
+						>{$_('turn_timer_duration') || 'Turn duration (minutes)'}</span
+					>
 					<input
 						type="number"
 						min="1"
@@ -1326,17 +1411,16 @@
 			</div>
 
 			<div class="w-full flex justify-center mt-0 mb-0">
-				<label
-					class="flex gap-2 text-sm px-4 py-2 rounded-full"
-					style="min-width: 12rem;"
-				>
+				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 					<input
 						type="checkbox"
 						checked={$appSettings.turnTimerSound}
 						on:change={handleTurnTimerSoundChange}
 						class="h-5 w-5"
 					/>
-					<span class="ml-2 text-lg font-semibold">{$_('turn_timer_sound') || 'Play sound on timeout'}</span>
+					<span class="ml-2 text-lg font-semibold"
+						>{$_('turn_timer_sound') || 'Play sound on timeout'}</span
+					>
 				</label>
 			</div>
 		{/if}
@@ -1358,7 +1442,9 @@
 					on:change={handleGlobalAllowChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('allow_negative_life_global') || 'Allow negative life (global)'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('allow_negative_life_global') || 'Allow negative life (global)'}</span
+				>
 			</label>
 		</div>
 
@@ -1419,7 +1505,8 @@
 					class="h-5 w-5"
 				/>
 				<span class="ml-2 text-lg font-semibold">
-					{$_('starting_player_probabilities_enable') || 'Enable custom probabilities for who starts'}
+					{$_('starting_player_probabilities_enable') ||
+						'Enable custom probabilities for who starts'}
 				</span>
 			</label>
 		</div>
@@ -1429,7 +1516,7 @@
 				<div class="text-sm text-gray-300 mb-2">
 					<p>
 						{$_('starting_player_probabilities_caption') ||
-						'This experimental option lets you customize who is more likely to start the game.'}
+							'This experimental option lets you customize who is more likely to start the game.'}
 					</p>
 				</div>
 			</div>
@@ -1445,13 +1532,16 @@
 			<div class="w-full px-6 mt-1 mb-2 text-left">
 				<div class="text-sm text-gray-300 mb-2">
 					<p>
-						{$_('starting_player_probabilities_help') || 'Values are treated as weights. They do not need to sum exactly to 100.'}
+						{$_('starting_player_probabilities_help') ||
+							'Values are treated as weights. They do not need to sum exactly to 100.'}
 					</p>
 				</div>
 			</div>
 			<div class="w-full px-6 mt-1 mb-2 text-left">
 				{#each Array.from({ length: $appSettings.playerCount }) as slot, index}
-					<div class="flex items-center justify-between gap-3 mb-2 bg-gray-800/70 rounded-xl px-3 py-2">
+					<div
+						class="flex items-center justify-between gap-3 mb-2 bg-gray-800/70 rounded-xl px-3 py-2"
+					>
 						<div class="text-base text-gray-100">
 							{$_('starting_player_probabilities_change_for') || 'Chance for'}
 							"{getDisplayedPlayerName(index)}"
@@ -1462,7 +1552,9 @@
 								min="0"
 								max="100"
 								step="1"
-								value={(() => Math.round(($appSettings.startingPlayerProbabilities?.[index] ?? 0) * 100) / 100)()}
+								value={(() =>
+									Math.round(($appSettings.startingPlayerProbabilities?.[index] ?? 0) * 100) /
+									100)()}
 								on:change={(e) => handleStartingPlayerProbabilityInput(index, e)}
 								class="bg-gray-600 w-20 h-8 rounded text-center text-lg"
 							/>
@@ -1471,7 +1563,9 @@
 					</div>
 				{/each}
 				<div class="text-xs text-gray-400 mt-1">
-					{$_('starting_player_probabilities_sum') || 'Current total'}: {Math.round(weightedStartSum * 100) / 100}%
+					{$_('starting_player_probabilities_sum') || 'Current total'}: {Math.round(
+						weightedStartSum * 100
+					) / 100}%
 				</div>
 			</div>
 		{/if}
@@ -1479,7 +1573,9 @@
 		<!-- Stream mode settings (LAN relay) -->
 		<div class="w-full flex justify-center mt-2 mb-0">
 			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">{$_('stream_mode_title') || 'Experimental Stream Mode (LAN relay)'}</div>
+				<div class="text-2xl font-bold">
+					{$_('stream_mode_title') || 'Experimental Stream Mode (LAN relay)'}
+				</div>
 			</div>
 		</div>
 		<div class="w-full flex justify-left mt-0 mb-0">
@@ -1493,59 +1589,65 @@
 					on:change={handleStreamModeChange}
 					class="h-5 w-5"
 				/>
-				<span class="ml-2 text-lg font-semibold">{$_('stream_mode_enable') || 'Enable stream mode'}</span>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('stream_mode_enable') || 'Enable stream mode'}</span
+				>
 			</label>
 		</div>
 		{#if $appSettings.isStreamMode}
-		<div class="w-full flex justify-start mt-0 mb-0 px-8">
-			<div style="min-width: 12rem; max-width: 32rem;" class="w-full">
-				<div class="text-sm text-gray-400 mb-1">{$_('stream_mode_help') || 'Use the local relay URL, e.g. http://192.168.1.113:8787'}</div>
-				<input
-					type="url"
-					value={$appSettings.remoteServerUrl}
-					on:change={handleStreamRemoteServerUrlChange}
-					placeholder={$_('stream_mode_server_url_placeholder') || 'http://192.168.1.113:8787'}
-					class="w-full bg-gray-700 text-white rounded px-3 py-2 outline-none border border-gray-500"
-				/>
-				<div class="text-sm mt-1">{$_('stream_mode_server_url') || 'Relay server URL'}</div>
-				<div class="mt-2 flex items-center gap-3">
-					<button
-						on:click={testRelayHealth}
-						class="px-3 py-1 rounded bg-gray-700 border border-gray-500"
-						disabled={relayHealthStatus === 'testing'}
-					>
-						{$_('stream_mode_test_button') || 'Test relay'}
-					</button>
-					<a
-						href={relayHealthUrl || '#'}
-						target="_blank"
-						rel="noreferrer"
-						class="px-3 py-1 rounded border border-gray-500"
-						class:text-blue-300={!!relayHealthUrl}
-						class:text-gray-500={!relayHealthUrl}
-						on:click={handleOpenRelayHealthClick}
-					>
-						{$_('stream_mode_open_health_link') || 'Open /health'}
-					</a>
-					<span
-						class:text-gray-400={relayHealthStatus === 'idle'}
-						class:text-yellow-300={relayHealthStatus === 'testing'}
-						class:text-green-300={relayHealthStatus === 'ok'}
-						class:text-red-300={relayHealthStatus === 'ko'}
-					>
-						{#if relayHealthStatus === 'testing'}
-							{$_('stream_mode_status_testing') || 'Testing...'}
-						{:else if relayHealthStatus === 'ok'}
-							{$_('stream_mode_status_ok') || 'Relay OK'}
-						{:else if relayHealthStatus === 'ko'}
-							{$_('stream_mode_status_ko') || 'Relay KO'}{relayHealthMessage ? ` (${relayHealthMessage})` : ''}
-						{:else}
-							{$_('stream_mode_status_idle') || 'Not tested'}
-						{/if}
-					</span>
+			<div class="w-full flex justify-start mt-0 mb-0 px-8">
+				<div style="min-width: 12rem; max-width: 32rem;" class="w-full">
+					<div class="text-sm text-gray-400 mb-1">
+						{$_('stream_mode_help') || 'Use the local relay URL, e.g. http://192.168.1.113:8787'}
+					</div>
+					<input
+						type="url"
+						value={$appSettings.remoteServerUrl}
+						on:change={handleStreamRemoteServerUrlChange}
+						placeholder={$_('stream_mode_server_url_placeholder') || 'http://192.168.1.113:8787'}
+						class="w-full bg-gray-700 text-white rounded px-3 py-2 outline-none border border-gray-500"
+					/>
+					<div class="text-sm mt-1">{$_('stream_mode_server_url') || 'Relay server URL'}</div>
+					<div class="mt-2 flex items-center gap-3">
+						<button
+							on:click={testRelayHealth}
+							class="px-3 py-1 rounded bg-gray-700 border border-gray-500"
+							disabled={relayHealthStatus === 'testing'}
+						>
+							{$_('stream_mode_test_button') || 'Test relay'}
+						</button>
+						<a
+							href={relayHealthUrl || '#'}
+							target="_blank"
+							rel="noreferrer"
+							class="px-3 py-1 rounded border border-gray-500"
+							class:text-blue-300={!!relayHealthUrl}
+							class:text-gray-500={!relayHealthUrl}
+							on:click={handleOpenRelayHealthClick}
+						>
+							{$_('stream_mode_open_health_link') || 'Open /health'}
+						</a>
+						<span
+							class:text-gray-400={relayHealthStatus === 'idle'}
+							class:text-yellow-300={relayHealthStatus === 'testing'}
+							class:text-green-300={relayHealthStatus === 'ok'}
+							class:text-red-300={relayHealthStatus === 'ko'}
+						>
+							{#if relayHealthStatus === 'testing'}
+								{$_('stream_mode_status_testing') || 'Testing...'}
+							{:else if relayHealthStatus === 'ok'}
+								{$_('stream_mode_status_ok') || 'Relay OK'}
+							{:else if relayHealthStatus === 'ko'}
+								{$_('stream_mode_status_ko') || 'Relay KO'}{relayHealthMessage
+									? ` (${relayHealthMessage})`
+									: ''}
+							{:else}
+								{$_('stream_mode_status_idle') || 'Not tested'}
+							{/if}
+						</span>
+					</div>
 				</div>
 			</div>
-		</div>
 		{/if}
 
 		<!-- Language selection -->
@@ -1560,7 +1662,8 @@
 							class:text-white={$appSettings.locale === lang.code}
 							on:click={() => handleChangeLocale(lang.code)}
 						>
-							{lang.emoji} {lang.label}
+							{lang.emoji}
+							{lang.label}
 						</button>
 					{/each}
 				</div>
@@ -1580,8 +1683,24 @@
 			<div class="text-base mb-1">
 				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.4.12'}
 			</div>
-			<div class="text-base mb-1">{$_('about_author')}: <a class="text-blue-400 underline text-base" href="https://github.com/Naereen" target="_blank" rel="noreferrer">Lilian Besson (Naereen)</a></div>
-			<div class="text-base mb-2">{$_('about_license')}: <a class="text-blue-400 underline text-base" href="https://naereen.mit-license.org" target="_blank" rel="noreferrer">MIT</a></div>
+			<div class="text-base mb-1">
+				{$_('about_author')}:
+				<a
+					class="text-blue-400 underline text-base"
+					href="https://github.com/Naereen"
+					target="_blank"
+					rel="noreferrer">Lilian Besson (Naereen)</a
+				>
+			</div>
+			<div class="text-base mb-2">
+				{$_('about_license')}:
+				<a
+					class="text-blue-400 underline text-base"
+					href="https://naereen.mit-license.org"
+					target="_blank"
+					rel="noreferrer">MIT</a
+				>
+			</div>
 			<div class="text-base mb-2">{$_('about_thanks')}</div>
 			<div class="flex justify-center gap-4 mt-2">
 				<a
@@ -1593,7 +1712,12 @@
 				<!-- TODO: Optional links: Play Store direct link -->
 				<!-- <a class="text-blue-400 underline text-base" href="#" on:click|preventDefault={() => null}>{ $_('about_playstore') }</a> -->
 				<!-- Additional links: Feedback form or feedback email -->
-				<a class="text-blue-400 underline text-base" href="mailto:naereen@crans.org?Subject=Feedback%20for%20Magic%20Life%20Points%20Tracker" target="_blank" rel="noreferrer">{ $_('about_feedback') }</a>
+				<a
+					class="text-blue-400 underline text-base"
+					href="mailto:naereen@crans.org?Subject=Feedback%20for%20Magic%20Life%20Points%20Tracker"
+					target="_blank"
+					rel="noreferrer">{$_('about_feedback')}</a
+				>
 			</div>
 		</div>
 	</div>

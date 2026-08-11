@@ -10,6 +10,7 @@ declare global {
 				| 'emblem'
 				| 'vanguard'
 				| 'treachery'
+				| 'bounty'
 				| 'history'
 				| '';
 		}

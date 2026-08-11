@@ -15,7 +15,7 @@ const config = {
 		// Utiliser des chemins relatifs pour permettre un déploiement dans n'importe quel sous-dossier
 		paths: {
 			relative: true
-		}		
+		}
 	}
 };
 

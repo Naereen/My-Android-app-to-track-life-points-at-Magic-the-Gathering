@@ -1,11 +1,7 @@
 <script lang="ts">
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
-	import {
-		assignRandomTreacheryForGame,
-		players,
-		setPlayerTreacherySeen
-	} from '$lib/store/player';
+	import { assignRandomTreacheryForGame, players, setPlayerTreacherySeen } from '$lib/store/player';
 	import { appSettings } from '$lib/store/appSettings';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
@@ -21,20 +17,23 @@
 
 	$: activePlayers = $players.slice(0, $appSettings.playerCount);
 	$: isShogunVariant = !!$appSettings.shogunVariantEnabled;
-	$: treacheryOfficialUrl = $appSettings.locale === 'fr'
-		? 'https://mtgtreachery.net/fr/'
-		: 'https://mtgtreachery.net/en/';
-	$: modeSettingsTitle = isShogunVariant ? $_('shogun_mode_settings_title') : $_('treachery_mode_settings_title');
+	$: treacheryOfficialUrl =
+		$appSettings.locale === 'fr' ? 'https://mtgtreachery.net/fr/' : 'https://mtgtreachery.net/en/';
+	$: modeSettingsTitle = isShogunVariant
+		? $_('shogun_mode_settings_title')
+		: $_('treachery_mode_settings_title');
 	$: modeExplanation = isShogunVariant ? $_('shogun_explanation') : $_('treachery_explanation');
 	$: modeRerollLabel = isShogunVariant ? $_('shogun_reroll_all') : $_('treachery_reroll_all');
-	$: modePlayersTitle = isShogunVariant ? $_('shogun_players_title') : $_('treachery_players_title');
+	$: modePlayersTitle = isShogunVariant
+		? $_('shogun_players_title')
+		: $_('treachery_players_title');
 	$: allAssignedPlayersSeenOnce =
 		activePlayers.length > 0 &&
 		activePlayers.every((player) => !!player.treacheryRole && !!player.treacherySeen);
 	$: revealedPlayer =
 		revealedPlayerId === null
 			? null
-			: activePlayers.find((player) => player.id === revealedPlayerId) ?? null;
+			: (activePlayers.find((player) => player.id === revealedPlayerId) ?? null);
 
 	// Treachery and Shogun share the same component tree, so the labels adapt instead of
 	// maintaining two separate menu implementations.
@@ -109,11 +108,11 @@
 
 		revealImageCandidates = target.treacheryCard
 			? getTreacheryImageCandidates(
-				target.treacheryCard.cardId,
-				target.treacheryCard.role,
-				target.treacheryCard.name,
-				target.treacheryCard.slug
-			)
+					target.treacheryCard.cardId,
+					target.treacheryCard.role,
+					target.treacheryCard.name,
+					target.treacheryCard.slug
+				)
 			: [];
 		revealImageIndex = 0;
 
@@ -183,7 +182,7 @@
 				>
 					{$_('treachery_official_link')}
 				</a>
-            {:else}
+			{:else}
 				<a
 					class="text-blue-400 underline text-sm mt-2"
 					href="https://github.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/tree/main/cartes-pour-le-shogun"
@@ -202,7 +201,9 @@
 						<div>
 							<div class="text-white text-lg font-semibold">{modeSettingsTitle}</div>
 							<div class="text-gray-300 text-sm">
-								{$_('treachery_mode_status')}: {$appSettings.treacheryModeEnabled ? $_('history_state_on') : $_('history_state_off')}
+								{$_('treachery_mode_status')}: {$appSettings.treacheryModeEnabled
+									? $_('history_state_on')
+									: $_('history_state_off')}
 							</div>
 							<div class="text-gray-400 text-xs mt-1">{$_('treachery_random_rule')}</div>
 						</div>
@@ -226,7 +227,9 @@
 										<div class="text-white text-sm font-semibold truncate">{player.playerName}</div>
 										<div class="text-gray-400 text-xs">
 											{#if player.treacheryRole}
-												{player.treacherySeen ? $_('treachery_seen_once') : $_('treachery_hidden_assigned')}
+												{player.treacherySeen
+													? $_('treachery_seen_once')
+													: $_('treachery_hidden_assigned')}
 											{:else}
 												{$_('treachery_none_assigned')}
 											{/if}
@@ -259,11 +262,16 @@
 </div>
 
 {#if revealedPlayer}
-	<div class="fixed inset-0 z-[120] bg-black/90 flex items-center justify-center p-4" on:click={closeReveal}>
+	<div
+		class="fixed inset-0 z-[120] bg-black/90 flex items-center justify-center p-4"
+		on:click={closeReveal}
+	>
 		<div class="bg-[#1f2123] w-full max-w-xl rounded-2xl p-4 text-white" on:click|stopPropagation>
 			<div class="flex items-start justify-between gap-3">
 				<div>
-					<div class="text-xs uppercase tracking-wide text-gray-400">{$_('treachery_secret_role')}</div>
+					<div class="text-xs uppercase tracking-wide text-gray-400">
+						{$_('treachery_secret_role')}
+					</div>
 					<div class="text-lg font-semibold">{revealedPlayer.playerName}</div>
 				</div>
 				<button
@@ -286,10 +294,16 @@
 				<div class="text-sm text-gray-300">{$_('treachery_role')}</div>
 				<div class="text-xl font-bold capitalize">{roleDisplay(revealedPlayer.treacheryRole)}</div>
 				{#if !isShogunVariant}
-					<div class="text-base mt-2 font-semibold">{revealedPlayer.treacheryCard?.name ?? '-'}</div>
-					<div class="text-xs text-gray-400 mt-1">{revealedPlayer.treacheryCard?.faces?.[0]?.typeLine ?? ''}</div>
+					<div class="text-base mt-2 font-semibold">
+						{revealedPlayer.treacheryCard?.name ?? '-'}
+					</div>
+					<div class="text-xs text-gray-400 mt-1">
+						{revealedPlayer.treacheryCard?.faces?.[0]?.typeLine ?? ''}
+					</div>
 					{#if revealedPlayer.treacheryCard?.faces?.[0]?.oracleText}
-						<pre class="mt-3 whitespace-pre-wrap break-words text-sm leading-5 font-sans">{revealedPlayer.treacheryCard.faces[0].oracleText}</pre>
+						<pre
+							class="mt-3 whitespace-pre-wrap break-words text-sm leading-5 font-sans">{revealedPlayer
+								.treacheryCard.faces[0].oracleText}</pre>
 					{/if}
 				{/if}
 			</div>

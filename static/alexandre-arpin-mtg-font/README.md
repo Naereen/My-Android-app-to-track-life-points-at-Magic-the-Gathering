@@ -1,4 +1,5 @@
 # mtg-font
+
 An iconic font and CSS toolkit for Magic The Gathering
 
 [Learn more here](http://alexandrearpin.com/mtg-font/index.html)
@@ -11,10 +12,9 @@ For instance, generating a split mana symbol of White/Red only requires the foll
 
     <div class="mi-split"><i class="mi mi-w"></i><i class="mi mi-r"></i></div>
 
-And a green mana symbol  is
+And a green mana symbol is
 
     <i class="mi mi-mana mi-g"></i>
-
 
 ## How to modify the font
 
