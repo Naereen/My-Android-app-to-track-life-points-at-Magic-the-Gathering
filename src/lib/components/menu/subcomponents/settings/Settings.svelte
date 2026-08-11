@@ -13,7 +13,6 @@
 		setShowEmblemMenu,
 		setShowVanguardMenu,
 		setShowTreacheryMenu,
-		setShowBountyMenu,
 		setBountyModeEnabled,
 		setShowLifeChangeHistory,
 		setVanguardModeEnabled,
@@ -486,18 +485,7 @@
 	};
 
 	/**
-	 * Persists Bounty menu visibility toggle.
-	 * @param {Event} e - Parameter used by handleShowBountyMenuChange.
-	 * @returns {unknown} Result produced by handleShowBountyMenuChange.
-	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
-	 */
-	const handleShowBountyMenuChange = (e: Event) => {
-		const target = e.currentTarget as HTMLInputElement;
-		setShowBountyMenu(!!target.checked);
-	};
-
-	/**
-	 * Persists Bounty mode activation toggle.
+	 * Persists the unified Bounty mode toggle.
 	 * @param {Event} e - Parameter used by handleBountyModeEnabledChange.
 	 * @returns {unknown} Result produced by handleBountyModeEnabledChange.
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
@@ -1300,27 +1288,12 @@
 			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
 				<input
 					type="checkbox"
-					checked={$appSettings.showBountyMenu}
-					on:change={handleShowBountyMenuChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_bounty_menu_button') || '🎯 Show Bounty menu button'}</span
-				>
-			</label>
-		</div>
-
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.bountyModeEnabled}
+					checked={$appSettings.bountyModeEnabled || $appSettings.showBountyMenu}
 					on:change={handleBountyModeEnabledChange}
 					class="h-5 w-5"
-					disabled={!$appSettings.showBountyMenu}
 				/>
 				<span class="ml-2 text-lg font-semibold"
-					>{$_('bounty_mode_enabled') || 'Enable Bounty mode (Thunder Junction)'}</span
+					>{$_('bounty_mode_enabled') || '🎯 Turn on the « Bounty mode »'}</span
 				>
 			</label>
 		</div>
