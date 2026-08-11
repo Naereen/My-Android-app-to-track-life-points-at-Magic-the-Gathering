@@ -210,6 +210,7 @@
 	"emblem_tap_close": "Touchez ici pour fermer.",
 	"emblem_dungeon_reset": "Réinitialiser tous les pions",
 	"emblem_dungeon_drag_hint": "Expérimental ! Maintenez un pion appuyé, puis glissez-le sur l'image du donjon. S'il n'a jamais été déplacé, il apparaît déjà à un emplacement par défaut. La position est mémorisée par joueur et par donjon.",
+	"emblem_dungeon_legend": "Légende",
 	"emblem_no_image": "Aucune image disponible pour cet emblème.",
 	"emblem_recent_title": "Récemment affichés",
 	"emblem_recent_empty": "Aucun emblème affiché pour le moment.",

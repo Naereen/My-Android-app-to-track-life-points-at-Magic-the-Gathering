@@ -206,6 +206,7 @@
 	"emblem_tap_close": "Toque para fechar.",
 	"emblem_dungeon_reset": "Repor todos os marcadores",
 	"emblem_dungeon_drag_hint": "Mantenha um marcador pressionado e depois arraste-o pela imagem da masmorra. Se nunca tiver sido movido, ele já começa numa posição padrão. A posição é guardada por jogador e por masmorra.",
+	"emblem_dungeon_legend": "Legenda",
 	"emblem_no_image": "Nenhuma imagem disponível para este emblema.",
 	"emblem_recent_title": "Exibidos recentemente",
 	"emblem_recent_empty": "Nenhum emblema exibido ainda.",

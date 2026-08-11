@@ -206,6 +206,7 @@
 	"emblem_tap_close": "Toca para cerrar.",
 	"emblem_dungeon_reset": "Reiniciar todos los marcadores",
 	"emblem_dungeon_drag_hint": "Mantén pulsado un marcador y arrástralo sobre la imagen de la mazmorra. Si nunca se ha movido, ya empieza en una posición predeterminada. La posición se guarda por jugador y por mazmorra.",
+	"emblem_dungeon_legend": "Leyenda",
 	"emblem_no_image": "No hay imagen disponible para este emblema.",
 	"emblem_recent_title": "Mostrados recientemente",
 	"emblem_recent_empty": "Aún no se ha mostrado ningún emblema.",

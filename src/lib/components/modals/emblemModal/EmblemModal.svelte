@@ -434,7 +434,33 @@
 							class="mt-1 w-full rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-center text-[11px] leading-snug text-gray-200"
 						>
 							{$_('emblem_dungeon_drag_hint')}
-							<!-- TODO: add a full legend showing which player is using which meeple marker, shape and color. -->
+						</div>
+
+						<div
+							class="mt-1 w-full rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-[11px] text-gray-200"
+						>
+							<div class="mb-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+								{$_('emblem_dungeon_legend')}
+							</div>
+							<div class="flex flex-wrap justify-center gap-x-4 gap-y-1.5">
+								{#each activePlayers as player, index (player.id)}
+									<div class="flex items-center gap-1.5">
+										<svg viewBox="0 0 28 28" class="h-5 w-5 flex-shrink-0 overflow-visible" aria-hidden="true">
+											<g transform="translate(14 14)">
+												{#if index % 8 === 0}
+													<circle r="11" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="1.6" />
+												{:else if index % 8 === 1}
+													<rect x="-11" y="-11" width="22" height="22" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="1.6" rx="3" />
+												{:else}
+													<polygon points={markerPolygonPoints(index, 11)} fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="1.6" />
+												{/if}
+												<text x="0" y="4" text-anchor="middle" class="legend-marker-number">{index + 1}</text>
+											</g>
+										</svg>
+										<span class="truncate max-w-[6rem] text-gray-100">{player.playerName}</span>
+									</div>
+								{/each}
+							</div>
 						</div>
 					{/if}
 				</div>
@@ -489,6 +515,15 @@
 		stroke: rgba(0, 0, 0, 0.55);
 		stroke-width: 1.2px;
 		letter-spacing: 0.02em;
+	}
+
+	.legend-marker-number {
+		fill: white;
+		font-size: 10px;
+		font-weight: 800;
+		paint-order: stroke fill;
+		stroke: rgba(0, 0, 0, 0.55);
+		stroke-width: 0.6px;
 	}
 
 	@keyframes meepleNewPulse {
