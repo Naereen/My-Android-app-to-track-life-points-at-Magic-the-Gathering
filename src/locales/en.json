@@ -208,6 +208,7 @@
 	"emblem_tap_close": "Tap to close.",
 	"emblem_dungeon_reset": "Reset all markers",
 	"emblem_dungeon_drag_hint": "Long-press a marker, then drag it anywhere on the dungeon image. If it has never been moved, it already starts at a default slot. The position is saved per player and per dungeon.",
+	"emblem_dungeon_legend": "Legend",
 	"emblem_no_image": "No image available for this emblem.",
 	"emblem_recent_title": "Recently displayed",
 	"emblem_recent_empty": "No emblem displayed yet.",

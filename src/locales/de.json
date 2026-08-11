@@ -206,6 +206,7 @@
 	"emblem_tap_close": "Tippen zum Schließen.",
 	"emblem_dungeon_reset": "Alle Marker zurücksetzen",
 	"emblem_dungeon_drag_hint": "Lange auf einen Marker drücken und ihn dann auf dem Dungeon-Bild verschieben. Wenn er nie bewegt wurde, startet er bereits auf einer Standardposition. Die Position wird pro Spieler und pro Dungeon gespeichert.",
+	"emblem_dungeon_legend": "Legende",
 	"emblem_no_image": "Kein Bild für dieses Emblem verfügbar.",
 	"emblem_recent_title": "Zuletzt angezeigt",
 	"emblem_recent_empty": "Noch kein Emblem angezeigt.",
