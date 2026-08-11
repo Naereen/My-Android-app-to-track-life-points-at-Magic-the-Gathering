@@ -88,10 +88,7 @@ const canMergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry
 };
 
 const mergeEntries = (previous: GameHistoryEntry, next: Omit<GameHistoryEntry, 'id' | 'timestamp'>): GameHistoryEntry => {
-	const nextLifeDelta =
-		previous.kind === 'commanderDamage'
-			? (previous.payload.lifeDelta ?? 0) + (next.payload.lifeDelta ?? 0)
-			: previous.payload.lifeDelta;
+	const nextLifeDelta = (previous.payload.lifeDelta ?? 0) + (next.payload.lifeDelta ?? 0);
 
 	return {
 		...previous,

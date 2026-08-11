@@ -1324,6 +1324,8 @@ export const applyCommanderCombatDamage = (
 	const minAllowed = canUseNegativeLife(target, projectedLifeTotal) ? -9999 : 0;
 	const nextLifeTotal = Math.max(minAllowed, Math.min(9999, projectedLifeTotal));
 	const actualLifeDelta = nextLifeTotal - target.lifeTotal;
+	// Commander-damage history stores sourceIndex as 1-based (slot + 1).
+	const historySourceIndex = sourceIndex + 1;
 
 	setCommanderDamage(playerId, fromPlayerId, nextCommanderDamage, sourceIndex, options);
 
@@ -1340,41 +1342,30 @@ export const applyCommanderCombatDamage = (
 		);
 		setTempLifeDiff(playerId, actualLifeDelta > 0 ? 'add' : 'subtract', Math.abs(actualLifeDelta));
 
-		const history = get(gameHistory);
-		const lastEntry = history[history.length - 1];
-		if (
-			lastEntry?.kind === 'commanderDamage' &&
-			lastEntry.playerId === playerId &&
-			lastEntry.payload.fromPlayerId === fromPlayerId &&
-			(lastEntry.payload.sourceIndex ?? 1) === (sourceIndex === 1 ? 2 : 1) &&
-			lastEntry.payload.to === nextCommanderDamage
-		) {
-			gameHistory.update((entries) => {
-				const latestEntry = entries[entries.length - 1];
-				if (
-					!latestEntry ||
-					latestEntry.id !== lastEntry.id ||
-					latestEntry.kind !== 'commanderDamage' ||
-					latestEntry.playerId !== playerId ||
-					latestEntry.payload.fromPlayerId !== fromPlayerId ||
-					(latestEntry.payload.sourceIndex ?? 1) !== (sourceIndex === 1 ? 2 : 1) ||
-					latestEntry.payload.to !== nextCommanderDamage
-				) {
-					return entries;
-				}
+		gameHistory.update((entries) => {
+			const latestEntry = entries[entries.length - 1];
+			if (
+				!latestEntry ||
+				latestEntry.kind !== 'commanderDamage' ||
+				latestEntry.playerId !== playerId ||
+				latestEntry.payload.fromPlayerId !== fromPlayerId ||
+				latestEntry.payload.sourceIndex !== historySourceIndex ||
+				latestEntry.payload.to !== nextCommanderDamage
+			) {
+				return entries;
+			}
 
-				return [
-					...entries.slice(0, -1),
-					{
-						...latestEntry,
-						payload: {
-							...latestEntry.payload,
-							lifeDelta: (latestEntry.payload.lifeDelta ?? 0) + actualLifeDelta
-						}
+			return [
+				...entries.slice(0, -1),
+				{
+					...latestEntry,
+					payload: {
+						...latestEntry.payload,
+						lifeDelta: (latestEntry.payload.lifeDelta ?? 0) + actualLifeDelta
 					}
-				];
-			});
-		}
+				}
+			];
+		});
 
 		recordSnapshot(get(players));
 	}
