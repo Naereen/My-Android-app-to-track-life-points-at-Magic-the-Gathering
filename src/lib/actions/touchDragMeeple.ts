@@ -26,6 +26,11 @@ export default function touchDragMeeple(node: HTMLElement, options: TouchDragMee
     let ghostEl: HTMLElement | null = null;
     let ghostHalfWidth = 0;
     let ghostHalfHeight = 0;
+    // Offset from the touch point to the meeple centre so the ghost starts
+    // at the marker's current on-screen position rather than jumping to the
+    // finger tip (which was causing the top-left-corner artifact on first drag).
+    let ghostTouchOffsetX = 0;
+    let ghostTouchOffsetY = 0;
     let lastClientX = 0;
     let lastClientY = 0;
 
@@ -44,12 +49,17 @@ export default function touchDragMeeple(node: HTMLElement, options: TouchDragMee
         ghostEl = null;
         ghostHalfWidth = 0;
         ghostHalfHeight = 0;
+        ghostTouchOffsetX = 0;
+        ghostTouchOffsetY = 0;
     };
 
     const positionGhost = (clientX: number, clientY: number) => {
         if (!ghostEl) return;
-        const left = clientX - ghostHalfWidth;
-        const top = clientY - ghostHalfHeight;
+        // Apply the stored offset so the ghost tracks the meeple centre, not the raw finger tip.
+        const cx = clientX + ghostTouchOffsetX;
+        const cy = clientY + ghostTouchOffsetY;
+        const left = cx - ghostHalfWidth;
+        const top = cy - ghostHalfHeight;
         ghostEl.style.transform = `translate3d(${left}px, ${top}px, 0) scale(${ghostScale})`;
     };
 
@@ -61,6 +71,13 @@ export default function touchDragMeeple(node: HTMLElement, options: TouchDragMee
         const clone = node.cloneNode(true) as HTMLElement;
         ghostHalfWidth = rect.width / 2;
         ghostHalfHeight = rect.height / 2;
+
+        // Compute the delta so the ghost appears exactly at the node's current
+        // position regardless of where within the marker the user touched.
+        const nodeCenterX = rect.left + ghostHalfWidth;
+        const nodeCenterY = rect.top + ghostHalfHeight;
+        ghostTouchOffsetX = nodeCenterX - clientX;
+        ghostTouchOffsetY = nodeCenterY - clientY;
 
         clone.setAttribute('aria-hidden', 'true');
         clone.style.position = 'fixed';
