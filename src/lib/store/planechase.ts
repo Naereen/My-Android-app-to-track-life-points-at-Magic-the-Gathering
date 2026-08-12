@@ -64,6 +64,18 @@ const rollPlanar = (): PlanarDieResult => {
 	return 'chaos';
 };
 
+/**
+ * Extracts the most relevant "chaos ensues" effect from an Oracle text block.
+ * Returns the suffix starting at "Whenever chaos ensues" when available.
+ */
+export const extractChaosOracleText = (oracleText: string): string => {
+	const text = (oracleText ?? '').trim();
+	if (!text) return '';
+	const matchIndex = text.toLowerCase().indexOf('whenever chaos ensues');
+	if (matchIndex < 0) return text;
+	return text.slice(matchIndex).trim();
+};
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------

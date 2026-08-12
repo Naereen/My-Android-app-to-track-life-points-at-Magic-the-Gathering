@@ -2,7 +2,16 @@
 	import Dsix from '$lib/assets/icons/Dsix.svelte';
 	import ManaPentagon from '$lib/assets/icons/ManaPentagon.svelte';
 	import Reset from '$lib/assets/icons/Reset.svelte';
-	import { appSettings } from '$lib/store/appSettings';
+	import {
+		appSettings,
+		setShowArchenemyMenu,
+		setShowEmblemMenu,
+		setShowGameHistoryMenu,
+		setShowPlanechaseMenu,
+		setShowResourcesButton,
+		setShowTreacheryMenu,
+		setShowVanguardMenu
+	} from '$lib/store/appSettings';
 	import { resetLifeTotals, spinToSelectRandomPlayer } from '$lib/store/player';
 	import { appState, toggleIsMenuOpen, nextTurn, prevTurn } from '$lib/store/appState';
 	import { replayLastRandomizerRoll } from '$lib/store/modal';
@@ -33,9 +42,52 @@
 
 	let randomPlayerTimeout: ReturnType<typeof setTimeout> | null = null;
 	let randomPlayerTriggered = false;
+	let menuButtonHideTimeout: ReturnType<typeof setTimeout> | null = null;
+	let menuButtonHideTriggered = false;
 	let timerGlowTimeout: ReturnType<typeof setTimeout> | null = null;
 	let previousMinutePulseId = 0;
 	let timerGlowClass = '';
+
+	const startMenuButtonHideLongPress =
+		(hideFn: () => void, delayMs = 700) =>
+		() => {
+			if (menuButtonHideTimeout) clearTimeout(menuButtonHideTimeout);
+			menuButtonHideTimeout = setTimeout(() => {
+				menuButtonHideTriggered = true;
+				hideFn();
+				vibrate(24);
+			}, delayMs);
+		};
+
+	const endMenuButtonHideLongPress = () => {
+		if (menuButtonHideTimeout) {
+			clearTimeout(menuButtonHideTimeout);
+			menuButtonHideTimeout = null;
+		}
+		if (menuButtonHideTriggered) {
+			setTimeout(() => {
+				menuButtonHideTriggered = false;
+			}, 50);
+		}
+	};
+
+	const consumeMenuButtonLongPress = () => {
+		if (!menuButtonHideTriggered) return false;
+		menuButtonHideTriggered = false;
+		return true;
+	};
+
+	const startHideResourcesButton = startMenuButtonHideLongPress(() =>
+		setShowResourcesButton(false)
+	);
+	const startHideEmblemButton = startMenuButtonHideLongPress(() => setShowEmblemMenu(false));
+	const startHideVanguardButton = startMenuButtonHideLongPress(() => setShowVanguardMenu(false));
+	const startHideTreacheryButton = startMenuButtonHideLongPress(() => setShowTreacheryMenu(false));
+	const startHidePlanechaseButton = startMenuButtonHideLongPress(() =>
+		setShowPlanechaseMenu(false)
+	);
+	const startHideArchenemyButton = startMenuButtonHideLongPress(() => setShowArchenemyMenu(false));
+	const startHideHistoryButton = startMenuButtonHideLongPress(() => setShowGameHistoryMenu(false));
 
 	/**
 	 * Starts long-press detection on the Next button to trigger previous-turn navigation.
@@ -128,8 +180,39 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleManaClick = () => {
+		if (consumeMenuButtonLongPress()) return;
 		vibrate(20);
 		toggleIsMenuOpen('resources');
+	};
+
+	const handleEmblemClick = () => {
+		if (consumeMenuButtonLongPress()) return;
+		toggleIsMenuOpen('emblem');
+	};
+
+	const handleVanguardClick = () => {
+		if (consumeMenuButtonLongPress()) return;
+		toggleIsMenuOpen('vanguard');
+	};
+
+	const handleTreacheryClick = () => {
+		if (consumeMenuButtonLongPress()) return;
+		toggleIsMenuOpen('treachery');
+	};
+
+	const handlePlanechaseClick = () => {
+		if (consumeMenuButtonLongPress()) return;
+		toggleIsMenuOpen('planechase');
+	};
+
+	const handleArchenemyClick = () => {
+		if (consumeMenuButtonLongPress()) return;
+		toggleIsMenuOpen('archenemy');
+	};
+
+	const handleHistoryClick = () => {
+		if (consumeMenuButtonLongPress()) return;
+		toggleIsMenuOpen('history');
 	};
 
 	/**
@@ -164,6 +247,7 @@
 	onDestroy(() => {
 		if (animateTimeout) clearTimeout(animateTimeout);
 		if (timerGlowTimeout) clearTimeout(timerGlowTimeout);
+		if (menuButtonHideTimeout) clearTimeout(menuButtonHideTimeout);
 	});
 
 	const formatGlobalTimer = (seconds: number): string => {
@@ -247,7 +331,13 @@
 		{#if $appSettings.showEmblemMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
-					on:click={() => toggleIsMenuOpen('emblem')}
+					on:click={handleEmblemClick}
+					on:mousedown={startHideEmblemButton}
+					on:mouseup={endMenuButtonHideLongPress}
+					on:mouseleave={endMenuButtonHideLongPress}
+					on:touchstart={startHideEmblemButton}
+					on:touchend={endMenuButtonHideLongPress}
+					on:touchcancel={endMenuButtonHideLongPress}
 					on:contextmenu|preventDefault
 					draggable="false"
 					title={$_('emblems_and_dungeons')}
@@ -260,7 +350,13 @@
 		{#if $appSettings.showVanguardMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
-					on:click={() => toggleIsMenuOpen('vanguard')}
+					on:click={handleVanguardClick}
+					on:mousedown={startHideVanguardButton}
+					on:mouseup={endMenuButtonHideLongPress}
+					on:mouseleave={endMenuButtonHideLongPress}
+					on:touchstart={startHideVanguardButton}
+					on:touchend={endMenuButtonHideLongPress}
+					on:touchcancel={endMenuButtonHideLongPress}
 					on:contextmenu|preventDefault
 					draggable="false"
 					title={$_('vanguard_menu')}
@@ -273,7 +369,13 @@
 		{#if $appSettings.showTreacheryMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
-					on:click={() => toggleIsMenuOpen('treachery')}
+					on:click={handleTreacheryClick}
+					on:mousedown={startHideTreacheryButton}
+					on:mouseup={endMenuButtonHideLongPress}
+					on:mouseleave={endMenuButtonHideLongPress}
+					on:touchstart={startHideTreacheryButton}
+					on:touchend={endMenuButtonHideLongPress}
+					on:touchcancel={endMenuButtonHideLongPress}
 					on:contextmenu|preventDefault
 					draggable="false"
 					title={$_('treachery_menu')}
@@ -299,7 +401,13 @@
 		{#if $appSettings.showPlanechaseMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
-					on:click={() => toggleIsMenuOpen('planechase')}
+					on:click={handlePlanechaseClick}
+					on:mousedown={startHidePlanechaseButton}
+					on:mouseup={endMenuButtonHideLongPress}
+					on:mouseleave={endMenuButtonHideLongPress}
+					on:touchstart={startHidePlanechaseButton}
+					on:touchend={endMenuButtonHideLongPress}
+					on:touchcancel={endMenuButtonHideLongPress}
 					on:contextmenu|preventDefault
 					draggable="false"
 					title={$_('planechase_menu_title')}
@@ -312,7 +420,13 @@
 		{#if $appSettings.showArchenemyMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
-					on:click={() => toggleIsMenuOpen('archenemy')}
+					on:click={handleArchenemyClick}
+					on:mousedown={startHideArchenemyButton}
+					on:mouseup={endMenuButtonHideLongPress}
+					on:mouseleave={endMenuButtonHideLongPress}
+					on:touchstart={startHideArchenemyButton}
+					on:touchend={endMenuButtonHideLongPress}
+					on:touchcancel={endMenuButtonHideLongPress}
 					on:contextmenu|preventDefault
 					draggable="false"
 					title={$_('archenemy_menu_title')}
@@ -325,7 +439,13 @@
 		{#if $appSettings.showGameHistoryMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
-					on:click={() => toggleIsMenuOpen('history')}
+					on:click={handleHistoryClick}
+					on:mousedown={startHideHistoryButton}
+					on:mouseup={endMenuButtonHideLongPress}
+					on:mouseleave={endMenuButtonHideLongPress}
+					on:touchstart={startHideHistoryButton}
+					on:touchend={endMenuButtonHideLongPress}
+					on:touchcancel={endMenuButtonHideLongPress}
 					on:contextmenu|preventDefault
 					draggable="false"
 					title={$_('game_history')}
@@ -342,7 +462,17 @@
 		{/if}
 		{#if $appSettings.showResourcesButton}
 			<div class="flex justify-center items-center flex-grow">
-				<button on:click={handleManaClick} on:contextmenu|preventDefault draggable="false">
+				<button
+					on:click={handleManaClick}
+					on:mousedown={startHideResourcesButton}
+					on:mouseup={endMenuButtonHideLongPress}
+					on:mouseleave={endMenuButtonHideLongPress}
+					on:touchstart={startHideResourcesButton}
+					on:touchend={endMenuButtonHideLongPress}
+					on:touchcancel={endMenuButtonHideLongPress}
+					on:contextmenu|preventDefault
+					draggable="false"
+				>
 					<ManaPentagon />
 				</button>
 			</div>

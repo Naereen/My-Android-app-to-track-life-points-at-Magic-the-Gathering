@@ -8,12 +8,16 @@
 		reshuffleDeck,
 		togglePlanechaseRotation,
 		dismissDieResult,
-		type PlanarDieResult
+		type PlanarDieResult,
+		extractChaosOracleText
 	} from '$lib/store/planechase';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
 	let fullscreen = false;
+	// Canonical Plane/Phenomenon card back requested by issue #103.
+	const PLANECHASE_CARD_BACK_URL =
+		'https://backs.scryfall.io/large/7/8/7840c131-f96b-4700-9347-2215c43156e6.jpg?1665006192';
 
 	$: deck = $planechaseState.deck;
 	$: currentIndex = $planechaseState.currentIndex;
@@ -23,6 +27,8 @@
 	$: lastDieResult = $planechaseState.lastDieResult;
 	$: isChaos = lastDieResult === 'chaos';
 	$: isPlaneswalk = lastDieResult === 'planeswalk';
+	$: displayedCardImage = currentFace ? currentFace.image || PLANECHASE_CARD_BACK_URL : null;
+	$: chaosOracleText = extractChaosOracleText(currentFace?.oracleText ?? '');
 
 	const handleRollDie = () => {
 		vibrate(30);
@@ -86,8 +92,17 @@
 	>
 		<!-- Header row -->
 		<div class="w-full flex items-center justify-between">
-			<span class="text-white text-xl font-bold">{$_('planechase_modal_title')}</span>
+			<span class="text-white text-2xl font-bold">{$_('planechase_modal_title')}</span>
 			<div class="flex gap-2 items-center">
+				<button
+					type="button"
+					class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-600/90 text-xl text-white shadow transition-transform hover:scale-105"
+					on:click={handleToggleFullscreen}
+					title={fullscreen ? $_('planechase_close') : $_('planechase_modal_title')}
+					aria-label={fullscreen ? $_('planechase_close') : $_('planechase_modal_title')}
+				>
+					{#if fullscreen}🗗{:else}⛶{/if}
+				</button>
 				<!-- Rotate button -->
 				<button
 					type="button"
@@ -111,7 +126,7 @@
 				<!-- Close button -->
 				<button
 					type="button"
-					class="flex h-12 w-12 items-center justify-center rounded-full bg-red-600/95 text-3xl font-black text-white shadow-xl transition-transform hover:scale-105"
+					class="flex h-10 w-10 items-center justify-center rounded-full bg-red-600/95 text-2xl font-black text-white shadow-xl transition-transform hover:scale-105"
 					on:click={handleClose}
 					aria-label={$_('planechase_close')}
 					title={$_('planechase_close')}
@@ -139,11 +154,11 @@
 				style={rotated ? 'transform: rotate(180deg);' : ''}
 			>
 				<!-- Card image -->
-				{#if currentFace?.image}
+				{#if displayedCardImage}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 					<img
-						src={currentFace.image}
+						src={displayedCardImage}
 						alt={currentCard?.name ?? ''}
 						class="rounded-xl object-contain cursor-pointer transition-all"
 						class:w-full={!fullscreen}
@@ -155,9 +170,21 @@
 						class:h-screen={fullscreen}
 						class:max-h-screen={fullscreen}
 						class:bg-black={fullscreen}
+						class:rotate-90={!fullscreen}
 						on:click={handleToggleFullscreen}
 						draggable="false"
 					/>
+					{#if fullscreen}
+						<button
+							type="button"
+							class="fixed right-4 top-4 z-[61] rounded-full bg-red-600/95 px-3 py-2 text-sm font-bold text-white shadow-xl"
+							on:click={handleToggleFullscreen}
+							aria-label={$_('planechase_close')}
+							title={$_('planechase_close')}
+						>
+							❌
+						</button>
+					{/if}
 				{:else}
 					<div class="text-gray-400 text-sm py-4">{$_('planechase_no_image')}</div>
 				{/if}
@@ -188,7 +215,7 @@
 					class="flex-1 max-w-[8rem] py-2 rounded-xl bg-slate-700 text-white text-sm font-semibold hover:bg-slate-600 transition-colors"
 					on:click={handlePrevPlane}
 				>
-					⬅ {$_('planechase_prev')}
+					⬅️ {$_('planechase_prev')}
 				</button>
 				<!-- Roll chaos die -->
 				<button
@@ -203,7 +230,7 @@
 					class="flex-1 max-w-[8rem] py-2 rounded-xl bg-slate-700 text-white text-sm font-semibold hover:bg-slate-600 transition-colors"
 					on:click={handleNextPlane}
 				>
-					{$_('planechase_next')} ➡
+					{$_('planechase_next')} ➡️
 				</button>
 			</div>
 
@@ -217,11 +244,11 @@
 				>
 					<div class="text-3xl">{dieResultEmoji(lastDieResult)}</div>
 					<div>{dieResultLabel(lastDieResult)}</div>
-					{#if isChaos && currentFace?.oracleText}
+					{#if isChaos && chaosOracleText}
 						<div
 							class="text-sm font-normal text-gray-200 mt-1 text-left whitespace-pre-line bg-black/25 rounded-xl px-3 py-2"
 						>
-							{currentFace.oracleText}
+							{chaosOracleText}
 						</div>
 					{/if}
 					{#if isPlaneswalk}

@@ -13,7 +13,7 @@ export type TouchDragMeepleOptions = {
 // 'dragend'   { x, y }
 export default function touchDragMeeple(node: HTMLElement, options: TouchDragMeepleOptions = {}) {
 	let handleSelector = options.handle || '.meeple-handle';
-	let longPressMs = options.longPressMs ?? 240;
+	let longPressMs = options.longPressMs ?? 180;
 	let ghostEnabled = options.ghost ?? true;
 	let ghostOpacity = options.ghostOpacity ?? 0.9;
 	let ghostScale = options.ghostScale ?? 1.08;
@@ -36,7 +36,7 @@ export default function touchDragMeeple(node: HTMLElement, options: TouchDragMee
 
 	const applyOptions = (nextOptions: TouchDragMeepleOptions = {}) => {
 		handleSelector = nextOptions.handle || '.meeple-handle';
-		longPressMs = nextOptions.longPressMs ?? 240;
+		longPressMs = nextOptions.longPressMs ?? 180;
 		ghostEnabled = nextOptions.ghost ?? true;
 		ghostOpacity = nextOptions.ghostOpacity ?? 0.9;
 		ghostScale = nextOptions.ghostScale ?? 1.08;
@@ -145,7 +145,7 @@ export default function touchDragMeeple(node: HTMLElement, options: TouchDragMee
 		const dx = t.clientX - startX;
 		const dy = t.clientY - startY;
 		const distSq = dx * dx + dy * dy;
-		if (!dragging && distSq > 12 * 12) {
+		if (!dragging && distSq > 18 * 18) {
 			cancelLongPress();
 			return;
 		}

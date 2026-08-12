@@ -8,9 +8,6 @@
 	const BOUNTY_SCRYFALL_URL =
 		'https://api.scryfall.com/cards/search?q=set%3ATOTC+%22Bounty%22&unique=cards&order=random';
 
-	// Back image of the Bounty card
-	const BOUNTY_BACK_IMAGE = 'https://files.mtg.wiki/thumb/Bounty_back.png/129px-Bounty_back.png';
-
 	// Reward descriptions per level
 	const REWARDS: Record<number, string> = {
 		1: '',
@@ -29,6 +26,7 @@
 	let showImageZoomModal = false;
 	let zoomedImageSrc = '';
 	let zoomedImageAlt = '';
+	let bountyBackImage = '';
 	let errorMsg = '';
 
 	$: currentCard = cards[currentCardIndex] ?? null;
@@ -68,13 +66,19 @@
 				name: string;
 				oracle_text?: string;
 				image_uris?: { normal: string };
-				card_faces?: Array<{ oracle_text: string; image_uris?: { normal: string } }>;
+				card_faces?: Array<{
+					oracle_text: string;
+					image_uris?: { normal: string };
+				}>;
 			}> = json.data ?? [];
 			cards = raw.map((c) => ({
 				name: trimWantedSuffix(c.name),
 				oracleText: c.oracle_text ?? c.card_faces?.[0]?.oracle_text ?? '',
 				imageUri: c.image_uris?.normal ?? c.card_faces?.[0]?.image_uris?.normal ?? ''
 			}));
+			bountyBackImage =
+				raw.find((c) => !!c.card_faces?.[1]?.image_uris?.normal)?.card_faces?.[1]?.image_uris
+					?.normal ?? '';
 			// shuffle
 			for (let i = cards.length - 1; i > 0; i--) {
 				const j = Math.floor(Math.random() * (i + 1));
@@ -196,17 +200,19 @@
 						{#if showBack}
 							<!-- Card back (face-down) -->
 							<div class="flex flex-col items-center gap-2">
-								<button
-									type="button"
-									class="rounded-xl cursor-zoom-in"
-									on:click={() => openImageZoomModal(BOUNTY_BACK_IMAGE, 'Bounty card back')}
-								>
-									<img
-										src={BOUNTY_BACK_IMAGE}
-										alt="Bounty card back"
-										class="rounded-xl w-full max-w-[17rem] max-h-[23rem] object-contain bg-black/40"
-									/>
-								</button>
+								{#if bountyBackImage}
+									<button
+										type="button"
+										class="rounded-xl cursor-zoom-in"
+										on:click={() => openImageZoomModal(bountyBackImage, 'Bounty card back')}
+									>
+										<img
+											src={bountyBackImage}
+											alt="Bounty card back"
+											class="rounded-xl w-full max-w-[17rem] max-h-[23rem] object-contain bg-black/40"
+										/>
+									</button>
+								{/if}
 								<button
 									class="bg-amber-600 hover:bg-amber-700 rounded-xl px-5 py-2 text-white text-sm mt-1"
 									on:click={revealCard}
@@ -245,7 +251,12 @@
 						<div class="text-white text-base font-semibold mb-3 text-center">
 							{$_('bounty_reward_level')}
 						</div>
-						<div class="flex justify-center items-center gap-4 mb-3">
+						<div class="flex justify-center items-center gap-2 mb-3">
+							<button
+								class="bg-gray-700 hover:bg-gray-600 rounded-full w-10 h-10 text-lg text-white disabled:opacity-40"
+								on:click={decrementReward}
+								disabled={rewardLevel <= 1}>−</button
+							>
 							{#each [1, 2, 3, 4] as level}
 								<button
 									class="w-12 h-12 rounded-full text-xl font-bold border-2 transition-colors"
@@ -263,21 +274,14 @@
 									{level}
 								</button>
 							{/each}
-						</div>
-						<div class="text-amber-300 text-sm text-center font-semibold">
-							{REWARDS[rewardLevel]}
-						</div>
-						<div class="flex justify-center gap-3 mt-3">
 							<button
-								class="bg-gray-700 hover:bg-gray-600 rounded-lg px-3 py-1 text-xs text-white disabled:opacity-40"
-								on:click={decrementReward}
-								disabled={rewardLevel <= 1}>−</button
-							>
-							<button
-								class="bg-gray-700 hover:bg-gray-600 rounded-lg px-3 py-1 text-xs text-white disabled:opacity-40"
+								class="bg-gray-700 hover:bg-gray-600 rounded-full w-10 h-10 text-lg text-white disabled:opacity-40"
 								on:click={incrementReward}
 								disabled={rewardLevel >= 4}>+</button
 							>
+						</div>
+						<div class="text-amber-300 text-sm text-center font-semibold">
+							{REWARDS[rewardLevel]}
 						</div>
 					</div>
 
@@ -359,14 +363,16 @@
 									<div>4️⃣ {$_('bounty_reward_4')}</div>
 								</div>
 							</div>
-							<button
-								class="text-amber-400 underline text-xs mt-2"
-								on:click={() => {
-									openImageZoomModal(BOUNTY_BACK_IMAGE, 'Bounty card back');
-								}}
-							>
-								{$_('bounty_show_back_image')}
-							</button>
+							{#if bountyBackImage}
+								<button
+									class="text-amber-400 underline text-xs mt-2"
+									on:click={() => {
+										openImageZoomModal(bountyBackImage, 'Bounty card back');
+									}}
+								>
+									{$_('bounty_show_back_image')}
+								</button>
+							{/if}
 						</div>
 					{/if}
 				</div>

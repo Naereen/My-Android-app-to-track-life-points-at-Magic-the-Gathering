@@ -30,6 +30,21 @@
 		}
 	};
 
+	const handleLoadPresetSet = async (setCode: string) => {
+		vibrate(20);
+		isSearching = true;
+		try {
+			const cards = await searchSchemeCards(`set:${setCode}`, 200);
+			if (cards.length > 0) {
+				loadSchemeDeck(cards);
+				openArchenemyModal();
+				toggleIsMenuOpen('');
+			}
+		} finally {
+			isSearching = false;
+		}
+	};
+
 	/**
 	 * Searches Scheme cards with the current query and updates results.
 	 */
@@ -123,6 +138,23 @@
 					>
 						{isSearching ? $_('scryfall_searching') : `😈 ${$_('archenemy_load_all')}`}
 					</button>
+					<div class="grid grid-cols-3 gap-2">
+						<button
+							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
+							on:click={() => handleLoadPresetSet('DSC')}
+							disabled={isSearching}>DSC</button
+						>
+						<button
+							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
+							on:click={() => handleLoadPresetSet('ARC')}
+							disabled={isSearching}>ARC</button
+						>
+						<button
+							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
+							on:click={() => handleLoadPresetSet('EO1')}
+							disabled={isSearching}>EO1</button
+						>
+					</div>
 				</div>
 
 				<!-- Search section -->

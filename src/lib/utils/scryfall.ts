@@ -309,7 +309,7 @@ export async function fetchCardBySetCollector(
  */
 export async function searchPlaneCards(query: string, limit = 200): Promise<ScryfallEmblemCard[]> {
 	const clean = query?.trim() ?? '';
-	const base = '(t:plane or t:phenomenon) game:paper border:black -set:PUNK';
+	const base = '(t:plane or t:phenomenon) game:paper border:black';
 	const composed = clean.length > 0 ? `(${clean}) ${base}` : base;
 
 	const q = encodeURIComponent(composed);

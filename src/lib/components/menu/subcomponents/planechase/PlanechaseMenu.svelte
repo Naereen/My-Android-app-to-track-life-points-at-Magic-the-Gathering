@@ -30,6 +30,21 @@
 		}
 	};
 
+	const handleLoadPresetSet = async (setCode: string) => {
+		vibrate(20);
+		isSearching = true;
+		try {
+			const cards = await searchPlaneCards(`set:${setCode}`, 200);
+			if (cards.length > 0) {
+				loadPlanarDeck(cards);
+				openPlanechaseModal();
+				toggleIsMenuOpen('');
+			}
+		} finally {
+			isSearching = false;
+		}
+	};
+
 	/**
 	 * Searches Plane/Phenomenon cards with the current query and updates results.
 	 */
@@ -123,6 +138,33 @@
 					>
 						{isSearching ? $_('scryfall_searching') : `🌐 ${$_('planechase_load_all')}`}
 					</button>
+					<div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+						<button
+							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
+							on:click={() => handleLoadPresetSet('MOC')}
+							disabled={isSearching}>MOC</button
+						>
+						<button
+							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
+							on:click={() => handleLoadPresetSet('WHO')}
+							disabled={isSearching}>WHO</button
+						>
+						<button
+							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
+							on:click={() => handleLoadPresetSet('PUNK')}
+							disabled={isSearching}>PUNK</button
+						>
+						<button
+							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
+							on:click={() => handleLoadPresetSet('OPCA')}
+							disabled={isSearching}>OPCA</button
+						>
+						<button
+							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
+							on:click={() => handleLoadPresetSet('PSSC')}
+							disabled={isSearching}>PSSC</button
+						>
+					</div>
 				</div>
 
 				<!-- Search section -->

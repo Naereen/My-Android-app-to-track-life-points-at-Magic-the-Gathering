@@ -19,6 +19,7 @@
 	let currentFaceIndex = 0;
 	let wasOpen = false;
 	let dungeonBoardEl: HTMLDivElement | null = null;
+	let dungeonImageEl: HTMLImageElement | null = null;
 	let activeDungeonDragPlayerId: number | null = null;
 	let activeDungeonDragPosition: DungeonMeeplePosition | null = null;
 	let activeDungeonDragStartPosition: DungeonMeeplePosition | null = null;
@@ -120,8 +121,8 @@
 	 * @returns {DungeonMeeplePosition | null} Clamped normalized position or `null`.
 	 */
 	const getNormalizedBoardPosition = (clientX: number, clientY: number) => {
-		if (!dungeonBoardEl) return null;
-		const rect = dungeonBoardEl.getBoundingClientRect();
+		const rect = dungeonImageEl?.getBoundingClientRect() ?? dungeonBoardEl?.getBoundingClientRect();
+		if (!rect) return null;
 		if (rect.width <= 0 || rect.height <= 0) return null;
 
 		return {
@@ -145,7 +146,8 @@
 		activeDungeonDragStartPosition = startPosition;
 
 		if (dungeonBoardEl) {
-			const rect = dungeonBoardEl.getBoundingClientRect();
+			const rect =
+				dungeonImageEl?.getBoundingClientRect() ?? dungeonBoardEl.getBoundingClientRect();
 			activeDungeonDragOffsetPx = {
 				x: startPosition.x * rect.width - (clientX - rect.left),
 				y: startPosition.y * rect.height - (clientY - rect.top)
@@ -323,7 +325,7 @@
 
 		<button
 			type="button"
-			class="absolute right-3 top-3 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-red-600/95 text-4xl font-black text-white shadow-xl transition-transform hover:scale-105 hover:bg-red-500 sm:right-4 sm:top-4 sm:h-16 sm:w-16 sm:text-5xl"
+			class="absolute right-3 top-3 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-red-600/95 text-3xl font-black text-white shadow-xl transition-transform hover:scale-105 hover:bg-red-500 sm:right-4 sm:top-4 sm:h-14 sm:w-14 sm:text-4xl"
 			on:click={closeSelectedEmblem}
 			aria-label={$_('emblem_tap_close')}
 			title={$_('emblem_tap_close')}
@@ -333,14 +335,16 @@
 
 		{#if selected && currentFace}
 			<div class="w-full px-1 pt-2 pb-2 text-center text-white">
-				<div class="text-xl md:text-2xl font-bold truncate">{selected.name}</div>
+				<div class="text-2xl md:text-3xl font-bold truncate">{selected.name}</div>
 				{#if selected.set_name}
 					<div class="text-xs text-gray-300">{selected.set_name}</div>
 				{/if}
-				<div class="text-xs text-gray-400 mt-1">
-					{$_('emblem_face_of')}
-					{currentFaceIndex + 1}/{faces.length}
-				</div>
+				{#if faces.length > 1}
+					<div class="text-xs text-gray-400 mt-1">
+						{$_('emblem_face_of')}
+						{currentFaceIndex + 1}/{faces.length}
+					</div>
+				{/if}
 			</div>
 
 			{#if currentFace.image}
@@ -350,83 +354,86 @@
 						class="relative w-full flex justify-center items-center overflow-hidden flex-1"
 						on:click={handleAdvanceFace}
 					>
-						<img
-							src={currentFace.image}
-							alt={currentFace.name}
-							class="max-h-[60vh] w-auto max-w-full object-contain rounded-xl"
-							draggable="false"
-						/>
+						<div class="relative inline-block max-h-[60vh]">
+							<img
+								bind:this={dungeonImageEl}
+								src={currentFace.image}
+								alt={currentFace.name}
+								class="max-h-[60vh] w-auto max-w-full object-contain rounded-xl"
+								draggable="false"
+							/>
 
-						{#if selectedDungeonId && activePlayers.length > 0}
-							<div class="pointer-events-none absolute inset-0 rounded-xl">
-								{#each activePlayers as player, index (player.id)}
-									{@const markerPosition = getMeeplePosition(player.id, index)}
-									{@const isUnplacedMeeple = !hasStoredMeeplePosition(player.id)}
-									<div
-										class="pointer-events-auto absolute"
-										style={`left: ${markerPosition.x * 100}%; top: ${markerPosition.y * 100}%; transform: translate(-50%, -50%);`}
-									>
-										<button
-											type="button"
-											draggable="false"
-											class="meeple-marker"
-											class:meeple-marker--new={isUnplacedMeeple}
-											use:touchDragMeeple={{
-												handle: '.meeple-handle',
-												longPressMs: 240,
-												ghost: true,
-												ghostOpacity: 0.9,
-												ghostScale: 1.08
-											}}
-											on:click|stopPropagation={swallowClick}
-											on:dragstart={buildMeepleTouchStartHandler(player.id)}
-											on:dragover={buildMeepleTouchMoveHandler(player.id)}
-											on:dragend={buildMeepleTouchEndHandler(player.id)}
-											aria-label={player.playerName}
-											title={player.playerName}
+							{#if selectedDungeonId && activePlayers.length > 0}
+								<div class="pointer-events-none absolute inset-0 rounded-xl">
+									{#each activePlayers as player, index (player.id)}
+										{@const markerPosition = getMeeplePosition(player.id, index)}
+										{@const isUnplacedMeeple = !hasStoredMeeplePosition(player.id)}
+										<div
+											class="pointer-events-auto absolute"
+											style={`left: ${markerPosition.x * 100}%; top: ${markerPosition.y * 100}%; transform: translate(-50%, -50%);`}
 										>
-											<svg
-												viewBox="0 0 80 80"
-												class="meeple-handle h-14 w-14 overflow-visible sm:h-16 sm:w-16"
-												aria-hidden="true"
+											<button
+												type="button"
+												draggable="false"
+												class="meeple-marker"
+												class:meeple-marker--new={isUnplacedMeeple}
+												use:touchDragMeeple={{
+													handle: '.meeple-handle',
+													longPressMs: 180,
+													ghost: true,
+													ghostOpacity: 0.9,
+													ghostScale: 1.06
+												}}
+												on:click|stopPropagation={swallowClick}
+												on:dragstart={buildMeepleTouchStartHandler(player.id)}
+												on:dragover={buildMeepleTouchMoveHandler(player.id)}
+												on:dragend={buildMeepleTouchEndHandler(player.id)}
+												aria-label={player.playerName}
+												title={player.playerName}
 											>
-												<g transform="translate(40 40)">
-													{#if index % 8 === 0}
-														<circle
-															r="28"
-															fill={getMarkerColor(player.color, index)}
-															stroke={markerStroke}
-															stroke-width="3.2"
-														/>
-													{:else if index % 8 === 1}
-														<rect
-															x="-28"
-															y="-28"
-															width="56"
-															height="56"
-															fill={getMarkerColor(player.color, index)}
-															stroke={markerStroke}
-															stroke-width="3.2"
-															rx="8"
-														/>
-													{:else}
-														<polygon
-															points={markerPolygonPoints(index, 28)}
-															fill={getMarkerColor(player.color, index)}
-															stroke={markerStroke}
-															stroke-width="3.2"
-														/>
-													{/if}
-													<text x="0" y="11" text-anchor="middle" class="meeple-number"
-														>{index + 1}</text
-													>
-												</g>
-											</svg>
-										</button>
-									</div>
-								{/each}
-							</div>
-						{/if}
+												<svg
+													viewBox="0 0 80 80"
+													class="meeple-handle h-14 w-14 overflow-visible sm:h-16 sm:w-16"
+													aria-hidden="true"
+												>
+													<g transform="translate(40 40)">
+														{#if index % 8 === 0}
+															<circle
+																r="28"
+																fill={getMarkerColor(player.color, index)}
+																stroke={markerStroke}
+																stroke-width="3.2"
+															/>
+														{:else if index % 8 === 1}
+															<rect
+																x="-28"
+																y="-28"
+																width="56"
+																height="56"
+																fill={getMarkerColor(player.color, index)}
+																stroke={markerStroke}
+																stroke-width="3.2"
+																rx="8"
+															/>
+														{:else}
+															<polygon
+																points={markerPolygonPoints(index, 28)}
+																fill={getMarkerColor(player.color, index)}
+																stroke={markerStroke}
+																stroke-width="3.2"
+															/>
+														{/if}
+														<text x="0" y="11" text-anchor="middle" class="meeple-number"
+															>{index + 1}</text
+														>
+													</g>
+												</svg>
+											</button>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						</div>
 					</div>
 
 					{#if selectedDungeonId && activePlayers.length > 0}
@@ -439,22 +446,49 @@
 						<div
 							class="mt-1 w-full rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-[11px] text-gray-200"
 						>
-							<div class="mb-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+							<div
+								class="mb-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-gray-400"
+							>
 								{$_('emblem_dungeon_legend')}
 							</div>
 							<div class="flex flex-wrap justify-center gap-x-4 gap-y-1.5">
 								{#each activePlayers as player, index (player.id)}
 									<div class="flex items-center gap-1.5">
-										<svg viewBox="0 0 28 28" class="h-5 w-5 flex-shrink-0 overflow-visible" aria-hidden="true">
+										<svg
+											viewBox="0 0 28 28"
+											class="h-5 w-5 flex-shrink-0 overflow-visible"
+											aria-hidden="true"
+										>
 											<g transform="translate(14 14)">
 												{#if index % 8 === 0}
-													<circle r="11" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="1.6" />
+													<circle
+														r="11"
+														fill={getMarkerColor(player.color, index)}
+														stroke={markerStroke}
+														stroke-width="1.6"
+													/>
 												{:else if index % 8 === 1}
-													<rect x="-11" y="-11" width="22" height="22" fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="1.6" rx="3" />
+													<rect
+														x="-11"
+														y="-11"
+														width="22"
+														height="22"
+														fill={getMarkerColor(player.color, index)}
+														stroke={markerStroke}
+														stroke-width="1.6"
+														rx="3"
+													/>
 												{:else}
-													<polygon points={markerPolygonPoints(index, 11)} fill={getMarkerColor(player.color, index)} stroke={markerStroke} stroke-width="1.6" />
+													<polygon
+														points={markerPolygonPoints(index, 11)}
+														fill={getMarkerColor(player.color, index)}
+														stroke={markerStroke}
+														stroke-width="1.6"
+													/>
 												{/if}
-												<text x="0" y="4" text-anchor="middle" class="legend-marker-number">{index + 1}</text>
+												<text x="0" y="4" text-anchor="middle" class="legend-marker-number"
+													>{index + 1}</text
+												>
 											</g>
 										</svg>
 										<span class="truncate max-w-[6rem] text-gray-100">{player.playerName}</span>

@@ -14,6 +14,22 @@
 	let innerHeight = 0;
 	let revealImageCandidates: string[] = [];
 	let revealImageIndex = 0;
+	const SHOGUN_ROLE_IMAGES: Record<string, string[]> = {
+		leader: [
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/shogun.png'
+		],
+		guardian: [
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/guardienne.png'
+		],
+		assassin: [
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin1.png',
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin2.png',
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin3.png'
+		],
+		traitor: [
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/traitre.png'
+		]
+	};
 
 	$: activePlayers = $players.slice(0, $appSettings.playerCount);
 	$: isShogunVariant = !!$appSettings.shogunVariantEnabled;
@@ -129,6 +145,15 @@
 		if (revealImageIndex < revealImageCandidates.length - 1) {
 			revealImageIndex += 1;
 		}
+	};
+
+	const getShogunRoleImage = (player: App.Player.Data | null) => {
+		if (!player?.treacheryRole) return null;
+		const variants = SHOGUN_ROLE_IMAGES[player.treacheryRole] ?? [];
+		if (variants.length === 0) return null;
+		if (player.treacheryRole !== 'assassin') return variants[0];
+		const normalizedIndex = ((player.id - 1) % variants.length + variants.length) % variants.length;
+		return variants[normalizedIndex];
 	};
 
 	/**
@@ -290,6 +315,15 @@
 						class="w-full max-h-[360px] object-contain rounded-lg bg-black/40"
 						on:error={handleRevealImageError}
 					/>
+				{:else if isShogunVariant}
+					{@const shogunRoleImage = getShogunRoleImage(revealedPlayer)}
+					{#if shogunRoleImage}
+					<img
+						src={shogunRoleImage}
+						alt={roleDisplay(revealedPlayer.treacheryRole)}
+						class="w-full max-h-[360px] object-contain rounded-lg bg-black/40"
+					/>
+					{/if}
 				{/if}
 				<div class="text-sm text-gray-300">{$_('treachery_role')}</div>
 				<div class="text-xl font-bold capitalize">{roleDisplay(revealedPlayer.treacheryRole)}</div>
