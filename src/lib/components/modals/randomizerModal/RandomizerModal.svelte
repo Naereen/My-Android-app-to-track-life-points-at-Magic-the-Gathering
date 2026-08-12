@@ -5,6 +5,7 @@
 	import { resetRandomizer, randomizerModalData } from '$lib/store/modal';
 	import { appSettings } from '$lib/store/appSettings';
 	import { playGameplaySound } from '$lib/utils/gameplaySound';
+	import { getRandomizerResultTranslationKey } from '$lib/utils/randomizer';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
@@ -49,6 +50,10 @@
 	$: face = displayResult || getMaxSides($randomizerModalData.type);
 	$: prefix = getPrefix($randomizerModalData.type);
 	$: diceClass = prefix && face ? `${prefix}-${face}` : '';
+	$: resultTranslationKey = getRandomizerResultTranslationKey(
+		$randomizerModalData.type,
+		displayResult
+	);
 
 	/**
 	 * Returns number of sides for predefined and custom dice modes.
@@ -277,6 +282,22 @@
 									{$_('planar_result_chaos')}
 								{:else}
 									{$_('planar_result_blank')}
+								{/if}
+							</div>
+						</div>
+					{:else if $randomizerModalData.type === 'd2'}
+						<div class="h-[132px] w-[120px] flex flex-col items-center justify-center gap-2">
+							<div class="h-[96px] w-[96px] flex items-center justify-center">
+								<i
+									class="{diceClass} text-white"
+									class:dice-rolling={rolling}
+									class:dice-final={!rolling && displayResult > 0}
+									style="font-size: {iconSize}; --dice-rolling-duration: {rollingMs}ms;"
+								></i>
+							</div>
+							<div class="text-white text-sm text-center min-h-[20px]">
+								{#if resultTranslationKey}
+									{$_(resultTranslationKey)}
 								{/if}
 							</div>
 						</div>

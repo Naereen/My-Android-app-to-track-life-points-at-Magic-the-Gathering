@@ -53,6 +53,8 @@
 	"planar_result_blank": "¡Sin acción!",
 	"planar_result_planeswalk": "¡Planeswalk!",
 	"planar_result_chaos": "¡Chaos!",
+	"coin_result_head": "Cara",
+	"coin_result_tail": "Cruz",
 	"set_dice": "Establecer",
 	"flip_coin": "Lanzar moneda",
 	"custom_number": "Personalizado",

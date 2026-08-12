@@ -55,6 +55,8 @@
 	"planar_result_blank": "Aucune action",
 	"planar_result_planeswalk": "Transplaner !",
 	"planar_result_chaos": "Chaos !",
+	"coin_result_head": "Face",
+	"coin_result_tail": "Pile",
 	"set_dice": "Dé à ?",
 	"flip_coin": "Pile / Face",
 	"custom_number": "Choisir",

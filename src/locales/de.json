@@ -53,6 +53,8 @@
 	"planar_result_blank": "Keine Aktion!",
 	"planar_result_planeswalk": "Planeswalk!",
 	"planar_result_chaos": "Chaos!",
+	"coin_result_head": "Kopf",
+	"coin_result_tail": "Zahl",
 	"set_dice": "Setzen",
 	"flip_coin": "Münze werfen",
 	"custom_number": "Benutzerdefiniert",

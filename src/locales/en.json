@@ -53,6 +53,8 @@
 	"planar_result_blank": "No Action",
 	"planar_result_planeswalk": "Planeswalk!",
 	"planar_result_chaos": "Chaos!",
+	"coin_result_head": "Head",
+	"coin_result_tail": "Tail",
 	"set_dice": "Set",
 	"flip_coin": "Flip coin",
 	"custom_number": "Custom",
