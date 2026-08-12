@@ -28,9 +28,9 @@
 		setStartingPlayerProbability,
 		resetStartingPlayerProbabilities,
 		setAppLocale,
-		setShowPlanechaseMenu
+		setShowPlanechaseMenu,
+		setShowArchenemyMenu
 	} from '$lib/store/appSettings';
-	import { setShowArchenemyMenu } from '$lib/store/appSettings';
 	import {
 		setTurnTimerEnabled,
 		setTurnTimerDuration,

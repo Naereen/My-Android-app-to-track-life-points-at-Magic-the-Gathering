@@ -139,7 +139,11 @@ export const reshuffleSchemeDeck = () => {
 export const abandonOngoingScheme = () => {
 	archenemyState.update((s) => {
 		if (!s.isOngoing || s.deck.length === 0) return s;
-		const nextIndex = s.deck.length > 1 ? (s.currentIndex + 1) % s.deck.length : s.currentIndex;
+		if (s.deck.length === 1) {
+			// Only card in deck — mark abandoned so the UI can reflect the state
+			return { ...s, ongoingAbandoned: true };
+		}
+		const nextIndex = (s.currentIndex + 1) % s.deck.length;
 		const isOngoing = detectOngoing(s.deck[nextIndex]);
 		return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false };
 	});
