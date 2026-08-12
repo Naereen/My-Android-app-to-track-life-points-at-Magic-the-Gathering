@@ -14,6 +14,7 @@
 	import BountyMenu from './subcomponents/bounty/BountyMenu.svelte';
 	import HistoryMenu from './subcomponents/history/HistoryMenu.svelte';
 	import PlanechaseMenu from './subcomponents/planechase/PlanechaseMenu.svelte';
+	import ArchenemyMenu from './subcomponents/archenemy/ArchenemyMenu.svelte';
 	import DayNightCycle from './subcomponents/dayNight/DayNightCycle.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
@@ -308,6 +309,19 @@
 				</button>
 			</div>
 		{/if}
+		{#if $appSettings.showArchenemyMenu}
+			<div class="flex justify-center items-center flex-grow">
+				<button
+					on:click={() => toggleIsMenuOpen('archenemy')}
+					on:contextmenu|preventDefault
+					draggable="false"
+					title={$_('archenemy_menu_title')}
+					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+				>
+					<span class="text-large">😈</span>
+				</button>
+			</div>
+		{/if}
 		{#if $appSettings.showGameHistoryMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
@@ -396,6 +410,8 @@
 	<BountyMenu />
 {:else if $appState.activeMenu === 'planechase'}
 	<PlanechaseMenu />
+{:else if $appState.activeMenu === 'archenemy'}
+	<ArchenemyMenu />
 {:else if $appState.activeMenu === 'history'}
 	<HistoryMenu />
 {/if}

@@ -58,6 +58,8 @@ interface AppSettings {
 	vanguardDraftThree: boolean;
 	// show planechase menu button in the main menu
 	showPlanechaseMenu: boolean;
+	// show archenemy menu button in the main menu
+	showArchenemyMenu: boolean;
 	// show game history menu button in the main menu
 	showGameHistoryMenu: boolean;
 	// enable Acorn status effect controls and badges in the UI
@@ -175,6 +177,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	showGameHistoryMenu: true,
 	// show planechase menu button in the main menu
 	showPlanechaseMenu: false,
+	// show archenemy menu button in the main menu
+	showArchenemyMenu: false,
 	// Acorn and Ticket are hidden by default
 	enableAcornMode: false,
 	enableTicketMode: false,
@@ -477,6 +481,15 @@ export const setShowGameHistoryMenu = (show: boolean) => {
  */
 export const setShowPlanechaseMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showPlanechaseMenu: show }));
+};
+
+/**
+ * Shows or hides the Archenemy menu entry.
+ * @param {boolean} show Whether Archenemy menu entry is visible.
+ * @returns {void}
+ */
+export const setShowArchenemyMenu = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showArchenemyMenu: show }));
 };
 
 /**

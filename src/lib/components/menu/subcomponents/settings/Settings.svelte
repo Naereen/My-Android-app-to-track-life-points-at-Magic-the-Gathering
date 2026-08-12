@@ -28,7 +28,8 @@
 		setStartingPlayerProbability,
 		resetStartingPlayerProbabilities,
 		setAppLocale,
-		setShowPlanechaseMenu
+		setShowPlanechaseMenu,
+		setShowArchenemyMenu
 	} from '$lib/store/appSettings';
 	import {
 		setTurnTimerEnabled,
@@ -521,6 +522,11 @@
 	const handleShowPlanechaseMenuChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowPlanechaseMenu(!!target.checked);
+	};
+
+	const handleShowArchenemyMenuChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setShowArchenemyMenu(!!target.checked);
 	};
 
 	/**
@@ -1314,6 +1320,20 @@
 				/>
 				<span class="ml-2 text-lg font-semibold"
 					>{$_('show_planechase_menu_button') || '🌀 Show Planechase menu button'}</span
+				>
+			</label>
+		</div>
+
+		<div class="w-full flex justify-start mt-0 mb-0">
+			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+				<input
+					type="checkbox"
+					checked={$appSettings.showArchenemyMenu}
+					on:change={handleShowArchenemyMenuChange}
+					class="h-5 w-5"
+				/>
+				<span class="ml-2 text-lg font-semibold"
+					>{$_('show_archenemy_menu_button') || '😈 Show Archenemy menu button'}</span
 				>
 			</label>
 		</div>

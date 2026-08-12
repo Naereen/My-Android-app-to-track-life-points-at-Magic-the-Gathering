@@ -12,6 +12,7 @@ declare global {
 				| 'treachery'
 				| 'bounty'
 				| 'planechase'
+				| 'archenemy'
 				| 'history'
 				| '';
 		}
