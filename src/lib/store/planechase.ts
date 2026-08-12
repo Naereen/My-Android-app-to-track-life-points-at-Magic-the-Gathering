@@ -32,7 +32,11 @@ const initialState: PlanechaseState = {
 };
 
 // We persist the deck so players can close and reopen the modal without losing their place.
+// isOpen is always reset to false on load so a crashed/closed app doesn't auto-reopen the modal.
 export const planechaseState = persist<PlanechaseState>('planechaseState', initialState);
+
+// Reset the modal-open flag on every page load so an unexpected reload doesn't reopen it.
+planechaseState.update((s) => ({ ...s, isOpen: false }));
 
 // ---------------------------------------------------------------------------
 // Helpers

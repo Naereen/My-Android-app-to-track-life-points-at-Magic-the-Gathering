@@ -317,7 +317,7 @@
   "planechase_no_deck": "Nessun mazzo planare caricato. Torna al menu Planechase.",
   "planechase_no_image": "Nessuna immagine disponibile per questa carta.",
   "planechase_die_blank": "Vuoto — non succede nulla.",
-  "planechase_die_planeswalk": "Planewalk! Passa al piano successivo.",
+  "planechase_die_planeswalk": "Planeswalk! Passa al piano successivo.",
   "planechase_die_chaos": "Caos! Attiva l’abilità Caos del piano attuale.",
   "planechase_planeswalk_hint": "La prima carta del mazzo planare è stata rivelata come nuovo piano.",
   "planechase_dismiss": "OK",

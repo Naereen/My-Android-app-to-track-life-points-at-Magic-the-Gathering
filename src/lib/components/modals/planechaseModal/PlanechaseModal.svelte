@@ -81,7 +81,6 @@
 <div class="bg-black/80 absolute w-full h-full top-0 left-0 flex justify-center items-center z-50">
 	<div
 		class="relative bg-[#1a1c2e] rounded-[1.75rem] w-[97vw] max-h-[97vh] overflow-y-auto p-4 flex flex-col items-center gap-3"
-		style={rotated ? 'transform: rotate(180deg);' : ''}
 		role="dialog"
 		aria-label={$_('planechase_modal_title')}
 	>
@@ -132,6 +131,11 @@
 				{$_('planechase_card_counter', { values: { current: currentIndex + 1, total: deck.length } })}
 			</div>
 
+			<!-- Card image and oracle text — rotated for opposite-side players -->
+			<div
+				class="w-full flex flex-col items-center gap-2 transition-transform duration-300"
+				style={rotated ? 'transform: rotate(180deg);' : ''}
+			>
 			<!-- Card image -->
 			{#if currentFace?.image}
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -170,6 +174,7 @@
 					{/if}
 				</div>
 			{/if}
+			</div><!-- end rotatable card area -->
 
 			<!-- Navigation row -->
 			<div class="flex gap-3 w-full justify-center">

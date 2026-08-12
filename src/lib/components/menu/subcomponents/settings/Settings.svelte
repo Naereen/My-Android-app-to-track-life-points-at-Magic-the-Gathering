@@ -518,12 +518,6 @@
 		setShowGameHistoryMenu(!!target.checked);
 	};
 
-	/**
-	 * Persists Planechase menu visibility checkbox.
-	 * @param {Event} e - Parameter used by handleShowPlanechaseMenuChange.
-	 * @returns {unknown} Result produced by handleShowPlanechaseMenuChange.
-	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
-	 */
 	const handleShowPlanechaseMenuChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowPlanechaseMenu(!!target.checked);
