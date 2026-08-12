@@ -5,6 +5,7 @@ const { playGameplaySound, playLifeLongStepSound, playLifeTapBurstSound } = vi.h
 	playLifeLongStepSound: vi.fn(),
 	playLifeTapBurstSound: vi.fn()
 }));
+const fetchMock = vi.fn();
 
 const storage = new Map<string, string>();
 vi.stubGlobal('localStorage', {
@@ -19,6 +20,7 @@ vi.stubGlobal('localStorage', {
 		storage.clear();
 	}
 });
+vi.stubGlobal('fetch', fetchMock);
 
 vi.mock('svelte-i18n', () => {
 	const createStore = <T>(value: T) => ({
@@ -48,11 +50,18 @@ import { get } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { appState, setDayNightCycleEnabled } from './appState';
 import { clearGameHistory, gameHistory } from './gameHistory';
-import { applyCommanderCombatDamage, players, resetLifeTotals, setCommanderDamage } from './player';
+import {
+	applyCommanderCombatDamage,
+	assignRandomTreacheryForGame,
+	players,
+	resetLifeTotals,
+	setCommanderDamage
+} from './player';
 
 describe('game reset state', () => {
 	beforeEach(() => {
 		localStorage.clear();
+		fetchMock.mockReset();
 		clearGameHistory();
 		appSettings.set({
 			playerCount: 2,
@@ -217,5 +226,45 @@ describe('game reset state', () => {
 				lifeDelta: -2
 			}
 		});
+	});
+
+	it('still assigns treachery roles when the catalog request fails', async () => {
+		fetchMock.mockRejectedValueOnce(new Error('network down'));
+		appSettings.update((settings) => ({
+			...settings,
+			playerCount: 4,
+			treacheryModeEnabled: true
+		}));
+		players.set(
+			Array.from({ length: 4 }, (_, index) => ({
+				id: index + 1,
+				lifeTotal: 20,
+				playerName: `Player ${index + 1}`,
+				color: 'white',
+				backgroundImage: null,
+				backgroundArtist: null,
+				backgroundSet: null,
+				tempLifeDiff: 0,
+				poison: 0,
+				statusEffects: {},
+				vanguard: null,
+				vanguardChoices: [],
+				treacheryRole: null,
+				treacheryCard: null,
+				treacherySeen: false,
+				allowNegativeLife: false,
+				isFirst: false,
+				highlighted: false,
+				isDead: false
+			}))
+		);
+
+		await assignRandomTreacheryForGame();
+
+		for (const player of get(players).slice(0, 4)) {
+			expect(player.treacheryRole).toBeTruthy();
+			expect(player.treacheryCard).toBeNull();
+			expect(player.treacherySeen).toBe(false);
+		}
 	});
 });

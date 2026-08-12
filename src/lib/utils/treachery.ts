@@ -22,6 +22,15 @@ export type TreacheryCard = ScryfallEmblemCard & {
 	oracleRaw?: string;
 };
 
+export const getTreacheryRoleTranslationKey = (
+	role: string | null | undefined,
+	isShogunVariant = false
+) => {
+	if (!role) return null;
+	if (isShogunVariant && role === 'leader') return 'shogun_role_leader';
+	return `treachery_role_${role}`;
+};
+
 const TREACHERY_ORACLE_URL = 'https://mtgtreachery.net/rules/oracle/';
 const TREACHERY_CATALOG_URL = '/treachery-card-names.json';
 const TREACHERY_IMAGE_BASE_URL = 'https://mtgtreachery.net/images/cards/en/trd/';

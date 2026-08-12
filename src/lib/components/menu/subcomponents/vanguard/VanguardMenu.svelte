@@ -147,7 +147,7 @@
 			>
 				<Arrow />
 			</button>
-			<span class="text-white text-center text-3xl">{$_('vanguard_menu')}</span>
+			<span class="text-white text-center text-3xl">🛡️ {$_('vanguard_menu')}</span>
 			<span class="text-gray-400 text-center text-base mt-2 w-90">{$_('vanguard_explanation')}</span
 			>
 			<a

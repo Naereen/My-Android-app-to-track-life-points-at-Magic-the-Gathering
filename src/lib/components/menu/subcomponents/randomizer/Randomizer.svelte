@@ -91,7 +91,7 @@
 			>
 				<Arrow />
 			</button>
-			<span class="text-white text-center text-3xl">{$_('dice_misc')}</span>
+			<span class="text-white text-center text-3xl">🎲 {$_('dice_misc')}</span>
 			<span class="text-gray-400 text-center text-sm mt-2 w-80"
 				>{$_('long_click_random_player')}</span
 			>

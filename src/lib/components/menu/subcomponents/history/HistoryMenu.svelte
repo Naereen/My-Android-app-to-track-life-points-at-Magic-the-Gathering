@@ -353,7 +353,7 @@
 			>
 				<Arrow />
 			</button>
-			<span class="text-white text-center text-3xl">{$_('game_history')}</span>
+			<span class="text-white text-center text-3xl">⏳ {$_('game_history')}</span>
 		</div>
 
 		<div class="mb-4 flex flex-wrap justify-center gap-3">
