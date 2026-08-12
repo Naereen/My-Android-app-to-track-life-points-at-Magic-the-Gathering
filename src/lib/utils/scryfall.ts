@@ -300,10 +300,42 @@ export async function fetchCardBySetCollector(
 	}
 }
 
+/**
+ * Searches Scryfall for Planechase Plane and Phenomenon cards (paper, black border).
+ * Uses the canonical Planechase query: `(t:plane or t:phenomenon) game:paper border:black`.
+ * @param {string} query Optional extra search terms to narrow the results.
+ * @param {number} limit Maximum number of cards returned.
+ * @returns {Promise<ScryfallEmblemCard[]>} Normalized list, or empty list on failure.
+ */
+export async function searchPlaneCards(query: string, limit = 200): Promise<ScryfallEmblemCard[]> {
+	const clean = query?.trim() ?? '';
+	const base = '(t:plane or t:phenomenon) game:paper border:black';
+	const composed = clean.length > 0 ? `(${clean}) ${base}` : base;
+
+	const q = encodeURIComponent(composed);
+	const url = `https://api.scryfall.com/cards/search?q=${q}&order=name&unique=cards`;
+
+	try {
+		const data = await fetchJson(url);
+		if (!data || !Array.isArray(data.data)) return [];
+
+		const mapped = data.data
+			.slice(0, limit)
+			.map((c: any) => normalizeEmblemCard(c))
+			.filter((card: ScryfallEmblemCard | null): card is ScryfallEmblemCard => card !== null);
+
+		return mapped;
+	} catch (err) {
+		console.warn('Scryfall plane search failed', err);
+		return [];
+	}
+}
+
 export default {
 	searchCards,
 	randomCards,
 	searchEmblemCards,
 	searchVanguardCards,
+	searchPlaneCards,
 	fetchCardBySetCollector
 };

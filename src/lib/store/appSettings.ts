@@ -56,6 +56,8 @@ interface AppSettings {
 	bountyModeEnabled: boolean;
 	// optional paper variant: each player gets 3 random vanguards and keeps one
 	vanguardDraftThree: boolean;
+	// show planechase menu button in the main menu
+	showPlanechaseMenu: boolean;
 	// show game history menu button in the main menu
 	showGameHistoryMenu: boolean;
 	// enable Acorn status effect controls and badges in the UI
@@ -171,6 +173,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	vanguardDraftThree: false,
 	// show game history menu button in the main menu
 	showGameHistoryMenu: true,
+	// show planechase menu button in the main menu
+	showPlanechaseMenu: false,
 	// Acorn and Ticket are hidden by default
 	enableAcornMode: false,
 	enableTicketMode: false,
@@ -464,6 +468,15 @@ export const setVanguardDraftThree = (enabled: boolean) => {
  */
 export const setShowGameHistoryMenu = (show: boolean) => {
 	appSettings.update((data) => ({ ...data, showGameHistoryMenu: show }));
+};
+
+/**
+ * Shows or hides the Planechase menu entry.
+ * @param {boolean} show Whether Planechase menu entry is visible.
+ * @returns {void}
+ */
+export const setShowPlanechaseMenu = (show: boolean) => {
+	appSettings.update((data) => ({ ...data, showPlanechaseMenu: show }));
 };
 
 /**

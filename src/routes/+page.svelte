@@ -25,6 +25,8 @@
 	import ConfirmModal from '$lib/components/modals/confirmModal/ConfirmModal.svelte';
 	import EmblemModal from '$lib/components/modals/emblemModal/EmblemModal.svelte';
 	import HistoryModal from '$lib/components/modals/historyModal/HistoryModal.svelte';
+	import PlanechaseModal from '$lib/components/modals/planechaseModal/PlanechaseModal.svelte';
+	import { planechaseState } from '$lib/store/planechase';
 
 	$: innerWidth = 0;
 	import { onMount, onDestroy } from 'svelte';
@@ -292,5 +294,8 @@
 	{/if}
 	{#if $historyModalData.isOpen}
 		<HistoryModal />
+	{/if}
+	{#if $planechaseState.isOpen}
+		<PlanechaseModal />
 	{/if}
 </div>

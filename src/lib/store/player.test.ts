@@ -83,6 +83,7 @@ describe('game reset state', () => {
 			bountyModeEnabled: false,
 			vanguardDraftThree: false,
 			showGameHistoryMenu: true,
+			showPlanechaseMenu: false,
 			enableAcornMode: false,
 			enableTicketMode: false,
 			turnTimerEnabled: false,
