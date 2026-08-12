@@ -337,13 +337,15 @@
 			<div class="w-full px-1 pt-2 pb-2 text-center text-white">
 				<div class="text-2xl md:text-3xl font-bold truncate">{selected.name}</div>
 				{#if selected.set_name}
-					<div class="text-xs text-gray-300">{selected.set_name}</div>
-				{/if}
-				{#if faces.length > 1}
-					<div class="text-xs text-gray-400 mt-1">
-						{$_('emblem_face_of')}
-						{currentFaceIndex + 1}/{faces.length}
-					</div>
+					<div class="text-xs text-gray-300">
+       {selected.set_name}
+       {#if faces.length > 1}
+					     <span class="text-gray-400">
+				 		     {$_('emblem_face_of')}
+					       {currentFaceIndex + 1}/{faces.length}
+				      </span>
+			    	{/if}
+     </div>
 				{/if}
 			</div>
 
