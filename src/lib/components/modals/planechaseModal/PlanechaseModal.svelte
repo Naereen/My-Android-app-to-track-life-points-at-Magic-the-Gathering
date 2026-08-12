@@ -128,7 +128,9 @@
 		{:else}
 			<!-- Card counter -->
 			<div class="text-gray-300 text-sm">
-				{$_('planechase_card_counter', { values: { current: currentIndex + 1, total: deck.length } })}
+				{$_('planechase_card_counter', {
+					values: { current: currentIndex + 1, total: deck.length }
+				})}
 			</div>
 
 			<!-- Card image and oracle text — rotated for opposite-side players -->
@@ -136,45 +138,48 @@
 				class="w-full flex flex-col items-center gap-2 transition-transform duration-300"
 				style={rotated ? 'transform: rotate(180deg);' : ''}
 			>
-			<!-- Card image -->
-			{#if currentFace?.image}
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-				<img
-					src={currentFace.image}
-					alt={currentCard?.name ?? ''}
-					class="rounded-xl object-contain cursor-pointer transition-all"
-					class:w-full={!fullscreen}
-					class:max-h-60={!fullscreen}
-					class:fixed={fullscreen}
-					class:inset-0={fullscreen}
-					class:z-60={fullscreen}
-					class:w-screen={fullscreen}
-					class:h-screen={fullscreen}
-					class:max-h-screen={fullscreen}
-					class:bg-black={fullscreen}
-					on:click={handleToggleFullscreen}
-					draggable="false"
-				/>
-			{:else}
-				<div class="text-gray-400 text-sm py-4">{$_('planechase_no_image')}</div>
-			{/if}
+				<!-- Card image -->
+				{#if currentFace?.image}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+					<img
+						src={currentFace.image}
+						alt={currentCard?.name ?? ''}
+						class="rounded-xl object-contain cursor-pointer transition-all"
+						class:w-full={!fullscreen}
+						class:max-h-80={!fullscreen}
+						class:fixed={fullscreen}
+						class:inset-0={fullscreen}
+						class:z-60={fullscreen}
+						class:w-screen={fullscreen}
+						class:h-screen={fullscreen}
+						class:max-h-screen={fullscreen}
+						class:bg-black={fullscreen}
+						on:click={handleToggleFullscreen}
+						draggable="false"
+					/>
+				{:else}
+					<div class="text-gray-400 text-sm py-4">{$_('planechase_no_image')}</div>
+				{/if}
 
-			<!-- Card name and oracle text -->
-			{#if currentCard}
-				<div class="w-full text-center">
-					<div class="text-white font-bold text-lg">{currentCard.name}</div>
-					{#if currentFace?.typeLine}
-						<div class="text-gray-400 text-xs mt-0.5">{currentFace.typeLine}</div>
-					{/if}
-					{#if currentFace?.oracleText}
-						<div class="text-gray-200 text-sm mt-1 text-left bg-black/30 rounded-xl px-3 py-2 whitespace-pre-line">
-							{currentFace.oracleText}
-						</div>
-					{/if}
-				</div>
-			{/if}
-			</div><!-- end rotatable card area -->
+				<!-- Card name and oracle text -->
+				{#if currentCard}
+					<div class="w-full text-center">
+						<div class="text-white font-bold text-lg">{currentCard.name}</div>
+						{#if currentFace?.typeLine}
+							<div class="text-gray-400 text-xs mt-0.5">{currentFace.typeLine}</div>
+						{/if}
+						{#if currentFace?.oracleText}
+							<div
+								class="text-gray-200 text-sm mt-1 text-left bg-black/30 rounded-xl px-3 py-2 whitespace-pre-line"
+							>
+								{currentFace.oracleText}
+							</div>
+						{/if}
+					</div>
+				{/if}
+			</div>
+			<!-- end rotatable card area -->
 
 			<!-- Navigation row -->
 			<div class="flex gap-3 w-full justify-center">
@@ -213,7 +218,9 @@
 					<div class="text-3xl">{dieResultEmoji(lastDieResult)}</div>
 					<div>{dieResultLabel(lastDieResult)}</div>
 					{#if isChaos && currentFace?.oracleText}
-						<div class="text-sm font-normal text-gray-200 mt-1 text-left whitespace-pre-line bg-black/25 rounded-xl px-3 py-2">
+						<div
+							class="text-sm font-normal text-gray-200 mt-1 text-left whitespace-pre-line bg-black/25 rounded-xl px-3 py-2"
+						>
 							{currentFace.oracleText}
 						</div>
 					{/if}
@@ -234,9 +241,11 @@
 		{/if}
 
 		<!-- Rules reminder -->
-		<div class="w-full rounded-2xl bg-black/30 px-4 py-3 text-gray-300 text-xs">
-			<div class="font-bold text-white text-sm mb-1">📜 {$_('planechase_rules_title')}</div>
-			<p class="whitespace-pre-line leading-relaxed">{$_('planechase_rules_summary')}</p>
+		<details class="w-full rounded-2xl bg-black/30 px-4 py-3 text-gray-300 text-xs">
+			<summary class="cursor-pointer font-bold text-white text-sm"
+				>📜 {$_('planechase_rules_title')}</summary
+			>
+			<p class="whitespace-pre-line leading-relaxed mt-1">{$_('planechase_rules_summary')}</p>
 			<a
 				href="https://mtg.wiki/page/Planechase_(format)"
 				target="_blank"
@@ -245,6 +254,6 @@
 			>
 				{$_('planechase_rules_link')}
 			</a>
-		</div>
+		</details>
 	</div>
 </div>

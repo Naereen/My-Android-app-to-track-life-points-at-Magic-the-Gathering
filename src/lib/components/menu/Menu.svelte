@@ -304,7 +304,7 @@
 					title={$_('planechase_menu_title')}
 					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
 				>
-					<i class="mi mi-chaos mi-3x text-white"></i>
+					<i class="mi mi-chaos mi-1x text-white"></i>
 				</button>
 			</div>
 		{/if}

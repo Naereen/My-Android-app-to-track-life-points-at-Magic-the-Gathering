@@ -98,7 +98,6 @@
 
 		<div class="w-full px-4 mt-1 mb-4">
 			<div class="max-w-4xl mx-auto flex flex-col gap-4">
-
 				<!-- Quick-start: load all planes -->
 				<div class="bg-[#2d2f30] rounded-2xl p-4 flex flex-col gap-3">
 					<div class="text-white font-semibold text-base">{$_('planechase_quick_start_title')}</div>
@@ -110,7 +109,9 @@
 							on:click={handleOpenExisting}
 							disabled={isSearching}
 						>
-							🗺️ {$_('planechase_continue_deck', { values: { count: $planechaseState.deck.length } })}
+							🗺️ {$_('planechase_continue_deck', {
+								values: { count: $planechaseState.deck.length }
+							})}
 						</button>
 					{/if}
 
@@ -185,9 +186,11 @@
 				</div>
 
 				<!-- Rules reminder -->
-				<div class="bg-[#2d2f30] rounded-2xl p-4 text-gray-300 text-xs">
-					<div class="font-bold text-white text-sm mb-1">📜 {$_('planechase_rules_title')}</div>
-					<p class="whitespace-pre-line leading-relaxed">{$_('planechase_rules_summary')}</p>
+				<details class="bg-[#2d2f30] rounded-2xl p-4 text-gray-300 text-xs">
+					<summary class="cursor-pointer font-bold text-white text-sm"
+						>📜 {$_('planechase_rules_title')}</summary
+					>
+					<p class="whitespace-pre-line leading-relaxed mt-1">{$_('planechase_rules_summary')}</p>
 					<a
 						href="https://mtg.wiki/page/Planechase_(format)"
 						target="_blank"
@@ -196,7 +199,7 @@
 					>
 						{$_('planechase_rules_link')}
 					</a>
-				</div>
+				</details>
 			</div>
 		</div>
 	</div>
