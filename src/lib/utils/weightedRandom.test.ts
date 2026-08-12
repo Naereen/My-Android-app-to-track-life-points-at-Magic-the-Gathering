@@ -11,7 +11,10 @@ describe('pickWeightedIndex', () => {
 	});
 
 	it('selects the bucket matching the random roll across weighted ranges', () => {
-		vi.spyOn(Math, 'random').mockReturnValueOnce(0).mockReturnValueOnce(0.2).mockReturnValueOnce(0.95);
+		vi.spyOn(Math, 'random')
+			.mockReturnValueOnce(0)
+			.mockReturnValueOnce(0.2)
+			.mockReturnValueOnce(0.95);
 
 		expect(pickWeightedIndex([1, 2, 3], 3)).toBe(0);
 		expect(pickWeightedIndex([1, 2, 3], 3)).toBe(1);

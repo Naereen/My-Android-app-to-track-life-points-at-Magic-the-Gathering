@@ -62,8 +62,8 @@ describe('treachery image candidate generation', () => {
 	});
 
 	it('returns no candidates for invalid card identifiers', () => {
-		expect(getTreacheryImageCandidates(Number.NaN, 'traitor', 'Hidden Agenda', 'hidden-agenda')).toEqual(
-			[]
-		);
+		expect(
+			getTreacheryImageCandidates(Number.NaN, 'traitor', 'Hidden Agenda', 'hidden-agenda')
+		).toEqual([]);
 	});
 });
