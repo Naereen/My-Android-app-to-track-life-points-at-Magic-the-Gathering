@@ -138,7 +138,7 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	// layout for 6-players games: 'one' ("3 x 2") or 'two' ("|::|")
 	sixPlayerLayout: 'one',
 	// layout for 8-players games: 'classic' (top/bottom + sides) or 'sides' (4 on each side)
-	eightPlayerLayout: 'classic',
+	eightPlayerLayout: 'sides',
 	// whether to enable haptic feedback (vibration) for certain actions like incrementing/decrementing life totals (default is true)
 	hapticsEnabled: true,
 	// whether to enable gameplay sound effects for major game events (default is true)

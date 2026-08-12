@@ -69,7 +69,7 @@
 	>
 		<!-- Header row -->
 		<div class="w-full flex items-center justify-between">
-			<span class="text-white text-2xl font-bold">{$_('archenemy_modal_title')}</span>
+			<span class="text-white text-2xl font-bold">😈 {$_('archenemy_modal_title')}</span>
 			<div class="flex gap-2 items-center">
 				<button
 					type="button"
@@ -195,7 +195,7 @@
 			<div class="flex gap-3 w-full justify-center flex-wrap">
 				<button
 					type="button"
-					class="flex-1 max-w-[8rem] py-2 rounded-xl bg-slate-700 text-white text-sm font-semibold hover:bg-slate-600 transition-colors"
+					class="flex-1 max-w-[7rem] py-2 rounded-xl bg-red-900/70 text-white text-sm font-semibold hover:bg-red-800/80 transition-colors"
 					on:click={handlePrevScheme}
 				>
 					⬅️ {$_('archenemy_prev')}
@@ -204,7 +204,7 @@
 				<!-- Reveal / activate scheme -->
 				<button
 					type="button"
-					class="flex-1 max-w-[10rem] py-2 rounded-xl bg-red-800 text-white text-base font-bold shadow hover:bg-red-700 transition-colors"
+					class="flex-1 max-w-[12rem] py-2 rounded-xl bg-red-800 text-white text-base font-bold shadow hover:bg-red-700 transition-colors"
 					on:click={handleReveal}
 				>
 					😈 {$_('archenemy_activate')}
@@ -212,7 +212,7 @@
 
 				<button
 					type="button"
-					class="flex-1 max-w-[8rem] py-2 rounded-xl bg-slate-700 text-white text-sm font-semibold hover:bg-slate-600 transition-colors"
+					class="flex-1 max-w-[7rem] py-2 rounded-xl bg-green-900/70 text-white text-sm font-semibold hover:bg-green-800/80 transition-colors"
 					on:click={handleNextScheme}
 				>
 					{$_('archenemy_next')} ➡️

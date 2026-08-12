@@ -166,7 +166,7 @@
 					<div class="flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
 						<div>
 							<div class="text-white text-lg font-semibold">
-								{$_('vanguard_mode_settings_title')}
+								🛡️ {$_('vanguard_mode_settings_title')}
 							</div>
 							<div class="text-gray-300 text-sm">
 								{$_('vanguard_mode_status')}: {$appSettings.vanguardModeEnabled

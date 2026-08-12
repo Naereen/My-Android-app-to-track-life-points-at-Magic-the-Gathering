@@ -146,13 +146,13 @@
 						>
 						<button
 							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
-							on:click={() => handleLoadPresetSet('ARC')}
-							disabled={isSearching}>ARC</button
+							on:click={() => handleLoadPresetSet('OARC')}
+							disabled={isSearching}>OARC</button
 						>
 						<button
 							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
-							on:click={() => handleLoadPresetSet('EO1')}
-							disabled={isSearching}>EO1</button
+							on:click={() => handleLoadPresetSet('OE01')}
+							disabled={isSearching}>OE01</button
 						>
 					</div>
 				</div>

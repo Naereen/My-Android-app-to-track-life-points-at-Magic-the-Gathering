@@ -84,15 +84,15 @@
 </script>
 
 <!-- Backdrop -->
-<div class="bg-black/80 absolute w-full h-full top-0 left-0 flex justify-center items-center z-50">
+<div class="bg-black/80 absolute w-full h-full top-0 left-0 flex justify-center items-start pt-[7.5vh] z-50">
 	<div
-		class="relative bg-[#1a1c2e] rounded-[1.75rem] w-[97vw] max-h-[97vh] overflow-y-auto p-4 flex flex-col items-center gap-3"
+		class="relative bg-[#1a1c2e] rounded-[1.75rem] w-[97vw] max-h-[85vh] overflow-y-auto p-4 flex flex-col items-center gap-3"
 		role="dialog"
 		aria-label={$_('planechase_modal_title')}
 	>
 		<!-- Header row -->
 		<div class="w-full flex items-center justify-between">
-			<span class="text-white text-2xl font-bold">{$_('planechase_modal_title')}</span>
+			<span class="text-white text-2xl font-bold">🌀 {$_('planechase_modal_title')}</span>
 			<div class="flex gap-2 items-center">
 				<button
 					type="button"
@@ -161,7 +161,7 @@
 						src={displayedCardImage}
 						alt={currentCard?.name ?? ''}
 						class="rounded-xl object-contain cursor-pointer transition-all"
-						class:w-full={!fullscreen}
+						class:w-[95%]={!fullscreen}
 						class:max-h-80={!fullscreen}
 						class:fixed={fullscreen}
 						class:inset-0={fullscreen}
@@ -212,7 +212,7 @@
 			<div class="flex gap-3 w-full justify-center">
 				<button
 					type="button"
-					class="flex-1 max-w-[8rem] py-2 rounded-xl bg-slate-700 text-white text-sm font-semibold hover:bg-slate-600 transition-colors"
+					class="flex-1 max-w-[7rem] py-2 rounded-xl bg-red-900/70 text-white text-sm font-semibold hover:bg-red-800/80 transition-colors"
 					on:click={handlePrevPlane}
 				>
 					⬅️ {$_('planechase_prev')}
@@ -220,14 +220,14 @@
 				<!-- Roll chaos die -->
 				<button
 					type="button"
-					class="flex-1 max-w-[10rem] py-2 rounded-xl bg-purple-700 text-white text-base font-bold shadow hover:bg-purple-600 transition-colors"
+					class="flex-1 max-w-[12rem] py-2 rounded-xl bg-purple-700 text-white text-base font-bold shadow hover:bg-purple-600 transition-colors"
 					on:click={handleRollDie}
 				>
 					🎲 {$_('planechase_roll_die')}
 				</button>
 				<button
 					type="button"
-					class="flex-1 max-w-[8rem] py-2 rounded-xl bg-slate-700 text-white text-sm font-semibold hover:bg-slate-600 transition-colors"
+					class="flex-1 max-w-[7rem] py-2 rounded-xl bg-green-900/70 text-white text-sm font-semibold hover:bg-green-800/80 transition-colors"
 					on:click={handleNextPlane}
 				>
 					{$_('planechase_next')} ➡️
