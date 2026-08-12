@@ -53,6 +53,8 @@
 	"planar_result_blank": "Sem ação!",
 	"planar_result_planeswalk": "Planeswalk!",
 	"planar_result_chaos": "Chaos!",
+	"coin_result_head": "Cara",
+	"coin_result_tail": "Coroa",
 	"set_dice": "Definir",
 	"flip_coin": "Lançar moeda",
 	"custom_number": "Personalizado",

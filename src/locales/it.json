@@ -53,6 +53,8 @@
 	"planar_result_blank": "Nessuna azione!",
 	"planar_result_planeswalk": "Planeswalk!",
 	"planar_result_chaos": "Chaos!",
+	"coin_result_head": "Testa",
+	"coin_result_tail": "Croce",
 	"set_dice": "Imposta",
 	"flip_coin": "Lancia moneta",
 	"custom_number": "Personalizzato",
