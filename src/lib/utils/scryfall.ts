@@ -331,11 +331,43 @@ export async function searchPlaneCards(query: string, limit = 200): Promise<Scry
 	}
 }
 
+/**
+ * Searches Scryfall cards for Archenemy Scheme cards.
+ * Uses the canonical query: `t:scheme game:paper`.
+ * @param {string} query Optional extra search terms to narrow the results.
+ * @param {number} limit Maximum number of cards returned.
+ * @returns {Promise<ScryfallEmblemCard[]>} Normalized list, or empty list on failure.
+ */
+export async function searchSchemeCards(query: string, limit = 200): Promise<ScryfallEmblemCard[]> {
+	const clean = query?.trim() ?? '';
+	const base = 't:scheme game:paper';
+	const composed = clean.length > 0 ? `(${clean}) ${base}` : base;
+
+	const q = encodeURIComponent(composed);
+	const url = `https://api.scryfall.com/cards/search?q=${q}&order=name&unique=cards`;
+
+	try {
+		const data = await fetchJson(url);
+		if (!data || !Array.isArray(data.data)) return [];
+
+		const mapped = data.data
+			.slice(0, limit)
+			.map((c: any) => normalizeEmblemCard(c))
+			.filter((card: ScryfallEmblemCard | null): card is ScryfallEmblemCard => card !== null);
+
+		return mapped;
+	} catch (err) {
+		console.warn('Scryfall scheme search failed', err);
+		return [];
+	}
+}
+
 export default {
 	searchCards,
 	randomCards,
 	searchEmblemCards,
 	searchVanguardCards,
 	searchPlaneCards,
+	searchSchemeCards,
 	fetchCardBySetCollector
 };

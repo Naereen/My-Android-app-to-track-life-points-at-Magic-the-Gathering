@@ -27,6 +27,8 @@
 	import HistoryModal from '$lib/components/modals/historyModal/HistoryModal.svelte';
 	import PlanechaseModal from '$lib/components/modals/planechaseModal/PlanechaseModal.svelte';
 	import { planechaseState } from '$lib/store/planechase';
+	import ArchenemyModal from '$lib/components/modals/archenemyModal/ArchenemyModal.svelte';
+	import { archenemyState } from '$lib/store/archenemy';
 
 	$: innerWidth = 0;
 	import { onMount, onDestroy } from 'svelte';
@@ -297,5 +299,8 @@
 	{/if}
 	{#if $planechaseState.isOpen}
 		<PlanechaseModal />
+	{/if}
+	{#if $archenemyState.isOpen}
+		<ArchenemyModal />
 	{/if}
 </div>
