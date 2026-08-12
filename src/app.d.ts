@@ -11,6 +11,7 @@ declare global {
 				| 'vanguard'
 				| 'treachery'
 				| 'bounty'
+				| 'planechase'
 				| 'history'
 				| '';
 		}

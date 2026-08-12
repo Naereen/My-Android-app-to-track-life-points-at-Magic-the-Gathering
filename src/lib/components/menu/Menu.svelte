@@ -13,6 +13,7 @@
 	import TreacheryMenu from './subcomponents/treachery/TreacheryMenu.svelte';
 	import BountyMenu from './subcomponents/bounty/BountyMenu.svelte';
 	import HistoryMenu from './subcomponents/history/HistoryMenu.svelte';
+	import PlanechaseMenu from './subcomponents/planechase/PlanechaseMenu.svelte';
 	import DayNightCycle from './subcomponents/dayNight/DayNightCycle.svelte';
 	import Resources from './subcomponents/resources/Resources.svelte';
 	import Settings from './subcomponents/settings/Settings.svelte';
@@ -294,6 +295,19 @@
 				</button>
 			</div>
 		{/if}
+		{#if $appSettings.showPlanechaseMenu}
+			<div class="flex justify-center items-center flex-grow">
+				<button
+					on:click={() => toggleIsMenuOpen('planechase')}
+					on:contextmenu|preventDefault
+					draggable="false"
+					title={$_('planechase_menu_title')}
+					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+				>
+					<i class="mi mi-chaos mi-3x text-white"></i>
+				</button>
+			</div>
+		{/if}
 		{#if $appSettings.showGameHistoryMenu}
 			<div class="flex justify-center items-center flex-grow">
 				<button
@@ -380,6 +394,8 @@
 	<TreacheryMenu />
 {:else if $appState.activeMenu === 'bounty'}
 	<BountyMenu />
+{:else if $appState.activeMenu === 'planechase'}
+	<PlanechaseMenu />
 {:else if $appState.activeMenu === 'history'}
 	<HistoryMenu />
 {/if}
