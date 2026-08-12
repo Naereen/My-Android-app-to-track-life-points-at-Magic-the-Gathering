@@ -24,7 +24,7 @@
 		assassin: [
 			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin1.png',
 			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin2.png',
-			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin1.png','https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin2.png
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin1.png','https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin2.png'
 		],
 		traitor: [
 			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/traitre.png'
