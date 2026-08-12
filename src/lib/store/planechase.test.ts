@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { extractChaosOracleText } from './planechase';
 
 describe('extractChaosOracleText', () => {
+	it('returns empty string for empty input', () => {
+		expect(extractChaosOracleText('')).toBe('');
+	});
+
 	it('returns full text when no chaos clause is present', () => {
 		const text = 'Players can’t cast spells.';
 		expect(extractChaosOracleText(text)).toBe(text);

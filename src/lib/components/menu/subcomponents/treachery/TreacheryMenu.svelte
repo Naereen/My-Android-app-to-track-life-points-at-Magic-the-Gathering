@@ -152,7 +152,8 @@
 		const variants = SHOGUN_ROLE_IMAGES[player.treacheryRole] ?? [];
 		if (variants.length === 0) return null;
 		if (player.treacheryRole !== 'assassin') return variants[0];
-		return variants[(player.id - 1) % variants.length];
+		const normalizedIndex = ((player.id - 1) % variants.length + variants.length) % variants.length;
+		return variants[normalizedIndex];
 	};
 
 	/**
@@ -314,12 +315,15 @@
 						class="w-full max-h-[360px] object-contain rounded-lg bg-black/40"
 						on:error={handleRevealImageError}
 					/>
-				{:else if isShogunVariant && getShogunRoleImage(revealedPlayer)}
+				{:else if isShogunVariant}
+					{@const shogunRoleImage = getShogunRoleImage(revealedPlayer)}
+					{#if shogunRoleImage}
 					<img
-						src={getShogunRoleImage(revealedPlayer) ?? ''}
+						src={shogunRoleImage}
 						alt={roleDisplay(revealedPlayer.treacheryRole)}
 						class="w-full max-h-[360px] object-contain rounded-lg bg-black/40"
 					/>
+					{/if}
 				{/if}
 				<div class="text-sm text-gray-300">{$_('treachery_role')}</div>
 				<div class="text-xl font-bold capitalize">{roleDisplay(revealedPlayer.treacheryRole)}</div>

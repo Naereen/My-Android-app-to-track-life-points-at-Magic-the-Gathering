@@ -341,6 +341,7 @@
 	"archenemy_prev": "Prev",
 	"archenemy_next": "Next",
 	"archenemy_reshuffle": "Reshuffle",
+	"archenemy_rotate": "Rotate 180°",
 	"archenemy_close": "Close",
 	"archenemy_no_deck": "No scheme deck loaded. Go back to the Archenemy menu to load one.",
 	"archenemy_no_image": "No image available for this card.",

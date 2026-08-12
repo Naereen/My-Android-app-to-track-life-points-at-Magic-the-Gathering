@@ -15,6 +15,7 @@
 	import { vibrate } from '$lib/utils/haptics';
 
 	let fullscreen = false;
+	// Canonical Plane/Phenomenon card back requested by issue #103.
 	const PLANECHASE_CARD_BACK_URL =
 		'https://backs.scryfall.io/large/7/8/7840c131-f96b-4700-9347-2215c43156e6.jpg?1665006192';
 
@@ -26,7 +27,7 @@
 	$: lastDieResult = $planechaseState.lastDieResult;
 	$: isChaos = lastDieResult === 'chaos';
 	$: isPlaneswalk = lastDieResult === 'planeswalk';
-	$: displayedCardImage = currentFace?.image || PLANECHASE_CARD_BACK_URL;
+	$: displayedCardImage = currentFace ? currentFace.image || PLANECHASE_CARD_BACK_URL : null;
 	$: chaosOracleText = extractChaosOracleText(currentFace?.oracleText ?? '');
 
 	const handleRollDie = () => {
@@ -178,6 +179,8 @@
 							type="button"
 							class="fixed right-4 top-4 z-[61] rounded-full bg-red-600/95 px-3 py-2 text-sm font-bold text-white shadow-xl"
 							on:click={handleToggleFullscreen}
+							aria-label={$_('planechase_close')}
+							title={$_('planechase_close')}
 						>
 							❌
 						</button>

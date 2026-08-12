@@ -30,7 +30,6 @@
 	let errorMsg = '';
 
 	$: currentCard = cards[currentCardIndex] ?? null;
-	$: effectiveBackImage = bountyBackImage || cards[0]?.imageUri || '';
 
 	$: REWARDS[1] = $_('bounty_reward_1');
 	$: REWARDS[2] = $_('bounty_reward_2');
@@ -201,17 +200,19 @@
 						{#if showBack}
 							<!-- Card back (face-down) -->
 							<div class="flex flex-col items-center gap-2">
-								<button
-									type="button"
-									class="rounded-xl cursor-zoom-in"
-									on:click={() => openImageZoomModal(effectiveBackImage, 'Bounty card back')}
-								>
-									<img
-										src={effectiveBackImage}
-										alt="Bounty card back"
-										class="rounded-xl w-full max-w-[17rem] max-h-[23rem] object-contain bg-black/40"
-									/>
-								</button>
+								{#if bountyBackImage}
+									<button
+										type="button"
+										class="rounded-xl cursor-zoom-in"
+										on:click={() => openImageZoomModal(bountyBackImage, 'Bounty card back')}
+									>
+										<img
+											src={bountyBackImage}
+											alt="Bounty card back"
+											class="rounded-xl w-full max-w-[17rem] max-h-[23rem] object-contain bg-black/40"
+										/>
+									</button>
+								{/if}
 								<button
 									class="bg-amber-600 hover:bg-amber-700 rounded-xl px-5 py-2 text-white text-sm mt-1"
 									on:click={revealCard}
@@ -362,14 +363,16 @@
 									<div>4️⃣ {$_('bounty_reward_4')}</div>
 								</div>
 							</div>
-							<button
-								class="text-amber-400 underline text-xs mt-2"
-								on:click={() => {
-									openImageZoomModal(effectiveBackImage, 'Bounty card back');
-								}}
-							>
-								{$_('bounty_show_back_image')}
-							</button>
+							{#if bountyBackImage}
+								<button
+									class="text-amber-400 underline text-xs mt-2"
+									on:click={() => {
+										openImageZoomModal(bountyBackImage, 'Bounty card back');
+									}}
+								>
+									{$_('bounty_show_back_image')}
+								</button>
+							{/if}
 						</div>
 					{/if}
 				</div>

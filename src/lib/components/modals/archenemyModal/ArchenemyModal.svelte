@@ -84,8 +84,8 @@
 					type="button"
 					class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600/90 text-xl text-white shadow transition-transform hover:scale-105"
 					on:click={handleRotate}
-					title={$_('planechase_rotate')}
-					aria-label={$_('planechase_rotate')}
+					title={$_('archenemy_rotate')}
+					aria-label={$_('archenemy_rotate')}
 				>
 					🔄
 				</button>
@@ -163,6 +163,8 @@
 							type="button"
 							class="fixed right-4 top-4 z-[61] rounded-full bg-red-600/95 px-3 py-2 text-sm font-bold text-white shadow-xl"
 							on:click={handleToggleFullscreen}
+							aria-label={$_('archenemy_close')}
+							title={$_('archenemy_close')}
 						>
 							❌
 						</button>
