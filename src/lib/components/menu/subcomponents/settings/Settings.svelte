@@ -1221,34 +1221,37 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.vanguardModeEnabled}
-					on:change={handleVanguardModeEnabledChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('vanguard_mode_enabled') || 'Enable Vanguard mode on new game'}</span
-				>
-			</label>
-		</div>
+		{#if $appSettings.showVanguardMenu}
+			<div class="w-full flex justify-start mt-0 mb-0">
+				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+					<input
+						type="checkbox"
+						checked={$appSettings.vanguardModeEnabled}
+						on:change={handleVanguardModeEnabledChange}
+						class="h-5 w-5"
+					/>
+					<span class="ml-2 text-lg font-semibold"
+						>{$_('vanguard_mode_enabled') || 'Enable Vanguard mode on new game'}</span
+					>
+				</label>
+			</div>
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.vanguardDraftThree}
-					on:change={handleVanguardDraftThreeChange}
-					class="h-5 w-5"
-					disabled={!$appSettings.vanguardModeEnabled}
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('vanguard_draft_three') || 'Variant: 3 Vanguard cards then keep one'}</span
-				>
-			</label>
-		</div>
+			{#if $appSettings.vanguardModeEnabled}
+				<div class="w-full flex justify-start mt-0 mb-0">
+					<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+						<input
+							type="checkbox"
+							checked={$appSettings.vanguardDraftThree}
+							on:change={handleVanguardDraftThreeChange}
+							class="h-5 w-5"
+						/>
+						<span class="ml-2 text-lg font-semibold"
+							>{$_('vanguard_draft_three') || 'Variant: 3 Vanguard cards then keep one'}</span
+						>
+					</label>
+				</div>
+			{/if}
+		{/if}
 
 		<div class="w-full flex justify-start mt-0 mb-0">
 			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
@@ -1264,37 +1267,40 @@
 			</label>
 		</div>
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.treacheryModeEnabled}
-					on:change={handleTreacheryModeEnabledChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('treachery_mode_enabled') || 'Enable Treachery mode on new game'}</span
-				>
-			</label>
-		</div>
+		{#if $appSettings.showTreacheryMenu}
+			<div class="w-full flex justify-start mt-0 mb-0">
+				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
+					<input
+						type="checkbox"
+						checked={$appSettings.treacheryModeEnabled}
+						on:change={handleTreacheryModeEnabledChange}
+						class="h-5 w-5"
+					/>
+					<span class="ml-2 text-lg font-semibold"
+						>{$_('treachery_mode_enabled') || 'Enable Treachery mode on new game'}</span
+					>
+				</label>
+			</div>
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.shogunVariantEnabled}
-					on:change={handleShogunVariantEnabledChange}
-					class="h-5 w-5"
-					disabled={!$appSettings.treacheryModeEnabled}
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('shogun_variant_enabled') || 'Enable Shogun variant (simpler)'}</span
-				>
-			</label>
-		</div>
+			{#if $appSettings.treacheryModeEnabled}
+				<div class="w-full flex justify-start mt-0 mb-0">
+					<label
+						class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
+						style="min-width: 12rem;"
+					>
+						<input
+							type="checkbox"
+							checked={$appSettings.shogunVariantEnabled}
+							on:change={handleShogunVariantEnabledChange}
+							class="h-5 w-5"
+						/>
+						<span class="ml-2 text-lg font-semibold"
+							>{$_('shogun_variant_enabled') || 'Enable Shogun variant (simpler)'}</span
+						>
+					</label>
+				</div>
+			{/if}
+		{/if}
 
 		<div class="w-full flex justify-start mt-0 mb-0">
 			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">

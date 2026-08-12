@@ -12,6 +12,7 @@
 	import { vibrate } from '$lib/utils/haptics';
 
 	let fullscreen = false;
+	let rotated = false;
 
 	$: deck = $archenemyState.deck;
 	$: currentIndex = $archenemyState.currentIndex;
@@ -31,6 +32,11 @@
 
 	const handleToggleFullscreen = () => {
 		fullscreen = !fullscreen;
+	};
+
+	const handleRotate = () => {
+		vibrate(20);
+		rotated = !rotated;
 	};
 
 	const handleNextScheme = () => {
@@ -63,8 +69,26 @@
 	>
 		<!-- Header row -->
 		<div class="w-full flex items-center justify-between">
-			<span class="text-white text-xl font-bold">{$_('archenemy_modal_title')}</span>
+			<span class="text-white text-2xl font-bold">{$_('archenemy_modal_title')}</span>
 			<div class="flex gap-2 items-center">
+				<button
+					type="button"
+					class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-600/90 text-xl text-white shadow transition-transform hover:scale-105"
+					on:click={handleToggleFullscreen}
+					title={fullscreen ? $_('archenemy_close') : $_('archenemy_modal_title')}
+					aria-label={fullscreen ? $_('archenemy_close') : $_('archenemy_modal_title')}
+				>
+					{#if fullscreen}🗗{:else}⛶{/if}
+				</button>
+				<button
+					type="button"
+					class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600/90 text-xl text-white shadow transition-transform hover:scale-105"
+					on:click={handleRotate}
+					title={$_('planechase_rotate')}
+					aria-label={$_('planechase_rotate')}
+				>
+					🔄
+				</button>
 				<!-- Reshuffle button -->
 				<button
 					type="button"
@@ -78,7 +102,7 @@
 				<!-- Close button -->
 				<button
 					type="button"
-					class="flex h-12 w-12 items-center justify-center rounded-full bg-red-600/95 text-3xl font-black text-white shadow-xl transition-transform hover:scale-105"
+					class="flex h-10 w-10 items-center justify-center rounded-full bg-red-600/95 text-2xl font-black text-white shadow-xl transition-transform hover:scale-105"
 					on:click={handleClose}
 					aria-label={$_('archenemy_close')}
 					title={$_('archenemy_close')}
@@ -110,7 +134,10 @@
 			{/if}
 
 			<!-- Card image and oracle text -->
-			<div class="w-full flex flex-col items-center gap-2">
+			<div
+				class="w-full flex flex-col items-center gap-2 transition-transform duration-300"
+				style={rotated ? 'transform: rotate(180deg);' : ''}
+			>
 				<!-- Card image -->
 				{#if currentFace?.image}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -131,6 +158,15 @@
 						on:click={handleToggleFullscreen}
 						draggable="false"
 					/>
+					{#if fullscreen}
+						<button
+							type="button"
+							class="fixed right-4 top-4 z-[61] rounded-full bg-red-600/95 px-3 py-2 text-sm font-bold text-white shadow-xl"
+							on:click={handleToggleFullscreen}
+						>
+							❌
+						</button>
+					{/if}
 				{:else}
 					<div class="text-gray-400 text-sm py-4">{$_('archenemy_no_image')}</div>
 				{/if}
@@ -160,7 +196,7 @@
 					class="flex-1 max-w-[8rem] py-2 rounded-xl bg-slate-700 text-white text-sm font-semibold hover:bg-slate-600 transition-colors"
 					on:click={handlePrevScheme}
 				>
-					⬅ {$_('archenemy_prev')}
+					⬅️ {$_('archenemy_prev')}
 				</button>
 
 				<!-- Reveal / activate scheme -->
@@ -177,7 +213,7 @@
 					class="flex-1 max-w-[8rem] py-2 rounded-xl bg-slate-700 text-white text-sm font-semibold hover:bg-slate-600 transition-colors"
 					on:click={handleNextScheme}
 				>
-					{$_('archenemy_next')} ➡
+					{$_('archenemy_next')} ➡️
 				</button>
 			</div>
 
