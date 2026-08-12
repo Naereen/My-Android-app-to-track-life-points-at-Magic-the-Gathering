@@ -3,6 +3,7 @@
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
+	import { bountyMenuState, type BountyCard } from '$lib/store/bountyState';
 
 	// Scryfall search URL for all 12 bounty cards
 	const BOUNTY_SCRYFALL_URL =
@@ -17,19 +18,25 @@
 	};
 
 	let innerHeight = 0;
-	let rewardLevel = 1;
-	let cards: Array<{ name: string; oracleText: string; imageUri: string }> = [];
-	let currentCardIndex = 0;
+	let rewardLevel = bountyMenuState.rewardLevel;
+	let cards: BountyCard[] = bountyMenuState.cards;
+	let currentCardIndex = bountyMenuState.currentCardIndex;
 	let loading = false;
-	let showBack = false;
+	let showBack = bountyMenuState.showBack;
 	let showRulesModal = false;
 	let showImageZoomModal = false;
 	let zoomedImageSrc = '';
 	let zoomedImageAlt = '';
-	let bountyBackImage = '';
-	let errorMsg = '';
+	let bountyBackImage = bountyMenuState.bountyBackImage;
+	let errorMsg = bountyMenuState.errorMsg;
 
 	$: currentCard = cards[currentCardIndex] ?? null;
+	$: bountyMenuState.rewardLevel = rewardLevel;
+	$: bountyMenuState.cards = cards;
+	$: bountyMenuState.currentCardIndex = currentCardIndex;
+	$: bountyMenuState.showBack = showBack;
+	$: bountyMenuState.bountyBackImage = bountyBackImage;
+	$: bountyMenuState.errorMsg = errorMsg;
 
 	$: REWARDS[1] = $_('bounty_reward_1');
 	$: REWARDS[2] = $_('bounty_reward_2');
@@ -152,7 +159,7 @@
 
 <div
 	class="w-full overflow-y-scroll h-full"
-	style="-webkit-overflow-scrolling: touch;"
+	style="overflow-y: scroll; -webkit-overflow-scrolling: touch; height: 100%; max-height: 100%;"
 >
 	<div class="flex flex-col">
 		<!-- Header -->

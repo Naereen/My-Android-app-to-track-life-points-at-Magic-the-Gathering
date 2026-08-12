@@ -7,6 +7,7 @@
 		setShowArchenemyMenu,
 		setShowEmblemMenu,
 		setShowGameHistoryMenu,
+		setBountyModeEnabled,
 		setShowPlanechaseMenu,
 		setShowResourcesButton,
 		setShowTreacheryMenu,
@@ -88,6 +89,7 @@
 	);
 	const startHideArchenemyButton = startMenuButtonHideLongPress(() => setShowArchenemyMenu(false));
 	const startHideHistoryButton = startMenuButtonHideLongPress(() => setShowGameHistoryMenu(false));
+	const startHideBountyButton = startMenuButtonHideLongPress(() => setBountyModeEnabled(false));
 
 	/**
 	 * Starts long-press detection on the Next button to trigger previous-turn navigation.
@@ -213,6 +215,11 @@
 	const handleHistoryClick = () => {
 		if (consumeMenuButtonLongPress()) return;
 		toggleIsMenuOpen('history');
+	};
+
+	const handleBountyClick = () => {
+		if (consumeMenuButtonLongPress()) return;
+		toggleIsMenuOpen('bounty');
 	};
 
 	/**
@@ -388,7 +395,13 @@
 		{#if $appSettings.showBountyMenu || $appSettings.bountyModeEnabled}
 			<div class="flex justify-center items-center flex-grow">
 				<button
-					on:click={() => toggleIsMenuOpen('bounty')}
+					on:click={handleBountyClick}
+					on:mousedown={startHideBountyButton}
+					on:mouseup={endMenuButtonHideLongPress}
+					on:mouseleave={endMenuButtonHideLongPress}
+					on:touchstart={startHideBountyButton}
+					on:touchend={endMenuButtonHideLongPress}
+					on:touchcancel={endMenuButtonHideLongPress}
 					on:contextmenu|preventDefault
 					draggable="false"
 					title={$_('bounty_menu')}
