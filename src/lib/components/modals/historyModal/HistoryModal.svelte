@@ -178,7 +178,7 @@
 			{/if}
 		</div>
 
-		<div class="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+		<div class="flex-1 overflow-y-auto px-4 pt-4 pb-2 sm:px-6">
 			{#if activeTab === 'turnTime'}
 				<TurnTimeStats />
 			{:else}
@@ -193,7 +193,7 @@
 
 				{#if legendEntries.length > 0}
 					<div class="mt-5 border-t border-gray-700 pt-4">
-						<div class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+						<div class="mb-3 text-sm font-semibold text-gray-300">
 							{$_('history_life_chart_legend') || 'Legend'}
 						</div>
 						<p class="mb-3 text-xs text-gray-400">{legendHintText}</p>

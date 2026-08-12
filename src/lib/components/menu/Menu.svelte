@@ -298,8 +298,8 @@
 </script>
 
 {#if !$appState.isMenuOpen}
-	<div class="flex justify-around py-1.5 items-center" class:h-14={!$appState.isMenuOpen}>
-		<div class="flex justify-center items-center flex-grow">
+	<div class="flex py-1.5 items-center overflow-x-auto scrollbar-hidden" class:h-14={!$appState.isMenuOpen}>
+		<div class="flex justify-center items-center flex-shrink-0 px-1">
 			<button
 				on:click={() => resetLifeTotals(false)}
 				on:contextmenu|preventDefault
@@ -307,7 +307,7 @@
 				class="h-10 w-10"><Reset /></button
 			>
 		</div>
-		<div class="flex justify-center items-center flex-grow">
+		<div class="flex justify-center items-center flex-shrink-0 px-1">
 			<CircularButton
 				on:click={() => toggleIsMenuOpen('settings')}
 				number={$appSettings.playerCount}
@@ -315,7 +315,7 @@
 			/>
 		</div>
 		{#if $appSettings.globalGameTimerEnabled}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					type="button"
 					on:click={handleGlobalGameTimerClick}
@@ -336,7 +336,7 @@
 			</div>
 		{/if}
 		{#if $appSettings.showEmblemMenu}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:click={handleEmblemClick}
 					on:mousedown={startHideEmblemButton}
@@ -355,7 +355,7 @@
 			</div>
 		{/if}
 		{#if $appSettings.showVanguardMenu}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:click={handleVanguardClick}
 					on:mousedown={startHideVanguardButton}
@@ -374,7 +374,7 @@
 			</div>
 		{/if}
 		{#if $appSettings.showTreacheryMenu}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:click={handleTreacheryClick}
 					on:mousedown={startHideTreacheryButton}
@@ -393,7 +393,7 @@
 			</div>
 		{/if}
 		{#if $appSettings.showBountyMenu || $appSettings.bountyModeEnabled}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:click={handleBountyClick}
 					on:mousedown={startHideBountyButton}
@@ -412,7 +412,7 @@
 			</div>
 		{/if}
 		{#if $appSettings.showPlanechaseMenu}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:click={handlePlanechaseClick}
 					on:mousedown={startHidePlanechaseButton}
@@ -431,7 +431,7 @@
 			</div>
 		{/if}
 		{#if $appSettings.showArchenemyMenu}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:click={handleArchenemyClick}
 					on:mousedown={startHideArchenemyButton}
@@ -450,7 +450,7 @@
 			</div>
 		{/if}
 		{#if $appSettings.showGameHistoryMenu}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:click={handleHistoryClick}
 					on:mousedown={startHideHistoryButton}
@@ -469,12 +469,12 @@
 			</div>
 		{/if}
 		{#if $appState.dayNightCycleEnabled}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<DayNightCycle />
 			</div>
 		{/if}
 		{#if $appSettings.showResourcesButton}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:click={handleManaClick}
 					on:mousedown={startHideResourcesButton}
@@ -491,7 +491,7 @@
 			</div>
 		{/if}
 		{#if $appSettings.showNextPlayerButton}
-			<div class="flex justify-center items-center flex-grow">
+			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
 					on:mousedown={handleTurnDown}
 					on:mouseup={handleTurnUp}

@@ -224,7 +224,7 @@
 				<div class="bg-[#2d2f30] rounded-2xl p-4">
 					<div class="flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
 						<div>
-							<div class="text-white text-lg font-semibold">{modeSettingsTitle}</div>
+							<div class="text-white text-lg font-semibold">{isShogunVariant ? '🎌' : '🕵️'} {modeSettingsTitle}</div>
 							<div class="text-gray-300 text-sm">
 								{$_('treachery_mode_status')}: {$appSettings.treacheryModeEnabled
 									? $_('history_state_on')
