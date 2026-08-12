@@ -6,7 +6,10 @@
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 	import { onMount } from 'svelte';
-	import { getTreacheryImageCandidates } from '$lib/utils/treachery';
+	import {
+		getTreacheryImageCandidates,
+		getTreacheryRoleTranslationKey
+	} from '$lib/utils/treachery';
 
 	let isAssigning = false;
 	let hasInitialized = false;
@@ -24,7 +27,8 @@
 		assassin: [
 			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin1.png',
 			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin2.png',
-			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin1.png','https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin2.png'
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin1.png',
+			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/assassin2.png'
 		],
 		traitor: [
 			'https://raw.githubusercontent.com/Naereen/Mes-regles-de-variantes-fun-et-amusantes-Magic-the-Gathering-en-LaTeX/refs/heads/main/cartes-pour-le-shogun/traitre.png'
@@ -61,9 +65,8 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const roleDisplay = (role: string | null | undefined) => {
-		if (!role) return '-';
-		if (isShogunVariant && role === 'leader') return 'Shogun';
-		return role.charAt(0).toUpperCase() + role.slice(1);
+		const translationKey = getTreacheryRoleTranslationKey(role, isShogunVariant);
+		return translationKey ? String($_(translationKey)) : '-';
 	};
 
 	/**
@@ -152,7 +155,8 @@
 		const variants = SHOGUN_ROLE_IMAGES[player.treacheryRole] ?? [];
 		if (variants.length === 0) return null;
 		if (player.treacheryRole !== 'assassin') return variants[0];
-		const normalizedIndex = ((player.id - 1) % variants.length + variants.length) % variants.length;
+		const normalizedIndex =
+			(((player.id - 1) % variants.length) + variants.length) % variants.length;
 		return variants[normalizedIndex];
 	};
 
@@ -191,6 +195,7 @@
 				<Arrow />
 			</button>
 			<span class="text-white text-center text-3xl">
+				{isShogunVariant ? '🎌' : '🕵️'}
 				{#if !isShogunVariant}
 					{$_('treachery_menu')}
 				{:else}
@@ -224,7 +229,10 @@
 				<div class="bg-[#2d2f30] rounded-2xl p-4">
 					<div class="flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
 						<div>
-							<div class="text-white text-lg font-semibold">{isShogunVariant ? '🎌' : '🕵️'} {modeSettingsTitle}</div>
+							<div class="text-white text-lg font-semibold">
+								{isShogunVariant ? '🎌' : '🕵️'}
+								{modeSettingsTitle}
+							</div>
 							<div class="text-gray-300 text-sm">
 								{$_('treachery_mode_status')}: {$appSettings.treacheryModeEnabled
 									? $_('history_state_on')
@@ -318,15 +326,15 @@
 				{:else if isShogunVariant}
 					{@const shogunRoleImage = getShogunRoleImage(revealedPlayer)}
 					{#if shogunRoleImage}
-					<img
-						src={shogunRoleImage}
-						alt={roleDisplay(revealedPlayer.treacheryRole)}
-						class="w-full max-h-[360px] object-contain rounded-lg bg-black/40"
-					/>
+						<img
+							src={shogunRoleImage}
+							alt={roleDisplay(revealedPlayer.treacheryRole)}
+							class="w-full max-h-[360px] object-contain rounded-lg bg-black/40"
+						/>
 					{/if}
 				{/if}
 				<div class="text-sm text-gray-300">{$_('treachery_role')}</div>
-				<div class="text-xl font-bold capitalize">{roleDisplay(revealedPlayer.treacheryRole)}</div>
+				<div class="text-xl font-bold">{roleDisplay(revealedPlayer.treacheryRole)}</div>
 				{#if !isShogunVariant}
 					<div class="text-base mt-2 font-semibold">
 						{revealedPlayer.treacheryCard?.name ?? '-'}

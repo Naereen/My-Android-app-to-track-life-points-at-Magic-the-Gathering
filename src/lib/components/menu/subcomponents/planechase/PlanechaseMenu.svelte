@@ -105,7 +105,7 @@
 			>
 				<Arrow />
 			</button>
-			<span class="text-white text-center text-3xl">{$_('planechase_menu_title')}</span>
+			<span class="text-white text-center text-3xl">🌀 {$_('planechase_menu_title')}</span>
 			<span class="text-gray-400 text-center text-sm mt-2 w-90">
 				{$_('planechase_menu_explanation')}
 			</span>

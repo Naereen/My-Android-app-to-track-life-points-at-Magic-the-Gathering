@@ -158,8 +158,8 @@
 <svelte:window bind:innerHeight />
 
 <div
-	class="w-full overflow-y-scroll h-full"
-	style="overflow-y: scroll; -webkit-overflow-scrolling: touch; height: 100%; max-height: 100%;"
+	class="w-full overflow-y-scroll"
+	style="max-height: {Math.max(innerHeight - 120, 0)}px; -webkit-overflow-scrolling: touch;"
 >
 	<div class="flex flex-col">
 		<!-- Header -->

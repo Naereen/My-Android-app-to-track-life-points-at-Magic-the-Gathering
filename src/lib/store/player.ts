@@ -867,8 +867,7 @@ export const assignRandomTreacheryForGame = async () => {
 	] as TreacheryRole[];
 
 	const shuffledRoles = shuffleCards(rolePool);
-
-	if (isShogunVariant) {
+	const assignRolesWithoutCards = () => {
 		players.update((currentPlayers) => {
 			return currentPlayers.map((player) => {
 				if (player.id > totalPlayers) {
@@ -889,11 +888,18 @@ export const assignRandomTreacheryForGame = async () => {
 				};
 			});
 		});
+	};
+
+	if (isShogunVariant) {
+		assignRolesWithoutCards();
 		return;
 	}
 
 	const catalog = await loadTreacheryCatalog();
-	if (!catalog.length) return;
+	if (!catalog.length) {
+		assignRolesWithoutCards();
+		return;
+	}
 
 	const byRole: Record<TreacheryRole, TreacheryCatalogEntry[]> = {
 		leader: shuffleCards(catalog.filter((entry) => entry.role === 'leader')),
