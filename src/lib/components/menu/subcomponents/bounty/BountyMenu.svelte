@@ -152,7 +152,7 @@
 
 <div
 	class="w-full overflow-y-scroll h-full"
-	style="max-height: {innerHeight - 112}px; -webkit-overflow-scrolling: touch;"
+	style="-webkit-overflow-scrolling: touch;"
 >
 	<div class="flex flex-col">
 		<!-- Header -->
