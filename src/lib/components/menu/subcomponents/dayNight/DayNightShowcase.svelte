@@ -68,6 +68,10 @@
 		border-radius: 1.55rem;
 		padding: 2rem 1.5rem;
 		border: 1px solid rgba(255, 255, 255, 0.16);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
 	}
 
 	.showcase-shell-day .showcase-frame {
