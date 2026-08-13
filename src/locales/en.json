@@ -192,6 +192,7 @@
 	"history_dice_roll_sides": "sides",
 	"history_dice_roll_result": "result",
 	"history_turn_time_open_button": "⏱ Turn times",
+	"history_stats_open_button": "📊 Multi-game stats",
 	"history_turn_time_title": "Turn Time Statistics",
 	"history_turn_time_tab": "Turn Times",
 	"history_life_chart_tab": "Life Chart",

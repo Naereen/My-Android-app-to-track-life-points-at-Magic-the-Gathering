@@ -34,7 +34,6 @@
 	$: tabLifeLabel = String($_('history_life_chart_tab') || 'Life Chart');
 	$: tabTimeLabel = String($_('history_turn_time_tab') || 'Turn Times');
 	$: tabStatsLabel = String($_('history_stats_tab') || 'Stats');
-	$: viewStatsLinkLabel = String($_('history_view_stats_link') || 'View multi-game statistics');
 	let selectedLegendPlayerId: number | null = null;
 
 	const legendMarkerStroke = '#e5e7eb';
@@ -191,23 +190,6 @@
 					{:else}
 						{emptyState}
 					{/if}
-				</p>
-				{#if $lifeHistory.length <= 1}
-					<p class="mt-1 text-sm text-gray-400">
-						<button
-							type="button"
-							class="underline decoration-dotted hover:text-fuchsia-400"
-							on:click={() => switchTab('stats')}>{viewStatsLinkLabel}</button
-						>
-					</p>
-				{/if}
-			{:else if activeTab === 'turnTime'}
-				<p class="mt-2 text-sm text-gray-400">
-					<button
-						type="button"
-						class="underline decoration-dotted hover:text-fuchsia-400"
-						on:click={() => switchTab('stats')}>{viewStatsLinkLabel}</button
-					>
 				</p>
 			{/if}
 		</div>
