@@ -1585,6 +1585,10 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 			playerCount: activePlayerCount,
 			startingLife: startingLifeTotal,
 			startingPlayerIndex: currentAppState.startingPlayerIndex,
+			endingTurnCount:
+				typeof currentAppState.turnCount === 'number' && currentAppState.turnCount > 0
+					? currentAppState.turnCount
+					: null,
 			playerStats,
 			winnerIndex
 		});

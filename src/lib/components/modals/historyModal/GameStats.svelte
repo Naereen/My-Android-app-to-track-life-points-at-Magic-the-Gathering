@@ -13,6 +13,16 @@
 	$: avgDurationSeconds = totalGames > 0 ? Math.round(totalDurationSeconds / totalGames) : 0;
 	$: maxDurationSeconds = totalGames > 0 ? Math.max(...games.map((g) => g.durationSeconds)) : 0;
 	$: minDurationSeconds = totalGames > 0 ? Math.min(...games.map((g) => g.durationSeconds)) : 0;
+	$: trackedTurnCounts = games
+		.map((g) => g.endingTurnCount)
+		.filter((turnCount): turnCount is number => typeof turnCount === 'number' && turnCount > 0);
+	$: trackedTurnGames = trackedTurnCounts.length;
+	$: avgEndingTurnCount =
+		trackedTurnGames > 0
+			? trackedTurnCounts.reduce((acc, turnCount) => acc + turnCount, 0) / trackedTurnGames
+			: 0;
+	$: maxEndingTurnCount = trackedTurnGames > 0 ? Math.max(...trackedTurnCounts) : 0;
+	$: minEndingTurnCount = trackedTurnGames > 0 ? Math.min(...trackedTurnCounts) : 0;
 
 	// Player count distribution
 	$: playerCountMap = games.reduce<Record<number, number>>((acc, g) => {
@@ -65,6 +75,13 @@
 	$: startingLifeSectionLabel = String(
 		$_('history_stats_starting_life_section') || 'Starting life'
 	);
+	$: endingTurnSectionLabel = String($_('history_stats_ending_turn_section') || 'Ending turn');
+	$: trackedTurnGamesLabel = String($_('history_stats_tracked_turn_games') || 'Tracked games');
+	$: avgEndingTurnLabel = String($_('history_stats_avg_ending_turn') || 'Avg. ending turn');
+	$: latestEndingTurnLabel = String($_('history_stats_latest_ending_turn') || 'Latest ending turn');
+	$: earliestEndingTurnLabel = String(
+		$_('history_stats_earliest_ending_turn') || 'Earliest ending turn'
+	);
 	$: outcomeSectionLabel = String($_('history_stats_outcome_section') || 'Outcomes');
 	$: winsLabel = String($_('history_stats_wins') || 'Games with a winner');
 	$: drawsLabel = String($_('history_stats_draws') || 'Draws');
@@ -90,6 +107,8 @@
 	// ── helpers ─────────────────────────────────────────────────────────────────
 
 	const pct = (part: number, total: number) => (total > 0 ? Math.round((part / total) * 100) : 0);
+	const formatTurnCount = (turnCount: number) =>
+		Number.isInteger(turnCount) ? String(turnCount) : turnCount.toFixed(1);
 
 	const handleClear = async () => {
 		const confirmed = await showConfirm(
@@ -147,6 +166,43 @@
 				</li>
 			</ul>
 		</section>
+
+		<!-- Ending turn section -->
+		{#if trackedTurnGames > 0}
+			<section>
+				<h3 class="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-400">
+					{endingTurnSectionLabel}
+				</h3>
+				<ul class="space-y-1">
+					<li class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5">
+						<span class="text-sm text-gray-200">{trackedTurnGamesLabel}</span>
+						<span class="font-mono text-sm text-gray-400"
+							>{trackedTurnGames}/{totalGames}
+							<span class="ml-2 font-semibold text-white">{pct(trackedTurnGames, totalGames)}%</span
+							></span
+						>
+					</li>
+					<li class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5">
+						<span class="text-sm text-gray-200">{avgEndingTurnLabel}</span>
+						<span class="font-mono text-sm font-semibold text-white"
+							>{formatTurnCount(avgEndingTurnCount)}</span
+						>
+					</li>
+					<li class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5">
+						<span class="text-sm text-gray-200">{latestEndingTurnLabel}</span>
+						<span class="font-mono text-sm font-semibold text-white"
+							>{formatTurnCount(maxEndingTurnCount)}</span
+						>
+					</li>
+					<li class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5">
+						<span class="text-sm text-gray-200">{earliestEndingTurnLabel}</span>
+						<span class="font-mono text-sm font-semibold text-white"
+							>{formatTurnCount(minEndingTurnCount)}</span
+						>
+					</li>
+				</ul>
+			</section>
+		{/if}
 
 		<!-- Turn order advantage -->
 		{#if positionWins.length > 0}
