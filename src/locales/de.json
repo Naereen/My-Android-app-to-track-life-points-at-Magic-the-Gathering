@@ -168,6 +168,7 @@
 	"history_life_chart_open_button": "Lebenspunkte-Diagramm öffnen",
 	"history_life_chart_title": "Verlauf der Lebenspunkte",
 	"history_life_chart_empty": "Noch keine Lebenspunkte-Schnappschüsse erfasst.",
+	"history_view_stats_link": "Spielübergreifende Statistiken anzeigen",
 	"history_life_chart_legend": "Legende",
 	"history_life_chart_legend_hint": "Klicke auf einen Spieler, um ihn zu isolieren. Klicke erneut, um alle anzuzeigen.",
 	"history_life_chart_snapshot_count": "Schnappschüsse erfasst",

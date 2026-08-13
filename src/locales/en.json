@@ -170,6 +170,7 @@
 	"history_life_chart_open_button": "Open life chart",
 	"history_life_chart_title": "Life total history",
 	"history_life_chart_empty": "No life snapshots recorded yet.",
+	"history_view_stats_link": "View multi-game statistics",
 	"history_life_chart_legend": "Legend",
 	"history_life_chart_legend_hint": "Click a player to isolate them. Click again to show all players.",
 	"history_life_chart_snapshot_count": "snapshots captured",
