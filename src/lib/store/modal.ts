@@ -262,7 +262,7 @@ export const resetPlayerModalData = () => {
 	playerModalData.set(initialPlayerModalData);
 };
 
-const initialHistoryModalState = { isOpen: false, tab: 'life' as 'life' | 'turnTime' };
+const initialHistoryModalState = { isOpen: false, tab: 'life' as 'life' | 'turnTime' | 'stats' };
 
 export const historyModalData = writable(initialHistoryModalState);
 
@@ -301,10 +301,10 @@ const resetHistoryModalState = () => {
 
 /**
  * Opens the global game history modal.
- * @param {'life' | 'turnTime'} [tab] Which tab to show initially (defaults to 'life').
+ * @param {'life' | 'turnTime' | 'stats'} [tab] Which tab to show initially (defaults to 'life').
  * @returns {void}
  */
-export const openHistoryModal = (tab: 'life' | 'turnTime' = 'life') => {
+export const openHistoryModal = (tab: 'life' | 'turnTime' | 'stats' = 'life') => {
 	historyModalData.set({ isOpen: true, tab });
 	pushHistoryModalHistoryEntry();
 };

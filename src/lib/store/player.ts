@@ -29,7 +29,8 @@ import {
 	type TreacheryRole
 } from '$lib/utils/treachery';
 import { pickWeightedIndex } from '$lib/utils/weightedRandom';
-import { resetTurnTimeStats } from './turnTimeStats';
+import { resetTurnTimeStats, turnTimeStats } from './turnTimeStats';
+import { recordCompletedGame } from './savedGames';
 // import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -1558,6 +1559,37 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 	const startingLifeTotal = get(appSettings).startingLifeTotal;
 	const shouldKeepGlobalTimerRunning =
 		isTwoPlayerMode && get(appSettings).globalGameTimerEnabled && startingPlayerChoice !== 2;
+
+	// Snapshot the completed game before any history is cleared so statistics survive the reset.
+	const currentLifeHistory = get(lifeHistory);
+	const currentTurnStats = get(turnTimeStats);
+	const currentAppState = get(appState);
+	if (currentLifeHistory.length >= 2) {
+		const firstSnapshot = currentLifeHistory[0];
+		const lastSnapshot = currentLifeHistory[currentLifeHistory.length - 1];
+		const startTs = firstSnapshot.timestamp;
+		const endTs = lastSnapshot.timestamp;
+		const durationSeconds = Math.max(0, Math.round((endTs - startTs) / 1000));
+		const activePlayerCount = get(appSettings).playerCount;
+		const playerStats = firstSnapshot.players.slice(0, activePlayerCount).map((p, idx) => ({
+			name: p.name,
+			lifeAtEnd: lastSnapshot.players[idx]?.life ?? p.life,
+			turnSeconds: currentTurnStats.playerSeconds[idx] ?? 0
+		}));
+		const survivors = playerStats.filter((p) => p.lifeAtEnd > 0);
+		const winnerIndex = survivors.length === 1 ? playerStats.indexOf(survivors[0]) : null;
+		recordCompletedGame({
+			timestamp: endTs,
+			startTimestamp: startTs,
+			durationSeconds,
+			playerCount: activePlayerCount,
+			startingLife: startingLifeTotal,
+			startingPlayerIndex: currentAppState.startingPlayerIndex,
+			playerStats,
+			winnerIndex
+		});
+	}
+
 	removeFirstPlace();
 	resetResources();
 	clearGameHistory();
