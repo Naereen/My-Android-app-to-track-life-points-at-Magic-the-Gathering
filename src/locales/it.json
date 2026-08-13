@@ -3,6 +3,7 @@
 	"life": "Punti Vita",
 	"commander_damage": "Danno del comandante",
 	"settings": "Impostazioni",
+	"settings_section_game_config": "Configurazione della partita",
 	"close": "Chiudi",
 	"clear": "Cancella",
 	"confirm_modal": "Confermare?",

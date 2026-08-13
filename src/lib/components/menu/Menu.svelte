@@ -298,7 +298,10 @@
 </script>
 
 {#if !$appState.isMenuOpen}
-	<div class="flex py-1.5 items-center overflow-x-auto scrollbar-hidden" class:h-14={!$appState.isMenuOpen}>
+	<div
+		class="flex py-1.5 items-center overflow-x-auto scrollbar-hidden"
+		class:h-14={!$appState.isMenuOpen}
+	>
 		<div class="flex justify-center items-center flex-shrink-0 px-1">
 			<button
 				on:click={() => resetLifeTotals(false)}

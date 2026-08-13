@@ -3,6 +3,7 @@
 	"life": "Puntos de vida",
 	"commander_damage": "Daño de comandante",
 	"settings": "Ajustes",
+	"settings_section_game_config": "Configuración de partida",
 	"close": "Cerrar",
 	"clear": "Borrar",
 	"confirm_modal": "¿Confirmar?",

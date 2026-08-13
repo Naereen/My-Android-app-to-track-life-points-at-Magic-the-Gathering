@@ -338,14 +338,14 @@
 				<div class="text-2xl md:text-3xl font-bold truncate">{selected.name}</div>
 				{#if selected.set_name}
 					<div class="text-xs text-gray-300">
-       {selected.set_name}
-       {#if faces.length > 1}
-					     <span class="text-gray-400">
-				 		     {$_('emblem_face_of')}
-					       {currentFaceIndex + 1}/{faces.length}
-				      </span>
-			    	{/if}
-     </div>
+						{selected.set_name}
+						{#if faces.length > 1}
+							<span class="text-gray-400">
+								{$_('emblem_face_of')}
+								{currentFaceIndex + 1}/{faces.length}
+							</span>
+						{/if}
+					</div>
 				{/if}
 			</div>
 
