@@ -23,16 +23,13 @@ describe('history modal browser-back handling', () => {
 		});
 	});
 
-	describe('confirm modal overlay', () => {
-		it('uses a high fixed z-index so confirmations stay above gameplay UI', () => {
-			const source = readFileSync(
-				new URL('../components/modals/confirmModal/ConfirmModal.svelte', import.meta.url),
-				'utf8'
-			);
+	it('keeps the shared confirm overlay fixed and above other UI layers', () => {
+		const source = readFileSync(
+			new URL('../components/modals/confirmModal/ConfirmModal.svelte', import.meta.url),
+			'utf8'
+		);
 
-			expect(source).toContain('class="fixed');
-			expect(source).toContain('z-[200]');
-		});
+		expect(source).toMatch(/class="[^"]*fixed[^"]*z-\[200\][^"]*bg-black\/70[^"]*"/);
 	});
 
 	it('pushes a synthetic browser-history entry and closes the modal on back navigation', () => {
