@@ -29,6 +29,7 @@
 	import { planechaseState } from '$lib/store/planechase';
 	import ArchenemyModal from '$lib/components/modals/archenemyModal/ArchenemyModal.svelte';
 	import { archenemyState } from '$lib/store/archenemy';
+	import DayNightShowcase from '$lib/components/menu/subcomponents/dayNight/DayNightShowcase.svelte';
 
 	$: innerWidth = 0;
 	import { onMount, onDestroy } from 'svelte';
@@ -303,4 +304,5 @@
 	{#if $archenemyState.isOpen}
 		<ArchenemyModal />
 	{/if}
+	<DayNightShowcase />
 </div>

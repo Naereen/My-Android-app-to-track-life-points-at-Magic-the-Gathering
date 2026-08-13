@@ -6,6 +6,7 @@ import { players } from './player';
 import { turnTimer } from './turnTimer';
 import { addGameHistoryEntry } from './gameHistory';
 import { startTurnFor, endCurrentTurn } from './turnTimeStats';
+import { hideDayNightShowcase, showDayNightShowcase, type DayNightPhase } from './dayNightShowcase';
 
 const MAX_STREAM_PLAYERS = 8;
 
@@ -89,11 +90,22 @@ export const toggleIsMenuOpen = (menu: App.AppState.Menu = '') => {
  * @returns {void}
  */
 export const setDayNightCycleEnabled = (enabled: boolean) => {
+	const currentState = get(appState);
+	const nextPhase = enabled ? ((currentState.dayNightPhase ?? 'day') as DayNightPhase) : 'day';
+
 	appState.update((data) => ({
 		...data,
 		dayNightCycleEnabled: enabled,
-		dayNightPhase: enabled ? (data.dayNightPhase ?? 'day') : 'day'
+		dayNightPhase: nextPhase
 	}));
+
+	if (enabled && !currentState.dayNightCycleEnabled) {
+		showDayNightShowcase(nextPhase);
+	}
+
+	if (!enabled) {
+		hideDayNightShowcase();
+	}
 };
 
 /**
@@ -103,9 +115,11 @@ export const setDayNightCycleEnabled = (enabled: boolean) => {
 export const toggleDayNightPhase = () => {
 	appState.update((data) => {
 		if (!data.dayNightCycleEnabled) return data;
+		const nextPhase: DayNightPhase = data.dayNightPhase === 'day' ? 'night' : 'day';
+		showDayNightShowcase(nextPhase);
 		return {
 			...data,
-			dayNightPhase: data.dayNightPhase === 'day' ? 'night' : 'day'
+			dayNightPhase: nextPhase
 		};
 	});
 };
