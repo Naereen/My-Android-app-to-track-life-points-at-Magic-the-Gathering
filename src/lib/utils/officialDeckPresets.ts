@@ -8,8 +8,8 @@ export const planechaseOfficialPresets: OfficialDeckPreset[] = [
 	{ code: 'OPCA', name: 'Planechase Anthology (2016)', cardCount: 86 },
 	{ code: 'MOC', name: 'March of the Machine (2023)', cardCount: 50 },
 	{ code: 'WHO', name: 'Doctor Who (2023)', cardCount: 40 },
-	{ code: 'PUNK', name: 'PUNK — Black Lotus Unknown (2024)', cardCount: 46 },
-	{ code: 'PSSC', name: 'PSSC — Secret Lair Showcase (2024)', cardCount: 10 }
+	{ code: 'PUNK', name: 'Black Lotus Unknown Planechase (2024)', cardCount: 10 },
+	{ code: 'PSSC', name: 'Secret Lair Showcase Planes (2024)', cardCount: 10 }
 ];
 
 export const archenemyOfficialPresets: OfficialDeckPreset[] = [
