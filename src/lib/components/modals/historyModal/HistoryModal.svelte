@@ -2,6 +2,7 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import LifeChart from './LifeChart.svelte';
 	import TurnTimeStats from './TurnTimeStats.svelte';
+	import GameStats from './GameStats.svelte';
 	import {
 		closeHistoryModal,
 		handleHistoryModalBackNavigation,
@@ -19,7 +20,9 @@
 	$: chartTitle =
 		activeTab === 'turnTime'
 			? String($_('history_turn_time_title') || 'Turn Time Statistics')
-			: String($_('history_life_chart_title') || 'Life total history');
+			: activeTab === 'stats'
+				? String($_('history_stats_title') || 'Game Statistics')
+				: String($_('history_life_chart_title') || 'Life total history');
 	$: emptyState = String($_('history_life_chart_empty') || 'No life snapshots recorded yet.');
 	$: closeLabel = String($_('close') || 'Close');
 	$: snapshotCountSuffix = String($_('history_life_chart_snapshot_count') || 'snapshots captured');
@@ -30,11 +33,12 @@
 	);
 	$: tabLifeLabel = String($_('history_life_chart_tab') || 'Life Chart');
 	$: tabTimeLabel = String($_('history_turn_time_tab') || 'Turn Times');
+	$: tabStatsLabel = String($_('history_stats_tab') || 'Stats');
 	let selectedLegendPlayerId: number | null = null;
 
 	const legendMarkerStroke = '#e5e7eb';
 
-	const switchTab = (tab: 'life' | 'turnTime') => {
+	const switchTab = (tab: 'life' | 'turnTime' | 'stats') => {
 		historyModalData.update((s) => ({ ...s, tab }));
 	};
 
@@ -162,6 +166,18 @@
 				>
 					{tabTimeLabel}
 				</button>
+				<button
+					type="button"
+					class="rounded-full px-3 py-1 text-sm transition-colors"
+					class:bg-fuchsia-700={activeTab === 'stats'}
+					class:text-white={activeTab === 'stats'}
+					class:bg-gray-700={activeTab !== 'stats'}
+					class:text-gray-300={activeTab !== 'stats'}
+					on:click={() => switchTab('stats')}
+					aria-pressed={activeTab === 'stats'}
+				>
+					{tabStatsLabel}
+				</button>
 			</div>
 			{#if activeTab === 'life'}
 				<p class="mt-2 text-sm text-gray-400">
@@ -179,7 +195,9 @@
 		</div>
 
 		<div class="flex-1 overflow-y-auto px-4 pt-4 pb-2 sm:px-6">
-			{#if activeTab === 'turnTime'}
+			{#if activeTab === 'stats'}
+				<GameStats />
+			{:else if activeTab === 'turnTime'}
 				<TurnTimeStats />
 			{:else}
 				<div class="w-full max-w-full">
