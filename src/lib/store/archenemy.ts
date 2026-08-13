@@ -23,6 +23,8 @@ type ArchenemyState = {
 	isOngoing: boolean;
 	/** Whether the current ongoing scheme has been abandoned. */
 	ongoingAbandoned: boolean;
+	/** List of currently active ongoing scheme cards (accumulated across turns). */
+	activeOngoingSchemes: ScryfallEmblemCard[];
 	/** Selected official set codes for deck customization. */
 	selectedSetCodes: string[];
 	/** Saved official-set selections for quick reuse. */
@@ -35,6 +37,7 @@ const initialState: ArchenemyState = {
 	isOpen: false,
 	isOngoing: false,
 	ongoingAbandoned: false,
+	activeOngoingSchemes: [],
 	selectedSetCodes: [],
 	savedSelections: []
 };
@@ -85,7 +88,8 @@ export const loadSchemeDeck = (cards: ScryfallEmblemCard[]) => {
 		deck,
 		currentIndex: 0,
 		isOngoing,
-		ongoingAbandoned: false
+		ongoingAbandoned: false,
+		activeOngoingSchemes: []
 	}));
 };
 
@@ -106,11 +110,24 @@ export const closeArchenemyModal = () => {
 export const revealNextScheme = () => {
 	archenemyState.update((s) => {
 		if (s.deck.length === 0) return s;
-		// If current scheme is ongoing and not yet abandoned, keep it.
-		if (s.isOngoing && !s.ongoingAbandoned) return s;
+		// If current scheme is ongoing and not yet abandoned, keep it and accumulate.
+		if (s.isOngoing && !s.ongoingAbandoned) {
+			const currentCard = s.deck[s.currentIndex];
+			const alreadyTracked = s.activeOngoingSchemes.some((c) => c.id === currentCard.id);
+			const activeOngoingSchemes = alreadyTracked
+				? s.activeOngoingSchemes
+				: [...s.activeOngoingSchemes, currentCard];
+			return { ...s, activeOngoingSchemes };
+		}
 		const nextIndex = s.deck.length > 1 ? (s.currentIndex + 1) % s.deck.length : s.currentIndex;
 		const isOngoing = detectOngoing(s.deck[nextIndex]);
-		return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false };
+		// If the next card is also ongoing, start accumulating it
+		const nextCard = s.deck[nextIndex];
+		const activeOngoingSchemes =
+			isOngoing && !s.activeOngoingSchemes.some((c) => c.id === nextCard.id)
+				? [...s.activeOngoingSchemes, nextCard]
+				: s.activeOngoingSchemes;
+		return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false, activeOngoingSchemes };
 	});
 };
 
@@ -139,7 +156,7 @@ export const reshuffleSchemeDeck = () => {
 	archenemyState.update((s) => {
 		const deck = shuffleArray([...s.deck]);
 		const isOngoing = deck.length > 0 ? detectOngoing(deck[0]) : false;
-		return { ...s, deck, currentIndex: 0, isOngoing, ongoingAbandoned: false };
+		return { ...s, deck, currentIndex: 0, isOngoing, ongoingAbandoned: false, activeOngoingSchemes: [] };
 	});
 };
 
@@ -150,13 +167,38 @@ export const reshuffleSchemeDeck = () => {
 export const abandonOngoingScheme = () => {
 	archenemyState.update((s) => {
 		if (!s.isOngoing || s.deck.length === 0) return s;
+		const currentCard = s.deck[s.currentIndex];
+		const activeOngoingSchemes = s.activeOngoingSchemes.filter((c) => c.id !== currentCard.id);
 		if (s.deck.length === 1) {
 			// Only card in deck — mark abandoned so the UI can reflect the state
-			return { ...s, ongoingAbandoned: true };
+			return { ...s, ongoingAbandoned: true, activeOngoingSchemes };
 		}
 		const nextIndex = (s.currentIndex + 1) % s.deck.length;
 		const isOngoing = detectOngoing(s.deck[nextIndex]);
-		return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false };
+		return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false, activeOngoingSchemes };
+	});
+};
+
+/**
+ * Abandons an ongoing scheme from the activeOngoingSchemes list by its index.
+ * If the abandoned card is the currently displayed scheme, also marks it as abandoned.
+ */
+export const abandonOngoingSchemeByIndex = (index: number) => {
+	archenemyState.update((s) => {
+		const abandonedCard = s.activeOngoingSchemes[index];
+		if (!abandonedCard) return s;
+		const activeOngoingSchemes = s.activeOngoingSchemes.filter((_, i) => i !== index);
+		const currentCard = s.deck[s.currentIndex];
+		if (abandonedCard.id === currentCard?.id) {
+			// The currently displayed card is being abandoned — advance the deck
+			if (s.deck.length === 1) {
+				return { ...s, ongoingAbandoned: true, activeOngoingSchemes };
+			}
+			const nextIndex = (s.currentIndex + 1) % s.deck.length;
+			const isOngoing = detectOngoing(s.deck[nextIndex]);
+			return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false, activeOngoingSchemes };
+		}
+		return { ...s, activeOngoingSchemes };
 	});
 };
 

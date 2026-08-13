@@ -396,5 +396,6 @@
 	"history_stats_clear_button": "Limpar todos os registros",
 	"history_stats_clear_confirm": "Limpar todos os registros de partidas? Esta ação não pode ser desfeita.",
 	"history_stats_game_singular": "partida",
-	"history_stats_game_plural": "partidas"
+	"history_stats_game_plural": "partidas",
+	"archenemy_ongoing_schemes_title": "Conspirações contínuas"
 }

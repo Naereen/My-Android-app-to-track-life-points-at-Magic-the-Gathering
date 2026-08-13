@@ -6,7 +6,8 @@
 		nextScheme,
 		prevScheme,
 		reshuffleSchemeDeck,
-		abandonOngoingScheme
+		abandonOngoingScheme,
+		abandonOngoingSchemeByIndex
 	} from '$lib/store/archenemy';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
@@ -19,6 +20,7 @@
 	$: currentCard = deck[currentIndex] ?? null;
 	$: currentFace = currentCard?.faces?.[0] ?? null;
 	$: isOngoing = $archenemyState.isOngoing;
+	$: activeOngoingSchemes = $archenemyState.activeOngoingSchemes ?? [];
 
 	const handleReveal = () => {
 		vibrate(30);
@@ -57,6 +59,11 @@
 	const handleAbandon = () => {
 		vibrate(20);
 		abandonOngoingScheme();
+	};
+
+	const handleAbandonByIndex = (index: number) => {
+		vibrate(20);
+		abandonOngoingSchemeByIndex(index);
 	};
 </script>
 
@@ -124,12 +131,44 @@
 				})}
 			</div>
 
-			<!-- Ongoing badge -->
-			{#if isOngoing}
-				<div
-					class="w-full rounded-xl px-3 py-2 bg-yellow-700/80 text-yellow-100 text-sm font-semibold text-center flex items-center justify-center gap-2"
-				>
-					⚠️ {$_('archenemy_ongoing_badge')}
+			<!-- Ongoing schemes horizontal scrollable list -->
+			{#if activeOngoingSchemes.length > 0}
+				<div class="w-full flex flex-col gap-1">
+					<div class="text-yellow-200 text-xs font-semibold px-1">
+						⚠️ {$_('archenemy_ongoing_schemes_title')}
+					</div>
+					<div class="flex flex-row gap-2 overflow-x-auto pb-1" style="scroll-snap-type: x mandatory;">
+						{#each activeOngoingSchemes as ongoingCard, i}
+							<div
+								class="relative flex-shrink-0 rounded-xl overflow-hidden border border-yellow-500/60"
+								style="width: 7rem; scroll-snap-align: start;"
+							>
+								{#if ongoingCard.faces?.[0]?.image}
+									<img
+										src={ongoingCard.faces[0].image}
+										alt={ongoingCard.name ?? ''}
+										class="w-full h-auto object-contain block"
+										draggable="false"
+									/>
+								{:else}
+									<div
+										class="w-full h-24 flex items-center justify-center bg-black/50 text-gray-400 text-xs text-center px-1"
+									>
+										{ongoingCard.name ?? ''}
+									</div>
+								{/if}
+								<button
+									type="button"
+									class="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-600/90 text-white text-xs font-black flex items-center justify-center shadow"
+									on:click={() => handleAbandonByIndex(i)}
+									aria-label={$_('archenemy_abandon_ongoing')}
+									title={$_('archenemy_abandon_ongoing')}
+								>
+									✕
+								</button>
+							</div>
+						{/each}
+					</div>
 				</div>
 			{/if}
 
@@ -219,7 +258,7 @@
 				</button>
 			</div>
 
-			<!-- Abandon ongoing scheme button -->
+			<!-- Abandon ongoing scheme button (for current card if ongoing) -->
 			{#if isOngoing}
 				<button
 					type="button"

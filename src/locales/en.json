@@ -398,5 +398,6 @@
 	"history_stats_clear_button": "Clear all game records",
 	"history_stats_clear_confirm": "Clear all saved game records? This cannot be undone.",
 	"history_stats_game_singular": "game",
-	"history_stats_game_plural": "games"
+	"history_stats_game_plural": "games",
+	"archenemy_ongoing_schemes_title": "Ongoing schemes"
 }
