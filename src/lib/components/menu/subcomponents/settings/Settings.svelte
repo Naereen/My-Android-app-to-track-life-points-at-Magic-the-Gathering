@@ -1033,9 +1033,7 @@
 		<hr class="border-gray-800 mx-4" />
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
-			<span class="text-base font-medium"
-				>{$_('haptic_feedback') || 'Enable haptic feedback'}</span
-			>
+			<span class="text-base font-medium">{$_('haptic_feedback') || 'Enable haptic feedback'}</span>
 			<ToggleSwitch checked={$appSettings.hapticsEnabled} on:change={handleHapticsChange} />
 		</label>
 		<hr class="border-gray-800 mx-4" />
@@ -1067,7 +1065,7 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>▶️ {$_('show_next_player_button') || 'Show next-player button'}</span
+				>🔂 {$_('show_next_player_button') || 'Show next-player button'}</span
 			>
 			<ToggleSwitch
 				checked={$appSettings.showNextPlayerButton}
@@ -1115,7 +1113,7 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>🛡️ {$_('show_emblem_menu_button') || 'Show emblem & dungeon button'}</span
+				>🗺️ {$_('show_emblem_menu_button') || 'Show emblem & dungeon button'}</span
 			>
 			<ToggleSwitch checked={$appSettings.showEmblemMenu} on:change={handleShowEmblemMenuChange} />
 		</label>
@@ -1139,7 +1137,7 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>🗡️ {$_('show_vanguard_menu_button') || 'Show Vanguard menu'}</span
+				>🛡️ {$_('show_vanguard_menu_button') || 'Show Vanguard menu'}</span
 			>
 			<ToggleSwitch
 				checked={$appSettings.showVanguardMenu}
@@ -1181,7 +1179,7 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>🤫 {$_('show_treachery_menu_button') || 'Show Treachery menu'}</span
+				>🎭 {$_('show_treachery_menu_button') || 'Show Treachery menu'}</span
 			>
 			<ToggleSwitch
 				checked={$appSettings.showTreacheryMenu}
@@ -1222,9 +1220,7 @@
 		<hr class="border-gray-800 mx-4" />
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
-			<span class="text-base font-medium"
-				>{$_('bounty_mode_enabled') || 'Enable Bounty mode'}</span
-			>
+			<span class="text-base font-medium">{$_('bounty_mode_enabled') || 'Enable Bounty mode'}</span>
 			<ToggleSwitch
 				checked={$appSettings.bountyModeEnabled || $appSettings.showBountyMenu}
 				on:change={handleBountyModeEnabledChange}
@@ -1384,7 +1380,7 @@
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<div class="flex-1 pr-4">
 				<div class="text-base font-medium">
-					{$_('starting_player_probabilities_enable') || 'Custom starting probabilities'}
+					🎰 {$_('starting_player_probabilities_enable') || 'Custom starting probabilities'}
 				</div>
 				<div class="text-xs text-gray-400 mt-0.5">
 					{$_('starting_player_probabilities_caption') ||
@@ -1448,6 +1444,18 @@
 			{$_('stream_mode_title') || 'Stream Mode (LAN relay)'}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
+		<div class="px-4 pb-2 text-xs text-gray-400">
+			{$_('stream_mode_lan_doc') ||
+				'LAN streaming mode: start a local relay on your network, then use its URL below.'}
+			<a
+				href="https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering/tree/main/relay-server"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-blue-400 underline"
+			>
+				{$_('stream_mode_lan_doc_link') || 'Code & docs: relay-server.'}
+			</a>
+		</div>
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
