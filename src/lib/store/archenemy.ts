@@ -1,7 +1,12 @@
 // Archenemy store – manages the scheme deck, the active scheme card, and ongoing scheme tracking.
-import { writable } from 'svelte/store';
 import { persist } from './persist';
 import type { ScryfallEmblemCard } from '$lib/utils/scryfall';
+import {
+	normalizeSetCodes,
+	removeSavedDeckSelection,
+	type SavedDeckSelection,
+	upsertSavedDeckSelection
+} from './deckSelections';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -18,6 +23,10 @@ type ArchenemyState = {
 	isOngoing: boolean;
 	/** Whether the current ongoing scheme has been abandoned. */
 	ongoingAbandoned: boolean;
+	/** Selected official set codes for deck customization. */
+	selectedSetCodes: string[];
+	/** Saved official-set selections for quick reuse. */
+	savedSelections: SavedDeckSelection[];
 };
 
 const initialState: ArchenemyState = {
@@ -25,7 +34,9 @@ const initialState: ArchenemyState = {
 	currentIndex: 0,
 	isOpen: false,
 	isOngoing: false,
-	ongoingAbandoned: false
+	ongoingAbandoned: false,
+	selectedSetCodes: [],
+	savedSelections: []
 };
 
 // We persist the deck so players can close and reopen the modal without losing their place.
@@ -147,4 +158,28 @@ export const abandonOngoingScheme = () => {
 		const isOngoing = detectOngoing(s.deck[nextIndex]);
 		return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false };
 	});
+};
+
+/** Persist the current official-set checkbox selection used by the menu deck builder. */
+export const setSelectedSchemeSetCodes = (setCodes: string[]) => {
+	archenemyState.update((s) => ({
+		...s,
+		selectedSetCodes: normalizeSetCodes(setCodes)
+	}));
+};
+
+/** Save the current official-set selection under a reusable local name. */
+export const saveSchemeSelection = (name: string, setCodes: string[]) => {
+	archenemyState.update((s) => ({
+		...s,
+		savedSelections: upsertSavedDeckSelection(s.savedSelections, name, setCodes)
+	}));
+};
+
+/** Delete one saved official-set selection without altering the active scheme deck. */
+export const deleteSchemeSelection = (name: string) => {
+	archenemyState.update((s) => ({
+		...s,
+		savedSelections: removeSavedDeckSelection(s.savedSelections, name)
+	}));
 };
