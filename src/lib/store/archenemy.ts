@@ -2,7 +2,6 @@
 import { persist } from './persist';
 import type { ScryfallEmblemCard } from '$lib/utils/scryfall';
 import {
-	getSavedDeckSelections,
 	normalizeSetCodes,
 	removeSavedDeckSelection,
 	type SavedDeckSelection,
@@ -165,8 +164,7 @@ export const abandonOngoingScheme = () => {
 export const setSelectedSchemeSetCodes = (setCodes: string[]) => {
 	archenemyState.update((s) => ({
 		...s,
-		selectedSetCodes: normalizeSetCodes(setCodes),
-		savedSelections: getSavedDeckSelections(s.savedSelections)
+		selectedSetCodes: normalizeSetCodes(setCodes)
 	}));
 };
 

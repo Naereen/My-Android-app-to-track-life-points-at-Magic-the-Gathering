@@ -3,7 +3,6 @@
 import { persist } from './persist';
 import type { ScryfallEmblemCard } from '$lib/utils/scryfall';
 import {
-	getSavedDeckSelections,
 	normalizeSetCodes,
 	removeSavedDeckSelection,
 	type SavedDeckSelection,
@@ -173,8 +172,7 @@ export const dismissDieResult = () => {
 export const setSelectedPlanarSetCodes = (setCodes: string[]) => {
 	planechaseState.update((s) => ({
 		...s,
-		selectedSetCodes: normalizeSetCodes(setCodes),
-		savedSelections: getSavedDeckSelections(s.savedSelections)
+		selectedSetCodes: normalizeSetCodes(setCodes)
 	}));
 };
 

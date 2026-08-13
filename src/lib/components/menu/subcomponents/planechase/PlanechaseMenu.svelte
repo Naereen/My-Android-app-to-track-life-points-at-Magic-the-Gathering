@@ -9,23 +9,12 @@
 		savePlanarSelection,
 		setSelectedPlanarSetCodes
 	} from '$lib/store/planechase';
+	import { planechaseOfficialPresets } from '$lib/utils/officialDeckPresets';
 	import { searchPlaneCards, type ScryfallEmblemCard } from '$lib/utils/scryfall';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
-	type OfficialPreset = {
-		code: string;
-		name: string;
-		cardCount: number;
-	};
-
-	const officialPresets: OfficialPreset[] = [
-		{ code: 'OPCA', name: 'Planechase Anthology (2016)', cardCount: 86 },
-		{ code: 'MOC', name: 'March of the Machine (2023)', cardCount: 50 },
-		{ code: 'WHO', name: 'Doctor Who (2023)', cardCount: 40 },
-		{ code: 'PUNK', name: 'Black Lotus Unknown (2024)', cardCount: 46 },
-		{ code: 'PSSC', name: 'Secret Lair Showcase (2024)', cardCount: 10 }
-	];
+	const officialPresets = planechaseOfficialPresets;
 
 	let searchQuery = '';
 	let searchResults: ScryfallEmblemCard[] = [];
@@ -119,11 +108,7 @@
 
 	const handleToggleAllPresets = () => {
 		vibrate(10);
-		setSelectedPlanarSetCodes(
-			allPresetCodes.length === selectedSetCodes.length
-				? []
-				: officialPresets.map(({ code }) => code)
-		);
+		setSelectedPlanarSetCodes(areAllPresetsSelected ? [] : officialPresets.map(({ code }) => code));
 	};
 
 	const handleSaveSelection = () => {
@@ -154,6 +139,7 @@
 	$: selectedSetCodes = $planechaseState.selectedSetCodes ?? [];
 	$: savedSelections = $planechaseState.savedSelections ?? [];
 	$: allPresetCodes = officialPresets.map(({ code }) => code);
+	$: areAllPresetsSelected = allPresetCodes.every((code) => selectedSetCodes.includes(code));
 </script>
 
 <svelte:window bind:innerHeight />
@@ -228,7 +214,7 @@
 						</div>
 						<div
 							class={`h-8 w-8 rounded-lg border-2 flex items-center justify-center text-lg ${
-								selectedSetCodes.length === officialPresets.length
+								areAllPresetsSelected
 									? 'border-cyan-400 text-white'
 									: 'border-gray-500 text-transparent'
 							}`}

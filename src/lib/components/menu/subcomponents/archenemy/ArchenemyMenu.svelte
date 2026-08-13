@@ -9,21 +9,12 @@
 		saveSchemeSelection,
 		setSelectedSchemeSetCodes
 	} from '$lib/store/archenemy';
+	import { archenemyOfficialPresets } from '$lib/utils/officialDeckPresets';
 	import { searchSchemeCards, type ScryfallEmblemCard } from '$lib/utils/scryfall';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
-	type OfficialPreset = {
-		code: string;
-		name: string;
-		cardCount: number;
-	};
-
-	const officialPresets: OfficialPreset[] = [
-		{ code: 'OARC', name: 'Archenemy (2010)', cardCount: 45 },
-		{ code: 'OE01', name: 'Archenemy: Nicol Bolas (2017)', cardCount: 20 },
-		{ code: 'DSC', name: 'Doctor Who (2023)', cardCount: 10 }
-	];
+	const officialPresets = archenemyOfficialPresets;
 
 	let searchQuery = '';
 	let searchResults: ScryfallEmblemCard[] = [];
@@ -117,11 +108,7 @@
 
 	const handleToggleAllPresets = () => {
 		vibrate(10);
-		setSelectedSchemeSetCodes(
-			allPresetCodes.length === selectedSetCodes.length
-				? []
-				: officialPresets.map(({ code }) => code)
-		);
+		setSelectedSchemeSetCodes(areAllPresetsSelected ? [] : officialPresets.map(({ code }) => code));
 	};
 
 	const handleSaveSelection = () => {
@@ -152,6 +139,7 @@
 	$: selectedSetCodes = $archenemyState.selectedSetCodes ?? [];
 	$: savedSelections = $archenemyState.savedSelections ?? [];
 	$: allPresetCodes = officialPresets.map(({ code }) => code);
+	$: areAllPresetsSelected = allPresetCodes.every((code) => selectedSetCodes.includes(code));
 </script>
 
 <svelte:window bind:innerHeight />
@@ -226,7 +214,7 @@
 						</div>
 						<div
 							class={`h-8 w-8 rounded-lg border-2 flex items-center justify-center text-lg ${
-								selectedSetCodes.length === officialPresets.length
+								areAllPresetsSelected
 									? 'border-red-400 text-white'
 									: 'border-gray-500 text-transparent'
 							}`}
