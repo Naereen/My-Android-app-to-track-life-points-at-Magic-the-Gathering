@@ -20,6 +20,8 @@ export type SavedGame = {
 	startingLife: number;
 	/** 0-based index of the player who went first, or null if unknown. */
 	startingPlayerIndex: number | null;
+	/** Turn number when the game ended, or null/undefined when turn tracking was never started. */
+	endingTurnCount?: number | null;
 	/** Per-player statistics (ordered by player slot index). */
 	playerStats: SavedGamePlayerStat[];
 	/**

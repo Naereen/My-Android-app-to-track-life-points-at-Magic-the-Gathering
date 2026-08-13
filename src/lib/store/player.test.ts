@@ -50,6 +50,7 @@ import { get } from 'svelte/store';
 import { appSettings } from './appSettings';
 import { appState, setDayNightCycleEnabled } from './appState';
 import { clearGameHistory, gameHistory } from './gameHistory';
+import { lifeHistory } from './lifeHistory';
 import {
 	applyCommanderCombatDamage,
 	assignRandomTreacheryForGame,
@@ -57,12 +58,17 @@ import {
 	resetLifeTotals,
 	setCommanderDamage
 } from './player';
+import { savedGames } from './savedGames';
+import { resetTurnTimeStats, turnTimeStats } from './turnTimeStats';
 
 describe('game reset state', () => {
 	beforeEach(() => {
 		localStorage.clear();
 		fetchMock.mockReset();
 		clearGameHistory();
+		lifeHistory.set([]);
+		savedGames.set([]);
+		resetTurnTimeStats();
 		appSettings.set({
 			playerCount: 2,
 			startingLifeTotal: 20,
@@ -96,6 +102,7 @@ describe('game reset state', () => {
 			showArchenemyMenu: false,
 			enableAcornMode: false,
 			enableTicketMode: false,
+			underlineSixAndNine: false,
 			turnTimerEnabled: false,
 			turnTimerDuration: 120,
 			turnTimerSound: false,
@@ -266,5 +273,73 @@ describe('game reset state', () => {
 			expect(player.treacheryCard).toBeNull();
 			expect(player.treacherySeen).toBe(false);
 		}
+	});
+
+	it('records the ending turn count for completed games when turns were tracked', async () => {
+		lifeHistory.set([
+			{
+				timestamp: 1_000,
+				players: [
+					{ id: 1, name: 'Player 1', color: '#38bdf8', life: 20 },
+					{ id: 2, name: 'Player 2', color: '#f472b6', life: 20 }
+				]
+			},
+			{
+				timestamp: 9_000,
+				players: [
+					{ id: 1, name: 'Player 1', color: '#38bdf8', life: 12 },
+					{ id: 2, name: 'Player 2', color: '#f472b6', life: 0 }
+				]
+			}
+		]);
+		turnTimeStats.set({
+			playerSeconds: [34, 21, 0, 0, 0, 0, 0, 0],
+			currentTurnStartMs: null,
+			currentPlayerIndex: null
+		});
+		appState.set({
+			...get(appState),
+			currentTurn: 0,
+			turnCount: 4,
+			startingPlayerIndex: 0
+		});
+
+		await resetLifeTotals(true);
+
+		expect(get(savedGames)).toHaveLength(1);
+		expect(get(savedGames)[0]).toMatchObject({
+			durationSeconds: 8,
+			startingPlayerIndex: 0,
+			endingTurnCount: 4,
+			winnerIndex: 0,
+			playerStats: [
+				{ name: 'Player 1', lifeAtEnd: 12, turnSeconds: 34 },
+				{ name: 'Player 2', lifeAtEnd: 0, turnSeconds: 21 }
+			]
+		});
+	});
+
+	it('does not record an ending turn count when the next turn button was never used', async () => {
+		lifeHistory.set([
+			{
+				timestamp: 2_000,
+				players: [
+					{ id: 1, name: 'Player 1', color: '#38bdf8', life: 20 },
+					{ id: 2, name: 'Player 2', color: '#f472b6', life: 20 }
+				]
+			},
+			{
+				timestamp: 6_000,
+				players: [
+					{ id: 1, name: 'Player 1', color: '#38bdf8', life: 0 },
+					{ id: 2, name: 'Player 2', color: '#f472b6', life: 7 }
+				]
+			}
+		]);
+
+		await resetLifeTotals(true);
+
+		expect(get(savedGames)).toHaveLength(1);
+		expect(get(savedGames)[0]?.endingTurnCount).toBeNull();
 	});
 });
