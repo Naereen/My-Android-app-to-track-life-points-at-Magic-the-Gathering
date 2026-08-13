@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { get } from 'svelte/store';
 import '../utils/i18n.js';
@@ -19,6 +20,19 @@ describe('history modal browser-back handling', () => {
 				back: vi.fn()
 			},
 			location: { href: 'http://localhost/' }
+		});
+	});
+
+	describe('confirm modal overlay', () => {
+		it('uses a high fixed z-index so confirmations stay above gameplay UI', () => {
+			const source = readFileSync(
+				new URL('../components/modals/confirmModal/ConfirmModal.svelte', import.meta.url),
+				'utf8'
+			);
+
+			expect(source).toContain(
+				'class="fixed inset-0 z-[200] flex items-center justify-center bg-black/70"'
+			);
 		});
 	});
 
