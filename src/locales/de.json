@@ -396,5 +396,6 @@
 	"history_stats_clear_button": "Alle Spielaufzeichnungen löschen",
 	"history_stats_clear_confirm": "Alle gespeicherten Spielaufzeichnungen löschen? Dies kann nicht rückgängig gemacht werden.",
 	"history_stats_game_singular": "Spiel",
-	"history_stats_game_plural": "Spiele"
+	"history_stats_game_plural": "Spiele",
+	"archenemy_ongoing_schemes_title": "Fortlaufende Komplotte"
 }

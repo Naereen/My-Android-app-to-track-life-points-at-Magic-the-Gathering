@@ -396,5 +396,6 @@
 	"history_stats_clear_button": "Borrar todos los registros",
 	"history_stats_clear_confirm": "¿Borrar todos los registros? Esta acción no se puede deshacer.",
 	"history_stats_game_singular": "partida",
-	"history_stats_game_plural": "partidas"
+	"history_stats_game_plural": "partidas",
+	"archenemy_ongoing_schemes_title": "Conspiraciones permanentes"
 }
