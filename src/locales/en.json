@@ -123,6 +123,7 @@
 	"enable_acorn_mode": "Enable Acorn mode?",
 	"enable_ticket_mode": "Enable Ticket mode?",
 	"show_life_change_history": "Show life change history",
+	"underline_six_and_nine": "Underline digits 6 and 9",
 	"starting_player_probabilities_title": "Starting Player Probabilities",
 	"starting_player_probabilities_caption": "This app includes an experimental feature to enable custom probabilities for choosing who starts. Warning: this may be considered cheating if you do not use it with your opponents' agreement!",
 	"starting_player_probabilities_enable": "Enable custom probabilities for who starts",

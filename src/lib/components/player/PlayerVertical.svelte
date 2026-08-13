@@ -42,6 +42,7 @@
 	import LifeChangeHistory from './LifeChangeHistory.svelte';
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
+	import { formatWithUnderlineSixNine } from '$lib/utils';
 
 	export let doNotShowMinimap: boolean = false; // for testing purposes, to hide the minimap in the player component
 	export let orientation: App.Player.Orientation = 'up';
@@ -517,7 +518,11 @@
 							class="absolute left-0 top-1/2 translate-x-[33%] -translate-y-1/2 w-24 text-center text-3xl text-shadow-xl/100 text-shadow-black text-white"
 							style="text-shadow: 0 0 20px black;"
 						>
-							{$players[index].tempLifeDiff < 0 ? `${$players[index].tempLifeDiff}` : ''}
+							{#if $players[index].tempLifeDiff < 0}
+								{@html $appSettings.underlineSixAndNine
+									? formatWithUnderlineSixNine($players[index].tempLifeDiff)
+									: String($players[index].tempLifeDiff)}
+							{/if}
 						</div>
 						{#if $appSettings.showLifeChangeHistory}
 							<div
@@ -561,7 +566,10 @@
 										class:-translate-y-5={$appSettings.playerCount === 6 ||
 											$appSettings.playerCount === 5}
 										class:-translate-y-4={$appSettings.playerCount === 4}
-										style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
+										style="text-shadow: 0 0 40px black;"
+										>{@html $appSettings.underlineSixAndNine
+											? formatWithUnderlineSixNine($players[index].lifeTotal)
+											: String($players[index].lifeTotal)}</span
 									>
 								</button>
 							{:else}
@@ -592,7 +600,11 @@
 							class="absolute right-0 top-1/2 -translate-x-[33%] -translate-y-1/2 w-24 text-center text-4xl text-shadow-xl/100 text-shadow-black text-white"
 							style="text-shadow: 0 0 20px black;"
 						>
-							{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}
+							{#if $players[index].tempLifeDiff > 0}
+								{@html $appSettings.underlineSixAndNine
+									? `+${formatWithUnderlineSixNine($players[index].tempLifeDiff)}`
+									: `+${$players[index].tempLifeDiff}`}
+							{/if}
 						</div>
 					</div>
 					<div class="grow h-1/3"></div>

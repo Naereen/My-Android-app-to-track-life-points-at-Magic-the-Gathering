@@ -61,9 +61,7 @@
 	$: avgLabel = String($_('history_stats_avg') || 'Avg. game');
 	$: longestLabel = String($_('history_stats_longest') || 'Longest');
 	$: shortestLabel = String($_('history_stats_shortest') || 'Shortest');
-	$: playerCountSectionLabel = String(
-		$_('history_stats_player_count_section') || 'Player count'
-	);
+	$: playerCountSectionLabel = String($_('history_stats_player_count_section') || 'Player count');
 	$: startingLifeSectionLabel = String(
 		$_('history_stats_starting_life_section') || 'Starting life'
 	);
@@ -85,18 +83,18 @@
 	];
 	$: clearButtonLabel = String($_('history_stats_clear_button') || 'Clear all game records');
 	$: gamesCountSuffix = (n: number) =>
-		n === 1 ? String($_('history_stats_game_singular') || 'game') : String($_('history_stats_game_plural') || 'games');
+		n === 1
+			? String($_('history_stats_game_singular') || 'game')
+			: String($_('history_stats_game_plural') || 'games');
 
 	// ── helpers ─────────────────────────────────────────────────────────────────
 
-	const pct = (part: number, total: number) =>
-		total > 0 ? Math.round((part / total) * 100) : 0;
+	const pct = (part: number, total: number) => (total > 0 ? Math.round((part / total) * 100) : 0);
 
 	const handleClear = async () => {
 		const confirmed = await showConfirm(
 			String(
-				$_('history_stats_clear_confirm') ||
-					'Clear all saved game records? This cannot be undone.'
+				$_('history_stats_clear_confirm') || 'Clear all saved game records? This cannot be undone.'
 			)
 		);
 		if (confirmed) clearSavedGames();
@@ -158,16 +156,13 @@
 				</h3>
 				<ul class="space-y-1">
 					{#each positionWins as row (row.position)}
-						<li
-							class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5"
-						>
+						<li class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5">
 							<span class="text-sm text-gray-200"
 								>{positionLabels[row.position] ?? `Position ${row.position + 1}`}</span
 							>
 							<span class="font-mono text-sm text-gray-400"
 								>{row.wins}/{row.total}
-								<span class="ml-2 font-semibold text-white">{pct(row.wins, row.total)}%</span
-								></span
+								<span class="ml-2 font-semibold text-white">{pct(row.wins, row.total)}%</span></span
 							>
 						</li>
 					{/each}
@@ -206,14 +201,12 @@
 				</h3>
 				<ul class="space-y-1">
 					{#each playerCounts as row (row.count)}
-						<li
-							class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5"
-						>
+						<li class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5">
 							<span class="text-sm text-gray-200">{row.count} 👤</span>
 							<span class="font-mono text-sm text-gray-400"
-								>{row.freq} {gamesCountSuffix(row.freq)}
-								<span class="ml-2 font-semibold text-white"
-									>{pct(row.freq, totalGames)}%</span
+								>{row.freq}
+								{gamesCountSuffix(row.freq)}
+								<span class="ml-2 font-semibold text-white">{pct(row.freq, totalGames)}%</span
 								></span
 							>
 						</li>
@@ -230,14 +223,12 @@
 				</h3>
 				<ul class="space-y-1">
 					{#each startingLifeTotals as row (row.life)}
-						<li
-							class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5"
-						>
+						<li class="flex items-center justify-between rounded-lg bg-gray-900/70 px-4 py-2.5">
 							<span class="text-sm text-gray-200">♥ {row.life}</span>
 							<span class="font-mono text-sm text-gray-400"
-								>{row.freq} {gamesCountSuffix(row.freq)}
-								<span class="ml-2 font-semibold text-white"
-									>{pct(row.freq, totalGames)}%</span
+								>{row.freq}
+								{gamesCountSuffix(row.freq)}
+								<span class="ml-2 font-semibold text-white">{pct(row.freq, totalGames)}%</span
 								></span
 							>
 						</li>

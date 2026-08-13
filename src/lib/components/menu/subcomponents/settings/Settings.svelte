@@ -23,6 +23,7 @@
 		setShowResourcesButton,
 		setShowRandomizerButton,
 		setEnableAcornMode,
+		setUnderlineSixAndNine,
 		setEnableTicketMode,
 		setUseWeightedStartingPlayer,
 		setStartingPlayerProbability,
@@ -279,6 +280,16 @@
 	const handleShowLifeChangeHistoryChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setShowLifeChangeHistory(!!target.checked);
+	};
+
+	/**
+	 * Persists underline-six-and-nine display toggle.
+	 * @param {Event} e - Change event from the toggle switch.
+	 * @returns {void}
+	 */
+	const handleUnderlineSixAndNineChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setUnderlineSixAndNine(!!target.checked);
 	};
 
 	/**
@@ -1054,6 +1065,17 @@
 			<ToggleSwitch
 				checked={$appSettings.showLifeChangeHistory}
 				on:change={handleShowLifeChangeHistoryChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>6̲9̲ {$_('underline_six_and_nine') || 'Underline digits 6 and 9'}</span
+			>
+			<ToggleSwitch
+				checked={$appSettings.underlineSixAndNine}
+				on:change={handleUnderlineSixAndNineChange}
 			/>
 		</label>
 

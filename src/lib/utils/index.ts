@@ -26,3 +26,20 @@ export function optimize(src: string, widths = [640, 960, 1280], quality = 90) {
 		.join(', ');
 	*/
 }
+
+/**
+ * Wraps each digit '6' and '9' in the string representation of a number
+ * with an underline span, so that 6 and 9 are visually distinguishable.
+ * @param {number | string} value The numeric value to format.
+ * @returns {string} HTML string with 6/9 digits underlined.
+ */
+export function formatWithUnderlineSixNine(value: number | string): string {
+	return String(value)
+		.split('')
+		.map((ch) =>
+			ch === '6' || ch === '9'
+				? `<span style="text-decoration:underline;text-underline-offset:0.1em;">${ch}</span>`
+				: ch
+		)
+		.join('');
+}

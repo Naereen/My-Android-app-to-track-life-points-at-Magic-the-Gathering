@@ -125,6 +125,7 @@
 	"enable_acorn_mode": "Activer le compteur de « Glands » ?",
 	"enable_ticket_mode": "Activer le compteur de « Tickets » ?",
 	"show_life_change_history": "Intégrer le petit historique PV (dernières variations)",
+	"underline_six_and_nine": "Souligner les chiffres 6 et 9",
 	"starting_player_probabilities_title": "Truquer le tirage du premier joueur ?",
 	"starting_player_probabilities_caption": "Cette option expérimentale vous permet de personnaliser qui est plus susceptible de commencer la partie. Attention : risque de triche !",
 	"starting_player_probabilities_enable": "Activer ce paramètre secret",

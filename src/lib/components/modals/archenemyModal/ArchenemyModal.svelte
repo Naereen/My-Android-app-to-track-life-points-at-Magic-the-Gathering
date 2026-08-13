@@ -137,7 +137,10 @@
 					<div class="text-yellow-200 text-xs font-semibold px-1">
 						⚠️ {$_('archenemy_ongoing_schemes_title')}
 					</div>
-					<div class="flex flex-row gap-2 overflow-x-auto pb-1" style="scroll-snap-type: x mandatory;">
+					<div
+						class="flex flex-row gap-2 overflow-x-auto pb-1"
+						style="scroll-snap-type: x mandatory;"
+					>
 						{#each activeOngoingSchemes as ongoingCard, i}
 							<div
 								class="relative flex-shrink-0 rounded-xl overflow-hidden border border-yellow-500/60"
