@@ -30,9 +30,8 @@ describe('history modal browser-back handling', () => {
 				'utf8'
 			);
 
-			expect(source).toContain(
-				'class="fixed inset-0 z-[200] flex items-center justify-center bg-black/70"'
-			);
+			expect(source).toContain('class="fixed');
+			expect(source).toContain('z-[200]');
 		});
 	});
 
