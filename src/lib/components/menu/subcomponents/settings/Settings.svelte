@@ -55,6 +55,7 @@
 	import Ticket from '$lib/assets/icons/Ticket.svelte';
 	import { players } from '$lib/store/player';
 	import { _ } from 'svelte-i18n';
+	import ToggleSwitch from '$lib/components/shared/toggleSwitch/ToggleSwitch.svelte';
 
 	type RelayHealthStatus = 'idle' | 'testing' | 'ok' | 'ko';
 
@@ -752,8 +753,9 @@
 	role="region"
 	aria-label={$_('settings')}
 >
+	<!-- Sticky header -->
 	<div
-		class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black"
+		class="w-full text-center flex px-4 flex-col justify-between items-center my-4 py-2 sticky top-[-1px] bg-black z-10"
 	>
 		<button
 			on:click={() => toggleIsMenuOpen('')}
@@ -764,209 +766,203 @@
 		<span class="text-white text-center" style="font-size: 2rem;">{$_('settings')}</span>
 	</div>
 
-	<div class="w-full text-center text-white mt-2 flex flex-col items-center">
+	<div class="w-full text-white flex flex-col">
+		<!-- ── Game Configuration ──────────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('settings_section_game_config') || 'Game Configuration'}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+
 		<!-- Player Count -->
-		<div class="w-3/4">
-			<div><span style="font-size: 1.5rem;" class="font-bold">{$_('players')}</span></div>
-			<div class="grid grid-cols-4 justify-items-center justify-center mt-3 gap-2">
+		<div class="px-4 pt-3 pb-2 text-center">
+			<div class="text-base font-semibold text-gray-200 mb-2">{$_('players')}</div>
+			<div class="grid grid-cols-4 justify-items-center gap-2 mb-2">
 				{#each [2, 3, 4, 5] as playerCount}
 					{#key $appSettings.playerCount}
-						<div>
-							<CircularButton
-								on:click={() => setNewPlayerCount(playerCount)}
-								number={playerCount}
-								highlight={$appSettings.playerCount === playerCount}
-							/>
-						</div>
+						<CircularButton
+							on:click={() => setNewPlayerCount(playerCount)}
+							number={playerCount}
+							highlight={$appSettings.playerCount === playerCount}
+						/>
 					{/key}
 				{/each}
 			</div>
-			<div class="grid grid-cols-3 justify-items-center justify-center mt-2">
+			<div class="grid grid-cols-3 justify-items-center gap-2">
 				{#each [6, 7, 8] as playerCount}
 					{#key $appSettings.playerCount}
-						<div>
-							<CircularButton
-								on:click={() => setNewPlayerCount(playerCount)}
-								number={playerCount}
-								highlight={$appSettings.playerCount === playerCount}
-							/>
-						</div>
+						<CircularButton
+							on:click={() => setNewPlayerCount(playerCount)}
+							number={playerCount}
+							highlight={$appSettings.playerCount === playerCount}
+						/>
 					{/key}
 				{/each}
 			</div>
-			{#if $appSettings.playerCount === 3}
-				<div class="mt-4">
-					<div class="text-lg mb-2">{$_('choose_3players_layout')}</div>
-					<div class="flex gap-3 justify-center">
-						<button
-							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-							class:border-blue-400={$appSettings.threePlayerLayout === 'classic'}
-							on:click={() => setThreePlayerLayout('classic')}
-						>
-							<div class="w-full h-full flex flex-col gap-1">
-								<div class="flex gap-1 h-1/2">
-									<div class="bg-gray-700 w-1/2" />
-									<div class="bg-gray-700 w-1/2" />
-								</div>
-								<div class="bg-gray-700 h-1/2 w-1/2 mx-auto" />
-							</div>
-							<div class="mt-1 text-sm">2 / 1</div>
-						</button>
-						<button
-							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-							class:border-blue-400={$appSettings.threePlayerLayout === 'inverted'}
-							on:click={() => setThreePlayerLayout('inverted')}
-						>
-							<div class="w-full h-full flex flex-col gap-1">
-								<div class="bg-gray-700 h-1/2 w-1/2 mx-auto" />
-								<div class="flex gap-1 h-1/2">
-									<div class="bg-gray-700 w-1/2" />
-									<div class="bg-gray-700 w-1/2" />
-								</div>
-							</div>
-							<div class="mt-1 text-sm">1 / 2 (experimental)</div>
-						</button>
-					</div>
-				</div>
-			{/if}
-
-			{#if $appSettings.playerCount === 4}
-				<div class="mt-4">
-					<div class="text-lg mb-2">{$_('choose_4players_layout')}</div>
-					<div class="flex gap-3 justify-center">
-						<button
-							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-							class:border-blue-400={$appSettings.fourPlayerLayout === 'matrix'}
-							on:click={() => setFourPlayerLayout('matrix')}
-						>
-							<div class="w-full h-full grid grid-rows-2 grid-cols-2 gap-1">
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-							</div>
-							<div class="mt-1 text-sm">2 x 2</div>
-						</button>
-						<button
-							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-							class:border-blue-400={$appSettings.fourPlayerLayout === 'stacked'}
-							on:click={() => setFourPlayerLayout('stacked')}
-						>
-							<div class="w-full h-full flex flex-col gap-1">
-								<div class="bg-gray-700 h-1/3" />
-								<div class="flex gap-1 h-1/3">
-									<div class="bg-gray-700 w-1/2" />
-									<div class="bg-gray-700 w-1/2" />
-								</div>
-								<div class="bg-gray-700 h-1/3" />
-							</div>
-							<div class="mt-1 text-sm">1 / 2 / 1</div>
-						</button>
-					</div>
-				</div>
-			{/if}
-
-			{#if $appSettings.playerCount === 6}
-				<div class="mt-4">
-					<div class="text-lg mb-2">{$_('choose_6players_layout')}</div>
-					<div class="flex gap-3 justify-center">
-						<button
-							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-							class:border-blue-400={$appSettings.sixPlayerLayout === 'one'}
-							on:click={() => setSixPlayerLayout('one')}
-						>
-							<div class="w-full h-full grid grid-rows-3 grid-cols-2 gap-1">
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-							</div>
-							<div class="mt-1 text-sm">3 x 2</div>
-						</button>
-						<button
-							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-							class:border-blue-400={$appSettings.sixPlayerLayout === 'two'}
-							on:click={() => setSixPlayerLayout('two')}
-						>
-							<div class="w-full h-full grid grid-rows-4 grid-cols-2 gap-1">
-								<div class="bg-gray-700 col-span-2" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700 col-span-2" />
-							</div>
-							<div class="mt-1 text-sm">1 / 2 / 2 / 1</div>
-						</button>
-					</div>
-				</div>
-			{/if}
-
-			{#if $appSettings.playerCount === 8}
-				<div class="mt-4">
-					<div class="text-lg mb-2">{$_('choose_8players_layout')}</div>
-					<div class="flex gap-3 justify-center">
-						<button
-							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-							class:border-blue-400={$appSettings.eightPlayerLayout === 'classic'}
-							on:click={() => setEightPlayerLayout('classic')}
-						>
-							<div class="w-full h-full grid grid-rows-5 grid-cols-2 gap-1">
-								<div class="bg-gray-700 col-span-2" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700" />
-								<div class="bg-gray-700 col-span-2" />
-							</div>
-							<div class="mt-1 text-sm">1 / 2 / 2 / 2 / 1</div>
-						</button>
-						<button
-							class="w-36 h-28 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
-							class:border-blue-400={$appSettings.eightPlayerLayout === 'sides'}
-							on:click={() => setEightPlayerLayout('sides')}
-						>
-							<div class="w-full h-full flex gap-1">
-								<div class="flex w-1/2 flex-col gap-1">
-									<div class="bg-gray-700 h-1/4" />
-									<div class="bg-gray-700 h-1/4" />
-									<div class="bg-gray-700 h-1/4" />
-									<div class="bg-gray-700 h-1/4" />
-								</div>
-								<div class="flex w-1/2 flex-col gap-1">
-									<div class="bg-gray-700 h-1/4" />
-									<div class="bg-gray-700 h-1/4" />
-									<div class="bg-gray-700 h-1/4" />
-									<div class="bg-gray-700 h-1/4" />
-								</div>
-							</div>
-							<div class="mt-1 text-sm">4 | 4</div>
-						</button>
-					</div>
-				</div>
-			{/if}
 		</div>
 
+		<!-- Layout picker (shown only when relevant) -->
+		{#if $appSettings.playerCount === 3}
+			<div class="px-4 pb-3">
+				<div class="text-sm text-gray-400 mb-2">{$_('choose_3players_layout')}</div>
+				<div class="flex gap-3 justify-center">
+					<button
+						class="w-32 h-24 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+						class:border-blue-400={$appSettings.threePlayerLayout === 'classic'}
+						class:border-gray-600={$appSettings.threePlayerLayout !== 'classic'}
+						on:click={() => setThreePlayerLayout('classic')}
+					>
+						<div class="w-full h-full flex flex-col gap-1">
+							<div class="flex gap-1 h-1/2">
+								<div class="bg-gray-600 w-1/2 rounded-sm" />
+								<div class="bg-gray-600 w-1/2 rounded-sm" />
+							</div>
+							<div class="bg-gray-600 h-1/2 w-1/2 mx-auto rounded-sm" />
+						</div>
+						<div class="mt-1 text-xs text-gray-300">2 / 1</div>
+					</button>
+					<button
+						class="w-32 h-24 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+						class:border-blue-400={$appSettings.threePlayerLayout === 'inverted'}
+						class:border-gray-600={$appSettings.threePlayerLayout !== 'inverted'}
+						on:click={() => setThreePlayerLayout('inverted')}
+					>
+						<div class="w-full h-full flex flex-col gap-1">
+							<div class="bg-gray-600 h-1/2 w-1/2 mx-auto rounded-sm" />
+							<div class="flex gap-1 h-1/2">
+								<div class="bg-gray-600 w-1/2 rounded-sm" />
+								<div class="bg-gray-600 w-1/2 rounded-sm" />
+							</div>
+						</div>
+						<div class="mt-1 text-xs text-gray-300">1 / 2 (exp.)</div>
+					</button>
+				</div>
+			</div>
+		{/if}
+
+		{#if $appSettings.playerCount === 4}
+			<div class="px-4 pb-3">
+				<div class="text-sm text-gray-400 mb-2">{$_('choose_4players_layout')}</div>
+				<div class="flex gap-3 justify-center">
+					<button
+						class="w-32 h-24 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+						class:border-blue-400={$appSettings.fourPlayerLayout === 'matrix'}
+						class:border-gray-600={$appSettings.fourPlayerLayout !== 'matrix'}
+						on:click={() => setFourPlayerLayout('matrix')}
+					>
+						<div class="w-full h-full grid grid-rows-2 grid-cols-2 gap-1">
+							<div class="bg-gray-600 rounded-sm" />
+							<div class="bg-gray-600 rounded-sm" />
+							<div class="bg-gray-600 rounded-sm" />
+							<div class="bg-gray-600 rounded-sm" />
+						</div>
+						<div class="mt-1 text-xs text-gray-300">2 x 2</div>
+					</button>
+					<button
+						class="w-32 h-24 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+						class:border-blue-400={$appSettings.fourPlayerLayout === 'stacked'}
+						class:border-gray-600={$appSettings.fourPlayerLayout !== 'stacked'}
+						on:click={() => setFourPlayerLayout('stacked')}
+					>
+						<div class="w-full h-full flex flex-col gap-1">
+							<div class="bg-gray-600 h-1/3 rounded-sm" />
+							<div class="flex gap-1 h-1/3">
+								<div class="bg-gray-600 w-1/2 rounded-sm" />
+								<div class="bg-gray-600 w-1/2 rounded-sm" />
+							</div>
+							<div class="bg-gray-600 h-1/3 rounded-sm" />
+						</div>
+						<div class="mt-1 text-xs text-gray-300">1 / 2 / 1</div>
+					</button>
+				</div>
+			</div>
+		{/if}
+
+		{#if $appSettings.playerCount === 6}
+			<div class="px-4 pb-3">
+				<div class="text-sm text-gray-400 mb-2">{$_('choose_6players_layout')}</div>
+				<div class="flex gap-3 justify-center">
+					<button
+						class="w-32 h-24 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+						class:border-blue-400={$appSettings.sixPlayerLayout === 'one'}
+						class:border-gray-600={$appSettings.sixPlayerLayout !== 'one'}
+						on:click={() => setSixPlayerLayout('one')}
+					>
+						<div class="w-full h-full grid grid-rows-3 grid-cols-2 gap-1">
+							{#each Array(6) as _}<div class="bg-gray-600 rounded-sm" />{/each}
+						</div>
+						<div class="mt-1 text-xs text-gray-300">3 x 2</div>
+					</button>
+					<button
+						class="w-32 h-24 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+						class:border-blue-400={$appSettings.sixPlayerLayout === 'two'}
+						class:border-gray-600={$appSettings.sixPlayerLayout !== 'two'}
+						on:click={() => setSixPlayerLayout('two')}
+					>
+						<div class="w-full h-full grid grid-rows-4 grid-cols-2 gap-1">
+							<div class="bg-gray-600 col-span-2 rounded-sm" />
+							<div class="bg-gray-600 rounded-sm" />
+							<div class="bg-gray-600 rounded-sm" />
+							<div class="bg-gray-600 rounded-sm" />
+							<div class="bg-gray-600 rounded-sm" />
+							<div class="bg-gray-600 col-span-2 rounded-sm" />
+						</div>
+						<div class="mt-1 text-xs text-gray-300">1/2/2/1</div>
+					</button>
+				</div>
+			</div>
+		{/if}
+
+		{#if $appSettings.playerCount === 8}
+			<div class="px-4 pb-3">
+				<div class="text-sm text-gray-400 mb-2">{$_('choose_8players_layout')}</div>
+				<div class="flex gap-3 justify-center">
+					<button
+						class="w-32 h-24 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+						class:border-blue-400={$appSettings.eightPlayerLayout === 'classic'}
+						class:border-gray-600={$appSettings.eightPlayerLayout !== 'classic'}
+						on:click={() => setEightPlayerLayout('classic')}
+					>
+						<div class="w-full h-full grid grid-rows-5 grid-cols-2 gap-1">
+							<div class="bg-gray-600 col-span-2 rounded-sm" />
+							{#each Array(6) as _}<div class="bg-gray-600 rounded-sm" />{/each}
+							<div class="bg-gray-600 col-span-2 rounded-sm" />
+						</div>
+						<div class="mt-1 text-xs text-gray-300">1/2/2/2/1</div>
+					</button>
+					<button
+						class="w-32 h-24 p-2 rounded-lg border-2 flex flex-col items-center justify-center"
+						class:border-blue-400={$appSettings.eightPlayerLayout === 'sides'}
+						class:border-gray-600={$appSettings.eightPlayerLayout !== 'sides'}
+						on:click={() => setEightPlayerLayout('sides')}
+					>
+						<div class="w-full h-full flex gap-1">
+							<div class="flex w-1/2 flex-col gap-1">
+								{#each Array(4) as _}<div class="bg-gray-600 h-1/4 rounded-sm" />{/each}
+							</div>
+							<div class="flex w-1/2 flex-col gap-1">
+								{#each Array(4) as _}<div class="bg-gray-600 h-1/4 rounded-sm" />{/each}
+							</div>
+						</div>
+						<div class="mt-1 text-xs text-gray-300">4 | 4</div>
+					</button>
+				</div>
+			</div>
+		{/if}
+
 		<!-- Starting Life Total -->
-		<div class="mt-6 w-2/3">
-			<div><span style="font-size: 1.5rem;" class="font-bold">{$_('starting_life')}</span></div>
-			<div class="flex flex-row justify-between mt-3">
+		<div class="px-4 pb-3 text-center">
+			<div class="text-base font-semibold text-gray-200 mb-2">{$_('starting_life')}</div>
+			<div class="flex flex-row justify-center gap-2 flex-wrap mt-1">
 				{#each [20, 25, 30, 40, 'custom'] as lifeTotal}
 					{#key $appSettings.startingLifeTotal}
 						{#if typeof lifeTotal === 'number'}
-							<div>
-								<CircularButton
-									on:click={() => setLifeTotal(lifeTotal)}
-									number={lifeTotal}
-									highlight={$appSettings.startingLifeTotal === lifeTotal}
-								/>
-							</div>
+							<CircularButton
+								on:click={() => setLifeTotal(lifeTotal)}
+								number={lifeTotal}
+								highlight={$appSettings.startingLifeTotal === lifeTotal}
+							/>
 						{:else}
-							<div>
+							<div class="flex flex-col items-center">
 								<CircularButton
 									customText
 									highlight={showCustomStartingLifeEditor || isCustomStartingLife()}
@@ -974,7 +970,9 @@
 								>
 									?
 								</CircularButton>
-								<span style="font-size: 0.75rem;">{$_('starting_life_custom_label_short')}</span>
+								<span class="text-xs text-gray-400 mt-0.5"
+									>{$_('starting_life_custom_label_short')}</span
+								>
 							</div>
 						{/if}
 					{/key}
@@ -982,11 +980,11 @@
 			</div>
 
 			{#if showCustomStartingLifeEditor || isCustomStartingLife()}
-				<div class="mt-4 p-3 rounded-xl bg-[#2d2f30] border border-gray-600">
-					<div class="text-sm text-gray-300 mb-2">
+				<div class="mt-3 p-3 rounded-xl bg-gray-800 border border-gray-700">
+					<div class="text-sm text-gray-400 mb-2">
 						{$_('starting_life_custom_label') || 'Custom starting life total'}
 					</div>
-					<div class="flex items-center gap-2">
+					<div class="flex items-center justify-center gap-2">
 						<input
 							type="number"
 							min="1"
@@ -995,7 +993,7 @@
 							value={$appSettings.customStartingLifeTotal}
 							on:input={handleCustomLifeTotalInput}
 							on:keydown={handleCustomLifeTotalKeydown}
-							class="bg-gray-700 rounded-lg h-10 w-28 px-3 text-right text-white outline-none"
+							class="bg-gray-700 rounded-lg h-10 w-24 px-3 text-right text-white outline-none"
 						/>
 						<button
 							on:click={applyCustomStartingLifeTotal}
@@ -1004,7 +1002,7 @@
 							{$_('starting_life_custom_apply') || 'Apply'}
 						</button>
 					</div>
-					<div class="text-xs text-gray-400 mt-2">
+					<div class="text-xs text-gray-500 mt-2">
 						{#if isCustomStartingLife()}
 							{$_('starting_life_current_custom') || 'Current starting life: custom'}
 							{$appSettings.startingLifeTotal}
@@ -1017,555 +1015,403 @@
 			{/if}
 		</div>
 
-		<!-- All the main checkboxes -->
-		<div class="w-full flex justify-center mt-6 mb-2">
-			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">{$_('main_checkboxes_settings')}</div>
-			</div>
-		</div>
+		<!-- ── Main Options ────────────────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('main_checkboxes_settings')}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>🔆 {$_('prevent_screen_sleep') || 'Prevent screen sleep'}</span
 			>
-				<input
-					type="checkbox"
-					checked={$appSettings.preventScreenSleep}
-					on:change={handlePreventSleepChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('prevent_screen_sleep') || 'Prevent screen sleep'}</span
-				>
-			</label>
-		</div>
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.hapticsEnabled}
-					on:change={handleHapticsChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('haptic_feedback') || 'Enable haptic feedback'}</span
-				>
-			</label>
-		</div>
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.soundEffectsEnabled}
-					on:change={handleSoundEffectsChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">{$_('sound_effects') || 'Sound effects'}</span>
-			</label>
-		</div>
+			<ToggleSwitch
+				checked={$appSettings.preventScreenSleep}
+				on:change={handlePreventSleepChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>📳 {$_('haptic_feedback') || 'Enable haptic feedback'}</span
 			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showLifeChangeHistory}
-					on:change={handleShowLifeChangeHistoryChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_life_change_history') || 'Show life change history'}</span
-				>
-			</label>
-		</div>
+			<ToggleSwitch checked={$appSettings.hapticsEnabled} on:change={handleHapticsChange} />
+		</label>
+		<hr class="border-gray-800 mx-4" />
 
-		<!-- Main optional buttons -->
-		<div class="w-full flex justify-center mt-2 mb-0">
-			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">
-					{$_('main_optional_buttons_settings_title') || 'Main Optional Buttons'}
-				</div>
-			</div>
-		</div>
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium">🔊 {$_('sound_effects') || 'Sound effects'}</span>
+			<ToggleSwitch
+				checked={$appSettings.soundEffectsEnabled}
+				on:change={handleSoundEffectsChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>📜 {$_('show_life_change_history') || 'Show life change history'}</span
 			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showNextPlayerButton}
-					on:change={handleShowNextButtonChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_next_player_button') || 'Show next-player button'}</span
-				>
-			</label>
-		</div>
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.enableCurrentPlayerGlow}
-					on:change={handleEnableGlowChange}
-					class="h-5 w-5"
-					disabled={!$appSettings.showNextPlayerButton}
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('enable_current_player_glow') || 'Enable current player glow'}</span
-				>
-			</label>
-		</div>
+			<ToggleSwitch
+				checked={$appSettings.showLifeChangeHistory}
+				on:change={handleShowLifeChangeHistoryChange}
+			/>
+		</label>
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showResourcesButton}
-					on:change={handleShowResourcesButtonChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_resources_button') || 'Show resources button'}</span
-				>
-			</label>
-		</div>
+		<!-- ── Main Optional Buttons ───────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('main_optional_buttons_settings_title') || 'Main optional buttons'}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>▶️ {$_('show_next_player_button') || 'Show next-player button'}</span
 			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showRandomizerButton}
-					on:change={handleShowRandomizerButtonChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_randomizer_button') || 'Show randomizer button'}</span
-				>
-			</label>
-		</div>
+			<ToggleSwitch
+				checked={$appSettings.showNextPlayerButton}
+				on:change={handleShowNextButtonChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
+		<label
+			class="flex items-center justify-between px-4 py-3 w-full cursor-pointer"
+			class:opacity-40={!$appSettings.showNextPlayerButton}
+		>
+			<span class="text-base font-medium"
+				>✨ {$_('enable_current_player_glow') || 'Enable current player glow'}</span
 			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showEmblemMenu}
-					on:change={handleShowEmblemMenuChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_emblem_menu_button') || 'Show emblem menu button'}</span
-				>
-			</label>
-		</div>
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
+			<ToggleSwitch
+				checked={$appSettings.enableCurrentPlayerGlow}
+				disabled={!$appSettings.showNextPlayerButton}
+				on:change={handleEnableGlowChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>⚡ {$_('show_resources_button') || 'Show resources button'}</span
 			>
-				<input
-					type="checkbox"
-					checked={$appSettings.showGameHistoryMenu}
-					on:change={handleShowGameHistoryMenuChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_game_history_menu_button') || 'Show game history menu button'}</span
-				>
-			</label>
-		</div>
+			<ToggleSwitch
+				checked={$appSettings.showResourcesButton}
+				on:change={handleShowResourcesButtonChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
 
-		<!-- EDH variants settings -->
-		<div class="w-full flex justify-center mt-2 mb-0">
-			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">
-					{$_('edh_variants_settings_title') || 'EDH Variants (experimental)'}
-				</div>
-			</div>
-		</div>
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>🎲 {$_('show_randomizer_button') || 'Show randomizer button'}</span
+			>
+			<ToggleSwitch
+				checked={$appSettings.showRandomizerButton}
+				on:change={handleShowRandomizerButtonChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.showVanguardMenu}
-					on:change={handleShowVanguardMenuChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_vanguard_menu_button') || 'Show Vanguard menu button'}</span
-				>
-			</label>
-		</div>
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>🛡️ {$_('show_emblem_menu_button') || 'Show emblem & dungeon button'}</span
+			>
+			<ToggleSwitch checked={$appSettings.showEmblemMenu} on:change={handleShowEmblemMenuChange} />
+		</label>
+		<hr class="border-gray-800 mx-4" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>📊 {$_('show_game_history_menu_button') || 'Show game history button'}</span
+			>
+			<ToggleSwitch
+				checked={$appSettings.showGameHistoryMenu}
+				on:change={handleShowGameHistoryMenuChange}
+			/>
+		</label>
+
+		<!-- ── EDH Variants ────────────────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('edh_variants_settings_title') || 'EDH variants (experimental)'}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>🗡️ {$_('show_vanguard_menu_button') || 'Show Vanguard menu'}</span
+			>
+			<ToggleSwitch
+				checked={$appSettings.showVanguardMenu}
+				on:change={handleShowVanguardMenuChange}
+			/>
+		</label>
 
 		{#if $appSettings.showVanguardMenu}
-			<div class="w-full flex justify-start mt-0 mb-0">
-				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-					<input
-						type="checkbox"
-						checked={$appSettings.vanguardModeEnabled}
-						on:change={handleVanguardModeEnabledChange}
-						class="h-5 w-5"
-					/>
-					<span class="ml-2 text-lg font-semibold"
-						>{$_('vanguard_mode_enabled') || 'Enable Vanguard mode on new game'}</span
-					>
-				</label>
-			</div>
+			<hr class="border-gray-800 mx-4" />
+			<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+				<div>
+					<div class="text-base font-medium">
+						{$_('vanguard_mode_enabled') || 'Enable Vanguard on new game'}
+					</div>
+				</div>
+				<ToggleSwitch
+					checked={$appSettings.vanguardModeEnabled}
+					on:change={handleVanguardModeEnabledChange}
+				/>
+			</label>
 
 			{#if $appSettings.vanguardModeEnabled}
-				<div class="w-full flex justify-start mt-0 mb-0">
-					<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-						<input
-							type="checkbox"
-							checked={$appSettings.vanguardDraftThree}
-							on:change={handleVanguardDraftThreeChange}
-							class="h-5 w-5"
-						/>
-						<span class="ml-2 text-lg font-semibold"
-							>{$_('vanguard_draft_three') || 'Variant: 3 Vanguard cards then keep one'}</span
-						>
-					</label>
-				</div>
+				<hr class="border-gray-800 mx-4" />
+				<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+					<div>
+						<div class="text-base font-medium">
+							{$_('vanguard_draft_three') || 'Draft 3 Vanguard cards then keep one'}
+						</div>
+					</div>
+					<ToggleSwitch
+						checked={$appSettings.vanguardDraftThree}
+						on:change={handleVanguardDraftThreeChange}
+					/>
+				</label>
 			{/if}
 		{/if}
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.showTreacheryMenu}
-					on:change={handleShowTreacheryMenuChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_treachery_menu_button') || 'Show Treachery menu button'}</span
-				>
-			</label>
-		</div>
+		<hr class="border-gray-800 mx-4" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>🤫 {$_('show_treachery_menu_button') || 'Show Treachery menu'}</span
+			>
+			<ToggleSwitch
+				checked={$appSettings.showTreacheryMenu}
+				on:change={handleShowTreacheryMenuChange}
+			/>
+		</label>
 
 		{#if $appSettings.showTreacheryMenu}
-			<div class="w-full flex justify-start mt-0 mb-0">
-				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-					<input
-						type="checkbox"
-						checked={$appSettings.treacheryModeEnabled}
-						on:change={handleTreacheryModeEnabledChange}
-						class="h-5 w-5"
-					/>
-					<span class="ml-2 text-lg font-semibold"
-						>{$_('treachery_mode_enabled') || 'Enable Treachery mode on new game'}</span
-					>
-				</label>
-			</div>
+			<hr class="border-gray-800 mx-4" />
+			<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+				<div>
+					<div class="text-base font-medium">
+						{$_('treachery_mode_enabled') || 'Enable Treachery on new game'}
+					</div>
+				</div>
+				<ToggleSwitch
+					checked={$appSettings.treacheryModeEnabled}
+					on:change={handleTreacheryModeEnabledChange}
+				/>
+			</label>
 
 			{#if $appSettings.treacheryModeEnabled}
-				<div class="w-full flex justify-start mt-0 mb-0">
-					<label
-						class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-						style="min-width: 12rem;"
-					>
-						<input
-							type="checkbox"
-							checked={$appSettings.shogunVariantEnabled}
-							on:change={handleShogunVariantEnabledChange}
-							class="h-5 w-5"
-						/>
-						<span class="ml-2 text-lg font-semibold"
-							>{$_('shogun_variant_enabled') || 'Enable Shogun variant (simpler)'}</span
-						>
-					</label>
-				</div>
+				<hr class="border-gray-800 mx-4" />
+				<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+					<div>
+						<div class="text-base font-medium">
+							{$_('shogun_variant_enabled') || 'Enable Shogun variant (simpler)'}
+						</div>
+					</div>
+					<ToggleSwitch
+						checked={$appSettings.shogunVariantEnabled}
+						on:change={handleShogunVariantEnabledChange}
+					/>
+				</label>
 			{/if}
 		{/if}
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.bountyModeEnabled || $appSettings.showBountyMenu}
-					on:change={handleBountyModeEnabledChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('bounty_mode_enabled') || '🎯 Turn on the « Bounty mode »'}</span
-				>
-			</label>
-		</div>
+		<hr class="border-gray-800 mx-4" />
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.showPlanechaseMenu}
-					on:change={handleShowPlanechaseMenuChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_planechase_menu_button') || '🌀 Show Planechase menu button'}</span
-				>
-			</label>
-		</div>
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>🎯 {$_('bounty_mode_enabled') || 'Enable Bounty mode'}</span
+			>
+			<ToggleSwitch
+				checked={$appSettings.bountyModeEnabled || $appSettings.showBountyMenu}
+				on:change={handleBountyModeEnabledChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
 
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<input
-					type="checkbox"
-					checked={$appSettings.showArchenemyMenu}
-					on:change={handleShowArchenemyMenuChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('show_archenemy_menu_button') || '😈 Show Archenemy menu button'}</span
-				>
-			</label>
-		</div>
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>🌀 {$_('show_planechase_menu_button') || 'Show Planechase menu'}</span
+			>
+			<ToggleSwitch
+				checked={$appSettings.showPlanechaseMenu}
+				on:change={handleShowPlanechaseMenuChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
 
-		<!-- Timers settings -->
-		<div class="w-full flex justify-center mt-2 mb-0">
-			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">{$_('timers_settings_title') || 'Timers'}</div>
-			</div>
-		</div>
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>😈 {$_('show_archenemy_menu_button') || 'Show Archenemy menu'}</span
+			>
+			<ToggleSwitch
+				checked={$appSettings.showArchenemyMenu}
+				on:change={handleShowArchenemyMenuChange}
+			/>
+		</label>
 
-		<div class="w-full flex text-left justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<div class="ml-2">
-					<div class="text-lg font-semibold">
-						<input
-							type="checkbox"
-							checked={$appSettings.globalGameTimerEnabled}
-							on:change={handleGlobalGameTimerEnabledChange}
-							class="h-5 w-5"
-						/>
-						{$_('global_game_timer_enabled') || 'Enable global game timer'}
-					</div>
-					<div class="text-sm text-gray-400">
-						{$_('global_game_timer_enabled_help') ||
-							'When enabled, a game-wide countdown appears in the center menu bar.'}
-					</div>
+		<!-- ── Timers ──────────────────────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('timers_settings_title') || 'Timers'}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<div class="flex-1 pr-4">
+				<div class="text-base font-medium">
+					⏱️ {$_('global_game_timer_enabled') || 'Enable global game timer'}
 				</div>
-			</label>
-		</div>
+				<div class="text-xs text-gray-400 mt-0.5">
+					{$_('global_game_timer_enabled_help') ||
+						'A game-wide countdown appears in the center menu bar.'}
+				</div>
+			</div>
+			<ToggleSwitch
+				checked={$appSettings.globalGameTimerEnabled}
+				on:change={handleGlobalGameTimerEnabledChange}
+			/>
+		</label>
 
 		{#if $appSettings.globalGameTimerEnabled}
-			<div class="w-full flex justify-end mt-0 mb-0">
-				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-					<span class="ml-2 text-lg font-semibold"
-						>{$_('global_game_timer_duration') || 'Global timer duration (minutes)'}</span
-					>
-					<input
-						type="number"
-						min="1"
-						max="300"
-						step="1"
-						value={Math.round($appSettings.globalGameTimerDuration / 60)}
-						on:change={handleGlobalGameTimerDurationChange}
-						class="bg-gray-600 w-24 h-8 rounded text-center text-xl ml-3"
-					/>
-				</label>
+			<hr class="border-gray-800 mx-4" />
+			<div class="flex items-center justify-between px-4 py-3 w-full">
+				<span class="text-base font-medium"
+					>{$_('global_game_timer_duration') || 'Duration (minutes)'}</span
+				>
+				<input
+					type="number"
+					min="1"
+					max="300"
+					step="1"
+					value={Math.round($appSettings.globalGameTimerDuration / 60)}
+					on:change={handleGlobalGameTimerDurationChange}
+					class="bg-gray-700 border border-gray-600 w-20 h-9 rounded-lg text-center text-lg"
+				/>
 			</div>
 		{/if}
 
-		<!-- Turn timer settings -->
-		<div class="w-full flex text-left justify-start mt-0 mb-0">
-			<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-				<div class="ml-2">
-					<div class="text-lg font-semibold">
-						<input
-							type="checkbox"
-							checked={$appSettings.turnTimerEnabled}
-							on:change={handleTurnTimerEnabledChange}
-							class="h-5 w-5"
-						/>
-						{$_('turn_timer_enabled') || 'Enable per-turn timer'}
-					</div>
-					<div class="text-sm text-gray-400">
-						{$_('turn_timer_enabled_help') ||
-							'When enabled, a per-turn countdown is shown for the active player.'}
-					</div>
+		<hr class="border-gray-800 mx-4" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<div class="flex-1 pr-4">
+				<div class="text-base font-medium">
+					⏳ {$_('turn_timer_enabled') || 'Enable per-turn timer'}
 				</div>
-			</label>
-		</div>
+				<div class="text-xs text-gray-400 mt-0.5">
+					{$_('turn_timer_enabled_help') || 'A per-turn countdown is shown for the active player.'}
+				</div>
+			</div>
+			<ToggleSwitch
+				checked={$appSettings.turnTimerEnabled}
+				on:change={handleTurnTimerEnabledChange}
+			/>
+		</label>
 
 		{#if $appSettings.turnTimerEnabled}
-			<div class="w-full flex justify-end mt-0 mb-0">
-				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-					<span class="ml-2 text-lg font-semibold"
-						>{$_('turn_timer_duration') || 'Turn duration (minutes)'}</span
-					>
-					<input
-						type="number"
-						min="1"
-						max="10"
-						step="1"
-						value={Math.round($appSettings.turnTimerDuration / 60)}
-						on:change={handleTurnTimerDurationChange}
-						class="bg-gray-600 w-20 h-8 rounded text-center text-xl ml-3"
-					/>
-				</label>
+			<hr class="border-gray-800 mx-4" />
+			<div class="flex items-center justify-between px-4 py-3 w-full">
+				<span class="text-base font-medium"
+					>{$_('turn_timer_duration') || 'Turn duration (minutes)'}</span
+				>
+				<input
+					type="number"
+					min="1"
+					max="10"
+					step="1"
+					value={Math.round($appSettings.turnTimerDuration / 60)}
+					on:change={handleTurnTimerDurationChange}
+					class="bg-gray-700 border border-gray-600 w-20 h-9 rounded-lg text-center text-lg"
+				/>
 			</div>
-
-			<div class="w-full flex justify-center mt-0 mb-0">
-				<label class="flex gap-2 text-sm px-4 py-2 rounded-full" style="min-width: 12rem;">
-					<input
-						type="checkbox"
-						checked={$appSettings.turnTimerSound}
-						on:change={handleTurnTimerSoundChange}
-						class="h-5 w-5"
-					/>
-					<span class="ml-2 text-lg font-semibold"
-						>{$_('turn_timer_sound') || 'Play sound on timeout'}</span
-					>
-				</label>
-			</div>
+			<hr class="border-gray-800 mx-4" />
+			<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+				<span class="text-base font-medium"
+					>🔔 {$_('turn_timer_sound') || 'Play sound on timeout'}</span
+				>
+				<ToggleSwitch
+					checked={$appSettings.turnTimerSound}
+					on:change={handleTurnTimerSoundChange}
+				/>
+			</label>
 		{/if}
 
-		<!-- All the additional checkboxes -->
-		<div class="w-full flex justify-center mt-6 mb-2">
-			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">{$_('additional_checkboxes_settings')}</div>
+		<!-- ── Additional Options ──────────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('additional_checkboxes_settings')}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>➖ {$_('allow_negative_life_global') || 'Allow negative life (global)'}</span
+			>
+			<ToggleSwitch checked={$appSettings.allowNegativeLife} on:change={handleGlobalAllowChange} />
+		</label>
+		<hr class="border-gray-800 mx-4" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium inline-flex items-center gap-1.5">
+				<Acorn />
+				{$_('enable_acorn_mode') || 'Enable Acorn counter'}
+			</span>
+			<ToggleSwitch
+				checked={$appSettings.enableAcornMode}
+				on:change={handleEnableAcornModeChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium inline-flex items-center gap-1.5">
+				<Ticket />
+				{$_('enable_ticket_mode') || 'Enable Ticket counter'}
+			</span>
+			<ToggleSwitch
+				checked={$appSettings.enableTicketMode}
+				on:change={handleEnableTicketModeChange}
+			/>
+		</label>
+
+		<!-- ── Starting Player Probabilities ──────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('starting_player_probabilities_title') || 'Starting Player Probabilities'}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<div class="flex-1 pr-4">
+				<div class="text-base font-medium">
+					{$_('starting_player_probabilities_enable') || 'Custom starting probabilities'}
+				</div>
+				<div class="text-xs text-gray-400 mt-0.5">
+					{$_('starting_player_probabilities_caption') ||
+						'Customize who is more likely to start the game.'}
+				</div>
 			</div>
-		</div>
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.allowNegativeLife}
-					on:change={handleGlobalAllowChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('allow_negative_life_global') || 'Allow negative life (global)'}</span
-				>
-			</label>
-		</div>
-
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.enableAcornMode}
-					on:change={handleEnableAcornModeChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold inline-flex items-center gap-2">
-					<Acorn />
-					{$_('enable_acorn_mode') || 'Enable Acorn mode?'}
-				</span>
-			</label>
-		</div>
-
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.enableTicketMode}
-					on:change={handleEnableTicketModeChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold inline-flex items-center gap-2">
-					<Ticket />
-					{$_('enable_ticket_mode') || 'Enable Ticket mode?'}
-				</span>
-			</label>
-		</div>
-
-		<!-- Custom starting probabilities for various players -->
-		<div class="w-full flex justify-center mt-2 mb-0">
-			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<span class="text-2xl font-bold">
-					{$_('starting_player_probabilities_title') || 'Starting Player Probabilities'}
-				</span>
-			</div>
-		</div>
-
-		<div class="w-full flex justify-start mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
-			>
-				<input
-					type="checkbox"
-					checked={$appSettings.useWeightedStartingPlayer}
-					on:change={handleUseWeightedStartingPlayerChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold">
-					{$_('starting_player_probabilities_enable') ||
-						'Enable custom probabilities for who starts'}
-				</span>
-			</label>
-		</div>
+			<ToggleSwitch
+				checked={$appSettings.useWeightedStartingPlayer}
+				on:change={handleUseWeightedStartingPlayerChange}
+			/>
+		</label>
 
 		{#if $appSettings.useWeightedStartingPlayer}
-			<div class="w-full px-6 mt-1 mb-2 text-left">
-				<div class="text-sm text-gray-300 mb-2">
-					<p>
-						{$_('starting_player_probabilities_caption') ||
-							'This experimental option lets you customize who is more likely to start the game.'}
-					</p>
+			<div class="px-4 pb-3">
+				<div class="text-xs text-gray-400 mb-3">
+					{$_('starting_player_probabilities_help') ||
+						'Values are weights — they do not need to sum to 100.'}
 				</div>
-			</div>
-			<div class="w-full flex justify-start mt-0 mb-1 pl-12">
-				<button
-					on:click={handleResetStartingPlayerProbabilities}
-					class="px-3 py-1 rounded bg-blue-900 border border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-					disabled={!$appSettings.useWeightedStartingPlayer}
-				>
-					{$_('starting_player_probabilities_reset') || 'Reset starting player probabilities'}
-				</button>
-			</div>
-			<div class="w-full px-6 mt-1 mb-2 text-left">
-				<div class="text-sm text-gray-300 mb-2">
-					<p>
-						{$_('starting_player_probabilities_help') ||
-							'Values are treated as weights. They do not need to sum exactly to 100.'}
-					</p>
-				</div>
-			</div>
-			<div class="w-full px-6 mt-1 mb-2 text-left">
 				{#each Array.from({ length: $appSettings.playerCount }) as slot, index}
 					<div
-						class="flex items-center justify-between gap-3 mb-2 bg-gray-800/70 rounded-xl px-3 py-2"
+						class="flex items-center justify-between gap-3 mb-2 bg-gray-800 rounded-xl px-3 py-2"
 					>
-						<div class="text-base text-gray-100">
+						<div class="text-sm text-gray-200">
 							{$_('starting_player_probabilities_change_for') || 'Chance for'}
 							"{getDisplayedPlayerName(index)}"
 						</div>
-						<div class="flex items-center gap-2">
+						<div class="flex items-center gap-1.5">
 							<input
 								type="number"
 								min="0"
@@ -1575,169 +1421,177 @@
 									Math.round(($appSettings.startingPlayerProbabilities?.[index] ?? 0) * 100) /
 									100)()}
 								on:change={(e) => handleStartingPlayerProbabilityInput(index, e)}
-								class="bg-gray-600 w-20 h-8 rounded text-center text-lg"
+								class="bg-gray-700 border border-gray-600 w-18 h-8 rounded-lg text-center text-base"
 							/>
-							<span class="text-gray-100 font-semibold">%</span>
+							<span class="text-gray-300 font-semibold text-sm">%</span>
 						</div>
 					</div>
 				{/each}
-				<div class="text-xs text-gray-400 mt-1">
-					{$_('starting_player_probabilities_sum') || 'Current total'}: {Math.round(
-						weightedStartSum * 100
-					) / 100}%
+				<div class="flex items-center justify-between mt-2">
+					<div class="text-xs text-gray-400">
+						{$_('starting_player_probabilities_sum') || 'Total'}: {Math.round(
+							weightedStartSum * 100
+						) / 100}%
+					</div>
+					<button
+						on:click={handleResetStartingPlayerProbabilities}
+						class="px-3 py-1 rounded-lg bg-gray-700 border border-gray-600 text-xs"
+					>
+						{$_('starting_player_probabilities_reset') || 'Reset'}
+					</button>
 				</div>
 			</div>
 		{/if}
 
-		<!-- Stream mode settings (LAN relay) -->
-		<div class="w-full flex justify-center mt-2 mb-0">
-			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl font-bold">
-					{$_('stream_mode_title') || 'Experimental Stream Mode (LAN relay)'}
-				</div>
-			</div>
-		</div>
-		<div class="w-full flex justify-left mt-0 mb-0">
-			<label
-				class="flex items-center gap-2 text-sm px-4 py-2 rounded-full"
-				style="min-width: 12rem;"
+		<!-- ── Stream Mode ─────────────────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('stream_mode_title') || 'Stream Mode (LAN relay)'}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<span class="text-base font-medium"
+				>📡 {$_('stream_mode_enable') || 'Enable stream mode'}</span
 			>
-				<input
-					type="checkbox"
-					checked={$appSettings.isStreamMode}
-					on:change={handleStreamModeChange}
-					class="h-5 w-5"
-				/>
-				<span class="ml-2 text-lg font-semibold"
-					>{$_('stream_mode_enable') || 'Enable stream mode'}</span
-				>
-			</label>
-		</div>
+			<ToggleSwitch checked={$appSettings.isStreamMode} on:change={handleStreamModeChange} />
+		</label>
+
 		{#if $appSettings.isStreamMode}
-			<div class="w-full flex justify-start mt-0 mb-0 px-8">
-				<div style="min-width: 12rem; max-width: 32rem;" class="w-full">
-					<div class="text-sm text-gray-400 mb-1">
-						{$_('stream_mode_help') || 'Use the local relay URL, e.g. http://192.168.1.113:8787'}
-					</div>
-					<input
-						type="url"
-						value={$appSettings.remoteServerUrl}
-						on:change={handleStreamRemoteServerUrlChange}
-						placeholder={$_('stream_mode_server_url_placeholder') || 'http://192.168.1.113:8787'}
-						class="w-full bg-gray-700 text-white rounded px-3 py-2 outline-none border border-gray-500"
-					/>
-					<div class="text-sm mt-1">{$_('stream_mode_server_url') || 'Relay server URL'}</div>
-					<div class="mt-2 flex items-center gap-3">
-						<button
-							on:click={testRelayHealth}
-							class="px-3 py-1 rounded bg-gray-700 border border-gray-500"
-							disabled={relayHealthStatus === 'testing'}
-						>
-							{$_('stream_mode_test_button') || 'Test relay'}
-						</button>
-						<a
-							href={relayHealthUrl || '#'}
-							target="_blank"
-							rel="noreferrer"
-							class="px-3 py-1 rounded border border-gray-500"
-							class:text-blue-300={!!relayHealthUrl}
-							class:text-gray-500={!relayHealthUrl}
-							on:click={handleOpenRelayHealthClick}
-						>
-							{$_('stream_mode_open_health_link') || 'Open /health'}
-						</a>
-						<span
-							class:text-gray-400={relayHealthStatus === 'idle'}
-							class:text-yellow-300={relayHealthStatus === 'testing'}
-							class:text-green-300={relayHealthStatus === 'ok'}
-							class:text-red-300={relayHealthStatus === 'ko'}
-						>
-							{#if relayHealthStatus === 'testing'}
-								{$_('stream_mode_status_testing') || 'Testing...'}
-							{:else if relayHealthStatus === 'ok'}
-								{$_('stream_mode_status_ok') || 'Relay OK'}
-							{:else if relayHealthStatus === 'ko'}
-								{$_('stream_mode_status_ko') || 'Relay KO'}{relayHealthMessage
-									? ` (${relayHealthMessage})`
-									: ''}
-							{:else}
-								{$_('stream_mode_status_idle') || 'Not tested'}
-							{/if}
-						</span>
-					</div>
+			<div class="px-4 pb-4">
+				<div class="text-xs text-gray-400 mb-2">
+					{$_('stream_mode_help') || 'Use the local relay URL, e.g. http://192.168.1.113:8787'}
+				</div>
+				<input
+					type="url"
+					value={$appSettings.remoteServerUrl}
+					on:change={handleStreamRemoteServerUrlChange}
+					placeholder={$_('stream_mode_server_url_placeholder') || 'http://192.168.1.113:8787'}
+					class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 outline-none border border-gray-600 text-sm"
+				/>
+				<div class="text-xs text-gray-500 mt-1">
+					{$_('stream_mode_server_url') || 'Relay server URL'}
+				</div>
+				<div class="mt-3 flex items-center gap-2 flex-wrap">
+					<button
+						on:click={testRelayHealth}
+						class="px-3 py-1.5 rounded-lg bg-gray-700 border border-gray-600 text-sm"
+						disabled={relayHealthStatus === 'testing'}
+					>
+						{$_('stream_mode_test_button') || 'Test relay'}
+					</button>
+					<a
+						href={relayHealthUrl || '#'}
+						target="_blank"
+						rel="noreferrer"
+						class="px-3 py-1.5 rounded-lg border border-gray-600 text-sm"
+						class:text-blue-400={!!relayHealthUrl}
+						class:text-gray-500={!relayHealthUrl}
+						on:click={handleOpenRelayHealthClick}
+					>
+						{$_('stream_mode_open_health_link') || 'Open /health'}
+					</a>
+					<span
+						class="text-sm font-medium"
+						class:text-gray-400={relayHealthStatus === 'idle'}
+						class:text-yellow-300={relayHealthStatus === 'testing'}
+						class:text-green-400={relayHealthStatus === 'ok'}
+						class:text-red-400={relayHealthStatus === 'ko'}
+					>
+						{#if relayHealthStatus === 'testing'}
+							{$_('stream_mode_status_testing') || 'Testing...'}
+						{:else if relayHealthStatus === 'ok'}
+							✅ {$_('stream_mode_status_ok') || 'Relay OK'}
+						{:else if relayHealthStatus === 'ko'}
+							❌ {$_('stream_mode_status_ko') || 'Relay KO'}{relayHealthMessage
+								? ` (${relayHealthMessage})`
+								: ''}
+						{:else}
+							{$_('stream_mode_status_idle') || 'Not tested'}
+						{/if}
+					</span>
 				</div>
 			</div>
 		{/if}
 
-		<!-- Language selection -->
-		<div class="w-full flex justify-center mt-6 mb-4">
-			<div style="min-width: 12rem;" class="px-4 py-2 rounded-full">
-				<div class="text-2xl mb-2 font-bold">{$_('choose_your_language')}</div>
-				<div class="grid grid-cols-3 gap-2 justify-center w-full">
-					{#each languages as lang}
-						<button
-							class="px-3 py-1 rounded-full text-xl"
-							class:bg-blue-500={$appSettings.locale === lang.code}
-							class:text-white={$appSettings.locale === lang.code}
-							on:click={() => handleChangeLocale(lang.code)}
-						>
-							{lang.emoji}
-							{lang.label}
-						</button>
-					{/each}
-				</div>
-			</div>
+		<!-- ── Language ────────────────────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('choose_your_language')}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+
+		<div class="px-4 py-3 grid grid-cols-3 gap-2">
+			{#each languages as lang}
+				<button
+					class="px-2 py-2 rounded-xl text-sm font-medium border transition-colors"
+					class:bg-blue-600={$appSettings.locale === lang.code}
+					class:border-blue-500={$appSettings.locale === lang.code}
+					class:text-white={$appSettings.locale === lang.code}
+					class:bg-gray-800={$appSettings.locale !== lang.code}
+					class:border-gray-700={$appSettings.locale !== lang.code}
+					class:text-gray-300={$appSettings.locale !== lang.code}
+					on:click={() => handleChangeLocale(lang.code)}
+				>
+					{lang.emoji}
+					{lang.label}
+				</button>
+			{/each}
 		</div>
 
-		<!-- Reset local storage placed at the bottom so user can scroll to it -->
-		<div class="w-full flex justify-center mt-2 mb-2">
-			<button class="bg-red-900 text-white px-4 py-1 rounded-full" on:click={resetLocalStorage}>
-				{$_('reset_local_storage')}
-			</button>
-		</div>
+		<!-- ── Reset & About ──────────────────────────────────────────────── -->
+		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('about_title')}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
 
-		<!-- About section (larger text per request) -->
-		<div class="w-full text-center text-gray-300 mt-4 mb-8 px-6">
-			<div class="text-white text-2xl mb-2 font-bold">{$_('about_title')}</div>
-			<div class="text-base mb-1">
+		<div class="px-4 py-3 text-center text-gray-300 space-y-1">
+			<div class="text-sm">
 				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.4.12'}
 			</div>
-			<div class="text-base mb-1">
+			<div class="text-sm">
 				{$_('about_author')}:
 				<a
-					class="text-blue-400 underline text-base"
+					class="text-blue-400 underline"
 					href="https://github.com/Naereen"
 					target="_blank"
 					rel="noreferrer">Lilian Besson (Naereen)</a
 				>
 			</div>
-			<div class="text-base mb-2">
+			<div class="text-sm">
 				{$_('about_license')}:
 				<a
-					class="text-blue-400 underline text-base"
+					class="text-blue-400 underline"
 					href="https://naereen.mit-license.org"
 					target="_blank"
 					rel="noreferrer">MIT</a
 				>
 			</div>
-			<div class="text-base mb-2">{$_('about_thanks')}</div>
+			<div class="text-sm">{$_('about_thanks')}</div>
 			<div class="flex justify-center gap-4 mt-2">
 				<a
-					class="text-blue-400 underline text-base"
+					class="text-blue-400 underline text-sm"
 					href="https://github.com/Naereen/My-Android-app-to-track-life-points-at-Magic-the-Gathering"
 					target="_blank"
 					rel="noreferrer">{$_('about_github')}</a
 				>
-				<!-- TODO: Optional links: Play Store direct link -->
-				<!-- <a class="text-blue-400 underline text-base" href="#" on:click|preventDefault={() => null}>{ $_('about_playstore') }</a> -->
-				<!-- Additional links: Feedback form or feedback email -->
 				<a
-					class="text-blue-400 underline text-base"
+					class="text-blue-400 underline text-sm"
 					href="mailto:naereen@crans.org?Subject=Feedback%20for%20Magic%20Life%20Points%20Tracker"
 					target="_blank"
 					rel="noreferrer">{$_('about_feedback')}</a
 				>
 			</div>
+		</div>
+
+		<hr class="border-gray-700 mx-4 mt-2 mb-3" />
+
+		<!-- Reset local storage placed at the bottom so user can scroll to it -->
+		<div class="flex justify-center px-4 pb-8">
+			<button
+				class="bg-red-900 hover:bg-red-800 text-white px-6 py-2 rounded-full text-sm font-medium"
+				on:click={resetLocalStorage}
+			>
+				{$_('reset_local_storage')}
+			</button>
 		</div>
 	</div>
 </div>

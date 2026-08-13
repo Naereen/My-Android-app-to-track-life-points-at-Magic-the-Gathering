@@ -84,7 +84,9 @@
 </script>
 
 <!-- Backdrop -->
-<div class="bg-black/80 absolute w-full h-full top-0 left-0 flex justify-center items-start pt-[7.5vh] z-50">
+<div
+	class="bg-black/80 absolute w-full h-full top-0 left-0 flex justify-center items-start pt-[7.5vh] z-50"
+>
 	<div
 		class="relative bg-[#1a1c2e] rounded-[1.75rem] w-[97vw] max-h-[85vh] overflow-y-auto p-4 flex flex-col items-center gap-3"
 		role="dialog"

@@ -4,6 +4,7 @@
 	"commander_damage": "Dégâts de commandant",
 	"commander_damage_short": "Dégâts EDH",
 	"settings": "Paramètres",
+	"settings_section_game_config": "Configuration de la partie",
 	"close": "Fermer",
 	"clear": "Vider",
 	"confirm_modal": "Confirmer ?",
