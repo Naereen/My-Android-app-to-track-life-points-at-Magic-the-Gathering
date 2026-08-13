@@ -15,5 +15,6 @@ export const planechaseOfficialPresets: OfficialDeckPreset[] = [
 export const archenemyOfficialPresets: OfficialDeckPreset[] = [
 	{ code: 'OARC', name: 'Archenemy (2010)', cardCount: 45 },
 	{ code: 'OE01', name: 'Archenemy: Nicol Bolas (2017)', cardCount: 20 },
-	{ code: 'DSC', name: 'Duskmourn Commander (2024)', cardCount: 40 }
+	{ code: 'DSC', name: 'Duskmourn Commander (2024)', cardCount: 40 },
+ { code: 'DCI', name: 'DCI Promos', cardCount: 5 },
 ];
