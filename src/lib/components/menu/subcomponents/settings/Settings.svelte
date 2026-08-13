@@ -763,12 +763,12 @@
 			draggable="false"
 			class="text-white absolute left-0 pl-4"><Arrow /></button
 		>
-		<span class="text-white text-center" style="font-size: 2rem;">{$_('settings')}</span>
+		<span class="text-white text-center" style="font-size: 2rem;">🛠️ {$_('settings')}</span>
 	</div>
 
 	<div class="w-full text-white flex flex-col">
 		<!-- ── Game Configuration ──────────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('settings_section_game_config') || 'Game Configuration'}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1016,7 +1016,7 @@
 		</div>
 
 		<!-- ── Main Options ────────────────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('main_checkboxes_settings')}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1034,14 +1034,14 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>📳 {$_('haptic_feedback') || 'Enable haptic feedback'}</span
+				>{$_('haptic_feedback') || 'Enable haptic feedback'}</span
 			>
 			<ToggleSwitch checked={$appSettings.hapticsEnabled} on:change={handleHapticsChange} />
 		</label>
 		<hr class="border-gray-800 mx-4" />
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
-			<span class="text-base font-medium">🔊 {$_('sound_effects') || 'Sound effects'}</span>
+			<span class="text-base font-medium">{$_('sound_effects') || 'Sound effects'}</span>
 			<ToggleSwitch
 				checked={$appSettings.soundEffectsEnabled}
 				on:change={handleSoundEffectsChange}
@@ -1060,7 +1060,7 @@
 		</label>
 
 		<!-- ── Main Optional Buttons ───────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('main_optional_buttons_settings_title') || 'Main optional buttons'}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1104,7 +1104,7 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>🎲 {$_('show_randomizer_button') || 'Show randomizer button'}</span
+				>{$_('show_randomizer_button') || 'Show randomizer button'}</span
 			>
 			<ToggleSwitch
 				checked={$appSettings.showRandomizerButton}
@@ -1132,7 +1132,7 @@
 		</label>
 
 		<!-- ── EDH Variants ────────────────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('edh_variants_settings_title') || 'EDH variants (experimental)'}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1223,7 +1223,7 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>🎯 {$_('bounty_mode_enabled') || 'Enable Bounty mode'}</span
+				>{$_('bounty_mode_enabled') || 'Enable Bounty mode'}</span
 			>
 			<ToggleSwitch
 				checked={$appSettings.bountyModeEnabled || $appSettings.showBountyMenu}
@@ -1234,7 +1234,7 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>🌀 {$_('show_planechase_menu_button') || 'Show Planechase menu'}</span
+				>{$_('show_planechase_menu_button') || 'Show Planechase menu'}</span
 			>
 			<ToggleSwitch
 				checked={$appSettings.showPlanechaseMenu}
@@ -1245,7 +1245,7 @@
 
 		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
 			<span class="text-base font-medium"
-				>😈 {$_('show_archenemy_menu_button') || 'Show Archenemy menu'}</span
+				>{$_('show_archenemy_menu_button') || 'Show Archenemy menu'}</span
 			>
 			<ToggleSwitch
 				checked={$appSettings.showArchenemyMenu}
@@ -1254,7 +1254,7 @@
 		</label>
 
 		<!-- ── Timers ──────────────────────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('timers_settings_title') || 'Timers'}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1339,7 +1339,7 @@
 		{/if}
 
 		<!-- ── Additional Options ──────────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('additional_checkboxes_settings')}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1376,7 +1376,7 @@
 		</label>
 
 		<!-- ── Starting Player Probabilities ──────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('starting_player_probabilities_title') || 'Starting Player Probabilities'}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1444,7 +1444,7 @@
 		{/if}
 
 		<!-- ── Stream Mode ─────────────────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('stream_mode_title') || 'Stream Mode (LAN relay)'}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1514,7 +1514,7 @@
 		{/if}
 
 		<!-- ── Language ────────────────────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('choose_your_language')}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
@@ -1538,7 +1538,7 @@
 		</div>
 
 		<!-- ── Reset & About ──────────────────────────────────────────────── -->
-		<h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('about_title')}
 		</h2>
 		<hr class="border-gray-700 mx-4 mb-1" />
