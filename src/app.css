@@ -527,6 +527,29 @@
 		font-weight: bold;
 	}
 
+	.life-total-longpress-vibrate {
+		animation: life-total-longpress-vibrate 220ms ease-in-out;
+	}
+
+	@keyframes life-total-longpress-vibrate {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		20% {
+			transform: translateX(-2px);
+		}
+		40% {
+			transform: translateX(2px);
+		}
+		60% {
+			transform: translateX(-1px);
+		}
+		80% {
+			transform: translateX(1px);
+		}
+	}
+
 	@keyframes turn-pulse {
 		0% {
 			transform: rotate(0deg) scale(1);
