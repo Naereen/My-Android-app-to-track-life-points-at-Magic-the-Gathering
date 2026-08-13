@@ -41,7 +41,7 @@
 
 {#if $confirmModalData.isOpen}
 	<div
-		class="bg-black/70 absolute w-full h-full top-0 left-0 flex justify-center items-center"
+		class="fixed inset-0 z-[200] flex items-center justify-center bg-black/70"
 		on:click={() => respondConfirm(false, getCheckboxValue(), radioValue)}
 		role="button"
 		aria-label="close dialog"

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { get } from 'svelte/store';
 import '../utils/i18n.js';
@@ -20,6 +21,15 @@ describe('history modal browser-back handling', () => {
 			},
 			location: { href: 'http://localhost/' }
 		});
+	});
+
+	it('keeps the shared confirm overlay fixed and above other UI layers', () => {
+		const source = readFileSync(
+			new URL('../components/modals/confirmModal/ConfirmModal.svelte', import.meta.url),
+			'utf8'
+		);
+
+		expect(source).toMatch(/class="[^"]*fixed[^"]*z-\[200\][^"]*bg-black\/70[^"]*"/);
 	});
 
 	it('pushes a synthetic browser-history entry and closes the modal on back navigation', () => {
