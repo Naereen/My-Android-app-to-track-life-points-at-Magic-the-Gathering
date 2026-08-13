@@ -369,7 +369,6 @@
 								<div class="pointer-events-none absolute inset-0 rounded-xl">
 									{#each activePlayers as player, index (player.id)}
 										{@const markerPosition = getMeeplePosition(player.id, index)}
-										{@const isUnplacedMeeple = !hasStoredMeeplePosition(player.id)}
 										<div
 											class="pointer-events-auto absolute"
 											style={`left: ${markerPosition.x * 100}%; top: ${markerPosition.y * 100}%; transform: translate(-50%, -50%);`}
@@ -378,7 +377,6 @@
 												type="button"
 												draggable="false"
 												class="meeple-marker"
-												class:meeple-marker--new={isUnplacedMeeple}
 												use:touchDragMeeple={{
 													handle: '.meeple-handle',
 													longPressMs: 180,
@@ -537,12 +535,6 @@
 		filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.6));
 	}
 
-	.meeple-marker--new {
-		outline: 2px dashed rgba(255, 255, 255, 0.78);
-		outline-offset: 4px;
-		animation: meepleNewPulse 1.8s ease-in-out infinite;
-	}
-
 	.meeple-number {
 		fill: white;
 		font-size: 20px;
@@ -562,15 +554,4 @@
 		stroke-width: 0.6px;
 	}
 
-	@keyframes meepleNewPulse {
-		0%,
-		100% {
-			transform: scale(1);
-			filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.55));
-		}
-		50% {
-			transform: scale(1.05);
-			filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.72));
-		}
-	}
 </style>
