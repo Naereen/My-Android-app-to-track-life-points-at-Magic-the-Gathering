@@ -8,7 +8,9 @@
 </script>
 
 {#if $dayNightShowcase.visible}
-	<div class="pointer-events-none fixed inset-0 z-[190] flex items-center justify-center bg-black/55 p-5 backdrop-blur-sm">
+	<div
+		class="pointer-events-none fixed inset-0 z-[190] flex items-center justify-center bg-black/55 p-5 backdrop-blur-sm"
+	>
 		<div
 			class={`showcase-shell ${isDay ? 'showcase-shell-day' : 'showcase-shell-night'}`}
 			role="status"
@@ -52,8 +54,7 @@
 	.showcase-frame {
 		border-radius: 1.9rem;
 		padding: 0.45rem;
-		background:
-			linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.18)),
+		background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.18)),
 			linear-gradient(145deg, rgba(255, 214, 102, 0.45), rgba(125, 211, 252, 0.25));
 		box-shadow:
 			inset 0 1px 0 rgba(255, 255, 255, 0.65),
@@ -70,27 +71,41 @@
 	}
 
 	.showcase-shell-day .showcase-frame {
-		background:
-			linear-gradient(160deg, rgba(254, 243, 199, 0.95), rgba(224, 242, 254, 0.45)),
+		background: linear-gradient(160deg, rgba(254, 243, 199, 0.95), rgba(224, 242, 254, 0.45)),
 			linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.18));
 	}
 
 	.showcase-shell-night .showcase-frame {
-		background:
-			linear-gradient(160deg, rgba(196, 181, 253, 0.82), rgba(148, 163, 184, 0.35)),
+		background: linear-gradient(160deg, rgba(196, 181, 253, 0.82), rgba(148, 163, 184, 0.35)),
 			linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.18));
 	}
 
 	.showcase-art-day {
-		background:
-			radial-gradient(circle at 50% 22%, rgba(255, 248, 196, 0.95), rgba(255, 248, 196, 0.06) 23%),
-			linear-gradient(180deg, rgba(59, 130, 246, 0.95) 0%, rgba(125, 211, 252, 0.9) 42%, rgba(254, 243, 199, 0.96) 100%);
+		background: radial-gradient(
+				circle at 50% 22%,
+				rgba(255, 248, 196, 0.95),
+				rgba(255, 248, 196, 0.06) 23%
+			),
+			linear-gradient(
+				180deg,
+				rgba(59, 130, 246, 0.95) 0%,
+				rgba(125, 211, 252, 0.9) 42%,
+				rgba(254, 243, 199, 0.96) 100%
+			);
 	}
 
 	.showcase-art-night {
-		background:
-			radial-gradient(circle at 50% 18%, rgba(248, 250, 252, 0.2), rgba(248, 250, 252, 0) 20%),
-			linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(49, 46, 129, 0.95) 50%, rgba(88, 28, 135, 0.92) 100%);
+		background: radial-gradient(
+				circle at 50% 18%,
+				rgba(248, 250, 252, 0.2),
+				rgba(248, 250, 252, 0) 20%
+			),
+			linear-gradient(
+				180deg,
+				rgba(15, 23, 42, 0.98) 0%,
+				rgba(49, 46, 129, 0.95) 50%,
+				rgba(88, 28, 135, 0.92) 100%
+			);
 	}
 
 	.showcase-glow {
@@ -103,22 +118,31 @@
 	}
 
 	.showcase-shell-day .showcase-glow {
-		background:
-			radial-gradient(circle at 50% 15%, rgba(255, 248, 196, 0.45), rgba(255, 248, 196, 0) 55%),
+		background: radial-gradient(
+				circle at 50% 15%,
+				rgba(255, 248, 196, 0.45),
+				rgba(255, 248, 196, 0) 55%
+			),
 			linear-gradient(180deg, rgba(251, 191, 36, 0.18), rgba(30, 64, 175, 0.28));
 	}
 
 	.showcase-shell-night .showcase-glow {
-		background:
-			radial-gradient(circle at 50% 15%, rgba(216, 180, 254, 0.28), rgba(216, 180, 254, 0) 55%),
+		background: radial-gradient(
+				circle at 50% 15%,
+				rgba(216, 180, 254, 0.28),
+				rgba(216, 180, 254, 0) 55%
+			),
 			linear-gradient(180deg, rgba(15, 23, 42, 0.18), rgba(76, 29, 149, 0.38));
 	}
 
 	.showcase-stars {
 		position: absolute;
 		inset: 0;
-		background-image:
-			radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.82) 0 0.13rem, transparent 0.14rem),
+		background-image: radial-gradient(
+				circle at 18% 22%,
+				rgba(255, 255, 255, 0.82) 0 0.13rem,
+				transparent 0.14rem
+			),
 			radial-gradient(circle at 76% 18%, rgba(255, 255, 255, 0.72) 0 0.1rem, transparent 0.11rem),
 			radial-gradient(circle at 24% 58%, rgba(255, 255, 255, 0.35) 0 0.09rem, transparent 0.1rem),
 			radial-gradient(circle at 82% 46%, rgba(255, 255, 255, 0.3) 0 0.08rem, transparent 0.09rem);
@@ -145,11 +169,23 @@
 	}
 
 	.showcase-shell-day .showcase-orb {
-		background: radial-gradient(circle, rgba(255, 255, 255, 0.98) 0%, rgba(254, 243, 199, 0.95) 38%, rgba(251, 191, 36, 0.75) 65%, rgba(251, 191, 36, 0) 100%);
+		background: radial-gradient(
+			circle,
+			rgba(255, 255, 255, 0.98) 0%,
+			rgba(254, 243, 199, 0.95) 38%,
+			rgba(251, 191, 36, 0.75) 65%,
+			rgba(251, 191, 36, 0) 100%
+		);
 	}
 
 	.showcase-shell-night .showcase-orb {
-		background: radial-gradient(circle at 38% 38%, rgba(255, 255, 255, 0.98) 0%, rgba(226, 232, 240, 0.95) 38%, rgba(196, 181, 253, 0.55) 66%, rgba(196, 181, 253, 0) 100%);
+		background: radial-gradient(
+			circle at 38% 38%,
+			rgba(255, 255, 255, 0.98) 0%,
+			rgba(226, 232, 240, 0.95) 38%,
+			rgba(196, 181, 253, 0.55) 66%,
+			rgba(196, 181, 253, 0) 100%
+		);
 	}
 
 	.showcase-emblem {
@@ -160,8 +196,11 @@
 		width: 8.5rem;
 		border-radius: 9999px;
 		border: 0.35rem solid rgba(255, 255, 255, 0.82);
-		background:
-			radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 55%),
+		background: radial-gradient(
+				circle at 35% 35%,
+				rgba(255, 255, 255, 0.3),
+				rgba(255, 255, 255, 0) 55%
+			),
 			rgba(15, 23, 42, 0.48);
 		box-shadow:
 			0 12px 30px rgba(15, 23, 42, 0.35),

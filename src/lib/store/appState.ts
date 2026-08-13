@@ -6,11 +6,7 @@ import { players } from './player';
 import { turnTimer } from './turnTimer';
 import { addGameHistoryEntry } from './gameHistory';
 import { startTurnFor, endCurrentTurn } from './turnTimeStats';
-import {
-	hideDayNightShowcase,
-	showDayNightShowcase,
-	type DayNightPhase
-} from './dayNightShowcase';
+import { hideDayNightShowcase, showDayNightShowcase, type DayNightPhase } from './dayNightShowcase';
 
 const MAX_STREAM_PLAYERS = 8;
 

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { get } from 'svelte/store';
+import '../utils/i18n.js';
 import {
 	dayNightShowcase,
 	dayNightShowcaseDurationMs,
