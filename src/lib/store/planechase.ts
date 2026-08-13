@@ -1,8 +1,14 @@
 // Planechase store – manages the planar deck, the active plane/phenomenon card,
 // the chaos die roll result, and the 180° rotation toggle for opposite-side viewing.
-import { writable } from 'svelte/store';
 import { persist } from './persist';
 import type { ScryfallEmblemCard } from '$lib/utils/scryfall';
+import {
+	getSavedDeckSelections,
+	normalizeSetCodes,
+	removeSavedDeckSelection,
+	type SavedDeckSelection,
+	upsertSavedDeckSelection
+} from './deckSelections';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -21,6 +27,10 @@ type PlanechaseState = {
 	lastDieResult: PlanarDieResult | null;
 	/** Whether the view is rotated 180° for opposite-side players. */
 	rotated: boolean;
+	/** Selected official set codes for deck customization. */
+	selectedSetCodes: string[];
+	/** Saved official-set selections for quick reuse. */
+	savedSelections: SavedDeckSelection[];
 };
 
 const initialState: PlanechaseState = {
@@ -28,7 +38,9 @@ const initialState: PlanechaseState = {
 	currentIndex: 0,
 	isOpen: false,
 	lastDieResult: null,
-	rotated: false
+	rotated: false,
+	selectedSetCodes: [],
+	savedSelections: []
 };
 
 // We persist the deck so players can close and reopen the modal without losing their place.
@@ -155,4 +167,29 @@ export const togglePlanechaseRotation = () => {
 /** Dismiss the last die result notification without advancing. */
 export const dismissDieResult = () => {
 	planechaseState.update((s) => ({ ...s, lastDieResult: null }));
+};
+
+/** Persist the current official-set checkbox selection used by the menu deck builder. */
+export const setSelectedPlanarSetCodes = (setCodes: string[]) => {
+	planechaseState.update((s) => ({
+		...s,
+		selectedSetCodes: normalizeSetCodes(setCodes),
+		savedSelections: getSavedDeckSelections(s.savedSelections)
+	}));
+};
+
+/** Save the current official-set selection under a reusable local name. */
+export const savePlanarSelection = (name: string, setCodes: string[]) => {
+	planechaseState.update((s) => ({
+		...s,
+		savedSelections: upsertSavedDeckSelection(s.savedSelections, name, setCodes)
+	}));
+};
+
+/** Delete one saved official-set selection without altering the active planar deck. */
+export const deletePlanarSelection = (name: string) => {
+	planechaseState.update((s) => ({
+		...s,
+		savedSelections: removeSavedDeckSelection(s.savedSelections, name)
+	}));
 };

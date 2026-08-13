@@ -1,16 +1,36 @@
 <script lang="ts">
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
-	import { archenemyState, loadSchemeDeck, openArchenemyModal } from '$lib/store/archenemy';
+	import {
+		archenemyState,
+		deleteSchemeSelection,
+		loadSchemeDeck,
+		openArchenemyModal,
+		saveSchemeSelection,
+		setSelectedSchemeSetCodes
+	} from '$lib/store/archenemy';
 	import { searchSchemeCards, type ScryfallEmblemCard } from '$lib/utils/scryfall';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
+
+	type OfficialPreset = {
+		code: string;
+		name: string;
+		cardCount: number;
+	};
+
+	const officialPresets: OfficialPreset[] = [
+		{ code: 'OARC', name: 'Archenemy (2010)', cardCount: 45 },
+		{ code: 'OE01', name: 'Archenemy: Nicol Bolas (2017)', cardCount: 20 },
+		{ code: 'DSC', name: 'Doctor Who (2023)', cardCount: 10 }
+	];
 
 	let searchQuery = '';
 	let searchResults: ScryfallEmblemCard[] = [];
 	let isSearching = false;
 	let hasSearched = false;
 	let innerHeight = 0;
+	let savedSelectionName = '';
 
 	/**
 	 * Loads the full Scheme card list (no query filter) and opens the modal.
@@ -30,11 +50,15 @@
 		}
 	};
 
-	const handleLoadPresetSet = async (setCode: string) => {
+	const loadSelectedSets = async (setCodes: string[]) => {
+		const selectedSetCodes = Array.from(new Set(setCodes));
+		if (selectedSetCodes.length === 0) return;
+
 		vibrate(20);
 		isSearching = true;
 		try {
-			const cards = await searchSchemeCards(`set:${setCode}`, 200);
+			const query = selectedSetCodes.map((setCode) => `set:${setCode}`).join(' or ');
+			const cards = await searchSchemeCards(query, 200);
 			if (cards.length > 0) {
 				loadSchemeDeck(cards);
 				openArchenemyModal();
@@ -83,7 +107,51 @@
 		toggleIsMenuOpen('');
 	};
 
+	const handleTogglePreset = (setCode: string) => {
+		vibrate(10);
+		const nextCodes = selectedSetCodes.includes(setCode)
+			? selectedSetCodes.filter((code) => code !== setCode)
+			: [...selectedSetCodes, setCode];
+		setSelectedSchemeSetCodes(nextCodes);
+	};
+
+	const handleToggleAllPresets = () => {
+		vibrate(10);
+		setSelectedSchemeSetCodes(
+			allPresetCodes.length === selectedSetCodes.length
+				? []
+				: officialPresets.map(({ code }) => code)
+		);
+	};
+
+	const handleSaveSelection = () => {
+		vibrate(20);
+		saveSchemeSelection(savedSelectionName, selectedSetCodes);
+		if (savedSelectionName.trim() && selectedSetCodes.length > 0) {
+			savedSelectionName = '';
+		}
+	};
+
+	const handleDeleteSavedSelection = (name: string) => {
+		vibrate(20);
+		deleteSchemeSelection(name);
+	};
+
+	const handleLoadSavedSelection = async (setCodes: string[]) => {
+		setSelectedSchemeSetCodes(setCodes);
+		await loadSelectedSets(setCodes);
+	};
+
+	const getSelectionCardCount = (setCodes: string[]) =>
+		officialPresets.reduce(
+			(total, preset) => total + (setCodes.includes(preset.code) ? preset.cardCount : 0),
+			0
+		);
+
 	$: hasDeck = ($archenemyState.deck?.length ?? 0) > 0;
+	$: selectedSetCodes = $archenemyState.selectedSetCodes ?? [];
+	$: savedSelections = $archenemyState.savedSelections ?? [];
+	$: allPresetCodes = officialPresets.map(({ code }) => code);
 </script>
 
 <svelte:window bind:innerHeight />
@@ -138,23 +206,126 @@
 					>
 						{isSearching ? $_('scryfall_searching') : `😈 ${$_('archenemy_load_all')}`}
 					</button>
-					<div class="grid grid-cols-3 gap-2">
-						<button
-							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
-							on:click={() => handleLoadPresetSet('DSC')}
-							disabled={isSearching}>DSC</button
-						>
-						<button
-							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
-							on:click={() => handleLoadPresetSet('OARC')}
-							disabled={isSearching}>OARC</button
-						>
-						<button
-							class="rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-xs py-1.5"
-							on:click={() => handleLoadPresetSet('OE01')}
-							disabled={isSearching}>OE01</button
-						>
+				</div>
+
+				<div class="bg-[#2d2f30] rounded-2xl p-4 flex flex-col gap-3">
+					<div class="text-white font-semibold text-base">
+						{$_('custom_deck_official_sets_title')}
 					</div>
+					<button
+						type="button"
+						class="w-full rounded-xl bg-black/40 px-3 py-3 text-left text-white flex items-center justify-between gap-3"
+						on:click={handleToggleAllPresets}
+						disabled={isSearching}
+					>
+						<div class="min-w-0">
+							<div class="text-sm font-semibold">{$_('custom_deck_select_all_sets')}</div>
+							<div class="text-xs text-gray-400">
+								{selectedSetCodes.length} / {officialPresets.length}
+							</div>
+						</div>
+						<div
+							class={`h-8 w-8 rounded-lg border-2 flex items-center justify-center text-lg ${
+								selectedSetCodes.length === officialPresets.length
+									? 'border-red-400 text-white'
+									: 'border-gray-500 text-transparent'
+							}`}
+						>
+							✓
+						</div>
+					</button>
+
+					<div class="flex flex-col gap-2">
+						{#each officialPresets as preset}
+							<button
+								type="button"
+								class="w-full rounded-xl bg-black/40 px-3 py-3 text-left text-white flex items-center justify-between gap-3"
+								on:click={() => handleTogglePreset(preset.code)}
+								disabled={isSearching}
+							>
+								<div class="min-w-0">
+									<div class="text-sm font-semibold truncate">{preset.name}</div>
+									<div class="text-xs text-gray-400">
+										{$_('custom_deck_cards_count', { values: { count: preset.cardCount } })}
+									</div>
+								</div>
+								<div class="flex items-center gap-3 shrink-0">
+									<div class="text-sm text-gray-300">
+										{selectedSetCodes.includes(preset.code)
+											? preset.cardCount
+											: 0}/{preset.cardCount}
+									</div>
+									<div
+										class={`h-8 w-8 rounded-lg border-2 flex items-center justify-center text-lg ${
+											selectedSetCodes.includes(preset.code)
+												? 'border-red-400 text-white'
+												: 'border-gray-500 text-transparent'
+										}`}
+									>
+										✓
+									</div>
+								</div>
+							</button>
+						{/each}
+					</div>
+
+					<button
+						type="button"
+						class="w-full py-3 rounded-xl bg-red-700 hover:bg-red-600 text-white font-bold text-base transition-colors disabled:opacity-50"
+						on:click={() => loadSelectedSets(selectedSetCodes)}
+						disabled={isSearching || selectedSetCodes.length === 0}
+					>
+						{isSearching ? $_('scryfall_searching') : $_('custom_deck_load_selected')}
+					</button>
+				</div>
+
+				<div class="bg-[#2d2f30] rounded-2xl p-4 flex flex-col gap-3">
+					<div class="text-white font-semibold text-base">{$_('custom_deck_saved_title')}</div>
+					<div class="flex gap-2">
+						<input
+							bind:value={savedSelectionName}
+							type="text"
+							autocomplete="off"
+							class="flex-1 bg-black rounded-xl h-[42px] px-3 text-white text-base outline-none"
+							placeholder={$_('custom_deck_name_placeholder')}
+						/>
+						<button
+							type="button"
+							class="bg-emerald-700 hover:bg-emerald-600 rounded-xl px-4 py-2 text-white text-sm disabled:opacity-50 transition-colors"
+							on:click={handleSaveSelection}
+							disabled={selectedSetCodes.length === 0 || !savedSelectionName.trim()}
+						>
+							{$_('custom_deck_save_current')}
+						</button>
+					</div>
+
+					{#if savedSelections.length === 0}
+						<div class="text-gray-300 text-sm">{$_('custom_deck_saved_empty')}</div>
+					{:else}
+						<div class="flex flex-col gap-2">
+							{#each savedSelections as selection (selection.name)}
+								<div class="rounded-xl bg-black/40 px-3 py-3 flex items-center gap-3">
+									<button
+										type="button"
+										class="flex-1 min-w-0 text-left"
+										on:click={() => handleLoadSavedSelection(selection.setCodes)}
+									>
+										<div class="text-white text-sm font-semibold truncate">{selection.name}</div>
+										<div class="text-xs text-gray-400 truncate">
+											{getSelectionCardCount(selection.setCodes)} • {selection.setCodes.join(', ')}
+										</div>
+									</button>
+									<button
+										type="button"
+										class="shrink-0 rounded-full border border-pink-500/70 px-3 py-2 text-pink-300 text-xs"
+										on:click={() => handleDeleteSavedSelection(selection.name)}
+									>
+										{$_('custom_deck_delete')}
+									</button>
+								</div>
+							{/each}
+						</div>
+					{/if}
 				</div>
 
 				<!-- Search section -->
