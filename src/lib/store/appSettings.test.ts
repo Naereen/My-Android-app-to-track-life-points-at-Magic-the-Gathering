@@ -2,9 +2,12 @@ import { beforeEach, describe, it, expect } from 'vitest';
 import { get } from 'svelte/store';
 import {
 	appSettings,
+	getDangerLifeThreshold,
+	getDangerPoisonThreshold,
 	getDefaultGlobalGameTimerDuration,
 	getDefaultStartingLifeTotal,
 	getPoisonLethalLimit,
+	isPlayerInDanger,
 	setPlayerCount,
 	setBountyModeEnabled,
 	setEightPlayerLayout,
@@ -54,6 +57,29 @@ describe('poison lethal limit', () => {
 	it('keeps 10 poison for other life totals', () => {
 		expect(getPoisonLethalLimit(20)).toBe(10);
 		expect(getPoisonLethalLimit(40)).toBe(10);
+	});
+});
+
+describe('danger thresholds', () => {
+	beforeEach(() => {
+		appSettings.set(structuredClone(defaultSettings));
+	});
+
+	it('matches the requested danger life thresholds for standard starts', () => {
+		expect(getDangerLifeThreshold(20)).toBe(8);
+		expect(getDangerLifeThreshold(40)).toBe(10);
+	});
+
+	it('warns at 80% of the poison lethal limit', () => {
+		expect(getDangerPoisonThreshold(10)).toBe(8);
+		expect(getDangerPoisonThreshold(15)).toBe(12);
+	});
+
+	it('flags danger when life or poison reaches the threshold', () => {
+		expect(isPlayerInDanger(8, 0, 20)).toBe(true);
+		expect(isPlayerInDanger(9, 8, 20)).toBe(true);
+		expect(isPlayerInDanger(10, 0, 40)).toBe(true);
+		expect(isPlayerInDanger(11, 7, 40)).toBe(false);
 	});
 });
 

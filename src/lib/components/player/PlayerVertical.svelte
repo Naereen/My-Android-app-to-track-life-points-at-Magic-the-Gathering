@@ -20,7 +20,7 @@
 	import StartYourEngineSpeed from '$lib/assets/icons/StartYourEngineSpeed.svelte';
 	import CommanderDamage from '$lib/assets/icons/CommanderDamage.svelte';
 	import { _ } from 'svelte-i18n';
-	import { appSettings, getPoisonLethalLimit } from '$lib/store/appSettings';
+	import { appSettings, getPoisonLethalLimit, isPlayerInDanger } from '$lib/store/appSettings';
 	import { appState } from '$lib/store/appState';
 	import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
@@ -73,6 +73,11 @@
 	$: index = id - 1;
 	$: hasSplitBackground =
 		Array.isArray($players[index].backgroundImage) && $players[index].backgroundImage.length > 1;
+	$: isInDanger = isPlayerInDanger(
+		$players[index].lifeTotal,
+		$players[index].poison ?? 0,
+		$appSettings.startingLifeTotal
+	);
 	$: isDead =
 		($players[index].lifeTotal <= 0 &&
 			!($appSettings.allowNegativeLife || $players[index].allowNegativeLife)) ||
@@ -390,6 +395,7 @@
 	<div
 		class="bg-rotated-overlay"
 		class:highlight={$players[index].highlighted}
+		class:danger={isInDanger && !isDead}
 		class:dead={isDead}
 	></div>
 	<div

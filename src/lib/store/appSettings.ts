@@ -226,6 +226,45 @@ export const getPoisonLethalLimit = (startingLifeTotal: number): number => {
 };
 
 /**
+ * Returns the low-life warning threshold used for the panel danger effect.
+ * Duel-style starts use a higher ratio than multiplayer starts.
+ * @param {number} startingLifeTotal Starting life selected for the current game.
+ * @returns {number} Life total at or below which the player is considered in danger.
+ */
+export const getDangerLifeThreshold = (startingLifeTotal: number): number => {
+	return startingLifeTotal <= 20
+		? Math.ceil(startingLifeTotal * 0.4)
+		: Math.ceil(startingLifeTotal / 4);
+};
+
+/**
+ * Returns the poison warning threshold used for the panel danger effect.
+ * @param {number} poisonLethalLimit Poison counters needed to lose.
+ * @returns {number} Poison total at or above which the player is considered in danger.
+ */
+export const getDangerPoisonThreshold = (poisonLethalLimit: number): number => {
+	return Math.ceil(poisonLethalLimit * 0.8);
+};
+
+/**
+ * Returns whether life or poison totals should trigger the panel danger effect.
+ * @param {number} lifeTotal Current life total.
+ * @param {number} poison Current poison total.
+ * @param {number} startingLifeTotal Starting life selected for the current game.
+ * @returns {boolean} Whether the player is in a near-death state.
+ */
+export const isPlayerInDanger = (
+	lifeTotal: number,
+	poison: number,
+	startingLifeTotal: number
+): boolean => {
+	return (
+		lifeTotal <= getDangerLifeThreshold(startingLifeTotal) ||
+		poison >= getDangerPoisonThreshold(getPoisonLethalLimit(startingLifeTotal))
+	);
+};
+
+/**
  * Applies a new player count and synchronizes dependent defaults.
  * Recomputes starting life, weighted probabilities, life-history visibility and default global timer.
  * @param {number} playerCount Number of active seats.
