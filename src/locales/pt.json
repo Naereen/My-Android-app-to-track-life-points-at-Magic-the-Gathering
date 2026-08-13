@@ -190,6 +190,7 @@
 	"history_dice_roll_sides": "faces",
 	"history_dice_roll_result": "resultado",
 	"history_turn_time_open_button": "⏱ Tempos por turno",
+	"history_stats_open_button": "📊 Estatísticas de múltiplas partidas",
 	"history_turn_time_title": "Estatísticas de tempo por turno",
 	"history_turn_time_tab": "Tempos por turno",
 	"history_life_chart_tab": "Gráfico de vida",
