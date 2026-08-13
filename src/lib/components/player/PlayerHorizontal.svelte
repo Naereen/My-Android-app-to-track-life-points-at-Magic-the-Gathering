@@ -51,6 +51,8 @@
 
 	let interval: ReturnType<typeof setInterval> | undefined;
 	let timeout: ReturnType<typeof setTimeout> | undefined;
+	let lifeTotalVibrateTimeout: ReturnType<typeof setTimeout> | undefined;
+	let lifeTotalVibrate = false;
 	let isHolding = false;
 	let holdingType: App.Player.LifeMoveType | null = null;
 	const MOUSE_AFTER_TOUCH_GUARD_MS = 1000;
@@ -301,6 +303,24 @@
 		($appSettings.playerCount === 4 && (id === 3 || id === 4)) ||
 		($appSettings.playerCount >= 5 && id >= 3);
 
+	const triggerLifeTotalVibrate = async () => {
+		if (lifeTotalVibrateTimeout) {
+			clearTimeout(lifeTotalVibrateTimeout);
+		}
+		lifeTotalVibrate = false;
+		await tick();
+		lifeTotalVibrate = true;
+		lifeTotalVibrateTimeout = setTimeout(() => {
+			lifeTotalVibrate = false;
+			lifeTotalVibrateTimeout = undefined;
+		}, 220);
+	};
+
+	const applyLongPressLifeStep = (type: App.Player.LifeMoveType) => {
+		void triggerLifeTotalVibrate();
+		manageLifeTotal(type, id, 10);
+	};
+
 	/**
 	 * Starts hold-to-repeat life adjustment using mouse input.
 	 * @param {App.Player.LifeMoveType} type - Parameter used by handleMouseDown.
@@ -316,11 +336,11 @@
 		setPlayerHighlighted(id, true);
 
 		timeout = setTimeout(() => {
-			manageLifeTotal(type, id, 10);
+			applyLongPressLifeStep(type);
 			if (isHolding) {
 				interval = setInterval(() => {
 					vibrate(10);
-					manageLifeTotal(type, id, 10);
+					applyLongPressLifeStep(type);
 				}, 1000);
 			}
 		}, 1000);
@@ -364,11 +384,11 @@
 		setPlayerHighlighted(id, true);
 
 		timeout = setTimeout(() => {
-			manageLifeTotal(type, id, 10);
+			applyLongPressLifeStep(type);
 			if (isHolding) {
 				interval = setInterval(() => {
 					vibrate(10);
-					manageLifeTotal(type, id, 10);
+					applyLongPressLifeStep(type);
 				}, 1000);
 			}
 		}, 1000);
@@ -770,6 +790,7 @@
 									>
 										<span
 											class="text-shadow-black text-shadow-xl/100 text-white font-bold flex items-center text-center leading-none"
+											class:life-total-longpress-vibrate={lifeTotalVibrate}
 											class:text-9xl={$appSettings.playerCount === 2}
 											class:text-8xl={$appSettings.playerCount >= 3 &&
 												$appSettings.playerCount <= 4}
