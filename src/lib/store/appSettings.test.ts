@@ -67,7 +67,10 @@ describe('danger thresholds', () => {
 
 	it('matches the requested danger life thresholds for standard starts', () => {
 		expect(getDangerLifeThreshold(20)).toBe(8);
+		expect(getDangerLifeThreshold(21)).toBe(6);
+		expect(getDangerLifeThreshold(30)).toBe(8);
 		expect(getDangerLifeThreshold(40)).toBe(10);
+		expect(getDangerLifeThreshold(60)).toBe(15);
 	});
 
 	it('warns at 80% of the poison lethal limit', () => {

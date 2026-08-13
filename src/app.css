@@ -342,7 +342,6 @@
 
 	.bg-rotated-overlay.danger,
 	.bg-rotated-horizontal-overlay.danger {
-		z-index: 15;
 		background: radial-gradient(
 			circle at center,
 			rgba(255, 48, 48, 0) 0%,
@@ -351,7 +350,6 @@
 			rgba(198, 0, 0, 0.28) 72%,
 			rgba(120, 0, 0, 0.46) 100%
 		);
-		opacity: 0.72;
 		mix-blend-mode: normal;
 		animation: player-danger-pulse 1.9s ease-in-out infinite;
 	}
@@ -415,11 +413,9 @@
 		0%,
 		100% {
 			opacity: 0.58;
-			transform: scale(1);
 		}
 		50% {
 			opacity: 0.9;
-			transform: scale(1.03);
 		}
 	}
 
