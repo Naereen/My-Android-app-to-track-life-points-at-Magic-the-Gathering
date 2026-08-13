@@ -127,7 +127,13 @@ export const revealNextScheme = () => {
 			isOngoing && !s.activeOngoingSchemes.some((c) => c.id === nextCard.id)
 				? [...s.activeOngoingSchemes, nextCard]
 				: s.activeOngoingSchemes;
-		return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false, activeOngoingSchemes };
+		return {
+			...s,
+			currentIndex: nextIndex,
+			isOngoing,
+			ongoingAbandoned: false,
+			activeOngoingSchemes
+		};
 	});
 };
 
@@ -156,7 +162,14 @@ export const reshuffleSchemeDeck = () => {
 	archenemyState.update((s) => {
 		const deck = shuffleArray([...s.deck]);
 		const isOngoing = deck.length > 0 ? detectOngoing(deck[0]) : false;
-		return { ...s, deck, currentIndex: 0, isOngoing, ongoingAbandoned: false, activeOngoingSchemes: [] };
+		return {
+			...s,
+			deck,
+			currentIndex: 0,
+			isOngoing,
+			ongoingAbandoned: false,
+			activeOngoingSchemes: []
+		};
 	});
 };
 
@@ -175,7 +188,13 @@ export const abandonOngoingScheme = () => {
 		}
 		const nextIndex = (s.currentIndex + 1) % s.deck.length;
 		const isOngoing = detectOngoing(s.deck[nextIndex]);
-		return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false, activeOngoingSchemes };
+		return {
+			...s,
+			currentIndex: nextIndex,
+			isOngoing,
+			ongoingAbandoned: false,
+			activeOngoingSchemes
+		};
 	});
 };
 
@@ -196,7 +215,13 @@ export const abandonOngoingSchemeByIndex = (index: number) => {
 			}
 			const nextIndex = (s.currentIndex + 1) % s.deck.length;
 			const isOngoing = detectOngoing(s.deck[nextIndex]);
-			return { ...s, currentIndex: nextIndex, isOngoing, ongoingAbandoned: false, activeOngoingSchemes };
+			return {
+				...s,
+				currentIndex: nextIndex,
+				isOngoing,
+				ongoingAbandoned: false,
+				activeOngoingSchemes
+			};
 		}
 		return { ...s, activeOngoingSchemes };
 	});

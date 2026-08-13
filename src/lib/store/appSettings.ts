@@ -84,6 +84,8 @@ interface AppSettings {
 	useWeightedStartingPlayer: boolean;
 	// per-seat starting chances in percent-like weights (seat 1..8)
 	startingPlayerProbabilities: number[];
+	// underline the digits 6 and 9 in life totals and life-change diffs for readability
+	underlineSixAndNine: boolean;
 }
 
 const MAX_PLAYER_SLOTS = 8;
@@ -145,6 +147,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	soundEffectsEnabled: true,
 	// show the life-change history stack near life total
 	showLifeChangeHistory: true,
+	// underline the digits 6 and 9 in life totals and life-change diffs for readability
+	underlineSixAndNine: true,
 	// app locale (default is 'fr' for French, but it will be overridden by the device locale if it's supported by the app)
 	locale: 'fr',
 	// show a glowing border around the current player's panel
@@ -315,6 +319,15 @@ export const setSoundEffectsEnabled = (soundEffectsEnabled: boolean) => {
  */
 export const setShowLifeChangeHistory = (showLifeChangeHistory: boolean) => {
 	appSettings.update((data) => ({ ...data, showLifeChangeHistory }));
+};
+
+/**
+ * Toggles underline decoration on digits 6 and 9 in life totals and diffs.
+ * @param {boolean} underlineSixAndNine Whether 6/9 digits are underlined.
+ * @returns {void}
+ */
+export const setUnderlineSixAndNine = (underlineSixAndNine: boolean) => {
+	appSettings.update((data) => ({ ...data, underlineSixAndNine }));
 };
 
 // Backward compatibility for existing localStorage payloads that predate this option.
@@ -647,7 +660,8 @@ appSettings.update((data) => {
 		startingPlayerProbabilities: sanitizeStartingPlayerProbabilities(
 			data.startingPlayerProbabilities,
 			data.playerCount ?? 4
-		)
+		),
+		underlineSixAndNine: data.underlineSixAndNine ?? true
 	};
 	return withDefaults;
 });

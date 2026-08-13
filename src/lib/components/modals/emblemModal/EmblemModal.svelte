@@ -553,5 +553,4 @@
 		stroke: rgba(0, 0, 0, 0.55);
 		stroke-width: 0.6px;
 	}
-
 </style>

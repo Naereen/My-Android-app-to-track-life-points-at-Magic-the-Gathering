@@ -121,6 +121,7 @@
 	"enable_acorn_mode": "Ativar modo Bolota?",
 	"enable_ticket_mode": "Ativar modo Ingressos?",
 	"show_life_change_history": "Mostrar histórico de mudanças de vida",
+	"underline_six_and_nine": "Sublinhar os dígitos 6 e 9",
 	"starting_player_probabilities_title": "Probabilidades adaptadas do jogador que começa",
 	"starting_player_probabilities_caption": "O app inclui um recurso experimental para ativar probabilidades personalizadas na escolha de quem começa. Atenção: isso pode ser considerado trapaça se você não usar com o acordo dos seus oponentes.",
 	"starting_player_probabilities_enable": "Ativar esta configuração",

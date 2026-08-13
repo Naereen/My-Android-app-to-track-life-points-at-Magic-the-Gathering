@@ -42,6 +42,7 @@
 	import LifeChangeHistory from './LifeChangeHistory.svelte';
 	import { vibrate } from '$lib/utils/haptics';
 	import { isMobileDevice } from '$lib/utils/detectMobile';
+	import { formatWithUnderlineSixNine } from '$lib/utils';
 
 	export let doNotShowMinimap: boolean = false; // for testing purposes, to hide the minimap in the player component
 	export let orientation: App.Player.Orientation = 'up';
@@ -693,7 +694,11 @@
 								class:translate-y-[75%]={orientation === 'left'}
 								class:-translate-y-[175%]={orientation === 'right'}
 							>
-								{$players[index].tempLifeDiff < 0 ? `${$players[index].tempLifeDiff}` : ''}
+								{#if $players[index].tempLifeDiff < 0}
+									{@html $appSettings.underlineSixAndNine
+										? formatWithUnderlineSixNine($players[index].tempLifeDiff)
+										: String($players[index].tempLifeDiff)}
+								{/if}
 							</div>
 							{#if orientation === 'left'}
 								<div
@@ -765,7 +770,10 @@
 											class:text-6xl={$appSettings.playerCount >= 5}
 											class:-rotate-180={orientation === 'left'}
 											class:opacity-25={isDead}
-											style="text-shadow: 0 0 40px black;">{$players[index].lifeTotal}</span
+											style="text-shadow: 0 0 40px black;"
+											>{@html $appSettings.underlineSixAndNine
+												? formatWithUnderlineSixNine($players[index].lifeTotal)
+												: String($players[index].lifeTotal)}</span
 										>
 									</button>
 								{:else}
@@ -809,7 +817,11 @@
 								class:translate-x-[100%]={orientation === 'left'}
 								class:-translate-x-[0%]={orientation === 'right'}
 							>
-								{$players[index].tempLifeDiff > 0 ? `+${$players[index].tempLifeDiff}` : ''}
+								{#if $players[index].tempLifeDiff > 0}
+									{@html $appSettings.underlineSixAndNine
+										? `+${formatWithUnderlineSixNine($players[index].tempLifeDiff)}`
+										: `+${$players[index].tempLifeDiff}`}
+								{/if}
 							</div>
 						</div>
 					</div>
