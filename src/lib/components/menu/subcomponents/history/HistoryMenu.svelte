@@ -333,6 +333,10 @@
 	const showTurnTimeStats = () => {
 		openHistoryModal('turnTime');
 	};
+
+	const showGameStats = () => {
+		openHistoryModal('stats');
+	};
 </script>
 
 <svelte:window bind:innerHeight />
@@ -369,6 +373,12 @@
 				class="px-3 py-1 rounded-full border border-sky-500/50 text-sky-200 text-xl bg-sky-950/30 hover:bg-sky-950/50"
 			>
 				{$_('history_turn_time_open_button') || 'Turn time stats'}
+			</button>
+			<button
+				on:click={showGameStats}
+				class="px-3 py-1 rounded-full border border-emerald-500/50 text-emerald-200 text-xl bg-emerald-950/30 hover:bg-emerald-950/50"
+			>
+				{$_('history_stats_open_button') || 'Multi-game stats'}
 			</button>
 		</div>
 
