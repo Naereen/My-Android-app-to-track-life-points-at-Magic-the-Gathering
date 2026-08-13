@@ -168,6 +168,7 @@
 	"history_life_chart_open_button": "Abrir gráfico de vida",
 	"history_life_chart_title": "Histórico de pontos de vida",
 	"history_life_chart_empty": "Nenhum instantâneo de pontos de vida foi registrado.",
+	"history_view_stats_link": "Ver estatísticas de múltiplas partidas",
 	"history_life_chart_legend": "Legenda",
 	"history_life_chart_legend_hint": "Clique em um jogador para isolá-lo. Clique novamente para mostrar todos.",
 	"history_life_chart_snapshot_count": "instantâneos capturados",
