@@ -87,6 +87,8 @@
 	"initiative": "Initiative",
 	"ascend": "Aufstieg",
 	"day_night": "Tag/Nacht",
+	"day": "Tag",
+	"night": "Nacht",
 	"ko": "K.O.",
 	"poison": "Gift",
 	"energy": "Energie",
