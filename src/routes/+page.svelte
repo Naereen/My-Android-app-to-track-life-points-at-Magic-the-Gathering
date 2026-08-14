@@ -21,6 +21,7 @@
 	} from '$lib/store/modal';
 	import { emblemModalOpen, emblemState } from '$lib/store/emblem';
 	import RandomizerModal from '$lib/components/modals/randomizerModal/RandomizerModal.svelte';
+	import FirstPlayerTouchSelectionModal from '$lib/components/modals/firstPlayerTouchSelectionModal/FirstPlayerTouchSelectionModal.svelte';
 	import PlayerDataModal from '$lib/components/modals/playerDataModal/PlayerDataModal.svelte';
 	import ConfirmModal from '$lib/components/modals/confirmModal/ConfirmModal.svelte';
 	import EmblemModal from '$lib/components/modals/emblemModal/EmblemModal.svelte';
@@ -305,4 +306,5 @@
 		<ArchenemyModal />
 	{/if}
 	<DayNightShowcase />
+	<FirstPlayerTouchSelectionModal />
 </div>
