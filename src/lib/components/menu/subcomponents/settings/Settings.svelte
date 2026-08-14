@@ -741,7 +741,14 @@
 		{ code: 'es', label: 'Español', emoji: '🇪🇸' },
 		{ code: 'de', label: 'Deutsch', emoji: '🇩🇪' },
 		{ code: 'it', label: 'Italiano', emoji: '🇮🇹' },
-		{ code: 'pt', label: 'Português', emoji: '🇵🇹' }
+		{ code: 'pt', label: 'Português', emoji: '🇵🇹' },
+		{ code: 'ja', label: '日本語', emoji: '🇯🇵' },
+		{ code: 'ru', label: 'Русский', emoji: '🇷🇺' },
+		{ code: 'zh-CN', label: '中文', emoji: '🇨🇳' },
+		{ code: 'nl', label: 'Nederlands', emoji: '🇳🇱' },
+		{ code: 'pl', label: 'Polski', emoji: '🇵🇱' },
+		{ code: 'tr', label: 'Türkçe', emoji: '🇹🇷' },
+		{ code: 'ko', label: '한국어', emoji: '🇰🇷' }
 	];
 
 	/**
@@ -1565,6 +1572,10 @@
 					{lang.label}
 				</button>
 			{/each}
+		</div>
+
+		<div class="px-4 pb-3 text-xs text-yellow-400 italic">
+			{$_('i18n_ai_warning')}
 		</div>
 
 		<!-- ── Reset & About ──────────────────────────────────────────────── -->

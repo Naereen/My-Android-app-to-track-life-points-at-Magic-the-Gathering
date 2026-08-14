@@ -407,5 +407,6 @@
 	"history_stats_clear_confirm": "Cancellare tutti i record? Questa azione è irreversibile.",
 	"history_stats_game_singular": "partita",
 	"history_stats_game_plural": "partite",
-	"archenemy_ongoing_schemes_title": "Complotti continuati"
+	"archenemy_ongoing_schemes_title": "Complotti continuati",
+	"i18n_ai_warning": "Avviso: eccetto per il francese e l'inglese, l'internazionalizzazione è stata realizzata dall'IA e può contenere errori. I contributi sono benvenuti su GitHub, se notate errori e volete aiutarmi a correggerli!"
 }
