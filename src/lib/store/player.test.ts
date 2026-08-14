@@ -54,8 +54,13 @@ import { lifeHistory } from './lifeHistory';
 import {
 	applyCommanderCombatDamage,
 	assignRandomTreacheryForGame,
+	dismissFirstPlayerTouchSelection,
+	firstPlayerTouchSelection,
 	players,
+	registerFirstPlayerSelectionTouch,
+	releaseFirstPlayerSelectionTouch,
 	resetLifeTotals,
+	startFirstPlayerTouchSelectionRound,
 	setCommanderDamage
 } from './player';
 import { savedGames } from './savedGames';
@@ -63,6 +68,7 @@ import { resetTurnTimeStats, turnTimeStats } from './turnTimeStats';
 
 describe('game reset state', () => {
 	beforeEach(() => {
+		dismissFirstPlayerTouchSelection();
 		localStorage.clear();
 		fetchMock.mockReset();
 		clearGameHistory();
@@ -341,5 +347,110 @@ describe('game reset state', () => {
 
 		expect(get(savedGames)).toHaveLength(1);
 		expect(get(savedGames)[0]?.endingTurnCount).toBeNull();
+	});
+
+	it('resets the simultaneous first-player touch round when a touch is released early', () => {
+		appSettings.update((settings) => ({ ...settings, playerCount: 3 }));
+		startFirstPlayerTouchSelectionRound();
+
+		registerFirstPlayerSelectionTouch(1, 11);
+		expect(Object.keys(get(firstPlayerTouchSelection).activePointersByPlayerId)).toHaveLength(1);
+
+		releaseFirstPlayerSelectionTouch(11);
+		expect(get(firstPlayerTouchSelection).activePointersByPlayerId).toEqual({});
+		expect(get(firstPlayerTouchSelection).phase).toBe('collecting');
+
+		dismissFirstPlayerTouchSelection();
+	});
+
+	it('selects exactly one winner after all required simultaneous touches are registered', () => {
+		vi.useFakeTimers();
+		const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+
+		appSettings.update((settings) => ({ ...settings, playerCount: 3 }));
+		players.set([
+			{
+				id: 1,
+				lifeTotal: 20,
+				playerName: 'Player 1',
+				color: 'white',
+				backgroundImage: null,
+				backgroundArtist: null,
+				backgroundSet: null,
+				tempLifeDiff: 0,
+				poison: 0,
+				statusEffects: {},
+				vanguard: null,
+				vanguardChoices: [],
+				treacheryRole: null,
+				treacheryCard: null,
+				treacherySeen: false,
+				allowNegativeLife: false,
+				isFirst: false,
+				highlighted: false,
+				isDead: false
+			},
+			{
+				id: 2,
+				lifeTotal: 20,
+				playerName: 'Player 2',
+				color: 'blue',
+				backgroundImage: null,
+				backgroundArtist: null,
+				backgroundSet: null,
+				tempLifeDiff: 0,
+				poison: 0,
+				statusEffects: {},
+				vanguard: null,
+				vanguardChoices: [],
+				treacheryRole: null,
+				treacheryCard: null,
+				treacherySeen: false,
+				allowNegativeLife: false,
+				isFirst: false,
+				highlighted: false,
+				isDead: false
+			},
+			{
+				id: 3,
+				lifeTotal: 20,
+				playerName: 'Player 3',
+				color: 'red',
+				backgroundImage: null,
+				backgroundArtist: null,
+				backgroundSet: null,
+				tempLifeDiff: 0,
+				poison: 0,
+				statusEffects: {},
+				vanguard: null,
+				vanguardChoices: [],
+				treacheryRole: null,
+				treacheryCard: null,
+				treacherySeen: false,
+				allowNegativeLife: false,
+				isFirst: false,
+				highlighted: false,
+				isDead: false
+			}
+		]);
+
+		startFirstPlayerTouchSelectionRound();
+		registerFirstPlayerSelectionTouch(1, 101);
+		registerFirstPlayerSelectionTouch(2, 102);
+		registerFirstPlayerSelectionTouch(3, 103);
+
+		expect(get(firstPlayerTouchSelection).phase).toBe('animating');
+
+		vi.advanceTimersByTime(3000);
+
+		const selectionState = get(firstPlayerTouchSelection);
+		expect(selectionState.phase).toBe('winner');
+		expect(selectionState.winnerPlayerId).toBe(1);
+		expect(get(players).filter((player) => player.isFirst)).toHaveLength(1);
+		expect(get(players)[0].isFirst).toBe(true);
+
+		randomSpy.mockRestore();
+		vi.useRealTimers();
+		dismissFirstPlayerTouchSelection();
 	});
 });

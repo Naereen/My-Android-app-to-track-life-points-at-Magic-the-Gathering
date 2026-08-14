@@ -1704,10 +1704,15 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 
 	await assignRandomVanguardsForGame();
 	await assignRandomTreacheryForGame();
+	dismissFirstPlayerTouchSelection();
 
 	if (isTwoPlayerMode && startingPlayerChoice !== 2) {
 		// Directly set the chosen player as the starting player (no spin animation)
 		setFirstPlayer(startingPlayerChoice);
+	} else if (!isTwoPlayerMode && playerCount >= 3 && playerCount <= 8) {
+		if (!startFirstPlayerTouchSelectionRound()) {
+			spinToSelectFirstPlayer();
+		}
 	} else {
 		spinToSelectFirstPlayer();
 	}
@@ -2125,6 +2130,160 @@ export const removeFirstPlace = () => {
 };
 
 export const spinning = writable(false);
+
+type FirstPlayerTouchPhase = 'idle' | 'collecting' | 'animating' | 'winner';
+
+type FirstPlayerTouchSelectionState = {
+	phase: FirstPlayerTouchPhase;
+	requiredPlayers: number;
+	activePointersByPlayerId: Record<number, number>;
+	winnerPlayerId: number | null;
+};
+
+const firstPlayerTouchSelectionInitialState: FirstPlayerTouchSelectionState = {
+	phase: 'idle',
+	requiredPlayers: 0,
+	activePointersByPlayerId: {},
+	winnerPlayerId: null
+};
+
+const FIRST_PLAYER_TOUCH_ANIMATION_MS_MIN = 2000;
+const FIRST_PLAYER_TOUCH_ANIMATION_MS_MAX = 3000;
+const FIRST_PLAYER_TOUCH_WINNER_DISPLAY_MS = 5000;
+
+let firstPlayerTouchAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
+let firstPlayerTouchWinnerDisplayTimeout: ReturnType<typeof setTimeout> | null = null;
+
+export const firstPlayerTouchSelection = writable<FirstPlayerTouchSelectionState>(
+	firstPlayerTouchSelectionInitialState
+);
+
+const clearFirstPlayerTouchSelectionTimers = () => {
+	if (firstPlayerTouchAnimationTimeout) {
+		clearTimeout(firstPlayerTouchAnimationTimeout);
+		firstPlayerTouchAnimationTimeout = null;
+	}
+	if (firstPlayerTouchWinnerDisplayTimeout) {
+		clearTimeout(firstPlayerTouchWinnerDisplayTimeout);
+		firstPlayerTouchWinnerDisplayTimeout = null;
+	}
+};
+
+export const dismissFirstPlayerTouchSelection = () => {
+	clearFirstPlayerTouchSelectionTimers();
+	firstPlayerTouchSelection.set(firstPlayerTouchSelectionInitialState);
+};
+
+export const startFirstPlayerTouchSelectionRound = () => {
+	const requiredPlayers = get(appSettings).playerCount;
+	if (requiredPlayers < 3 || requiredPlayers > 8) {
+		dismissFirstPlayerTouchSelection();
+		return false;
+	}
+
+	clearFirstPlayerTouchSelectionTimers();
+	firstPlayerTouchSelection.set({
+		phase: 'collecting',
+		requiredPlayers,
+		activePointersByPlayerId: {},
+		winnerPlayerId: null
+	});
+
+	return true;
+};
+
+const resolveFirstPlayerTouchSelectionWinner = (
+	state: FirstPlayerTouchSelectionState = get(firstPlayerTouchSelection)
+) => {
+	if (state.phase !== 'animating') return;
+	const participantPlayerIds = Object.keys(state.activePointersByPlayerId)
+		.map((id) => Number(id))
+		.filter((id) => Number.isFinite(id));
+	if (participantPlayerIds.length === 0) {
+		dismissFirstPlayerTouchSelection();
+		return;
+	}
+
+	const winnerPlayerId =
+		participantPlayerIds[Math.floor(Math.random() * participantPlayerIds.length)] ?? null;
+
+	if (!winnerPlayerId) {
+		dismissFirstPlayerTouchSelection();
+		return;
+	}
+
+	setFirstPlayer(winnerPlayerId - 1);
+	vibrate(24);
+	firstPlayerTouchSelection.set({
+		...state,
+		phase: 'winner',
+		winnerPlayerId
+	});
+
+	firstPlayerTouchWinnerDisplayTimeout = setTimeout(() => {
+		dismissFirstPlayerTouchSelection();
+	}, FIRST_PLAYER_TOUCH_WINNER_DISPLAY_MS);
+};
+
+export const registerFirstPlayerSelectionTouch = (playerId: number, pointerId: number) => {
+	const state = get(firstPlayerTouchSelection);
+	if (state.phase !== 'collecting') return;
+	if (playerId < 1 || playerId > state.requiredPlayers) return;
+	if (state.activePointersByPlayerId[playerId] !== undefined) return;
+	if (Object.values(state.activePointersByPlayerId).includes(pointerId)) return;
+
+	const nextActivePointersByPlayerId = {
+		...state.activePointersByPlayerId,
+		[playerId]: pointerId
+	};
+	const activeCount = Object.keys(nextActivePointersByPlayerId).length;
+
+	if (activeCount >= state.requiredPlayers) {
+		const animationMs =
+			FIRST_PLAYER_TOUCH_ANIMATION_MS_MIN +
+			Math.floor(
+				Math.random() *
+					(FIRST_PLAYER_TOUCH_ANIMATION_MS_MAX - FIRST_PLAYER_TOUCH_ANIMATION_MS_MIN + 1)
+			);
+		const animatingState: FirstPlayerTouchSelectionState = {
+			...state,
+			phase: 'animating',
+			activePointersByPlayerId: nextActivePointersByPlayerId
+		};
+		firstPlayerTouchSelection.set(animatingState);
+		clearFirstPlayerTouchSelectionTimers();
+		firstPlayerTouchAnimationTimeout = setTimeout(() => {
+			resolveFirstPlayerTouchSelectionWinner(animatingState);
+		}, animationMs);
+		return;
+	}
+
+	firstPlayerTouchSelection.set({
+		...state,
+		activePointersByPlayerId: nextActivePointersByPlayerId
+	});
+};
+
+export const releaseFirstPlayerSelectionTouch = (pointerId: number) => {
+	const state = get(firstPlayerTouchSelection);
+	if (state.phase !== 'collecting') return;
+	if (!Object.values(state.activePointersByPlayerId).includes(pointerId)) return;
+
+	// Any early release before all players are holding should reset the entire round.
+	firstPlayerTouchSelection.set({
+		...state,
+		activePointersByPlayerId: {}
+	});
+};
+
+export const skipFirstPlayerTouchSelection = () => {
+	const state = get(firstPlayerTouchSelection);
+	if (state.phase === 'idle') return;
+	dismissFirstPlayerTouchSelection();
+	if (state.phase === 'collecting' || state.phase === 'animating') {
+		spinToSelectFirstPlayer();
+	}
+};
 
 const pickRandomSeatIndex = (totalPlayers: number): number => {
 	if (totalPlayers <= 0) return 0;

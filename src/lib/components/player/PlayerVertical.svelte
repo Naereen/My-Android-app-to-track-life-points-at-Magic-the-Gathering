@@ -25,6 +25,7 @@
 	import { turnTimer } from '$lib/store/turnTimer';
 	import { openPlayerModal } from '$lib/store/modal';
 	import {
+		firstPlayerTouchSelection,
 		getCommandTaxBySourceForPlayer,
 		getCommandTaxTotalForPlayer,
 		getCommanderDamageTotalsForPlayer,
@@ -32,6 +33,8 @@
 		lifeChangeHistoryResetKey,
 		manageLifeTotal,
 		players,
+		registerFirstPlayerSelectionTouch,
+		releaseFirstPlayerSelectionTouch,
 		setPlayerLifeAbsolute,
 		setPlayerHighlighted,
 		spinning
@@ -166,6 +169,14 @@
 		$players[index],
 		$appSettings.playerCount
 	);
+	$: isFirstPlayerTouchSelectionActive = $firstPlayerTouchSelection.phase !== 'idle';
+	$: isTouchRegisteredForThisPlayer =
+		$firstPlayerTouchSelection.activePointersByPlayerId[id] !== undefined;
+	$: isFirstPlayerTouchWinner = $firstPlayerTouchSelection.winnerPlayerId === id;
+	$: shouldShowFirstPlayerTouchCircle =
+		isFirstPlayerTouchSelectionActive &&
+		($firstPlayerTouchSelection.phase !== 'winner' || isFirstPlayerTouchWinner) &&
+		(isTouchRegisteredForThisPlayer || isFirstPlayerTouchWinner);
 
 	const triggerLifeTotalVibrate = async () => {
 		if (lifeTotalVibrateTimeout) {
@@ -195,6 +206,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleMouseDown = (type: App.Player.LifeMoveType) => {
+		if (isFirstPlayerTouchSelectionActive) return;
 		if (isLikelySyntheticMouseEvent()) {
 			return;
 		}
@@ -220,6 +232,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleMouseUp = (type: App.Player.LifeMoveType) => {
+		if (isFirstPlayerTouchSelectionActive) return;
 		if (isLikelySyntheticMouseEvent()) {
 			return;
 		}
@@ -243,6 +256,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleTouchStart = (type: App.Player.LifeMoveType) => {
+		if (isFirstPlayerTouchSelectionActive) return;
 		lastTouchAt = Date.now();
 		isHolding = true;
 		holdingType = type;
@@ -266,6 +280,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const handleTouchEnd = (type: App.Player.LifeMoveType) => {
+		if (isFirstPlayerTouchSelectionActive) return;
 		lastTouchAt = Date.now();
 		if (interval) {
 			clearInterval(interval);
@@ -296,6 +311,14 @@
 		isHolding = false;
 		holdingType = null;
 		setPlayerHighlighted(id, false);
+	};
+
+	const handleFirstPlayerSelectionPointerDown = (event: PointerEvent) => {
+		registerFirstPlayerSelectionTouch(id, event.pointerId);
+	};
+
+	const handleFirstPlayerSelectionPointerUp = (event: PointerEvent) => {
+		releaseFirstPlayerSelectionTouch(event.pointerId);
 	};
 
 	let editing = false;
@@ -410,6 +433,9 @@
 	class:h-full={!$appState.isMenuOpen}
 	class:rotate-180={orientation === 'down'}
 	class:opacity-75={$players[index].highlighted}
+	on:pointerdown={handleFirstPlayerSelectionPointerDown}
+	on:pointerup={handleFirstPlayerSelectionPointerUp}
+	on:pointercancel={handleFirstPlayerSelectionPointerUp}
 >
 	<!-- Overlay au-dessus du background (non-interactif) -->
 	<div
@@ -418,10 +444,27 @@
 		class:danger={isInDanger && !isDead}
 		class:dead={isDead}
 	></div>
+
+	{#if shouldShowFirstPlayerTouchCircle}
+		<div
+			class="absolute left-1/2 top-1/2 rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 z-[25]"
+			class:w-32={!isFirstPlayerTouchWinner}
+			class:h-32={!isFirstPlayerTouchWinner}
+			class:w-44={isFirstPlayerTouchWinner}
+			class:h-44={isFirstPlayerTouchWinner}
+			class:animate-pulse={$firstPlayerTouchSelection.phase === 'animating'}
+			style="background: {bg}; opacity: {isFirstPlayerTouchWinner
+				? 0.95
+				: 0.8}; box-shadow: {isFirstPlayerTouchWinner
+				? '0 0 0 6px rgba(255, 255, 255, 0.6), 0 0 44px rgba(255, 255, 255, 0.7)'
+				: '0 0 0 4px rgba(255, 255, 255, 0.35), 0 0 30px rgba(255, 255, 255, 0.35)'};"
+		></div>
+	{/if}
 	<div
 		class="relative z-20 flex w-full rounded-2xl flex-grow h-6"
 		class:h-full={!$appState.isMenuOpen}
 		class:opacity-75={$players[index].highlighted}
+		class:pointer-events-none={isFirstPlayerTouchSelectionActive}
 	>
 		{#if !$appState.isMenuOpen}
 			<div class="flex w-full relative">
@@ -508,6 +551,7 @@
 									<div class="flex justify-center items-center mr-1">
 										<CommanderDamage playerIndex={index} color="white" />
 									</div>
+
 								{/if}
 								-->
 								{#if $players[index].isFirst}
