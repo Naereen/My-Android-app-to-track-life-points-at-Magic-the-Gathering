@@ -2207,7 +2207,7 @@ const resolveFirstPlayerTouchSelectionWinner = (
 	const winnerPlayerId =
 		participantPlayerIds[Math.floor(Math.random() * participantPlayerIds.length)] ?? null;
 
-	if (!winnerPlayerId) {
+	if (winnerPlayerId === null) {
 		dismissFirstPlayerTouchSelection();
 		return;
 	}
@@ -2250,8 +2250,8 @@ export const registerFirstPlayerSelectionTouch = (playerId: number, pointerId: n
 			phase: 'animating',
 			activePointersByPlayerId: nextActivePointersByPlayerId
 		};
-		firstPlayerTouchSelection.set(animatingState);
 		clearFirstPlayerTouchSelectionTimers();
+		firstPlayerTouchSelection.set(animatingState);
 		firstPlayerTouchAnimationTimeout = setTimeout(() => {
 			resolveFirstPlayerTouchSelectionWinner(animatingState);
 		}, animationMs);

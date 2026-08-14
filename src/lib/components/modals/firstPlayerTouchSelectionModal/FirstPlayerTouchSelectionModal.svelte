@@ -11,7 +11,8 @@
 
 {#if $firstPlayerTouchSelection.phase !== 'idle'}
 	<div
-		class="fixed inset-0 z-[220] pointer-events-none flex flex-col justify-between p-4"
+		class="fixed inset-0 z-[220] flex flex-col justify-between p-4"
+		class:pointer-events-none={$firstPlayerTouchSelection.phase !== 'winner'}
 		class:pointer-events-auto={$firstPlayerTouchSelection.phase === 'winner'}
 		on:click={() => {
 			if ($firstPlayerTouchSelection.phase === 'winner') {
@@ -19,8 +20,16 @@
 			}
 		}}
 		role="button"
-		tabindex="-1"
-		on:keydown={() => null}
+		tabindex="0"
+		on:keydown={(event) => {
+			if (
+				$firstPlayerTouchSelection.phase === 'winner' &&
+				(event.key === 'Enter' || event.key === ' ')
+			) {
+				event.preventDefault();
+				dismissFirstPlayerTouchSelection();
+			}
+		}}
 	>
 		<div class="w-full flex justify-center">
 			<div class="rounded-2xl bg-black/65 text-white px-4 py-3 text-center">
@@ -36,16 +45,16 @@
 				{/if}
 			</div>
 		</div>
-
-		{#if $firstPlayerTouchSelection.phase !== 'winner'}
-			<div class="w-full flex justify-center pointer-events-auto">
-				<button
-					class="rounded-full bg-white/90 text-black px-6 py-2 font-semibold shadow-lg"
-					on:click={skipFirstPlayerTouchSelection}
-				>
-					{$_('reset_game_random_start')}
-				</button>
-			</div>
-		{/if}
 	</div>
+
+	{#if $firstPlayerTouchSelection.phase !== 'winner'}
+		<div class="fixed inset-x-0 bottom-4 z-[221] w-full flex justify-center pointer-events-auto">
+			<button
+				class="rounded-full bg-white/90 text-black px-6 py-2 font-semibold shadow-lg"
+				on:click|stopPropagation={skipFirstPlayerTouchSelection}
+			>
+				{$_('reset_game_random_start')}
+			</button>
+		</div>
+	{/if}
 {/if}
