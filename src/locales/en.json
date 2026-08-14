@@ -407,5 +407,6 @@
 	"history_stats_clear_confirm": "Clear all saved game records? This cannot be undone.",
 	"history_stats_game_singular": "game",
 	"history_stats_game_plural": "games",
-	"archenemy_ongoing_schemes_title": "Ongoing schemes"
+	"archenemy_ongoing_schemes_title": "Ongoing schemes",
+	"i18n_ai_warning": "Warning: except for French and English, the internationalization was made by AI, and it can contain errors. Contributions are welcome on GitHub, if you spot any errors and if you want to help me fixing them!"
 }

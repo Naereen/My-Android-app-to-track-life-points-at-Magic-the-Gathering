@@ -409,5 +409,6 @@
 	"history_stats_clear_confirm": "Effacer tous les enregistrements de parties ? Cette action est irréversible.",
 	"history_stats_game_singular": "partie",
 	"history_stats_game_plural": "parties",
-	"archenemy_ongoing_schemes_title": "Stratagèmes permanents"
+	"archenemy_ongoing_schemes_title": "Stratagèmes permanents",
+	"i18n_ai_warning": "Avertissement : à l'exception du français et de l'anglais, l'internationalisation a été réalisée par une IA et peut contenir des erreurs. Les contributions sont les bienvenues sur GitHub, si vous repérez des erreurs et souhaitez m'aider à les corriger !"
 }
