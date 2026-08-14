@@ -2175,7 +2175,12 @@ export const dismissFirstPlayerTouchSelection = () => {
 };
 
 export const startFirstPlayerTouchSelectionRound = () => {
-	const requiredPlayers = get(appSettings).playerCount;
+	const settings = get(appSettings);
+	const requiredPlayers = settings.playerCount;
+	if (!settings.requireTouchBeforeRandomStart) {
+		dismissFirstPlayerTouchSelection();
+		return false;
+	}
 	if (requiredPlayers < 3 || requiredPlayers > 8) {
 		dismissFirstPlayerTouchSelection();
 		return false;

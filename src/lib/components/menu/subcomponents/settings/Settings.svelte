@@ -26,6 +26,7 @@
 		setUnderlineSixAndNine,
 		setEnableTicketMode,
 		setUseWeightedStartingPlayer,
+		setRequireTouchBeforeRandomStart,
 		setStartingPlayerProbability,
 		resetStartingPlayerProbabilities,
 		setAppLocale,
@@ -323,6 +324,11 @@
 	const handleUseWeightedStartingPlayerChange = (e: Event) => {
 		const target = e.currentTarget as HTMLInputElement;
 		setUseWeightedStartingPlayer(!!target.checked);
+	};
+
+	const handleRequireTouchBeforeRandomStartChange = (e: Event) => {
+		const target = e.currentTarget as HTMLInputElement;
+		setRequireTouchBeforeRandomStart(!!target.checked);
 	};
 
 	/**
@@ -1419,6 +1425,18 @@
 			<ToggleSwitch
 				checked={$appSettings.useWeightedStartingPlayer}
 				on:change={handleUseWeightedStartingPlayerChange}
+			/>
+		</label>
+		<hr class="border-gray-800 mx-4" />
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<div class="flex-1 pr-4">
+				<div class="text-base font-medium">
+					✋ {$_('touch_before_random_start')}
+				</div>
+			</div>
+			<ToggleSwitch
+				checked={$appSettings.requireTouchBeforeRandomStart}
+				on:change={handleRequireTouchBeforeRandomStartChange}
 			/>
 		</label>
 

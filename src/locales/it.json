@@ -129,6 +129,7 @@
 	"starting_player_probabilities_title": "Probabilità adattate del giocatore che inizia",
 	"starting_player_probabilities_caption": "L'app include una funzione sperimentale per attivare probabilità personalizzate nella scelta di chi inizia. Attenzione: può essere considerato barare se non la usi con l'accordo dei tuoi avversari.",
 	"starting_player_probabilities_enable": "Attiva questa impostazione",
+	"touch_before_random_start": "Chiedi a 3+ giocatori di toccare il proprio pannello prima di scegliere casualmente chi inizia",
 	"starting_player_probabilities_reset": "Reimposta le probabilità di inizio",
 	"starting_player_probabilities_help": "I valori vengono usati come pesi. Non devono necessariamente sommare esattamente 100.",
 	"starting_player_probabilities_change_for": "Probabilità di iniziare per",

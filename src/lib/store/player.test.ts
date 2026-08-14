@@ -117,6 +117,7 @@ describe('game reset state', () => {
 			isStreamMode: false,
 			remoteServerUrl: '',
 			useWeightedStartingPlayer: false,
+			requireTouchBeforeRandomStart: false,
 			startingPlayerProbabilities: [50, 50, 0, 0, 0, 0, 0, 0]
 		});
 		appState.set({
@@ -350,7 +351,11 @@ describe('game reset state', () => {
 	});
 
 	it('resets the simultaneous first-player touch round when a touch is released early', () => {
-		appSettings.update((settings) => ({ ...settings, playerCount: 3 }));
+		appSettings.update((settings) => ({
+			...settings,
+			playerCount: 3,
+			requireTouchBeforeRandomStart: true
+		}));
 		startFirstPlayerTouchSelectionRound();
 
 		registerFirstPlayerSelectionTouch(1, 11);
@@ -363,11 +368,28 @@ describe('game reset state', () => {
 		dismissFirstPlayerTouchSelection();
 	});
 
+	it('does not start the touch round when touch confirmation is disabled', () => {
+		appSettings.update((settings) => ({
+			...settings,
+			playerCount: 3,
+			requireTouchBeforeRandomStart: false
+		}));
+
+		const started = startFirstPlayerTouchSelectionRound();
+
+		expect(started).toBe(false);
+		expect(get(firstPlayerTouchSelection).phase).toBe('idle');
+	});
+
 	it('selects exactly one winner after all required simultaneous touches are registered', () => {
 		vi.useFakeTimers();
 		const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
 
-		appSettings.update((settings) => ({ ...settings, playerCount: 3 }));
+		appSettings.update((settings) => ({
+			...settings,
+			playerCount: 3,
+			requireTouchBeforeRandomStart: true
+		}));
 		players.set([
 			{
 				id: 1,

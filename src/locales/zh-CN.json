@@ -129,6 +129,7 @@
  "starting_player_probabilities_title": "Starting 玩家 Probabilities",
  "starting_player_probabilities_caption": "本应用提供一个实验性功能，可自定义谁先开始的概率。注意：如果未获得对手同意，使用此功能可能会被视为作弊！",
  "starting_player_probabilities_enable": "启用自定义起始玩家概率",
+ "touch_before_random_start": "在随机选择先手前，要求 3 名以上玩家先触摸自己的面板",
  "starting_player_probabilities_reset": "重置起始玩家概率",
  "starting_player_probabilities_help": "这些值会作为权重处理，不必严格相加为 100。",
  "starting_player_probabilities_change_for": "Chance for",
