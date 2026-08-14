@@ -129,6 +129,7 @@
  "starting_player_probabilities_title": "Starting Speler Probabilities",
  "starting_player_probabilities_caption": "Deze app bevat een experimentele functie om aangepaste kansen in te stellen voor wie begint. Let op: dit kan als valsspelen worden gezien zonder toestemming van je tegenstanders!",
  "starting_player_probabilities_enable": "Aangepaste kansen inschakelen voor wie begint",
+ "touch_before_random_start": "Laat 3+ spelers hun paneel aanraken voordat willekeurig wordt gekozen wie begint",
  "starting_player_probabilities_reset": "Kansen voor startspeler resetten",
  "starting_player_probabilities_help": "Waarden worden als gewichten behandeld. Ze hoeven niet exact op 100 uit te komen.",
  "starting_player_probabilities_change_for": "Chance for",

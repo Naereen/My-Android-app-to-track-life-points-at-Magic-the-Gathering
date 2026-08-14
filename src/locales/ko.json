@@ -129,6 +129,7 @@
  "starting_player_probabilities_title": "Starting 플레이어 Probabilities",
  "starting_player_probabilities_caption": "이 앱에는 누가 먼저 시작할지에 대한 확률을 직접 설정할 수 있는 실험적 기능이 포함되어 있습니다. 상대의 동의 없이 사용하면 부정행위로 여겨질 수 있으니 주의하세요!",
  "starting_player_probabilities_enable": "시작 플레이어의 사용자 지정 확률 사용",
+ "touch_before_random_start": "무작위 시작 플레이어를 고르기 전에 3명 이상 플레이어가 자신의 패널을 터치하도록 요청",
  "starting_player_probabilities_reset": "시작 플레이어 확률 초기화",
  "starting_player_probabilities_help": "값은 가중치로 처리됩니다. 합계가 정확히 100일 필요는 없습니다.",
  "starting_player_probabilities_change_for": "Chance for",

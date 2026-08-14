@@ -82,6 +82,8 @@ interface AppSettings {
 	remoteServerUrl: string;
 	// enable weighted random pick for selecting who starts the game
 	useWeightedStartingPlayer: boolean;
+	// require all 3+ active players to hold their panel before random start selection
+	requireTouchBeforeRandomStart: boolean;
 	// per-seat starting chances in percent-like weights (seat 1..8)
 	startingPlayerProbabilities: number[];
 	// underline the digits 6 and 9 in life totals and life-change diffs for readability
@@ -202,6 +204,8 @@ export const appSettings: Writable<AppSettings> = persist('appSettings', {
 	remoteServerUrl: 'http://192.168.1.113:8787',
 	// weighted random start disabled by default
 	useWeightedStartingPlayer: false,
+	// touch-to-confirm random start is disabled by default
+	requireTouchBeforeRandomStart: false,
 	startingPlayerProbabilities: getUniformStartingProbabilities(4)
 });
 
@@ -635,6 +639,15 @@ export const setUseWeightedStartingPlayer = (enabled: boolean) => {
 };
 
 /**
+ * Enables/disables touch confirmation flow before random start selection (3+ players).
+ * @param {boolean} enabled Whether all players must touch before random start.
+ * @returns {void}
+ */
+export const setRequireTouchBeforeRandomStart = (enabled: boolean) => {
+	appSettings.update((data) => ({ ...data, requireTouchBeforeRandomStart: enabled }));
+};
+
+/**
  * Resets per-seat starting-player probabilities to a uniform distribution.
  * @returns {void}
  */
@@ -696,6 +709,7 @@ appSettings.update((data) => {
 			data.globalGameTimerDuration ?? getDefaultGlobalGameTimerDuration(data.playerCount ?? 4),
 		eightPlayerLayout: data.eightPlayerLayout ?? 'classic',
 		useWeightedStartingPlayer: data.useWeightedStartingPlayer ?? false,
+		requireTouchBeforeRandomStart: data.requireTouchBeforeRandomStart ?? false,
 		startingPlayerProbabilities: sanitizeStartingPlayerProbabilities(
 			data.startingPlayerProbabilities,
 			data.playerCount ?? 4

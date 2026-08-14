@@ -9,6 +9,7 @@ import {
 	getPoisonLethalLimit,
 	isPlayerInDanger,
 	setPlayerCount,
+	setRequireTouchBeforeRandomStart,
 	setBountyModeEnabled,
 	setEightPlayerLayout,
 	setShowBountyMenu
@@ -30,6 +31,10 @@ describe('app settings defaults', () => {
 		expect(getDefaultStartingLifeTotal(3)).toBe(40);
 		expect(getDefaultStartingLifeTotal(8)).toBe(40);
 		expect(getDefaultGlobalGameTimerDuration(4)).toBe(5400);
+	});
+
+	it('keeps first-player touch confirmation disabled by default', () => {
+		expect(get(appSettings).requireTouchBeforeRandomStart).toBe(false);
 	});
 });
 
@@ -89,6 +94,18 @@ describe('danger thresholds', () => {
 describe('player-count derived settings', () => {
 	beforeEach(() => {
 		appSettings.set(structuredClone(defaultSettings));
+	});
+
+	describe('first-player touch confirmation setting', () => {
+		beforeEach(() => {
+			appSettings.set(structuredClone(defaultSettings));
+		});
+
+		it('updates touch confirmation preference', () => {
+			setRequireTouchBeforeRandomStart(true);
+
+			expect(get(appSettings).requireTouchBeforeRandomStart).toBe(true);
+		});
 	});
 
 	it('resets dependent defaults when the player count changes', () => {

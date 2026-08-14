@@ -131,6 +131,7 @@
 	"starting_player_probabilities_title": "Truquer le tirage du premier joueur ?",
 	"starting_player_probabilities_caption": "Cette option expérimentale vous permet de personnaliser qui est plus susceptible de commencer la partie. Attention : risque de triche !",
 	"starting_player_probabilities_enable": "Activer ce paramètre secret",
+	"touch_before_random_start": "Demander à 3+ joueurs de toucher leur panneau avant le tirage aléatoire du premier joueur",
 	"starting_player_probabilities_reset": "Réinitialiser les probabilités de commencer ?",
 	"starting_player_probabilities_help": "Les valeurs sont utilisées comme des poids. Elles n'ont pas besoin de faire exactement 100.",
 	"starting_player_probabilities_change_for": "Chance de commencer pour",

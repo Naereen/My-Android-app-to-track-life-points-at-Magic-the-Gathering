@@ -129,6 +129,7 @@
  "starting_player_probabilities_title": "Starting プレイヤー Probabilities",
  "starting_player_probabilities_caption": "このアプリには、誰が先手になるかの確率をカスタマイズできる実験的な機能があります。対戦相手の同意なしに使うと不正と見なされる可能性があるので注意してください。",
  "starting_player_probabilities_enable": "先手プレイヤーのカスタム確率を有効にする",
+ "touch_before_random_start": "ランダムで先手を選ぶ前に、3人以上のプレイヤーに自分のパネルをタッチしてもらう",
  "starting_player_probabilities_reset": "先手プレイヤーの確率をリセット",
  "starting_player_probabilities_help": "値は重みとして扱われます。合計が正確に 100 である必要はありません。",
  "starting_player_probabilities_change_for": "Chance for",

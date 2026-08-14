@@ -129,6 +129,7 @@
  "starting_player_probabilities_title": "Starting Oyuncu Probabilities",
  "starting_player_probabilities_caption": "Bu uygulama, oyuna kimin başlayacağını seçmek için özel olasılıklar ayarlamaya yarayan deneysel bir özellik içerir. Dikkat: Rakiplerinin onayı olmadan kullanırsan bu hile sayılabilir!",
  "starting_player_probabilities_enable": "Başlayan oyuncu için özel olasılıkları aç",
+ "touch_before_random_start": "Rastgele başlayanı seçmeden önce 3+ oyuncudan paneline dokunmasını iste",
  "starting_player_probabilities_reset": "Başlayan oyuncu olasılıklarını sıfırla",
  "starting_player_probabilities_help": "Değerler ağırlık olarak ele alınır. Tam olarak 100 toplamaları gerekmez.",
  "starting_player_probabilities_change_for": "Chance for",

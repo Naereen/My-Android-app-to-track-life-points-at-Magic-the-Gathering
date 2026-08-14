@@ -129,6 +129,7 @@
 	"starting_player_probabilities_title": "Starting Player Probabilities",
 	"starting_player_probabilities_caption": "This app includes an experimental feature to enable custom probabilities for choosing who starts. Warning: this may be considered cheating if you do not use it with your opponents' agreement!",
 	"starting_player_probabilities_enable": "Enable custom probabilities for who starts",
+	"touch_before_random_start": "Ask 3+ players to touch their panel before picking a random starter",
 	"starting_player_probabilities_reset": "Reset starting player probabilities",
 	"starting_player_probabilities_help": "Values are treated as weights. They do not need to sum exactly to 100.",
 	"starting_player_probabilities_change_for": "Chance for",

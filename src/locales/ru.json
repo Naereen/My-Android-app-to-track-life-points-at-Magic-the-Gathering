@@ -129,6 +129,7 @@
  "starting_player_probabilities_title": "Starting Игрок Probabilities",
  "starting_player_probabilities_caption": "В приложении есть экспериментальная функция, которая позволяет задать свои вероятности выбора начинающего игрока. Внимание: это может считаться жульничеством без согласия соперников.",
  "starting_player_probabilities_enable": "Включить свои вероятности выбора начинающего игрока",
+ "touch_before_random_start": "Попросить 3+ игроков коснуться своей панели перед случайным выбором начинающего",
  "starting_player_probabilities_reset": "Сбросить вероятности начинающего игрока",
  "starting_player_probabilities_help": "Значения используются как веса. Их сумма не обязана быть ровно 100.",
  "starting_player_probabilities_change_for": "Chance for",
