@@ -78,7 +78,10 @@
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
-		if (e.key === 'Enter') doSearch();
+		if (e.key === 'Enter') {
+			e.stopPropagation();
+			doSearch();
+		}
 	}
 
 	async function toggleRulings(card: ScryfallCard) {
@@ -202,6 +205,7 @@
 							placeholder={$_('scryfall_search') || 'Search card name'}
 							bind:value={query}
 							on:keydown={handleKeydown}
+							enterkeyhint="search"
 							aria-label={$_('scryfall_search') || 'Search card name'}
 						/>
 					</div>

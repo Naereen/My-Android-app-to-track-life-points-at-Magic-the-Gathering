@@ -791,6 +791,28 @@
 	</div>
 
 	<div class="w-full text-white flex flex-col">
+		<!-- ── Card Search ─────────────────────────────────────────────────── -->
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('search_scryfall_title') || 'Card Search'}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+		<div class="px-4 py-3">
+			<button
+				class="w-full flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl px-4 py-3 transition-colors"
+				on:click={() => {
+					toggleIsMenuOpen('');
+					openScryfallModal();
+				}}
+				on:contextmenu|preventDefault
+				draggable="false"
+			>
+				<span class="text-2xl">🔍</span>
+				<span class="text-base font-medium"
+					>{$_('search_scryfall_button') || 'Search Scryfall'}</span
+				>
+			</button>
+		</div>
+
 		<!-- ── Game Configuration ──────────────────────────────────────────── -->
 		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
 			{$_('settings_section_game_config') || 'Game Configuration'}
@@ -1594,28 +1616,6 @@
 
 		<div class="px-4 pb-3 text-xs text-yellow-400 italic">
 			{$_('i18n_ai_warning')}
-		</div>
-
-		<!-- ── Card Search ─────────────────────────────────────────────────── -->
-		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
-			{$_('search_scryfall_title') || 'Card Search'}
-		</h2>
-		<hr class="border-gray-700 mx-4 mb-1" />
-		<div class="px-4 py-3">
-			<button
-				class="w-full flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl px-4 py-3 transition-colors"
-				on:click={() => {
-					toggleIsMenuOpen('');
-					openScryfallModal();
-				}}
-				on:contextmenu|preventDefault
-				draggable="false"
-			>
-				<span class="text-2xl">🔍</span>
-				<span class="text-base font-medium"
-					>{$_('search_scryfall_button') || 'Search Scryfall'}</span
-				>
-			</button>
 		</div>
 
 		<!-- ── Reset & About ──────────────────────────────────────────────── -->
