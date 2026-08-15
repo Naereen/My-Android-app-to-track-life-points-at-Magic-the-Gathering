@@ -7,11 +7,19 @@
 		name: string;
 		set_name: string;
 		artist: string;
+		released_at?: string;
 		image_uris?: { normal?: string; large?: string; png?: string };
 		card_faces?: Array<{ image_uris?: { normal?: string; large?: string; png?: string } }>;
 		oracle_text?: string;
 		rulings_uri: string;
 		prints_search_uri: string;
+		legalities?: Record<string, string>;
+		prices?: {
+			usd?: string | null;
+			usd_foil?: string | null;
+			eur?: string | null;
+			eur_foil?: string | null;
+		};
 	};
 
 	type Ruling = {
@@ -25,9 +33,9 @@
 	let totalCards = 0;
 	let searchError = false;
 
-	// Per-card expanded state: 'rulings' | 'printings' | null
+	// Per-card expanded state: 'rulings' | 'printings' | 'legality' | null
 	let expandedCard: string | null = null;
-	let expandedMode: 'rulings' | 'printings' | null = null;
+	let expandedMode: 'rulings' | 'printings' | 'legality' | null = null;
 	let rulings: Ruling[] = [];
 	let printings: ScryfallCard[] = [];
 	let isLoadingExpanded = false;
@@ -61,7 +69,7 @@
 		rulings = [];
 		printings = [];
 		try {
-			const url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(query.trim())}&unique=cards`;
+			const url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(query.trim())}&unique=cards&order=released&dir=desc`;
 			const resp = await fetch(url);
 			if (!resp.ok) {
 				searchError = true;
@@ -132,6 +140,18 @@
 		} finally {
 			isLoadingExpanded = false;
 		}
+	}
+
+	function toggleLegality(card: ScryfallCard) {
+		if (expandedCard === card.id && expandedMode === 'legality') {
+			expandedCard = null;
+			expandedMode = null;
+			return;
+		}
+		expandedCard = card.id;
+		expandedMode = 'legality';
+		rulings = [];
+		printings = [];
 	}
 
 	function openFullscreen(card: ScryfallCard) {
@@ -248,7 +268,21 @@
 								<div class="text-sm text-gray-300">{card.set_name}</div>
 								<div class="text-sm text-gray-400">{card.artist}</div>
 								<div class="text-xs text-gray-500 mt-0.5">© Wizards of the Coast</div>
-								<!-- Rulings / Printings buttons -->
+								<!-- Prices -->
+								{#if card.prices && (card.prices.usd || card.prices.eur)}
+									<div class="text-xs text-gray-300 mt-1 leading-snug">
+										<span>
+											{#if card.prices.usd}${card.prices.usd}{/if}{#if card.prices.usd && card.prices.eur} | {/if}{#if card.prices.eur}€{card.prices.eur}{/if}
+										</span>
+										{#if card.prices.usd_foil || card.prices.eur_foil}
+											<span class="ml-1 text-gray-400">
+												{$_('scryfall_foil') || 'Foil'}:
+												{#if card.prices.usd_foil}${card.prices.usd_foil}{/if}{#if card.prices.usd_foil && card.prices.eur_foil} | {/if}{#if card.prices.eur_foil}€{card.prices.eur_foil}{/if}
+											</span>
+										{/if}
+									</div>
+								{/if}
+								<!-- Rulings / Printings / Legality buttons -->
 								<div class="flex gap-2 mt-2 flex-wrap">
 									<button
 										class="px-3 py-1 rounded-full text-sm font-medium border border-gray-600 bg-gray-700 hover:bg-gray-600 transition-colors"
@@ -265,6 +299,14 @@
 										on:click={() => togglePrintings(card)}
 									>
 										{$_('scryfall_printings') || 'Printings'}
+									</button>
+									<button
+										class="px-3 py-1 rounded-full text-sm font-medium border border-gray-600 bg-gray-700 hover:bg-gray-600 transition-colors"
+										class:bg-blue-700={expandedCard === card.id && expandedMode === 'legality'}
+										class:border-blue-500={expandedCard === card.id && expandedMode === 'legality'}
+										on:click={() => toggleLegality(card)}
+									>
+										{$_('scryfall_legality') || 'Legality'}
 									</button>
 								</div>
 							</div>
@@ -286,7 +328,7 @@
 							{/if}
 						</div>
 
-						<!-- Expanded rulings/printings panel -->
+						<!-- Expanded rulings/printings/legality panel -->
 						{#if expandedCard === card.id}
 							<div class="mt-1">
 								{#if isLoadingExpanded}
@@ -344,6 +386,41 @@
 									{#if printings.length === 0}
 										<p class="text-xs text-gray-400 text-center py-1">
 											{$_('scryfall_no_printings') || 'No other printings found.'}
+										</p>
+									{/if}
+								{:else if expandedMode === 'legality'}
+									{#if card.legalities && Object.keys(card.legalities).length > 0}
+										<div class="space-y-1">
+											{#each Object.entries(card.legalities) as [format, status]}
+												<div class="flex items-center gap-2">
+													<span
+														class="inline-block px-2 py-0.5 rounded text-xs font-bold uppercase min-w-[80px] text-center text-white"
+														class:bg-green-600={status === 'legal'}
+														class:bg-red-600={status === 'not_legal'}
+														class:bg-yellow-600={status === 'restricted'}
+														class:bg-orange-700={status === 'banned'}
+													>
+														{#if status === 'legal'}
+															{$_('scryfall_legal') || 'Legal'}
+														{:else if status === 'not_legal'}
+															{$_('scryfall_not_legal') || 'Not Legal'}
+														{:else if status === 'restricted'}
+															{$_('scryfall_restricted') || 'Restricted'}
+														{:else if status === 'banned'}
+															{$_('scryfall_banned') || 'Banned'}
+														{:else}
+															{status}
+														{/if}
+													</span>
+													<span class="text-sm text-gray-200 capitalize"
+														>{format.replace(/_/g, ' ')}</span
+													>
+												</div>
+											{/each}
+										</div>
+									{:else}
+										<p class="text-xs text-gray-400 text-center py-1">
+											{$_('scryfall_no_legality') || 'No legality data available.'}
 										</p>
 									{/if}
 								{/if}
