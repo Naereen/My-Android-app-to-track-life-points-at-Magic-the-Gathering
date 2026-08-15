@@ -393,6 +393,13 @@ export const showConfirm = (
 	});
 };
 
+// Scryfall card search modal
+type ScryfallModalState = { isOpen: boolean };
+const initialScryfallModalState: ScryfallModalState = { isOpen: false };
+export const scryfallModalData = writable<ScryfallModalState>(initialScryfallModalState);
+export const openScryfallModal = () => scryfallModalData.set({ isOpen: true });
+export const closeScryfallModal = () => scryfallModalData.set({ isOpen: false });
+
 export const respondConfirm = (
 	value: boolean,
 	checkboxValue?: boolean | boolean[],

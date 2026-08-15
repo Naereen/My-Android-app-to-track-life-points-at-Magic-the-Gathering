@@ -17,7 +17,8 @@
 		playerModalData,
 		randomizerModalData,
 		confirmModalData,
-		historyModalData
+		historyModalData,
+		scryfallModalData
 	} from '$lib/store/modal';
 	import { emblemModalOpen, emblemState } from '$lib/store/emblem';
 	import RandomizerModal from '$lib/components/modals/randomizerModal/RandomizerModal.svelte';
@@ -31,6 +32,7 @@
 	import ArchenemyModal from '$lib/components/modals/archenemyModal/ArchenemyModal.svelte';
 	import { archenemyState } from '$lib/store/archenemy';
 	import DayNightShowcase from '$lib/components/menu/subcomponents/dayNight/DayNightShowcase.svelte';
+	import ScryfallModal from '$lib/components/modals/scryfallModal/ScryfallModal.svelte';
 
 	$: innerWidth = 0;
 	import { onMount, onDestroy } from 'svelte';
@@ -304,6 +306,9 @@
 	{/if}
 	{#if $archenemyState.isOpen}
 		<ArchenemyModal />
+	{/if}
+	{#if $scryfallModalData.isOpen}
+		<ScryfallModal />
 	{/if}
 	<DayNightShowcase />
 	<FirstPlayerTouchSelectionModal />
