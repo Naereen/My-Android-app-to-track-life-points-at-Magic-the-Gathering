@@ -299,246 +299,248 @@
 
 {#if !$appState.isMenuOpen}
 	<div
-		class="flex py-1.5 items-center overflow-x-auto scrollbar-hidden"
+		class="flex py-1.5 items-center overflow-x-auto scrollbar-hidden justify-center"
 		class:h-14={!$appState.isMenuOpen}
 	>
-		<div class="flex justify-center items-center flex-shrink-0 px-1">
-			<button
-				on:click={() => resetLifeTotals(false)}
-				on:contextmenu|preventDefault
-				draggable="false"
-				class="h-10 w-10"><Reset /></button
-			>
-		</div>
-		<div class="flex justify-center items-center flex-shrink-0 px-1">
-			<CircularButton
-				on:click={() => toggleIsMenuOpen('settings')}
-				number={$appSettings.playerCount}
-				highlight
-			/>
-		</div>
-		{#if $appSettings.globalGameTimerEnabled}
+		<div class="flex items-center flex-shrink-0">
 			<div class="flex justify-center items-center flex-shrink-0 px-1">
 				<button
-					type="button"
-					on:click={handleGlobalGameTimerClick}
-					class={`global-game-timer-box ${timerGlowClass}`}
-					title={$globalGameTimer.running ? 'Pause timer' : 'Resume timer'}
-				>
-					{#if $globalGameTimer.running}
-						<span class="global-game-timer-text"
-							>{formatGlobalTimer($globalGameTimer.remaining)}</span
-						>
-					{:else}
-						<span class="global-game-timer-overlay" aria-hidden="true">
-							⏯️
-							{formatGlobalTimer($globalGameTimer.remaining)}
-						</span>
-					{/if}
-				</button>
-			</div>
-		{/if}
-		{#if $appSettings.showEmblemMenu}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:click={handleEmblemClick}
-					on:mousedown={startHideEmblemButton}
-					on:mouseup={endMenuButtonHideLongPress}
-					on:mouseleave={endMenuButtonHideLongPress}
-					on:touchstart={startHideEmblemButton}
-					on:touchend={endMenuButtonHideLongPress}
-					on:touchcancel={endMenuButtonHideLongPress}
+					on:click={() => resetLifeTotals(false)}
 					on:contextmenu|preventDefault
 					draggable="false"
-					title={$_('emblems_and_dungeons')}
-					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+					class="h-10 w-10"><Reset /></button
 				>
-					<span class="text-large">🗺️</span>
-				</button>
 			</div>
-		{/if}
-		{#if $appSettings.showVanguardMenu}
 			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:click={handleVanguardClick}
-					on:mousedown={startHideVanguardButton}
-					on:mouseup={endMenuButtonHideLongPress}
-					on:mouseleave={endMenuButtonHideLongPress}
-					on:touchstart={startHideVanguardButton}
-					on:touchend={endMenuButtonHideLongPress}
-					on:touchcancel={endMenuButtonHideLongPress}
-					on:contextmenu|preventDefault
-					draggable="false"
-					title={$_('vanguard_menu')}
-					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
-				>
-					<span class="text-large">🛡️</span>
-				</button>
+				<CircularButton
+					on:click={() => toggleIsMenuOpen('settings')}
+					number={$appSettings.playerCount}
+					highlight
+				/>
 			</div>
-		{/if}
-		{#if $appSettings.showTreacheryMenu}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:click={handleTreacheryClick}
-					on:mousedown={startHideTreacheryButton}
-					on:mouseup={endMenuButtonHideLongPress}
-					on:mouseleave={endMenuButtonHideLongPress}
-					on:touchstart={startHideTreacheryButton}
-					on:touchend={endMenuButtonHideLongPress}
-					on:touchcancel={endMenuButtonHideLongPress}
-					on:contextmenu|preventDefault
-					draggable="false"
-					title={$_('treachery_menu')}
-					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
-				>
-					<span class="text-large">🕵️</span>
-				</button>
-			</div>
-		{/if}
-		{#if $appSettings.showBountyMenu || $appSettings.bountyModeEnabled}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:click={handleBountyClick}
-					on:mousedown={startHideBountyButton}
-					on:mouseup={endMenuButtonHideLongPress}
-					on:mouseleave={endMenuButtonHideLongPress}
-					on:touchstart={startHideBountyButton}
-					on:touchend={endMenuButtonHideLongPress}
-					on:touchcancel={endMenuButtonHideLongPress}
-					on:contextmenu|preventDefault
-					draggable="false"
-					title={$_('bounty_menu')}
-					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
-				>
-					<span class="text-large">🎯</span>
-				</button>
-			</div>
-		{/if}
-		{#if $appSettings.showPlanechaseMenu}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:click={handlePlanechaseClick}
-					on:mousedown={startHidePlanechaseButton}
-					on:mouseup={endMenuButtonHideLongPress}
-					on:mouseleave={endMenuButtonHideLongPress}
-					on:touchstart={startHidePlanechaseButton}
-					on:touchend={endMenuButtonHideLongPress}
-					on:touchcancel={endMenuButtonHideLongPress}
-					on:contextmenu|preventDefault
-					draggable="false"
-					title={$_('planechase_menu_title')}
-					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
-				>
-					<i class="mi mi-chaos mi-1x text-white"></i>
-				</button>
-			</div>
-		{/if}
-		{#if $appSettings.showArchenemyMenu}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:click={handleArchenemyClick}
-					on:mousedown={startHideArchenemyButton}
-					on:mouseup={endMenuButtonHideLongPress}
-					on:mouseleave={endMenuButtonHideLongPress}
-					on:touchstart={startHideArchenemyButton}
-					on:touchend={endMenuButtonHideLongPress}
-					on:touchcancel={endMenuButtonHideLongPress}
-					on:contextmenu|preventDefault
-					draggable="false"
-					title={$_('archenemy_menu_title')}
-					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
-				>
-					<span class="text-large">😈</span>
-				</button>
-			</div>
-		{/if}
-		{#if $appSettings.showGameHistoryMenu}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:click={handleHistoryClick}
-					on:mousedown={startHideHistoryButton}
-					on:mouseup={endMenuButtonHideLongPress}
-					on:mouseleave={endMenuButtonHideLongPress}
-					on:touchstart={startHideHistoryButton}
-					on:touchend={endMenuButtonHideLongPress}
-					on:touchcancel={endMenuButtonHideLongPress}
-					on:contextmenu|preventDefault
-					draggable="false"
-					title={$_('game_history')}
-					class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
-				>
-					<span class="text-large">🕘</span>
-				</button>
-			</div>
-		{/if}
-		{#if $appState.dayNightCycleEnabled}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<DayNightCycle />
-			</div>
-		{/if}
-		{#if $appSettings.showResourcesButton}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:click={handleManaClick}
-					on:mousedown={startHideResourcesButton}
-					on:mouseup={endMenuButtonHideLongPress}
-					on:mouseleave={endMenuButtonHideLongPress}
-					on:touchstart={startHideResourcesButton}
-					on:touchend={endMenuButtonHideLongPress}
-					on:touchcancel={endMenuButtonHideLongPress}
-					on:contextmenu|preventDefault
-					draggable="false"
-				>
-					<ManaPentagon />
-				</button>
-			</div>
-		{/if}
-		{#if $appSettings.showNextPlayerButton}
-			<div class="flex justify-center items-center flex-shrink-0 px-1">
-				<button
-					on:mousedown={handleTurnDown}
-					on:mouseup={handleTurnUp}
-					on:mouseleave={handleTurnUp}
-					on:touchstart={handleTurnDown}
-					on:touchend={handleTurnUp}
-					on:touchcancel={handleTurnUp}
-					on:click={handleNextClick}
-					on:contextmenu|preventDefault
-					draggable="false"
-					class="px-2 py-1 rounded-3xl bg-gray-800 text-white"
-					title="Next player"
-				>
-					<span class="inline-flex items-center">
-						<!-- <span>↪</span> -->
-						<!-- <span>↩</span> -->
-						<span>🔂</span>
-						{#if $appState.turnCount > 0}
-							<span
-								class="ml-1 w-6 h-6 rounded-full text-xl flex items-center justify-center turn-badge"
-								class:animate={animateTurn}>T{$appState.turnCount}</span
+			{#if $appSettings.globalGameTimerEnabled}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						type="button"
+						on:click={handleGlobalGameTimerClick}
+						class={`global-game-timer-box ${timerGlowClass}`}
+						title={$globalGameTimer.running ? 'Pause timer' : 'Resume timer'}
+					>
+						{#if $globalGameTimer.running}
+							<span class="global-game-timer-text"
+								>{formatGlobalTimer($globalGameTimer.remaining)}</span
 							>
+						{:else}
+							<span class="global-game-timer-overlay" aria-hidden="true">
+								⏯️
+								{formatGlobalTimer($globalGameTimer.remaining)}
+							</span>
 						{/if}
-					</span>
-				</button>
-			</div>
-		{/if}
-		{#if $appSettings.showRandomizerButton}
-			<div class="flex justify-center items-center flex-grow text-sm">
-				<button
-					on:click={handleRandomizerClick}
-					on:mousedown={handleRandomPlayerDown}
-					on:mouseup={handleRandomPlayerUp}
-					on:mouseleave={handleRandomPlayerUp}
-					on:touchstart={handleRandomPlayerDown}
-					on:touchend={handleRandomPlayerUp}
-					on:touchcancel={handleRandomPlayerUp}
-					on:contextmenu|preventDefault
-					draggable="false"
-				>
-					<Dsix />
-				</button>
-			</div>
-		{/if}
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showEmblemMenu}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:click={handleEmblemClick}
+						on:mousedown={startHideEmblemButton}
+						on:mouseup={endMenuButtonHideLongPress}
+						on:mouseleave={endMenuButtonHideLongPress}
+						on:touchstart={startHideEmblemButton}
+						on:touchend={endMenuButtonHideLongPress}
+						on:touchcancel={endMenuButtonHideLongPress}
+						on:contextmenu|preventDefault
+						draggable="false"
+						title={$_('emblems_and_dungeons')}
+						class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+					>
+						<span class="text-large">🗺️</span>
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showVanguardMenu}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:click={handleVanguardClick}
+						on:mousedown={startHideVanguardButton}
+						on:mouseup={endMenuButtonHideLongPress}
+						on:mouseleave={endMenuButtonHideLongPress}
+						on:touchstart={startHideVanguardButton}
+						on:touchend={endMenuButtonHideLongPress}
+						on:touchcancel={endMenuButtonHideLongPress}
+						on:contextmenu|preventDefault
+						draggable="false"
+						title={$_('vanguard_menu')}
+						class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+					>
+						<span class="text-large">🛡️</span>
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showTreacheryMenu}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:click={handleTreacheryClick}
+						on:mousedown={startHideTreacheryButton}
+						on:mouseup={endMenuButtonHideLongPress}
+						on:mouseleave={endMenuButtonHideLongPress}
+						on:touchstart={startHideTreacheryButton}
+						on:touchend={endMenuButtonHideLongPress}
+						on:touchcancel={endMenuButtonHideLongPress}
+						on:contextmenu|preventDefault
+						draggable="false"
+						title={$_('treachery_menu')}
+						class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+					>
+						<span class="text-large">🕵️</span>
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showBountyMenu || $appSettings.bountyModeEnabled}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:click={handleBountyClick}
+						on:mousedown={startHideBountyButton}
+						on:mouseup={endMenuButtonHideLongPress}
+						on:mouseleave={endMenuButtonHideLongPress}
+						on:touchstart={startHideBountyButton}
+						on:touchend={endMenuButtonHideLongPress}
+						on:touchcancel={endMenuButtonHideLongPress}
+						on:contextmenu|preventDefault
+						draggable="false"
+						title={$_('bounty_menu')}
+						class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+					>
+						<span class="text-large">🎯</span>
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showPlanechaseMenu}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:click={handlePlanechaseClick}
+						on:mousedown={startHidePlanechaseButton}
+						on:mouseup={endMenuButtonHideLongPress}
+						on:mouseleave={endMenuButtonHideLongPress}
+						on:touchstart={startHidePlanechaseButton}
+						on:touchend={endMenuButtonHideLongPress}
+						on:touchcancel={endMenuButtonHideLongPress}
+						on:contextmenu|preventDefault
+						draggable="false"
+						title={$_('planechase_menu_title')}
+						class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+					>
+						<i class="mi mi-chaos mi-1x text-white"></i>
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showArchenemyMenu}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:click={handleArchenemyClick}
+						on:mousedown={startHideArchenemyButton}
+						on:mouseup={endMenuButtonHideLongPress}
+						on:mouseleave={endMenuButtonHideLongPress}
+						on:touchstart={startHideArchenemyButton}
+						on:touchend={endMenuButtonHideLongPress}
+						on:touchcancel={endMenuButtonHideLongPress}
+						on:contextmenu|preventDefault
+						draggable="false"
+						title={$_('archenemy_menu_title')}
+						class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+					>
+						<span class="text-large">😈</span>
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showGameHistoryMenu}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:click={handleHistoryClick}
+						on:mousedown={startHideHistoryButton}
+						on:mouseup={endMenuButtonHideLongPress}
+						on:mouseleave={endMenuButtonHideLongPress}
+						on:touchstart={startHideHistoryButton}
+						on:touchend={endMenuButtonHideLongPress}
+						on:touchcancel={endMenuButtonHideLongPress}
+						on:contextmenu|preventDefault
+						draggable="false"
+						title={$_('game_history')}
+						class="px-2 py-1 rounded-3xl bg-gray-800 text-white min-w-[2.5rem] h-10 flex items-center justify-center"
+					>
+						<span class="text-large">🕘</span>
+					</button>
+				</div>
+			{/if}
+			{#if $appState.dayNightCycleEnabled}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<DayNightCycle />
+				</div>
+			{/if}
+			{#if $appSettings.showResourcesButton}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:click={handleManaClick}
+						on:mousedown={startHideResourcesButton}
+						on:mouseup={endMenuButtonHideLongPress}
+						on:mouseleave={endMenuButtonHideLongPress}
+						on:touchstart={startHideResourcesButton}
+						on:touchend={endMenuButtonHideLongPress}
+						on:touchcancel={endMenuButtonHideLongPress}
+						on:contextmenu|preventDefault
+						draggable="false"
+					>
+						<ManaPentagon />
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showNextPlayerButton}
+				<div class="flex justify-center items-center flex-shrink-0 px-1">
+					<button
+						on:mousedown={handleTurnDown}
+						on:mouseup={handleTurnUp}
+						on:mouseleave={handleTurnUp}
+						on:touchstart={handleTurnDown}
+						on:touchend={handleTurnUp}
+						on:touchcancel={handleTurnUp}
+						on:click={handleNextClick}
+						on:contextmenu|preventDefault
+						draggable="false"
+						class="px-2 py-1 rounded-3xl bg-gray-800 text-white"
+						title="Next player"
+					>
+						<span class="inline-flex items-center">
+							<!-- <span>↪</span> -->
+							<!-- <span>↩</span> -->
+							<span>🔂</span>
+							{#if $appState.turnCount > 0}
+								<span
+									class="ml-1 w-6 h-6 rounded-full text-xl flex items-center justify-center turn-badge"
+									class:animate={animateTurn}>T{$appState.turnCount}</span
+								>
+							{/if}
+						</span>
+					</button>
+				</div>
+			{/if}
+			{#if $appSettings.showRandomizerButton}
+				<div class="flex justify-center items-center flex-shrink-0 px-1 text-sm">
+					<button
+						on:click={handleRandomizerClick}
+						on:mousedown={handleRandomPlayerDown}
+						on:mouseup={handleRandomPlayerUp}
+						on:mouseleave={handleRandomPlayerUp}
+						on:touchstart={handleRandomPlayerDown}
+						on:touchend={handleRandomPlayerUp}
+						on:touchcancel={handleRandomPlayerUp}
+						on:contextmenu|preventDefault
+						draggable="false"
+					>
+						<Dsix />
+					</button>
+				</div>
+			{/if}
+		</div>
 	</div>
 {:else if $appState.activeMenu === 'settings'}
 	<Settings on:resetLifeTotals />
