@@ -210,7 +210,7 @@
 	"history_resource_green": "緑マナ",
 	"history_resource_waste": "無色マナ",
 	"history_resource_storm": "ストーム",
-	"history_dice_roll_prefix": "面数",
+	"history_dice_roll_prefix": "ダイス",
 	"history_dice_roll_sides": "面",
 	"history_dice_roll_result": "結果",
 	"history_turn_time_open_button": "⏱ ターン times",
