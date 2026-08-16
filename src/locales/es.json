@@ -425,5 +425,7 @@
 	"history_stats_game_singular": "partida",
 	"history_stats_game_plural": "partidas",
 	"archenemy_ongoing_schemes_title": "Conspiraciones permanentes",
-	"i18n_ai_warning": "Advertencia: excepto para el francés y el inglés, la internacionalización fue realizada por IA y puede contener errores. ¡Las contribuciones son bienvenidas en GitHub si detectas errores y quieres ayudarme a corregirlos!"
+	"i18n_ai_warning": "Advertencia: excepto para el francés y el inglés, la internacionalización fue realizada por IA y puede contener errores. ¡Las contribuciones son bienvenidas en GitHub si detectas errores y quieres ayudarme a corregirlos!",
+	"start_your_engine_speed": "Tu Velocidad",
+	"tooltip_status_start_your_engine_speed": "Tus contadores de Velocidad (0 - 4)"
 }
