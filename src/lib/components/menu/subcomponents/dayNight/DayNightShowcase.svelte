@@ -164,9 +164,9 @@
 	.showcase-orb {
 		position: absolute;
 		left: 50%;
-		top: 19%;
-		height: 7.5rem;
-		width: 7.5rem;
+		top: 15%;
+		height: 8.25rem;
+		width: 8.25rem;
 		transform: translateX(-50%);
 		border-radius: 9999px;
 		box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
