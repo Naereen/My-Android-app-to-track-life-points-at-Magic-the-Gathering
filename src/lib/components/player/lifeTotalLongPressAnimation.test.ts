@@ -18,10 +18,23 @@ describe('long-press life total animation wiring', () => {
 
 	it('vibration keyframes use standalone translate property (not transform: translateX) to preserve element rotation', () => {
 		const css = readRepoFile('src/app.css');
-		// Extract the keyframes block
+		// Extract the full keyframes block by tracking brace depth
 		const keyframesStart = css.indexOf('@keyframes life-total-longpress-vibrate');
 		expect(keyframesStart).toBeGreaterThan(-1);
-		const keyframesBlock = css.slice(keyframesStart, css.indexOf('}', css.indexOf('}', keyframesStart) + 1) + 1);
+		const openBrace = css.indexOf('{', keyframesStart);
+		let depth = 0;
+		let end = openBrace;
+		for (let i = openBrace; i < css.length; i++) {
+			if (css[i] === '{') depth++;
+			else if (css[i] === '}') {
+				depth--;
+				if (depth === 0) {
+					end = i;
+					break;
+				}
+			}
+		}
+		const keyframesBlock = css.slice(keyframesStart, end + 1);
 		// Must use standalone `translate` property so that `transform: rotate()` from
 		// orientation classes (e.g. `-rotate-180` for `orientation === 'left'`) is not overridden.
 		expect(keyframesBlock).toContain('translate:');
