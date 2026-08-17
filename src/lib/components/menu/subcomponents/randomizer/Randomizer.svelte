@@ -12,13 +12,13 @@
 	import { appSettings, setCustomRandomNumber } from '$lib/store/appSettings';
 	import { toggleIsMenuOpen } from '$lib/store/appState';
 	import { generateRandomNumber, selectRandomPlayer, selectRandomOpponent } from '$lib/store/modal';
+	import { openCoinFlipModal } from '$lib/store/coinFlipStore';
 	import { players } from '$lib/store/player';
 	import DiceCard from './subcomponents/diceCard/RandomizerButton.svelte';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
 	$: innerHeight = 0;
-	let selectedActivePlayer: number | null = null;
 	let showOpponentSelector = false;
 
 	// The randomizer menu combines several independent mini-tools in one place, so the
@@ -67,7 +67,6 @@
 	const selectPlayerAsActive = (playerId: number) => {
 		// The chosen active player becomes the reference for the next opponent roll.
 		vibrate(20);
-		selectedActivePlayer = playerId;
 		selectRandomOpponent(playerId);
 		showOpponentSelector = false;
 	};
@@ -208,6 +207,20 @@
 						>
 					</div>
 				{/if}
+				<div class="col-span-2">
+					<DiceCard
+						on:click={() => {
+							openCoinFlipModal();
+						}}
+						text={$_('coin_flip_tracker') || 'Coin Tracker'}
+					>
+						<div
+							class="flex h-16 w-16 items-center justify-center rounded-full border border-amber-200/30 bg-[radial-gradient(circle_at_30%_30%,_rgba(255,255,255,0.7),_rgba(250,204,21,0.2)_32%,_rgba(180,83,9,0.85)_100%)] text-3xl shadow-[inset_0_2px_10px_rgba(255,255,255,0.18)]"
+						>
+							🪙
+						</div>
+					</DiceCard>
+				</div>
 			</div>
 		</div>
 
