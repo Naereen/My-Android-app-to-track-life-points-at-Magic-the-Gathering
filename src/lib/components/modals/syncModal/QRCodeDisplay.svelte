@@ -42,12 +42,14 @@
 		<p class="text-red-400 text-sm">{errorMessage}</p>
 	{/if}
 	<div class="rounded-lg bg-white p-4">
-		<canvas
-			bind:this={canvas}
-			width={canvasSize}
-			height={canvasSize}
-			style={`width: ${size}px; height: auto;`}
-			class="block max-w-full bg-white"
-		></canvas>
+		<div class="aspect-square" style={`width: min(${size}px, 100%);`}>
+			<canvas
+				bind:this={canvas}
+				width={canvasSize}
+				height={canvasSize}
+				style="width: 100%; height: 100%;"
+				class="block bg-white"
+			></canvas>
+		</div>
 	</div>
 </div>
