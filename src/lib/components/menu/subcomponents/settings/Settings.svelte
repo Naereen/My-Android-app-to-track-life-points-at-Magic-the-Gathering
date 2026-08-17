@@ -1449,19 +1449,6 @@
 				on:change={handleUseWeightedStartingPlayerChange}
 			/>
 		</label>
-		<hr class="border-gray-800 mx-4" />
-		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
-			<div class="flex-1 pr-4">
-				<div class="text-base font-medium">
-					✋ {$_('touch_before_random_start')}
-				</div>
-			</div>
-			<ToggleSwitch
-				checked={$appSettings.requireTouchBeforeRandomStart}
-				on:change={handleRequireTouchBeforeRandomStartChange}
-			/>
-		</label>
-
 		{#if $appSettings.useWeightedStartingPlayer}
 			<div class="px-4 pb-3">
 				<div class="text-xs text-gray-400 mb-3">
@@ -1507,6 +1494,19 @@
 				</div>
 			</div>
 		{/if}
+
+	<hr class="border-gray-800 mx-4" />
+		<label class="flex items-center justify-between px-4 py-3 w-full cursor-pointer">
+			<div class="flex-1 pr-4">
+				<div class="text-base font-medium">
+					👇🏻 {$_('touch_before_random_start')}
+				</div>
+			</div>
+			<ToggleSwitch
+				checked={$appSettings.requireTouchBeforeRandomStart}
+				on:change={handleRequireTouchBeforeRandomStartChange}
+			/>
+		</label>
 
 		<!-- ── Stream Mode ─────────────────────────────────────────────────── -->
 		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
