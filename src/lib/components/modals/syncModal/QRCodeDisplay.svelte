@@ -46,8 +46,8 @@
 			bind:this={canvas}
 			width={canvasSize}
 			height={canvasSize}
-			style={`width: ${size}px; height: ${size}px;`}
-			class="block bg-white"
+			style={`width: ${size}px; height: auto;`}
+			class="block max-w-full bg-white"
 		></canvas>
 	</div>
 </div>
