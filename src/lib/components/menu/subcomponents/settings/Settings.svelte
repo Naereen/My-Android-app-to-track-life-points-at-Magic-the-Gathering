@@ -45,7 +45,7 @@
 	import CircularButton from '../../../shared/circularButton/CircularButton.svelte';
 	import Arrow from '$lib/assets/icons/Arrow.svelte';
 	import { resetLifeTotals } from '$lib/store/player';
-	import { showConfirm, openScryfallModal } from '$lib/store/modal';
+	import { showConfirm, openScryfallModal, openSyncModal } from '$lib/store/modal';
 	import {
 		setAllowNegativeLife,
 		setPreventScreenSleep,
@@ -810,6 +810,26 @@
 				<span class="text-base font-medium"
 					>{$_('search_scryfall_button') || 'Search Scryfall'}</span
 				>
+			</button>
+		</div>
+
+		<!-- ── Sync Mode ───────────────────────────────────────────────────── -->
+		<h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 px-4 pt-4 pb-1">
+			{$_('sync_mode_title') || 'Sync Mode'}
+		</h2>
+		<hr class="border-gray-700 mx-4 mb-1" />
+		<div class="px-4 py-3">
+			<button
+				class="w-full flex items-center gap-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl px-4 py-3 transition-colors"
+				on:click={() => {
+					toggleIsMenuOpen('');
+					openSyncModal();
+				}}
+				on:contextmenu|preventDefault
+				draggable="false"
+			>
+				<span class="text-2xl">🔗</span>
+				<span class="text-base font-medium">{$_('sync_mode_menu_button') || 'Connect Players (P2P Sync)'}</span>
 			</button>
 		</div>
 
