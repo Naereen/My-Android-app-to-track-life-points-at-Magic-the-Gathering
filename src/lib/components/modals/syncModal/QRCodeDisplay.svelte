@@ -55,7 +55,9 @@
 	>
 		<canvas
 			bind:this={canvas}
-			class="block aspect-square h-auto w-full bg-white"
+			class="block aspect-square max-h-[350px] w-full bg-white"
+			width={RENDER_SIZE}
+			height={RENDER_SIZE}
 			style="min-width: {size}px"
 		>
 			<span class="text-sm text-red-400">
