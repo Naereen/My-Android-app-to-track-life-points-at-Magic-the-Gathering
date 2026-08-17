@@ -19,7 +19,9 @@ export const secureRandomInt = (min: number, max: number): number => {
 
 	const range = max - min + 1;
 	if (!Number.isSafeInteger(range) || range <= 0 || range > UINT32_RANGE) {
-		throw new RangeError('secureRandomInt range must be between 1 and 2^32 (inclusive).');
+		throw new RangeError(
+			'secureRandomInt range must be between 1 and 2^32 (inclusive); max span is [0, 4294967295].'
+		);
 	}
 
 	const maxUnbiased = Math.floor(UINT32_RANGE / range) * range;
