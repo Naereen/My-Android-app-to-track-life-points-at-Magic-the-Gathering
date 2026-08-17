@@ -39,13 +39,13 @@ const playerBaseName = get(_)('player') || 'Player';
 // List of planeswalker names from Magic: The Gathering, to use as random player names.
 // Source: https://mtg.wiki/Planeswalkers and https://yawgatog.com/resources/magic-rules/#R2053j
 const popularPlaneswalkerNames: Record<string, string[]> = {
-	A: ['Ajani', 'Aminatou', 'Angrath', 'Arlinn', 'Ashiok'],
-	B: ['Bahamut', 'Basri', 'Bolas'],
+	A: ['Ajani', 'Aminatou', 'Angrath', 'Arlinn', 'Ashiok', 'Arzakon'],
+	B: ['Basri', 'Bolas'],
 	C: ['Calix', 'Chandra', 'Comet'],
-	D: ['Dack', 'Dakkon', 'Daretti', 'Davriel', 'Dihada', 'Domri', 'Dovin'],
+	D: ['Dack', 'Dakkon', 'Daretti', 'Davriel', 'Dihada', 'Domri', 'Dovin', 'Dyfed'],
 	E: ['Ellywick', 'Elminster', 'Elspeth', 'Estrid'],
-	F: ['Freyalise'],
-	G: ['Garruk', 'Gideon', 'Grist', 'Guff'],
+	F: ['Freyalise', 'Feroz'],
+	G: ['Garruk', 'Gideon', 'Greensleeves', 'Grist', 'Guff'],
 	H: ['Huatli'],
 	J: ['Jace', 'Jared', 'Jaya', 'Jeska'],
 	K: ['Kaito', 'Karn', 'Kasmina', 'Kaya', 'Kiora', 'Koth'],
@@ -55,11 +55,11 @@ const popularPlaneswalkerNames: Record<string, string[]> = {
 	O: ['Oko'],
 	Q: ['Quintorius'],
 	R: ['Ral', 'Rowan'],
-	S: ['Saheeli', 'Samut', 'Sarkhan', 'Serra', 'Sivitri', 'Sorin', 'Szat'],
-	T: ['Tamiyo', 'Tasha', 'Teferi', 'Teyo', 'Tezzeret', 'Tibalt', 'Tyvar'],
+	S: ['Saheeli', 'Samut', 'Sarkhan', 'Serra', 'Sifa', 'Sivitri', 'Sorin', 'Szat'],
+	T: ['Tamiyo', 'Tasha', 'Teferi', 'Teyo', 'Tezzeret', 'Thomil', 'Tibalt', 'Tyvar'],
 	U: ['Ugin', 'Urza'],
 	V: ['Venser', 'Vivien', 'Vraska', 'Vronos'],
-	W: ['Will', 'Windgrace', 'Wrenn'],
+	W: ['Will', 'Windgrace', 'Worzel', 'Wrenn'],
 	X: ['Xenagos'],
 	Y: ['Yanggu', 'Yanling'],
 	Z: ['Zariel']
