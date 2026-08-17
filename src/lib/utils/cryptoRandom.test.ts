@@ -46,10 +46,24 @@ describe('cryptoRandom', () => {
 
 	it('rollDie and flipCoin stay within expected ranges', () => {
 		for (let i = 0; i < 200; i++) {
-			expect(rollDie(6)).toBeGreaterThanOrEqual(1);
-			expect(rollDie(6)).toBeLessThanOrEqual(6);
+			const roll = rollDie(6);
+			expect(roll).toBeGreaterThanOrEqual(1);
+			expect(roll).toBeLessThanOrEqual(6);
 			expect(typeof flipCoin()).toBe('boolean');
 		}
+	});
+
+	it('validates invalid integer bounds', () => {
+		expect(() => secureRandomInt(2, 1)).toThrow(/min <= max/i);
+		expect(() => secureRandomInt(0.1, 1)).toThrow(/integer bounds/i);
+		expect(() => secureRandomInt(0, 1.1)).toThrow(/integer bounds/i);
+		expect(() => secureRandomInt(0, 0x100000000)).toThrow(/2\^32/i);
+	});
+
+	it('validates rollDie arguments', () => {
+		expect(() => rollDie(0)).toThrow(/positive integer/i);
+		expect(() => rollDie(-1)).toThrow(/positive integer/i);
+		expect(() => rollDie(1.5)).toThrow(/positive integer/i);
 	});
 
 	it('throws when crypto.getRandomValues is unavailable', () => {

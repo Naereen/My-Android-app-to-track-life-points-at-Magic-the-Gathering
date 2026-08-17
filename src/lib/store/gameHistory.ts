@@ -1,5 +1,4 @@
 import { persist } from './persist';
-import { secureRandomInt } from '$lib/utils/cryptoRandom';
 
 export type GameHistoryEntryKind =
 	| 'positiveLife'
@@ -38,6 +37,7 @@ export type GameHistoryEntry = {
 };
 
 const MAX_GAME_HISTORY_ENTRIES = 500;
+let gameHistoryEntryIdSequence = 0;
 const MERGE_WINDOW_MS = 2000;
 const MERGEABLE_STATUS_KEYS = new Set(['energy', 'experience', 'rad', 'acorn', 'ticket']);
 
@@ -118,7 +118,7 @@ export const addGameHistoryEntry = (entry: Omit<GameHistoryEntry, 'id' | 'timest
 		const randomId =
 			typeof globalThis !== 'undefined' && globalThis.crypto?.randomUUID
 				? globalThis.crypto.randomUUID()
-				: `${Date.now()}-${secureRandomInt(0, 0xffffffff).toString(16)}`;
+				: `${Date.now()}-${gameHistoryEntryIdSequence++}`;
 
 		const nextEntry: GameHistoryEntry = {
 			...entry,

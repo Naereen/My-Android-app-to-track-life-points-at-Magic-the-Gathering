@@ -39,6 +39,7 @@ export const secureRandomFloat = (): number => {
 };
 
 export const secureShuffle = <T>(array: T[]): T[] => {
+	// Fisher-Yates in-place shuffle; returns the same array reference for convenience.
 	for (let i = array.length - 1; i > 0; i--) {
 		const j = secureRandomInt(0, i);
 		[array[i], array[j]] = [array[j], array[i]];
