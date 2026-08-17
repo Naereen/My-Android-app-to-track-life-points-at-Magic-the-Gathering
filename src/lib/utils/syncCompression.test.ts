@@ -99,6 +99,20 @@ describe('syncCompression', () => {
 		expect(deserialized?.sdp).toContain('a=ice-ufrag:abc1');
 	});
 
+	it('serializeSdp produces a QR-friendly payload and rebuilds a usable SDP', () => {
+		const desc: RTCSessionDescriptionInit = { type: 'offer', sdp: SAMPLE_SDP };
+		const serialized = serializeSdp(desc);
+		expect(serialized.length).toBeLessThan(200);
+
+		const rebuilt = deserializeSdp(serialized);
+		expect(rebuilt?.sdp).toContain('a=ice-pwd:supersecretpassword12345678');
+		expect(rebuilt?.sdp).toContain('a=setup:actpass');
+		expect(rebuilt?.sdp).toContain('a=sctp-port:5000');
+		expect(rebuilt?.sdp).toContain('a=fingerprint:sha-256 AA:BB:CC:DD');
+		expect(rebuilt?.sdp).toContain('192.168.1.100 54400 typ host');
+		expect(rebuilt?.sdp).not.toContain('203.0.113.1');
+	});
+
 	it('deserializeSdp returns null for garbage input', () => {
 		expect(deserializeSdp('notvalid')).toBeNull();
 	});

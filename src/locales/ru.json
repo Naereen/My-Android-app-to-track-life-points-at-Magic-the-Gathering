@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "Повторить",
 	"sync_mode_error": "Произошла ошибка",
 	"sync_mode_camera_scanning": "Наведите камеру на QR-код…",
+	"sync_mode_manual_entry": "QR-код не сканируется? Введите код вручную",
+	"sync_mode_manual_placeholder": "Вставьте код, показанный на другом устройстве",
+	"sync_mode_paste": "Вставить",
+	"sync_mode_validate": "Подтвердить",
+	"sync_mode_copy_code": "Скопировать код вместо этого",
+	"sync_mode_copied": "Скопировано!",
 	"sync_mode_camera_error": "Ошибка камеры",
 	"sync_mode_qr_render_error": "Не удалось отрисовать QR-код"
 }

@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "Spróbuj ponownie",
 	"sync_mode_error": "Wystąpił błąd",
 	"sync_mode_camera_scanning": "Skieruj aparat na kod QR…",
+	"sync_mode_manual_entry": "Kod QR się nie skanuje? Wpisz kod ręcznie",
+	"sync_mode_manual_placeholder": "Wklej kod wyświetlony na drugim urządzeniu",
+	"sync_mode_paste": "Wklej",
+	"sync_mode_validate": "Zatwierdź",
+	"sync_mode_copy_code": "Skopiuj kod zamiast tego",
+	"sync_mode_copied": "Skopiowano!",
 	"sync_mode_camera_error": "Błąd aparatu",
 	"sync_mode_qr_render_error": "Nie udało się wyrenderować kodu QR"
 }

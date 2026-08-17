@@ -475,5 +475,11 @@
 	"sync_mode_error": "An error occurred",
 	"sync_mode_camera_scanning": "Point camera at QR code…",
 	"sync_mode_camera_error": "Camera error",
+	"sync_mode_manual_entry": "QR code not scanning? Enter the code manually",
+	"sync_mode_manual_placeholder": "Paste the code shown on the other device",
+	"sync_mode_paste": "Paste",
+	"sync_mode_validate": "Validate",
+	"sync_mode_copy_code": "Copy the code instead",
+	"sync_mode_copied": "Copied!",
 	"sync_mode_qr_render_error": "Failed to render QR code"
 }

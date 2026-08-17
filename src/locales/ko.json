@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "다시 시도",
 	"sync_mode_error": "오류가 발생했습니다",
 	"sync_mode_camera_scanning": "카메라를 QR 코드에 맞춰 주세요…",
+	"sync_mode_manual_entry": "QR 코드가 스캔되지 않나요? 코드를 직접 입력하세요",
+	"sync_mode_manual_placeholder": "다른 기기에 표시된 코드를 붙여넣으세요",
+	"sync_mode_paste": "붙여넣기",
+	"sync_mode_validate": "확인",
+	"sync_mode_copy_code": "대신 코드 복사",
+	"sync_mode_copied": "복사됨!",
 	"sync_mode_camera_error": "카메라 오류",
 	"sync_mode_qr_render_error": "QR 코드를 렌더링하지 못했습니다"
 }

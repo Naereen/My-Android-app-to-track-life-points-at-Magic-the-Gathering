@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "重试",
 	"sync_mode_error": "发生错误",
 	"sync_mode_camera_scanning": "将相机对准二维码…",
+	"sync_mode_manual_entry": "二维码扫不出来？手动输入代码",
+	"sync_mode_manual_placeholder": "粘贴另一台设备上显示的代码",
+	"sync_mode_paste": "粘贴",
+	"sync_mode_validate": "确认",
+	"sync_mode_copy_code": "改为复制代码",
+	"sync_mode_copied": "已复制！",
 	"sync_mode_camera_error": "相机错误",
 	"sync_mode_qr_render_error": "无法渲染二维码"
 }

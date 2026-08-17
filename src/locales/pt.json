@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "Tentar novamente",
 	"sync_mode_error": "Ocorreu um erro",
 	"sync_mode_camera_scanning": "Aponte a câmera para o código QR…",
+	"sync_mode_manual_entry": "O código QR não é lido? Introduza o código manualmente",
+	"sync_mode_manual_placeholder": "Cole o código apresentado no outro dispositivo",
+	"sync_mode_paste": "Colar",
+	"sync_mode_validate": "Validar",
+	"sync_mode_copy_code": "Copiar o código em vez disso",
+	"sync_mode_copied": "Copiado!",
 	"sync_mode_camera_error": "Erro de câmera",
 	"sync_mode_qr_render_error": "Falha ao renderizar o código QR"
 }

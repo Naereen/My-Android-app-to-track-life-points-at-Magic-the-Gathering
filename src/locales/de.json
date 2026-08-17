@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "Erneut versuchen",
 	"sync_mode_error": "Ein Fehler ist aufgetreten",
 	"sync_mode_camera_scanning": "Kamera auf den QR-Code richten…",
+	"sync_mode_manual_entry": "QR-Code lässt sich nicht scannen? Code manuell eingeben",
+	"sync_mode_manual_placeholder": "Fügen Sie den auf dem anderen Gerät angezeigten Code ein",
+	"sync_mode_paste": "Einfügen",
+	"sync_mode_validate": "Bestätigen",
+	"sync_mode_copy_code": "Stattdessen Code kopieren",
+	"sync_mode_copied": "Kopiert!",
 	"sync_mode_camera_error": "Kamerafehler",
 	"sync_mode_qr_render_error": "QR-Code konnte nicht gerendert werden"
 }

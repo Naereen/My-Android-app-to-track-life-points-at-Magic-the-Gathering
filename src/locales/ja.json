@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "再試行",
 	"sync_mode_error": "エラーが発生しました",
 	"sync_mode_camera_scanning": "カメラをQRコードに向けてください…",
+	"sync_mode_manual_entry": "QRコードを読み取れませんか？コードを手動で入力",
+	"sync_mode_manual_placeholder": "もう一方の端末に表示されたコードを貼り付けてください",
+	"sync_mode_paste": "貼り付け",
+	"sync_mode_validate": "確定",
+	"sync_mode_copy_code": "代わりにコードをコピー",
+	"sync_mode_copied": "コピーしました！",
 	"sync_mode_camera_error": "カメラエラー",
 	"sync_mode_qr_render_error": "QRコードの生成に失敗しました"
 }

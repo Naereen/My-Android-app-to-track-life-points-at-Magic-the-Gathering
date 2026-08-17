@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "Opnieuw proberen",
 	"sync_mode_error": "Er is een fout opgetreden",
 	"sync_mode_camera_scanning": "Richt de camera op de QR-code…",
+	"sync_mode_manual_entry": "Lukt scannen niet? Voer de code handmatig in",
+	"sync_mode_manual_placeholder": "Plak de code die op het andere apparaat staat",
+	"sync_mode_paste": "Plakken",
+	"sync_mode_validate": "Bevestigen",
+	"sync_mode_copy_code": "Kopieer in plaats daarvan de code",
+	"sync_mode_copied": "Gekopieerd!",
 	"sync_mode_camera_error": "Camerafout",
 	"sync_mode_qr_render_error": "Kan de QR-code niet weergeven"
 }

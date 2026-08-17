@@ -474,6 +474,12 @@
 	"sync_mode_try_again": "Tekrar dene",
 	"sync_mode_error": "Bir hata oluştu",
 	"sync_mode_camera_scanning": "Kamerayı QR koduna doğrult…",
+	"sync_mode_manual_entry": "QR kod okunmuyor mu? Kodu elle girin",
+	"sync_mode_manual_placeholder": "Diğer cihazda görünen kodu yapıştırın",
+	"sync_mode_paste": "Yapıştır",
+	"sync_mode_validate": "Onayla",
+	"sync_mode_copy_code": "Bunun yerine kodu kopyala",
+	"sync_mode_copied": "Kopyalandı!",
 	"sync_mode_camera_error": "Kamera hatası",
 	"sync_mode_qr_render_error": "QR kodu oluşturulamadı"
 }

@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import { syncState, initHostSync, initGuestSync, acceptGuestAnswer, disconnectSync } from '$lib/store/syncStore';
+	import {
+		syncState,
+		initHostSync,
+		initGuestSync,
+		acceptGuestAnswer,
+		disconnectSync
+	} from '$lib/store/syncStore';
 	import { syncModalOpen, closeSyncModal } from '$lib/store/modal';
 	import QRCodeDisplay from './QRCodeDisplay.svelte';
 	import QRScanner from './QRScanner.svelte';
@@ -91,7 +97,9 @@
 		class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
 		on:click|self={close}
 	>
-		<div class="relative bg-gray-900 text-white rounded-2xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4 shadow-2xl">
+		<div
+			class="relative bg-gray-900 text-white rounded-2xl p-6 w-full max-w-md mx-4 flex flex-col gap-4 shadow-2xl"
+		>
 			<!-- Close button -->
 			<button
 				class="absolute top-3 right-3 p-1.5 rounded-full hover:bg-white/10 transition-colors"
@@ -105,7 +113,8 @@
 
 			{#if step === 'choose_role'}
 				<p class="text-center text-white/70 text-sm">
-					{$_('sync_mode_description') || 'Connect with other players on the same Wi-Fi or hotspot. No internet required.'}
+					{$_('sync_mode_description') ||
+						'Connect with other players on the same Wi-Fi or hotspot. No internet required.'}
 				</p>
 				<div class="flex flex-col gap-3">
 					<button
@@ -113,7 +122,9 @@
 						on:click={startHost}
 						disabled={loading}
 					>
-						{loading ? ($_('sync_mode_preparing') || 'Preparing…') : ('📡 ' + ($_('sync_mode_host_button') || "Host — Share my screen first"))}
+						{loading
+							? $_('sync_mode_preparing') || 'Preparing…'
+							: '📡 ' + ($_('sync_mode_host_button') || 'Host — Share my screen first')}
 					</button>
 					<button
 						class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 font-semibold transition-colors"
@@ -122,7 +133,6 @@
 						📷 {$_('sync_mode_guest_button') || "Guest — Scan the host's QR code"}
 					</button>
 				</div>
-
 			{:else if step === 'host_show_offer'}
 				<p class="text-center text-white/70 text-sm">
 					{$_('sync_mode_step_1_of_2') || 'Step 1/2 — Have the guest scan this QR code.'}
@@ -134,40 +144,64 @@
 				>
 					{$_('sync_mode_host_continue') || 'Guest has scanned → Continue'}
 				</button>
-				<button class="text-white/50 text-sm underline text-center" on:click={reset}>{$_('sync_mode_cancel') || 'Cancel'}</button>
-
+				<button class="text-white/50 text-sm underline text-center" on:click={reset}
+					>{$_('sync_mode_cancel') || 'Cancel'}</button
+				>
 			{:else if step === 'host_scan_answer'}
 				<p class="text-center text-white/70 text-sm">
 					{$_('sync_mode_step_2_of_2') || "Step 2/2 — Scan the guest's answer QR code."}
 				</p>
-				<QRScanner on:scan={onAnswerScanned} on:error={(e) => { errorMessage = e.detail; step = 'error'; }} />
+				<QRScanner
+					on:scan={onAnswerScanned}
+					on:error={(e) => {
+						errorMessage = e.detail;
+						step = 'error';
+					}}
+				/>
 				{#if loading}
-					<p class="text-center text-white/60 text-sm">{$_('sync_mode_connecting') || 'Connecting…'}</p>
+					<p class="text-center text-white/60 text-sm">
+						{$_('sync_mode_connecting') || 'Connecting…'}
+					</p>
 				{/if}
-				<button class="text-white/50 text-sm underline text-center" on:click={reset}>{$_('sync_mode_cancel') || 'Cancel'}</button>
-
+				<button class="text-white/50 text-sm underline text-center" on:click={reset}
+					>{$_('sync_mode_cancel') || 'Cancel'}</button
+				>
 			{:else if step === 'guest_scan_offer'}
 				<p class="text-center text-white/70 text-sm">
 					{$_('sync_mode_guest_scan_offer') || "Scan the host's QR code."}
 				</p>
-				<QRScanner on:scan={onOfferScanned} on:error={(e) => { errorMessage = e.detail; step = 'error'; }} />
+				<QRScanner
+					on:scan={onOfferScanned}
+					on:error={(e) => {
+						errorMessage = e.detail;
+						step = 'error';
+					}}
+				/>
 				{#if loading}
-					<p class="text-center text-white/60 text-sm">{$_('sync_mode_processing') || 'Processing…'}</p>
+					<p class="text-center text-white/60 text-sm">
+						{$_('sync_mode_processing') || 'Processing…'}
+					</p>
 				{/if}
-				<button class="text-white/50 text-sm underline text-center" on:click={reset}>{$_('sync_mode_cancel') || 'Cancel'}</button>
-
+				<button class="text-white/50 text-sm underline text-center" on:click={reset}
+					>{$_('sync_mode_cancel') || 'Cancel'}</button
+				>
 			{:else if step === 'guest_show_answer'}
 				<p class="text-center text-white/70 text-sm">
 					{$_('sync_mode_guest_show_answer') || 'Show this QR code to the host to scan.'}
 				</p>
 				<QRCodeDisplay data={answerPayload} size={256} />
-				<p class="text-center text-white/50 text-sm">{$_('sync_mode_waiting_for_host') || 'Waiting for host to scan…'}</p>
-				<button class="text-white/50 text-sm underline text-center" on:click={reset}>{$_('sync_mode_cancel') || 'Cancel'}</button>
-
+				<p class="text-center text-white/50 text-sm">
+					{$_('sync_mode_waiting_for_host') || 'Waiting for host to scan…'}
+				</p>
+				<button class="text-white/50 text-sm underline text-center" on:click={reset}
+					>{$_('sync_mode_cancel') || 'Cancel'}</button
+				>
 			{:else if step === 'connected'}
 				<div class="flex flex-col items-center gap-3">
 					<div class="text-5xl">✅</div>
-					<p class="text-green-400 font-semibold text-lg text-center">{$_('sync_mode_connected') || 'Connected!'}</p>
+					<p class="text-green-400 font-semibold text-lg text-center">
+						{$_('sync_mode_connected') || 'Connected!'}
+					</p>
 					<p class="text-white/60 text-sm text-center">
 						{$_('sync_mode_connected_desc') || 'Game state is now synchronized in real-time.'}
 					</p>
@@ -184,11 +218,12 @@
 						{$_('close') || 'Close'}
 					</button>
 				</div>
-
 			{:else if step === 'error'}
 				<div class="flex flex-col items-center gap-3">
 					<div class="text-5xl">❌</div>
-					<p class="text-red-400 font-semibold text-center">{errorMessage || ($_('sync_mode_error') || 'An error occurred')}</p>
+					<p class="text-red-400 font-semibold text-center">
+						{errorMessage || $_('sync_mode_error') || 'An error occurred'}
+					</p>
 					<button
 						class="w-full py-3 rounded-xl bg-gray-700 hover:bg-gray-600 font-semibold transition-colors"
 						on:click={reset}
