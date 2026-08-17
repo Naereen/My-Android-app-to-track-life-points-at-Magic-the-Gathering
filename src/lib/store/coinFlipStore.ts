@@ -124,7 +124,10 @@ const countSides = (groups: FlipGroup[]) =>
 const flattenHistoryResults = (history: FlipHistoryEntry[]) =>
 	history.flatMap((entry) => entry.groups.flatMap((group) => group.results));
 
-const formatResultGroup = (group: FlipGroup) => group.results.join('');
+const formatResultGroup = (
+	group: FlipGroup,
+	formatCoinSide: (result: CoinSide) => string = (result) => result
+) => group.results.map(formatCoinSide).join('');
 
 const getLongestStreak = (results: CoinSide[], side: CoinSide) => {
 	let longest = 0;
@@ -147,12 +150,19 @@ export const getCoinsPerGroup = (krarkThumbs: number) => 2 ** clampKrarkThumbs(k
 export const getTotalCoinsPerFlip = (state: Pick<CoinFlipState, 'krarkThumbs' | 'coinsToFlip'>) =>
 	getCoinsPerGroup(state.krarkThumbs) * clampCoinsToFlip(state.coinsToFlip);
 
-export const formatFlipGroups = (groups: FlipGroup[]) =>
-	groups.length > 0 ? `( ${groups.map(formatResultGroup).join(', ')} )` : '—';
+export const formatFlipGroups = (
+	groups: FlipGroup[],
+	formatCoinSide: (result: CoinSide) => string = (result) => result
+) => (groups.length > 0 ? `( ${groups.map((group) => formatResultGroup(group, formatCoinSide)).join(', ')} )` : '—');
 
-export const formatFlipHistory = (history: FlipHistoryEntry[]) =>
+export const formatFlipHistory = (
+	history: FlipHistoryEntry[],
+	coinSideLabels: { head: string; tail: string } = { head: 'H', tail: 'T' }
+) =>
 	history.length > 0
-		? history.map((entry) => `( ${entry.heads}H & ${entry.tails}T )`).join(', ')
+		? history
+				.map((entry) => `( ${entry.heads}${coinSideLabels.head} & ${entry.tails}${coinSideLabels.tail} )`)
+				.join(', ')
 		: '—';
 
 export const getCoinFlipStatistics = (state: CoinFlipState) => {

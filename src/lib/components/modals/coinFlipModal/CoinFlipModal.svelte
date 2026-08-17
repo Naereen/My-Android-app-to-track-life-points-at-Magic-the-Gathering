@@ -3,6 +3,7 @@
 	import {
 		MAX_COINS_TO_FLIP,
 		MAX_KRARK_THUMBS,
+		type CoinSide,
 		closeCoinFlipModal,
 		coinFlipStore,
 		formatFlipGroups,
@@ -11,17 +12,25 @@
 		getCoinsPerGroup,
 		getTotalCoinsPerFlip
 	} from '$lib/store/coinFlipStore';
+	import { getCoinResultInitial } from '$lib/utils/coinFlipResultLabel';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
 	let showHelp = false;
 
+	const formatCoinSide = (result: CoinSide) => (result === 'H' ? headResultLabel : tailResultLabel);
+
 	$: coinStats = getCoinFlipStatistics($coinFlipStore);
 	$: coinsPerGroup = getCoinsPerGroup($coinFlipStore.krarkThumbs);
 	$: totalCoins = getTotalCoinsPerFlip($coinFlipStore);
 	$: previewCoinIndices = Array.from({ length: Math.min(totalCoins, 8) }, (_, index) => index);
-	$: lastResultText = formatFlipGroups($coinFlipStore.lastResults);
-	$: flipHistoryText = formatFlipHistory($coinFlipStore.flipHistory);
+	$: headResultLabel = getCoinResultInitial($_('coin_result_head'), 'Head');
+	$: tailResultLabel = getCoinResultInitial($_('coin_result_tail'), 'Tail');
+	$: lastResultText = formatFlipGroups($coinFlipStore.lastResults, formatCoinSide);
+	$: flipHistoryText = formatFlipHistory($coinFlipStore.flipHistory, {
+		head: headResultLabel,
+		tail: tailResultLabel
+	});
 
 	const adjustKrarkThumbs = (delta: number) => {
 		vibrate(10);
@@ -265,7 +274,7 @@
 												class:text-rose-300={result === 'T'}
 												class="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-sm font-black"
 											>
-												{result}
+												{formatCoinSide(result)}
 											</div>
 										{/each}
 									</div>
@@ -293,7 +302,9 @@
 											? `${$_(entry.call === 'H' ? 'call_heads' : 'call_tails') || (entry.call === 'H' ? 'Call Heads' : 'Call Tails')}`
 											: `${$_('flip_coin') || 'Flip coin'}`}
 									</p>
-									<p class="mt-1 text-slate-300">( {entry.heads}H & {entry.tails}T )</p>
+									<p class="mt-1 text-slate-300">
+										( {entry.heads}{headResultLabel} & {entry.tails}{tailResultLabel} )
+									</p>
 								</div>
 							{/each}
 						{:else}
