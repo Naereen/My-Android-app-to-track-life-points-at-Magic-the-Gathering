@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
+	import { BrowserMultiFormatReader, ReaderException } from '@zxing/library';
 	import { _ } from 'svelte-i18n';
+	import { get } from 'svelte/store';
 
 	const dispatch = createEventDispatcher<{ scan: string; error: string }>();
 
@@ -21,8 +22,8 @@
 					if (result) {
 						dispatch('scan', result.getText());
 						stopScanning();
-					} else if (err && !(err instanceof NotFoundException)) {
-						errorMessage = err.message ?? 'Camera error';
+					} else if (err && !(err instanceof ReaderException)) {
+						errorMessage = err.message ?? get(_)('sync_mode_camera_error') ?? 'Camera error';
 						dispatch('error', errorMessage);
 					}
 				}
@@ -49,7 +50,9 @@
 	{#if errorMessage}
 		<p class="text-red-400 text-sm text-center">{errorMessage}</p>
 	{:else if scanning}
-		<p class="text-white/70 text-sm">{$_('sync_mode_camera_scanning') || 'Point camera at QR code…'}</p>
+		<p class="text-white/70 text-sm">
+			{$_('sync_mode_camera_scanning') || 'Point camera at QR code…'}
+		</p>
 	{/if}
 	<video
 		bind:this={videoElement}
