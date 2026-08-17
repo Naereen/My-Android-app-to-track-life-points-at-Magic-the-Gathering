@@ -6,6 +6,7 @@ export type SyncActionType =
 	| 'SET_INITIATIVE'
 	| 'RESET_GAME'
 	| 'GAME_STATE'
+	| 'TIMER_STATE'
 	| 'FULL_STATE_SYNC';
 
 export interface SyncAction {

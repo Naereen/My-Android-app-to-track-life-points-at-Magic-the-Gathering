@@ -232,6 +232,25 @@ const createGlobalGameTimer = () => {
 	};
 
 	/**
+	 * Adopts a timer state received from a synchronized peer, without emitting timeout cues.
+	 * @param {{ remaining: number; total: number; running: boolean }} next Remote timer state.
+	 * @returns {void}
+	 */
+	const applyRemoteState = (next: { remaining: number; total: number; running: boolean }) => {
+		stopInternal();
+		lastTickEpochMs = Date.now();
+		const remaining = Math.round(Number(next.remaining) || 0);
+		set({
+			remaining,
+			total: Math.max(0, Math.round(Number(next.total) || 0)),
+			running: !!next.running,
+			minutePulseId: state.minutePulseId,
+			minutePulseKind: remaining < 0 ? 'negative' : 'positive'
+		});
+		if (next.running) startInternal();
+	};
+
+	/**
 	 * Applies a new configured duration and resets timer to that value.
 	 * @param {number} durationSeconds Duration in seconds.
 	 * @returns {void}
@@ -287,7 +306,8 @@ const createGlobalGameTimer = () => {
 		stop,
 		togglePause,
 		resetForNewGame,
-		applyDuration
+		applyDuration,
+		applyRemoteState
 	};
 };
 

@@ -2,6 +2,9 @@ import { writable, get } from 'svelte/store';
 import type { SyncAction, SyncState } from '$lib/types/sync';
 import { players, setPlayerLifeAbsolute, setPlayerPoison } from './player';
 import { appSettings } from './appSettings';
+import { appState } from './appState';
+import { turnTimer } from './turnTimer';
+import { globalGameTimer } from './globalGameTimer';
 import { resetLifeTotals } from './player';
 
 let manager: import('$lib/utils/webrtcManager').WebRTCManager | null = null;
@@ -11,9 +14,23 @@ let applyingRemote = false;
 let unsubscribers: (() => void)[] = [];
 let broadcastTimer: ReturnType<typeof setTimeout> | null = null;
 let lastBroadcastPayload = '';
+let lastTimerSignature = '';
+let lastTimerBroadcastAt = 0;
 
 /** Coalesces bursts of local updates (e.g. holding the +1 button) into one message. */
 const BROADCAST_DEBOUNCE_MS = 120;
+
+/** Both peers tick locally, so timers only need a periodic drift correction. */
+const TIMER_RESYNC_INTERVAL_MS = 15000;
+
+/** Turn/game progression fields; menu and UI flags stay device-local. */
+const SYNCED_APP_STATE_KEYS = [
+	'currentTurn',
+	'turnCount',
+	'startingPlayerIndex',
+	'dayNightCycleEnabled',
+	'dayNightPhase'
+] as const;
 
 /**
  * Settings that describe the shared game and must be identical on every device.
@@ -71,12 +88,72 @@ function pickSyncedSettings(settings: Record<string, unknown>): Record<string, u
 	return picked;
 }
 
+function pickSyncedAppState(state: Record<string, unknown>): Record<string, unknown> {
+	const picked: Record<string, unknown> = {};
+	for (const key of SYNCED_APP_STATE_KEYS) {
+		if (key in state) picked[key] = state[key];
+	}
+	return picked;
+}
+
 /** The whole shared game state: every player field plus the game-defining settings. */
 function buildGameStatePayload(): Record<string, unknown> {
 	return {
 		players: get(players),
-		settings: pickSyncedSettings(get(appSettings) as unknown as Record<string, unknown>)
+		settings: pickSyncedSettings(get(appSettings) as unknown as Record<string, unknown>),
+		appState: pickSyncedAppState(get(appState) as unknown as Record<string, unknown>)
 	};
+}
+
+function buildTimerPayload() {
+	const turn = get(turnTimer);
+	const global = get(globalGameTimer);
+	return {
+		turn: {
+			remaining: turn.remaining,
+			total: turn.total,
+			running: turn.running,
+			playerIndex: turn.playerIndex
+		},
+		global: { remaining: global.remaining, total: global.total, running: global.running }
+	};
+}
+
+/** Identifies discrete timer events; plain ticking does not change it. */
+function timerSignature(payload: ReturnType<typeof buildTimerPayload>): string {
+	return JSON.stringify([
+		payload.turn.running,
+		payload.turn.total,
+		payload.turn.playerIndex,
+		payload.global.running,
+		payload.global.total
+	]);
+}
+
+/**
+ * Broadcasts the timers on discrete events (start/pause/reset/turn change) and, while
+ * they merely tick down on both sides, only every {@link TIMER_RESYNC_INTERVAL_MS}.
+ */
+function broadcastTimers(force = false) {
+	if (!manager?.isConnected) return;
+	const payload = buildTimerPayload();
+	const signature = timerSignature(payload);
+	const now = Date.now();
+	if (
+		!force &&
+		signature === lastTimerSignature &&
+		now - lastTimerBroadcastAt < TIMER_RESYNC_INTERVAL_MS
+	) {
+		return;
+	}
+	lastTimerSignature = signature;
+	lastTimerBroadcastAt = now;
+	sendSyncAction(makeAction('TIMER_STATE', payload));
+}
+
+function onTimerChange() {
+	if (applyingRemote) return;
+	broadcastTimers();
 }
 
 function broadcastGameState() {
@@ -104,7 +181,13 @@ function scheduleBroadcast() {
 function startBroadcasting() {
 	stopBroadcasting();
 	lastBroadcastPayload = JSON.stringify(buildGameStatePayload());
-	unsubscribers = [players.subscribe(scheduleBroadcast), appSettings.subscribe(scheduleBroadcast)];
+	unsubscribers = [
+		players.subscribe(scheduleBroadcast),
+		appSettings.subscribe(scheduleBroadcast),
+		appState.subscribe(scheduleBroadcast),
+		turnTimer.subscribe(onTimerChange),
+		globalGameTimer.subscribe(onTimerChange)
+	];
 }
 
 function stopBroadcasting() {
@@ -125,6 +208,28 @@ function applyGameState(payload: Record<string, unknown>) {
 		const allowed = pickSyncedSettings(incomingSettings as Record<string, unknown>);
 		appSettings.update((current) => ({ ...current, ...allowed }));
 	}
+
+	const incomingAppState = payload.appState;
+	if (incomingAppState && typeof incomingAppState === 'object') {
+		const allowed = pickSyncedAppState(incomingAppState as Record<string, unknown>);
+		appState.update((current) => ({ ...current, ...allowed }));
+	}
+}
+
+function applyTimerState(payload: Record<string, unknown>) {
+	const turn = payload.turn as
+		| { remaining: number; total: number; running: boolean; playerIndex: number | null }
+		| undefined;
+	if (turn && typeof turn.remaining === 'number') {
+		turnTimer.applyRemoteState(turn);
+	}
+
+	const global = payload.global as
+		| { remaining: number; total: number; running: boolean }
+		| undefined;
+	if (global && typeof global.remaining === 'number') {
+		globalGameTimer.applyRemoteState(global);
+	}
 }
 
 /**
@@ -136,6 +241,10 @@ function applyRemoteAction(action: SyncAction) {
 		switch (action.type) {
 			case 'GAME_STATE': {
 				applyGameState(action.payload);
+				break;
+			}
+			case 'TIMER_STATE': {
+				applyTimerState(action.payload);
 				break;
 			}
 			case 'CHANGE_LIFE': {
@@ -159,6 +268,8 @@ function applyRemoteAction(action: SyncAction) {
 		applyingRemote = false;
 		// Prevents echoing back the state we just adopted.
 		lastBroadcastPayload = JSON.stringify(buildGameStatePayload());
+		lastTimerSignature = timerSignature(buildTimerPayload());
+		lastTimerBroadcastAt = Date.now();
 	}
 }
 
@@ -177,6 +288,7 @@ export function sendSyncAction(action: SyncAction): boolean {
 export function sendFullStateSync() {
 	lastBroadcastPayload = '';
 	broadcastGameState();
+	broadcastTimers(true);
 }
 
 /**

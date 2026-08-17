@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import { get } from 'svelte/store';
 import { appSettings } from './appSettings';
-import { appState, nextTurn } from './appState';
+import { appState } from './appState';
 import { vibrate } from '$lib/utils/haptics';
 import { playGameplaySound } from '$lib/utils/gameplaySound';
 
@@ -103,13 +103,13 @@ const createTurnTimer = () => {
 	const notifyTimeoutReached = () => {
 		try {
 			if (get(appSettings).hapticsEnabled) vibrate(200);
-		} catch (e) {
+		} catch (_) {
 			// ignore
 		}
 		if (get(appSettings).turnTimerSound) {
 			try {
 				playGameplaySound('timerTimeout', { ignoreSoundEffectsSetting: true });
-			} catch (e) {
+			} catch (_) {
 				// ignore
 			}
 		}
@@ -233,6 +233,23 @@ const createTurnTimer = () => {
 		else stop();
 	};
 
+	/**
+	 * Adopts a timer state received from a synchronized peer, without emitting timeout cues.
+	 * @param {TimerState} next Remote timer state.
+	 * @returns {void}
+	 */
+	const applyRemoteState = (next: TimerState) => {
+		stopInternal();
+		lastTickEpochMs = Date.now();
+		set({
+			remaining: Math.round(Number(next.remaining) || 0),
+			total: Math.max(0, Math.round(Number(next.total) || 0)),
+			running: !!next.running,
+			playerIndex: typeof next.playerIndex === 'number' ? next.playerIndex : null
+		});
+		if (next.running) ensureIntervalRunning();
+	};
+
 	if (isBrowser) {
 		document.addEventListener('visibilitychange', () => {
 			if (!document.hidden) {
@@ -255,7 +272,8 @@ const createTurnTimer = () => {
 		pause,
 		resume,
 		stop,
-		resetForCurrent
+		resetForCurrent,
+		applyRemoteState
 	};
 };
 
