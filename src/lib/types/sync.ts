@@ -5,6 +5,7 @@ export type SyncActionType =
 	| 'SET_MONARCH'
 	| 'SET_INITIATIVE'
 	| 'RESET_GAME'
+	| 'GAME_STATE'
 	| 'FULL_STATE_SYNC';
 
 export interface SyncAction {

@@ -8,8 +8,37 @@ let manager: import('$lib/utils/webrtcManager').WebRTCManager | null = null;
 
 /** Guards against re-broadcasting a change that we just received from the peer. */
 let applyingRemote = false;
-let unsubscribePlayers: (() => void) | null = null;
-let lastSnapshot = new Map<number, { life: number; poison: number }>();
+let unsubscribers: (() => void)[] = [];
+let broadcastTimer: ReturnType<typeof setTimeout> | null = null;
+let lastBroadcastPayload = '';
+
+/** Coalesces bursts of local updates (e.g. holding the +1 button) into one message. */
+const BROADCAST_DEBOUNCE_MS = 120;
+
+/**
+ * Settings that describe the shared game and must be identical on every device.
+ * Device-local preferences (haptics, sounds, locale, stream mode…) are deliberately excluded.
+ */
+const SYNCED_SETTINGS_KEYS = [
+	'playerCount',
+	'startingLifeTotal',
+	'customStartingLifeTotal',
+	'allowNegativeLife',
+	'threePlayerLayout',
+	'fourPlayerLayout',
+	'sixPlayerLayout',
+	'eightPlayerLayout',
+	'vanguardModeEnabled',
+	'treacheryModeEnabled',
+	'shogunVariantEnabled',
+	'bountyModeEnabled',
+	'enableAcornMode',
+	'enableTicketMode',
+	'turnTimerEnabled',
+	'turnTimerDuration',
+	'globalGameTimerEnabled',
+	'globalGameTimerDuration'
+] as const;
 
 const initialSyncState: SyncState = {
 	status: 'disconnected',
@@ -23,14 +52,6 @@ export const syncState = writable<SyncState>(initialSyncState);
 /** Unique peer ID for this session (generated once per page load). */
 export const localPeerId = crypto.randomUUID();
 
-function snapshotPlayers(list: App.Player.Data[]) {
-	const map = new Map<number, { life: number; poison: number }>();
-	for (const player of list) {
-		map.set(player.id, { life: player.lifeTotal, poison: Number(player.poison ?? 0) });
-	}
-	return map;
-}
-
 function makeAction(type: SyncAction['type'], payload: Record<string, unknown>): SyncAction {
 	return {
 		id: crypto.randomUUID(),
@@ -42,44 +63,81 @@ function makeAction(type: SyncAction['type'], payload: Record<string, unknown>):
 	};
 }
 
+function pickSyncedSettings(settings: Record<string, unknown>): Record<string, unknown> {
+	const picked: Record<string, unknown> = {};
+	for (const key of SYNCED_SETTINGS_KEYS) {
+		if (key in settings) picked[key] = settings[key];
+	}
+	return picked;
+}
+
+/** The whole shared game state: every player field plus the game-defining settings. */
+function buildGameStatePayload(): Record<string, unknown> {
+	return {
+		players: get(players),
+		settings: pickSyncedSettings(get(appSettings) as unknown as Record<string, unknown>)
+	};
+}
+
+function broadcastGameState() {
+	if (!manager?.isConnected) return;
+	const payload = buildGameStatePayload();
+	const serialized = JSON.stringify(payload);
+	if (serialized === lastBroadcastPayload) return;
+	lastBroadcastPayload = serialized;
+	sendSyncAction(makeAction('GAME_STATE', payload));
+}
+
+function scheduleBroadcast() {
+	if (applyingRemote || !manager?.isConnected) return;
+	if (broadcastTimer) clearTimeout(broadcastTimer);
+	broadcastTimer = setTimeout(() => {
+		broadcastTimer = null;
+		broadcastGameState();
+	}, BROADCAST_DEBOUNCE_MS);
+}
+
 /**
- * Watches the players store and broadcasts every local life/poison change to the peer.
- * Diffing the store (rather than hooking each mutation site) covers all input paths.
+ * Watches the shared stores and broadcasts the full game state on every local change.
+ * Diffing at the store level (rather than hooking each mutation site) covers all input paths.
  */
 function startBroadcasting() {
 	stopBroadcasting();
-	lastSnapshot = snapshotPlayers(get(players));
-	unsubscribePlayers = players.subscribe((list) => {
-		const next = snapshotPlayers(list);
-		if (!applyingRemote && manager?.isConnected) {
-			for (const [id, value] of next) {
-				const previous = lastSnapshot.get(id);
-				if (!previous) continue;
-				if (previous.life !== value.life) {
-					sendSyncAction(makeAction('CHANGE_LIFE', { playerId: id, lifeTotal: value.life }));
-				}
-				if (previous.poison !== value.poison) {
-					sendSyncAction(makeAction('CHANGE_POISON', { playerId: id, amount: value.poison }));
-				}
-			}
-		}
-		lastSnapshot = next;
-	});
+	lastBroadcastPayload = JSON.stringify(buildGameStatePayload());
+	unsubscribers = [players.subscribe(scheduleBroadcast), appSettings.subscribe(scheduleBroadcast)];
 }
 
 function stopBroadcasting() {
-	unsubscribePlayers?.();
-	unsubscribePlayers = null;
+	if (broadcastTimer) clearTimeout(broadcastTimer);
+	broadcastTimer = null;
+	for (const unsubscribe of unsubscribers) unsubscribe();
+	unsubscribers = [];
+}
+
+function applyGameState(payload: Record<string, unknown>) {
+	const incomingPlayers = payload.players;
+	if (Array.isArray(incomingPlayers) && incomingPlayers.every((p) => typeof p?.id === 'number')) {
+		players.set(incomingPlayers as App.Player.Data[]);
+	}
+
+	const incomingSettings = payload.settings;
+	if (incomingSettings && typeof incomingSettings === 'object') {
+		const allowed = pickSyncedSettings(incomingSettings as Record<string, unknown>);
+		appSettings.update((current) => ({ ...current, ...allowed }));
+	}
 }
 
 /**
  * Dispatches a received SyncAction to the appropriate store mutation.
- * Used for both incoming remote actions and local echo when sending.
  */
 function applyRemoteAction(action: SyncAction) {
 	applyingRemote = true;
 	try {
 		switch (action.type) {
+			case 'GAME_STATE': {
+				applyGameState(action.payload);
+				break;
+			}
 			case 'CHANGE_LIFE': {
 				const { playerId, lifeTotal } = action.payload as { playerId: number; lifeTotal: number };
 				setPlayerLifeAbsolute(playerId, lifeTotal);
@@ -88,19 +146,6 @@ function applyRemoteAction(action: SyncAction) {
 			case 'CHANGE_POISON': {
 				const { playerId, amount } = action.payload as { playerId: number; amount: number };
 				setPlayerPoison(playerId, amount);
-				break;
-			}
-			case 'FULL_STATE_SYNC': {
-				const { lifeTotals, poisonTotals } = action.payload as {
-					lifeTotals: { playerId: number; lifeTotal: number }[];
-					poisonTotals: { playerId: number; amount: number }[];
-				};
-				for (const lt of lifeTotals) {
-					setPlayerLifeAbsolute(lt.playerId, lt.lifeTotal);
-				}
-				for (const pt of poisonTotals) {
-					setPlayerPoison(pt.playerId, pt.amount);
-				}
 				break;
 			}
 			case 'RESET_GAME': {
@@ -112,7 +157,8 @@ function applyRemoteAction(action: SyncAction) {
 		}
 	} finally {
 		applyingRemote = false;
-		lastSnapshot = snapshotPlayers(get(players));
+		// Prevents echoing back the state we just adopted.
+		lastBroadcastPayload = JSON.stringify(buildGameStatePayload());
 	}
 }
 
@@ -126,20 +172,11 @@ export function sendSyncAction(action: SyncAction): boolean {
 }
 
 /**
- * Builds and sends a FULL_STATE_SYNC action based on current store values.
+ * Immediately pushes the full game state to the peer.
  */
 export function sendFullStateSync() {
-	const currentPlayers = get(players);
-	const playerCount = get(appSettings).playerCount;
-	const activePlayers = currentPlayers.slice(0, playerCount);
-
-	const lifeTotals = activePlayers.map((p) => ({ playerId: p.id, lifeTotal: p.lifeTotal }));
-	const poisonTotals = activePlayers.map((p) => ({
-		playerId: p.id,
-		amount: Number(p.poison ?? 0)
-	}));
-
-	sendSyncAction(makeAction('FULL_STATE_SYNC', { lifeTotals, poisonTotals }));
+	lastBroadcastPayload = '';
+	broadcastGameState();
 }
 
 /**

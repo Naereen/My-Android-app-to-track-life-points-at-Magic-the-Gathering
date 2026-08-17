@@ -133,7 +133,12 @@ export class WebRTCManager {
 	 */
 	sendAction(action: SyncAction): void {
 		if (!this.dataChannel || this.dataChannel.readyState !== 'open') return;
-		this.dataChannel.send(JSON.stringify(action));
+		try {
+			this.dataChannel.send(JSON.stringify(action));
+		} catch (e) {
+			// A full game state can exceed the SCTP max message size on some browsers.
+			console.error('[sync] failed to send action', action.type, e);
+		}
 	}
 
 	/**
