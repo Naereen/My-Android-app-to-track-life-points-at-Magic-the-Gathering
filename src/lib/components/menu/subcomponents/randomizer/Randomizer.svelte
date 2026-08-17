@@ -93,8 +93,7 @@
 			<span class="text-white text-center text-3xl">🎲 {$_('dice_misc')}</span>
 			<span class="text-gray-400 text-center text-sm mt-2 w-80"
 				>{$_('long_click_random_player')}</span
-			>
-			<!-- <span class="text-gray-400 text-center text-base mt-2 w-80"></span> -->
+		 >
 		</div>
 
 		<div class="w-full flex justify-center">
@@ -189,7 +188,7 @@
 						text="{$_('roll')} d20"><Dtwenty size="4rem" /></DiceCard
 					>
 				</div>
-				<div class="col-span-2 col-start-2">
+				<div class="col-span-2">
 					<DiceCard
 						on:click={() => {
 							selectRandomPlayer();
