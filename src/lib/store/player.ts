@@ -31,6 +31,7 @@ import {
 import { pickWeightedIndex } from '$lib/utils/weightedRandom';
 import { resetTurnTimeStats, turnTimeStats } from './turnTimeStats';
 import { recordCompletedGame } from './savedGames';
+import { secureRandomInt, secureShuffle } from '$lib/utils/cryptoRandom';
 // import { chooseRandom, doSearch } from '$lib/components/modals/playerDataModal/PlayerDataModal';
 
 const playerBaseName = get(_)('player') || 'Player';
@@ -285,7 +286,7 @@ const getInitialPlayers = (): App.Player.Data[] => {
 				return defaultPlayers.map((p) => ({
 					...p,
 					playerName: randomNames[p.id - 1] || `${playerBaseName} ${p.id}`,
-					color: `${first_choices[Math.floor(Math.random() * first_choices.length)]},${second_choices[Math.floor(Math.random() * second_choices.length)]}`
+					color: `${first_choices[secureRandomInt(0, first_choices.length - 1)]},${second_choices[secureRandomInt(0, second_choices.length - 1)]}`
 				}));
 			}
 
@@ -767,12 +768,7 @@ export const setPlayerTreacherySeen = (playerId: number, seen: boolean) => {
 };
 
 const shuffleCards = <T>(array: T[]) => {
-	const copy = [...array];
-	for (let i = copy.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[copy[i], copy[j]] = [copy[j], copy[i]];
-	}
-	return copy;
+	return secureShuffle([...array]);
 };
 
 /**
@@ -810,8 +806,7 @@ export const assignRandomVanguardsForGame = async () => {
 	for (let playerIndex = 0; playerIndex < totalPlayers; playerIndex++) {
 		const start = playerIndex * choicesPerPlayer;
 		const choices = shuffled.slice(start, start + choicesPerPlayer);
-		const selected =
-			choices.length > 0 ? choices[Math.floor(Math.random() * choices.length)] : null;
+		const selected = choices.length > 0 ? choices[secureRandomInt(0, choices.length - 1)] : null;
 		selectedByPlayer[playerIndex + 1] = { selected, choices };
 	}
 
@@ -1662,7 +1657,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
 					'orange',
 					'lightgreen'
 				];
-				const color = `${first_choices[Math.floor(Math.random() * first_choices.length)]},${second_choices[Math.floor(Math.random() * second_choices.length)]}`;
+				const color = `${first_choices[secureRandomInt(0, first_choices.length - 1)]},${second_choices[secureRandomInt(0, second_choices.length - 1)]}`;
 
 				updatedPlayer.color = color;
 				updatedPlayer.backgroundImage = null;
@@ -1727,13 +1722,7 @@ export const resetLifeTotals = async (alreadyConfirmed: boolean) => {
  * @param {Array} array - Le tableau à mélanger (modifié en place).
  */
 function shuffle(array: any[]) {
-	for (let i = array.length - 1; i > 0; i--) {
-		// Choisir un index aléatoire entre 0 et i (inclus)
-		const j = Math.floor(Math.random() * (i + 1));
-		// Échange des éléments via la déstructuration ES6
-		[array[i], array[j]] = [array[j], array[i]];
-	}
-	return array;
+	return secureShuffle(array);
 }
 
 /**
@@ -2210,7 +2199,7 @@ const resolveFirstPlayerTouchSelectionWinner = (
 	}
 
 	const winnerPlayerId =
-		participantPlayerIds[Math.floor(Math.random() * participantPlayerIds.length)] ?? null;
+		participantPlayerIds[secureRandomInt(0, participantPlayerIds.length - 1)] ?? null;
 
 	if (winnerPlayerId === null) {
 		dismissFirstPlayerTouchSelection();
@@ -2246,10 +2235,7 @@ export const registerFirstPlayerSelectionTouch = (playerId: number, pointerId: n
 	if (activeCount >= state.requiredPlayers) {
 		const animationMs =
 			FIRST_PLAYER_TOUCH_ANIMATION_MS_MIN +
-			Math.floor(
-				Math.random() *
-					(FIRST_PLAYER_TOUCH_ANIMATION_MS_MAX - FIRST_PLAYER_TOUCH_ANIMATION_MS_MIN + 1)
-			);
+			secureRandomInt(0, FIRST_PLAYER_TOUCH_ANIMATION_MS_MAX - FIRST_PLAYER_TOUCH_ANIMATION_MS_MIN);
 		const animatingState: FirstPlayerTouchSelectionState = {
 			...state,
 			phase: 'animating',
@@ -2294,7 +2280,7 @@ const pickRandomSeatIndex = (totalPlayers: number): number => {
 	if (totalPlayers <= 0) return 0;
 	const settings = get(appSettings);
 	if (!settings.useWeightedStartingPlayer) {
-		return Math.floor(Math.random() * totalPlayers);
+		return secureRandomInt(0, totalPlayers - 1);
 	}
 	return pickWeightedIndex(settings.startingPlayerProbabilities ?? [], totalPlayers);
 };
@@ -2328,7 +2314,7 @@ export const spinToSelectFirstPlayer = () => {
 
 	spinning.set(true);
 	let currentIndex = 0;
-	const extraRounds = Math.floor(Math.random() * 3) + 4;
+	const extraRounds = secureRandomInt(4, 6);
 	let spinCount = extraRounds * totalPlayers + chosenIndex + 1;
 	let intervalTime = 25;
 	const finalPauseTime = 100;
@@ -2386,7 +2372,7 @@ export const spinToSelectRandomPlayer = () => {
 
 	spinning.set(true);
 	let currentIndex = 0;
-	const extraRounds = Math.floor(Math.random() * 2) + 2;
+	const extraRounds = secureRandomInt(2, 3);
 	let spinCount = extraRounds * totalPlayers + chosenIndex + 1;
 	let intervalTime = 10;
 	const finalPauseTime = 100;

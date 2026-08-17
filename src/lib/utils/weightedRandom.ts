@@ -1,3 +1,5 @@
+import { secureRandomFloat, secureRandomInt } from './cryptoRandom';
+
 export const pickWeightedIndex = (weights: number[], count: number): number => {
 	if (count <= 0) return 0;
 
@@ -13,10 +15,10 @@ export const pickWeightedIndex = (weights: number[], count: number): number => {
 	const total = normalized.reduce((sum, value) => sum + value, 0);
 	if (total <= 0) {
 		// Degenerate input falls back to an even random seat rather than refusing to pick.
-		return Math.floor(Math.random() * count);
+		return secureRandomInt(0, count - 1);
 	}
 
-	const random = Math.random() * total;
+	const random = secureRandomFloat() * total;
 	let cumulative = 0;
 	for (let index = 0; index < normalized.length; index++) {
 		cumulative += normalized[index];

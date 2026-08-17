@@ -392,6 +392,7 @@
 
 	import { searchCards, randomCards } from '$lib/utils/scryfall';
 	import { searchGifs } from '$lib/utils/klipy';
+	import { secureRandomInt } from '$lib/utils/cryptoRandom';
 	import { setPlayerBackgroundImage } from '$lib/store/player';
 	import { tick } from 'svelte';
 
@@ -686,7 +687,7 @@
 		if (searchResults && searchResults.length > 0) {
 			const withImage = searchResults.filter((r) => r.image);
 			const pool = withImage.length > 0 ? withImage : searchResults;
-			const pick = pool[Math.floor(Math.random() * pool.length)];
+			const pick = pool[secureRandomInt(0, pool.length - 1)];
 			chooseBackground(playerId, pick.image ?? null, pick.artist ?? null, pick.set_name ?? null);
 			return;
 		}
@@ -697,7 +698,7 @@
 			if (gifMode) {
 				const gifs = await searchGifs(searchQuery || 'random');
 				if (gifs && gifs.length > 0) {
-					const g = gifs[Math.floor(Math.random() * gifs.length)];
+					const g = gifs[secureRandomInt(0, gifs.length - 1)];
 					chooseBackground(playerId, g.url ?? null, 'Klipy GIF', null);
 				}
 			} else {

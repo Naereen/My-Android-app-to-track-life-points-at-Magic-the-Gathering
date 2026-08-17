@@ -8,6 +8,7 @@ import { vibrate } from '../utils/haptics';
 import { persist } from './persist';
 import { pickWeightedIndex } from '$lib/utils/weightedRandom';
 import { primeGameplayAudio } from '$lib/utils/gameplaySound';
+import { rollDie, secureRandomInt } from '$lib/utils/cryptoRandom';
 
 type RandomizerModalState = {
 	isOpen: boolean;
@@ -75,7 +76,7 @@ if (restoredLastType !== null && !isPersistedReplayableRandomizerType(restoredLa
  * @returns {0 | 1 | 2} `0` blank, `1` planeswalk, `2` chaos.
  */
 const rollPlanarDie = () => {
-	const roll = Math.floor(Math.random() * 6) + 1;
+	const roll = rollDie(6);
 	if (roll <= 4) return 0;
 	if (roll === 5) return 1;
 	return 2;
@@ -105,8 +106,7 @@ export const generateRandomNumber = (type: string) => {
 	};
 
 	const max = dieTypes[type] || 0;
-	const result =
-		type === 'dplanar' ? rollPlanarDie() : max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
+	const result = type === 'dplanar' ? rollPlanarDie() : max > 0 ? rollDie(max) : 0;
 
 	if (max > 0 && isReplayableRandomizerType(type)) {
 		lastReplayableRandomizerType.set(type);
@@ -190,7 +190,7 @@ export const selectRandomPlayer = (randomIndex: number | null = null) => {
 			? randomIndex
 			: settings.useWeightedStartingPlayer
 				? pickWeightedIndex(settings.startingPlayerProbabilities ?? [], activePlayers.length)
-				: Math.floor(Math.random() * activePlayers.length);
+				: secureRandomInt(0, activePlayers.length - 1);
 	const selectedPlayer = activePlayers[index];
 
 	randomizerModalData.set({
@@ -218,7 +218,7 @@ export const selectRandomOpponent = (activePlayerId: number) => {
 
 	if (activePlayers.length === 0) return;
 
-	const randomIndex = Math.floor(Math.random() * activePlayers.length);
+	const randomIndex = secureRandomInt(0, activePlayers.length - 1);
 	const selectedPlayer = activePlayers[randomIndex];
 
 	randomizerModalData.set({

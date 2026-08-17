@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as cryptoRandom from '$lib/utils/cryptoRandom';
 
 const { playGameplaySound, playLifeLongStepSound, playLifeTapBurstSound } = vi.hoisted(() => ({
 	playGameplaySound: vi.fn(),
@@ -383,7 +384,13 @@ describe('game reset state', () => {
 
 	it('selects exactly one winner after all required simultaneous touches are registered', () => {
 		vi.useFakeTimers();
-		const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+		const randomIntSpy = vi
+			.spyOn(cryptoRandom, 'secureRandomInt')
+			.mockImplementation((min, max) => {
+				if (min === 0 && max === 2) return 0;
+				if (min === 0 && max === 2500) return 0;
+				return min;
+			});
 
 		appSettings.update((settings) => ({
 			...settings,
@@ -471,7 +478,7 @@ describe('game reset state', () => {
 		expect(get(players).filter((player) => player.isFirst)).toHaveLength(1);
 		expect(get(players)[0].isFirst).toBe(true);
 
-		randomSpy.mockRestore();
+		randomIntSpy.mockRestore();
 		vi.useRealTimers();
 		dismissFirstPlayerTouchSelection();
 	});
