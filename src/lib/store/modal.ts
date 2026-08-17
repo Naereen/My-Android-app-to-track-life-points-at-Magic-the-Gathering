@@ -419,3 +419,8 @@ export const respondConfirm = (
 	}
 	confirmModalData.set(initialConfirmModalState);
 };
+
+// Sync modal store
+export const syncModalOpen = writable(false);
+export const openSyncModal = () => syncModalOpen.set(true);
+export const closeSyncModal = () => syncModalOpen.set(false);

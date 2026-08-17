@@ -35,6 +35,8 @@
 	import ScryfallModal from '$lib/components/modals/scryfallModal/ScryfallModal.svelte';
 	import CoinFlipModal from '$lib/components/modals/coinFlipModal/CoinFlipModal.svelte';
 	import { coinFlipModalOpen } from '$lib/store/coinFlipStore';
+	import SyncModal from '$lib/components/modals/syncModal/SyncModal.svelte';
+	import { syncModalOpen } from '$lib/store/modal';
 
 	$: innerWidth = 0;
 	import { onMount, onDestroy } from 'svelte';
@@ -313,6 +315,9 @@
 	{/if}
 	{#if $coinFlipModalOpen}
 		<CoinFlipModal />
+	{/if}
+	{#if $syncModalOpen}
+		<SyncModal />
 	{/if}
 	<DayNightShowcase />
 	<FirstPlayerTouchSelectionModal />
