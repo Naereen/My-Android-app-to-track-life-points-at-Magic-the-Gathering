@@ -16,6 +16,8 @@ let broadcastTimer: ReturnType<typeof setTimeout> | null = null;
 let lastBroadcastPayload = '';
 let lastTimerSignature = '';
 let lastTimerBroadcastAt = 0;
+let lastTurnRemaining: number | null = null;
+let lastGlobalRemaining: number | null = null;
 
 /** Coalesces bursts of local updates (e.g. holding the +1 button) into one message. */
 const BROADCAST_DEBOUNCE_MS = 120;
@@ -132,28 +134,36 @@ function timerSignature(payload: ReturnType<typeof buildTimerPayload>): string {
 
 /**
  * Broadcasts the timers on discrete events (start/pause/reset/turn change) and, while
- * they merely tick down on both sides, only every {@link TIMER_RESYNC_INTERVAL_MS}.
+ * they merely tick down on both sides, only from the host every {@link TIMER_RESYNC_INTERVAL_MS}.
  */
 function broadcastTimers(force = false) {
 	if (!manager?.isConnected) return;
 	const payload = buildTimerPayload();
 	const signature = timerSignature(payload);
 	const now = Date.now();
-	if (
-		!force &&
-		signature === lastTimerSignature &&
-		now - lastTimerBroadcastAt < TIMER_RESYNC_INTERVAL_MS
-	) {
-		return;
+	if (!force && signature === lastTimerSignature) {
+		// Only the host emits the periodic drift correction, otherwise both peers keep
+		// resetting each other's countdown every interval.
+		const isHost = get(syncState).role === 'host';
+		if (!isHost || now - lastTimerBroadcastAt < TIMER_RESYNC_INTERVAL_MS) return;
 	}
 	lastTimerSignature = signature;
 	lastTimerBroadcastAt = now;
+	console.info('[sync] → TIMER_STATE', payload);
 	sendSyncAction(makeAction('TIMER_STATE', payload));
 }
 
 function onTimerChange() {
 	if (applyingRemote) return;
-	broadcastTimers();
+	const payload = buildTimerPayload();
+	// A jump larger than one second means a reset/manual adjustment, not a plain tick,
+	// and must be propagated even when running/total/playerIndex did not change.
+	const jumped =
+		(lastTurnRemaining !== null && Math.abs(payload.turn.remaining - lastTurnRemaining) > 1) ||
+		(lastGlobalRemaining !== null && Math.abs(payload.global.remaining - lastGlobalRemaining) > 1);
+	lastTurnRemaining = payload.turn.remaining;
+	lastGlobalRemaining = payload.global.remaining;
+	broadcastTimers(jumped);
 }
 
 function broadcastGameState() {
@@ -162,6 +172,7 @@ function broadcastGameState() {
 	const serialized = JSON.stringify(payload);
 	if (serialized === lastBroadcastPayload) return;
 	lastBroadcastPayload = serialized;
+	console.info('[sync] → GAME_STATE', serialized.length, 'bytes');
 	sendSyncAction(makeAction('GAME_STATE', payload));
 }
 
@@ -181,6 +192,10 @@ function scheduleBroadcast() {
 function startBroadcasting() {
 	stopBroadcasting();
 	lastBroadcastPayload = JSON.stringify(buildGameStatePayload());
+	const timers = buildTimerPayload();
+	lastTimerSignature = timerSignature(timers);
+	lastTurnRemaining = timers.turn.remaining;
+	lastGlobalRemaining = timers.global.remaining;
 	unsubscribers = [
 		players.subscribe(scheduleBroadcast),
 		appSettings.subscribe(scheduleBroadcast),
@@ -193,6 +208,8 @@ function startBroadcasting() {
 function stopBroadcasting() {
 	if (broadcastTimer) clearTimeout(broadcastTimer);
 	broadcastTimer = null;
+	lastTurnRemaining = null;
+	lastGlobalRemaining = null;
 	for (const unsubscribe of unsubscribers) unsubscribe();
 	unsubscribers = [];
 }
@@ -237,6 +254,7 @@ function applyTimerState(payload: Record<string, unknown>) {
  */
 function applyRemoteAction(action: SyncAction) {
 	applyingRemote = true;
+	console.info('[sync] ←', action.type);
 	try {
 		switch (action.type) {
 			case 'GAME_STATE': {
@@ -268,7 +286,10 @@ function applyRemoteAction(action: SyncAction) {
 		applyingRemote = false;
 		// Prevents echoing back the state we just adopted.
 		lastBroadcastPayload = JSON.stringify(buildGameStatePayload());
-		lastTimerSignature = timerSignature(buildTimerPayload());
+		const timers = buildTimerPayload();
+		lastTimerSignature = timerSignature(timers);
+		lastTurnRemaining = timers.turn.remaining;
+		lastGlobalRemaining = timers.global.remaining;
 		lastTimerBroadcastAt = Date.now();
 	}
 }
