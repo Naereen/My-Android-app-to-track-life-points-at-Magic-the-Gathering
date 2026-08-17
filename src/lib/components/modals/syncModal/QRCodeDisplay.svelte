@@ -14,7 +14,9 @@
 	$: canvasSize = Math.max(size, MIN_CANVAS_SIZE);
 
 	async function renderQR() {
-		if (!canvas || !data) return;
+		if (!canvas || !data) {
+			return;
+		}
 		errorMessage = '';
 		try {
 			await QRCode.toCanvas(canvas, data, {
@@ -40,16 +42,17 @@
 <div class="flex flex-col items-center gap-2">
 	{#if errorMessage}
 		<p class="text-red-400 text-sm">{errorMessage}</p>
-	{/if}
-	<div class="rounded-lg bg-white p-4">
-		<div class="aspect-square" style={`width: min(${size}px, 100%);`}>
-			<canvas
-				bind:this={canvas}
-				width={canvasSize}
-				height={canvasSize}
-				style="width: 100%; height: 100%;"
-				class="block bg-white"
-			></canvas>
+	{:else}
+		<div class="rounded-lg bg-white p-4">
+			<div class="aspect-square" style={`width: min(${size}px, 100%);`}>
+				<canvas
+					bind:this={canvas}
+					width={size}
+					height={size}
+					style={`width: ${size}px; height: ${size}px;`}
+					class="block bg-white"
+				></canvas>
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>

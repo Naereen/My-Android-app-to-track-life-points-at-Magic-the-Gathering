@@ -98,6 +98,11 @@ export default defineConfig({
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
+	server: {
+		port: 5173,
+		host: true,
+		allowedHosts: true // Autorise l'accès depuis n'importe quel hôte/IP du réseau local
+	},
 	define: {
 		// On définit une variable globale disponible dans le code Svelte
 		'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkg.version)
