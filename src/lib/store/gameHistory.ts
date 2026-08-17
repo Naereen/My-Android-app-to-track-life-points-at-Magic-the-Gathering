@@ -1,4 +1,5 @@
 import { persist } from './persist';
+import { secureRandomInt } from '$lib/utils/cryptoRandom';
 
 export type GameHistoryEntryKind =
 	| 'positiveLife'
@@ -117,7 +118,7 @@ export const addGameHistoryEntry = (entry: Omit<GameHistoryEntry, 'id' | 'timest
 		const randomId =
 			typeof globalThis !== 'undefined' && globalThis.crypto?.randomUUID
 				? globalThis.crypto.randomUUID()
-				: `${Date.now()}-${Math.random()}`;
+				: `${Date.now()}-${secureRandomInt(0, 0xffffffff).toString(16)}`;
 
 		const nextEntry: GameHistoryEntry = {
 			...entry,

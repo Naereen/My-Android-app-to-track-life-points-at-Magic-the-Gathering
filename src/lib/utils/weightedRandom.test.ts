@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import * as cryptoRandom from './cryptoRandom';
 import { pickWeightedIndex } from './weightedRandom';
 
 describe('pickWeightedIndex', () => {
@@ -11,7 +12,7 @@ describe('pickWeightedIndex', () => {
 	});
 
 	it('selects the bucket matching the random roll across weighted ranges', () => {
-		vi.spyOn(Math, 'random')
+		vi.spyOn(cryptoRandom, 'secureRandomFloat')
 			.mockReturnValueOnce(0)
 			.mockReturnValueOnce(0.2)
 			.mockReturnValueOnce(0.95);
@@ -22,13 +23,13 @@ describe('pickWeightedIndex', () => {
 	});
 
 	it('flattens invalid weights to zero and falls back to an even pick when all are unusable', () => {
-		vi.spyOn(Math, 'random').mockReturnValue(0.75);
+		vi.spyOn(cryptoRandom, 'secureRandomInt').mockReturnValue(2);
 
 		expect(pickWeightedIndex([Number.NaN, -10, 0], 3)).toBe(2);
 	});
 
 	it('still reaches later seats when earlier weights are zero', () => {
-		vi.spyOn(Math, 'random').mockReturnValue(0.1);
+		vi.spyOn(cryptoRandom, 'secureRandomFloat').mockReturnValue(0.1);
 
 		expect(pickWeightedIndex([0, 0, 5], 3)).toBe(2);
 	});

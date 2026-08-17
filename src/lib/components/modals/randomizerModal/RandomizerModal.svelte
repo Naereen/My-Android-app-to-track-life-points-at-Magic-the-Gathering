@@ -6,6 +6,7 @@
 	import { appSettings } from '$lib/store/appSettings';
 	import { playGameplaySound } from '$lib/utils/gameplaySound';
 	import { getRandomizerResultTranslationKey } from '$lib/utils/randomizer';
+	import { rollDie, secureRandomInt } from '$lib/utils/cryptoRandom';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
@@ -21,7 +22,7 @@
 	 * @throws {Error} Propagates runtime errors from dependent browser, network, or store APIs.
 	 */
 	const rollPlanarFace = () => {
-		const roll = Math.floor(Math.random() * 6) + 1;
+		const roll = rollDie(6);
 		if (roll <= 4) return 0;
 		if (roll === 5) return 1;
 		return 2;
@@ -131,7 +132,7 @@
 			// Planar dice are animated through semantic faces rather than numeric pips so the
 			// user sees the magic-specific state transitions before the final result settles.
 			const final = $randomizerModalData.result;
-			const rounds = Math.floor(Math.random() * 5 + 5);
+			const rounds = secureRandomInt(5, 9);
 			const totalMs = 1000;
 			rollingMs = totalMs;
 			const step = Math.max(50, Math.floor(totalMs / rounds));
@@ -156,7 +157,7 @@
 		}
 
 		const final = $randomizerModalData.result;
-		const rounds = Math.floor(Math.random() * 5 + 5); // Number of times the face changes during the animation
+		const rounds = secureRandomInt(5, 9); // Number of times the face changes during the animation
 		const totalMs = 1000;
 		rollingMs = totalMs;
 		const step = Math.max(50, Math.floor(totalMs / rounds));
@@ -166,7 +167,7 @@
 				rollingMs = 0;
 				return;
 			}
-			displayResult = max > 0 ? Math.floor(Math.random() * max) + 1 : 0;
+			displayResult = max > 0 ? rollDie(max) : 0;
 			vibrate(10);
 			await new Promise((r) => setTimeout(r, step));
 		}

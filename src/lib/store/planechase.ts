@@ -8,6 +8,7 @@ import {
 	type SavedDeckSelection,
 	upsertSavedDeckSelection
 } from './deckSelections';
+import { rollDie, secureRandomInt } from '$lib/utils/cryptoRandom';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -58,7 +59,7 @@ planechaseState.update((s) => ({ ...s, isOpen: false }));
  */
 function shuffleArray<T>(arr: T[]): T[] {
 	for (let i = arr.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
+		const j = secureRandomInt(0, i);
 		[arr[i], arr[j]] = [arr[j], arr[i]];
 	}
 	return arr;
@@ -69,7 +70,7 @@ function shuffleArray<T>(arr: T[]): T[] {
  * faces 1-4 → blank, face 5 → planeswalk, face 6 → chaos.
  */
 const rollPlanar = (): PlanarDieResult => {
-	const roll = Math.floor(Math.random() * 6) + 1;
+	const roll = rollDie(6);
 	if (roll <= 4) return 'blank';
 	if (roll === 5) return 'planeswalk';
 	return 'chaos';

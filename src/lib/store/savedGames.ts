@@ -1,4 +1,5 @@
 import { persist } from './persist';
+import { secureRandomInt } from '$lib/utils/cryptoRandom';
 
 export type SavedGamePlayerStat = {
 	name: string;
@@ -43,7 +44,7 @@ export const recordCompletedGame = (game: Omit<SavedGame, 'id'>) => {
 	const id =
 		typeof globalThis !== 'undefined' && globalThis.crypto?.randomUUID
 			? globalThis.crypto.randomUUID()
-			: `${Date.now()}-${Math.random()}`;
+			: `${Date.now()}-${secureRandomInt(0, 0xffffffff).toString(16)}`;
 
 	savedGames.update((current) => {
 		const next = [...current, { ...game, id }];

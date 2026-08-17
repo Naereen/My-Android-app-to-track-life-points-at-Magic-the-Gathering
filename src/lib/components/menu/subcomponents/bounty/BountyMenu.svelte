@@ -4,6 +4,7 @@
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 	import { bountyMenuState, type BountyCard } from '$lib/store/bountyState';
+	import { secureShuffle } from '$lib/utils/cryptoRandom';
 
 	// Scryfall search URL for all 12 bounty cards
 	const BOUNTY_SCRYFALL_URL =
@@ -87,10 +88,7 @@
 				raw.find((c) => !!c.card_faces?.[1]?.image_uris?.normal)?.card_faces?.[1]?.image_uris
 					?.normal ?? '';
 			// shuffle
-			for (let i = cards.length - 1; i > 0; i--) {
-				const j = Math.floor(Math.random() * (i + 1));
-				[cards[i], cards[j]] = [cards[j], cards[i]];
-			}
+			cards = secureShuffle([...cards]);
 			currentCardIndex = 0;
 			showBack = true;
 			rewardLevel = 1;
@@ -118,10 +116,7 @@
 			currentCardIndex += 1;
 		} else {
 			// Reshuffle all claimed bounties
-			for (let i = cards.length - 1; i > 0; i--) {
-				const j = Math.floor(Math.random() * (i + 1));
-				[cards[i], cards[j]] = [cards[j], cards[i]];
-			}
+			cards = secureShuffle([...cards]);
 			currentCardIndex = 0;
 		}
 		rewardLevel = 1;
