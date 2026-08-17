@@ -5,17 +5,21 @@
 	export let data: string = '';
 	export let size: number = 256;
 
+	const MIN_CANVAS_SIZE = 512;
+
 	let canvas: HTMLCanvasElement;
 	let errorMessage = '';
+
+	$: canvasSize = Math.max(size, MIN_CANVAS_SIZE);
 
 	async function renderQR() {
 		if (!canvas || !data) return;
 		errorMessage = '';
 		try {
 			await QRCode.toCanvas(canvas, data, {
-				width: size,
-				margin: 2,
-				color: { dark: '#000000', light: '#ffffff' }
+				width: canvasSize,
+				margin: 4,
+				color: { dark: '#000000', light: '#FFFFFF' }
 			});
 		} catch (e) {
 			errorMessage = 'Failed to render QR code';
@@ -36,10 +40,13 @@
 	{#if errorMessage}
 		<p class="text-red-400 text-sm">{errorMessage}</p>
 	{/if}
-	<canvas
-		bind:this={canvas}
-		width={size}
-		height={size}
-		class="rounded-lg border-2 border-white/20 bg-white"
-	></canvas>
+	<div class="rounded-lg bg-white p-4">
+		<canvas
+			bind:this={canvas}
+			width={canvasSize}
+			height={canvasSize}
+			style={`width: ${size}px; height: ${size}px;`}
+			class="block max-w-full bg-white"
+		></canvas>
+	</div>
 </div>

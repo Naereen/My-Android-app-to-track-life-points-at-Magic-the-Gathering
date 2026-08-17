@@ -9,27 +9,19 @@ export function pruneSdp(sdp: string): string {
 		.split('\n')
 		.filter((line) => {
 			const trimmed = line.trim();
-			// Keep essential SDP lines
 			if (trimmed.startsWith('v=')) return true;
 			if (trimmed.startsWith('o=')) return true;
 			if (trimmed.startsWith('s=')) return true;
 			if (trimmed.startsWith('t=')) return true;
-			if (trimmed.startsWith('m=')) return true;
+			if (trimmed.startsWith('m=application')) return true;
 			if (trimmed.startsWith('c=')) return true;
 			if (trimmed.startsWith('a=ice-ufrag')) return true;
 			if (trimmed.startsWith('a=ice-pwd')) return true;
 			if (trimmed.startsWith('a=fingerprint')) return true;
 			if (trimmed.startsWith('a=setup')) return true;
 			if (trimmed.startsWith('a=mid')) return true;
-			if (trimmed.startsWith('a=sendrecv')) return true;
-			if (trimmed.startsWith('a=recvonly')) return true;
-			if (trimmed.startsWith('a=sendonly')) return true;
-			if (trimmed.startsWith('a=inactive')) return true;
-			if (trimmed.startsWith('a=group')) return true;
-			if (trimmed.startsWith('a=msid-semantic')) return true;
-			if (trimmed.startsWith('a=candidate')) return true;
 			if (trimmed.startsWith('a=sctp-port')) return true;
-			if (trimmed.startsWith('a=max-message-size')) return true;
+			if (trimmed.startsWith('a=candidate:') && trimmed.includes(' typ host')) return true;
 			return false;
 		})
 		.join('\n');

@@ -1,11 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { pruneSdp, compressSdp, decompressSdp, serializeSdp, deserializeSdp } from './syncCompression';
+import {
+	pruneSdp,
+	compressSdp,
+	decompressSdp,
+	serializeSdp,
+	deserializeSdp
+} from './syncCompression';
 
 const SAMPLE_SDP = `v=0
 o=- 1234567890 1 IN IP4 127.0.0.1
 s=-
 t=0 0
 a=group:BUNDLE 0
+m=audio 9 UDP/TLS/RTP/SAVPF 111
 m=application 9 UDP/DTLS/SCTP webrtc-datachannel
 c=IN IP4 0.0.0.0
 a=ice-ufrag:abc1
@@ -14,6 +21,8 @@ a=fingerprint:sha-256 AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99:AA:BB:CC:D
 a=setup:actpass
 a=mid:0
 a=sctp-port:5000
+a=candidate:1 1 UDP 2122260223 192.168.1.100 54400 typ host
+a=candidate:2 1 UDP 1686052607 203.0.113.1 54401 typ srflx raddr 192.168.1.100 rport 54400
 b=AS:30
 a=rtcp-mux
 `;
@@ -31,8 +40,17 @@ describe('syncCompression', () => {
 
 	it('pruneSdp removes non-essential lines', () => {
 		const pruned = pruneSdp(SAMPLE_SDP);
+		expect(pruned).not.toContain('a=group:BUNDLE 0');
+		expect(pruned).not.toContain('m=audio');
+		expect(pruned).not.toContain('typ srflx');
 		expect(pruned).not.toContain('b=AS:30');
 		expect(pruned).not.toContain('a=rtcp-mux');
+	});
+
+	it('pruneSdp keeps only host ICE candidates', () => {
+		const pruned = pruneSdp(SAMPLE_SDP);
+		expect(pruned).toContain('a=candidate:1 1 UDP 2122260223 192.168.1.100 54400 typ host');
+		expect(pruned).not.toContain('a=candidate:2 1 UDP 1686052607 203.0.113.1 54401 typ srflx');
 	});
 
 	it('compressSdp produces a non-empty string', () => {

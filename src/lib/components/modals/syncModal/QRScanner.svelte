@@ -1,23 +1,31 @@
 <script lang="ts">
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	import { BrowserMultiFormatReader } from '@zxing/library';
+	import { BrowserQRCodeReader } from '@zxing/library';
 	import { _ } from 'svelte-i18n';
 
 	const dispatch = createEventDispatcher<{ scan: string; error: string }>();
+	const SCAN_BOX_SIZE = 280;
 
 	let videoElement: HTMLVideoElement;
-	let reader: BrowserMultiFormatReader | null = null;
+	let reader: BrowserQRCodeReader | null = null;
 	let scanning = false;
 	let errorMessage = '';
 
 	onMount(async () => {
 		try {
-			reader = new BrowserMultiFormatReader();
+			reader = new BrowserQRCodeReader();
 			scanning = true;
 			await reader.decodeFromConstraints(
-				{ video: { facingMode: 'environment' } },
+				{
+					video: {
+						facingMode: { ideal: 'environment' },
+						width: { ideal: SCAN_BOX_SIZE },
+						height: { ideal: SCAN_BOX_SIZE },
+						aspectRatio: { ideal: 1 }
+					}
+				},
 				videoElement,
-				(result, _err) => {
+				(result) => {
 					if (result) {
 						dispatch('scan', result.getText());
 						stopScanning();
@@ -53,7 +61,7 @@
 	{/if}
 	<video
 		bind:this={videoElement}
-		class="w-full max-w-xs rounded-lg border-2 border-white/20"
+		class="aspect-square w-full max-w-[280px] rounded-lg border-2 border-white/20 bg-black object-cover"
 		autoplay
 		playsinline
 		muted
