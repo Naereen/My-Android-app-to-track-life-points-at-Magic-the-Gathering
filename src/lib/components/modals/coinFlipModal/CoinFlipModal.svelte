@@ -12,7 +12,7 @@
 		getCoinsPerGroup,
 		getTotalCoinsPerFlip
 	} from '$lib/store/coinFlipStore';
-	import { getCoinResultInitial } from '$lib/utils/coinFlipResultLabel';
+	import { getCoinResultShortLabel } from '$lib/utils/coinFlipResultLabel';
 	import { _ } from 'svelte-i18n';
 	import { vibrate } from '$lib/utils/haptics';
 
@@ -24,8 +24,16 @@
 	$: coinsPerGroup = getCoinsPerGroup($coinFlipStore.krarkThumbs);
 	$: totalCoins = getTotalCoinsPerFlip($coinFlipStore);
 	$: previewCoinIndices = Array.from({ length: Math.min(totalCoins, 8) }, (_, index) => index);
-	$: headResultLabel = getCoinResultInitial($_('coin_result_head'), 'Head');
-	$: tailResultLabel = getCoinResultInitial($_('coin_result_tail'), 'Tail');
+	$: headResultLabel = getCoinResultShortLabel(
+		$_('coin_result_head_short'),
+		$_('coin_result_head'),
+		'Head'
+	);
+	$: tailResultLabel = getCoinResultShortLabel(
+		$_('coin_result_tail_short'),
+		$_('coin_result_tail'),
+		'Tail'
+	);
 	$: lastResultText = formatFlipGroups($coinFlipStore.lastResults, formatCoinSide);
 	$: flipHistoryText = formatFlipHistory($coinFlipStore.flipHistory, {
 		head: headResultLabel,

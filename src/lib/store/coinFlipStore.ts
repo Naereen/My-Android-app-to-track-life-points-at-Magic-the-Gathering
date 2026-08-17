@@ -153,7 +153,10 @@ export const getTotalCoinsPerFlip = (state: Pick<CoinFlipState, 'krarkThumbs' | 
 export const formatFlipGroups = (
 	groups: FlipGroup[],
 	formatCoinSide: (result: CoinSide) => string = (result) => result
-) => (groups.length > 0 ? `( ${groups.map((group) => formatResultGroup(group, formatCoinSide)).join(', ')} )` : '—');
+) =>
+	groups.length > 0
+		? `( ${groups.map((group) => formatResultGroup(group, formatCoinSide)).join(', ')} )`
+		: '—';
 
 export const formatFlipHistory = (
 	history: FlipHistoryEntry[],
@@ -161,7 +164,10 @@ export const formatFlipHistory = (
 ) =>
 	history.length > 0
 		? history
-				.map((entry) => `( ${entry.heads}${coinSideLabels.head} & ${entry.tails}${coinSideLabels.tail} )`)
+				.map(
+					(entry) =>
+						`( ${entry.heads}${coinSideLabels.head} & ${entry.tails}${coinSideLabels.tail} )`
+				)
 				.join(', ')
 		: '—';
 
