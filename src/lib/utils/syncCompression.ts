@@ -2,29 +2,84 @@ import LZString from 'lz-string';
 
 /**
  * Prunes an SDP string to only keep the essential fields required for WebRTC connection.
- * Removes non-essential lines like bandwidth, timing, and optional attributes to reduce QR code size.
+ * For local Wi-Fi / hotspot sync, keep only session-level v=/o=/s=/t=/c= lines plus the
+ * m=application section fields required for the data channel, including host ICE candidates only.
  */
 export function pruneSdp(sdp: string): string {
-	return sdp
-		.split('\n')
-		.filter((line) => {
-			const trimmed = line.trim();
-			if (trimmed.startsWith('v=')) return true;
-			if (trimmed.startsWith('o=')) return true;
-			if (trimmed.startsWith('s=')) return true;
-			if (trimmed.startsWith('t=')) return true;
-			if (trimmed.startsWith('m=application')) return true;
-			if (trimmed.startsWith('c=')) return true;
-			if (trimmed.startsWith('a=ice-ufrag')) return true;
-			if (trimmed.startsWith('a=ice-pwd')) return true;
-			if (trimmed.startsWith('a=fingerprint')) return true;
-			if (trimmed.startsWith('a=setup')) return true;
-			if (trimmed.startsWith('a=mid')) return true;
-			if (trimmed.startsWith('a=sctp-port')) return true;
-			if (trimmed.startsWith('a=candidate:') && trimmed.includes(' typ host')) return true;
-			return false;
-		})
-		.join('\n');
+	let currentSection: 'session' | 'application' | 'other' = 'session';
+	const keptLines: string[] = [];
+
+	for (const line of sdp.split(/\r?\n/)) {
+		const trimmed = line.trim();
+
+		if (trimmed.startsWith('v=')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('o=')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('s=')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('t=')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+
+		if (trimmed.startsWith('m=')) {
+			currentSection = trimmed.startsWith('m=application') ? 'application' : 'other';
+			if (currentSection === 'application') {
+				keptLines.push(trimmed);
+			}
+			continue;
+		}
+
+		if (currentSection === 'session') {
+			if (trimmed.startsWith('c=')) {
+				keptLines.push(trimmed);
+			}
+			continue;
+		}
+
+		if (currentSection !== 'application') continue;
+
+		if (trimmed.startsWith('c=')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('a=ice-ufrag')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('a=ice-pwd')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('a=fingerprint')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('a=setup')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('a=mid')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('a=sctp-port')) {
+			keptLines.push(trimmed);
+			continue;
+		}
+		if (trimmed.startsWith('a=candidate:') && trimmed.includes(' typ host')) {
+			keptLines.push(trimmed);
+		}
+	}
+
+	return keptLines.join('\n');
 }
 
 /**

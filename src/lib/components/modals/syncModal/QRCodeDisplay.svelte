@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import QRCode from 'qrcode';
+	import { _ } from 'svelte-i18n';
 
 	export let data: string = '';
 	export let size: number = 256;
@@ -22,7 +23,7 @@
 				color: { dark: '#000000', light: '#FFFFFF' }
 			});
 		} catch (e) {
-			errorMessage = 'Failed to render QR code';
+			errorMessage = $_('sync_mode_qr_render_error') || 'Failed to render QR code';
 			console.error(e);
 		}
 	}

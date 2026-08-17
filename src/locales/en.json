@@ -472,5 +472,6 @@
 	"sync_mode_try_again": "Try Again",
 	"sync_mode_error": "An error occurred",
 	"sync_mode_camera_scanning": "Point camera at QR code…",
-	"sync_mode_camera_error": "Camera error"
+	"sync_mode_camera_error": "Camera error",
+	"sync_mode_qr_render_error": "Failed to render QR code"
 }

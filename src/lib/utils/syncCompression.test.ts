@@ -13,6 +13,13 @@ s=-
 t=0 0
 a=group:BUNDLE 0
 m=audio 9 UDP/TLS/RTP/SAVPF 111
+c=IN IP4 10.0.0.1
+a=ice-ufrag:audio123
+a=ice-pwd:audio-password
+a=fingerprint:sha-256 11:22:33
+a=setup:actpass
+a=mid:audio
+a=candidate:9 1 UDP 2122260223 10.0.0.1 40000 typ host
 m=application 9 UDP/DTLS/SCTP webrtc-datachannel
 c=IN IP4 0.0.0.0
 a=ice-ufrag:abc1
@@ -31,6 +38,7 @@ describe('syncCompression', () => {
 	it('pruneSdp keeps essential lines', () => {
 		const pruned = pruneSdp(SAMPLE_SDP);
 		expect(pruned).toContain('v=0');
+		expect(pruned).toContain('m=application 9 UDP/DTLS/SCTP webrtc-datachannel');
 		expect(pruned).toContain('a=ice-ufrag:abc1');
 		expect(pruned).toContain('a=ice-pwd:supersecretpassword12345678');
 		expect(pruned).toContain('a=fingerprint');
@@ -42,14 +50,19 @@ describe('syncCompression', () => {
 		const pruned = pruneSdp(SAMPLE_SDP);
 		expect(pruned).not.toContain('a=group:BUNDLE 0');
 		expect(pruned).not.toContain('m=audio');
+		expect(pruned).not.toContain('c=IN IP4 10.0.0.1');
+		expect(pruned).not.toContain('a=ice-ufrag:audio123');
+		expect(pruned).not.toContain('a=ice-pwd:audio-password');
+		expect(pruned).not.toContain('a=mid:audio');
 		expect(pruned).not.toContain('typ srflx');
 		expect(pruned).not.toContain('b=AS:30');
 		expect(pruned).not.toContain('a=rtcp-mux');
 	});
 
-	it('pruneSdp keeps only host ICE candidates', () => {
+	it('pruneSdp keeps host candidates only in the application section', () => {
 		const pruned = pruneSdp(SAMPLE_SDP);
 		expect(pruned).toContain('a=candidate:1 1 UDP 2122260223 192.168.1.100 54400 typ host');
+		expect(pruned).not.toContain('a=candidate:9 1 UDP 2122260223 10.0.0.1 40000 typ host');
 		expect(pruned).not.toContain('a=candidate:2 1 UDP 1686052607 203.0.113.1 54401 typ srflx');
 	});
 
