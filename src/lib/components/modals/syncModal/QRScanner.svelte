@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	import { BrowserMultiFormatReader, ReaderException } from '@zxing/library';
+	import { BrowserMultiFormatReader } from '@zxing/library';
 	import { _ } from 'svelte-i18n';
-	import { get } from 'svelte/store';
 
 	const dispatch = createEventDispatcher<{ scan: string; error: string }>();
 
@@ -18,14 +17,12 @@
 			await reader.decodeFromConstraints(
 				{ video: { facingMode: 'environment' } },
 				videoElement,
-				(result, err) => {
+				(result, _err) => {
 					if (result) {
 						dispatch('scan', result.getText());
 						stopScanning();
-					} else if (err && !(err instanceof ReaderException)) {
-						errorMessage = err.message ?? get(_)('sync_mode_camera_error') ?? 'Camera error';
-						dispatch('error', errorMessage);
 					}
+					// Per-frame errors (e.g. NotFoundException when no QR is visible) are harmless — ignore them silently.
 				}
 			);
 		} catch (e) {
