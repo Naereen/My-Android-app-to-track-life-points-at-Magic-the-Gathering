@@ -16,12 +16,12 @@ const config = {
 		paths: {
 			relative: true
 		},
-		csrf: {
-			// checkOrigin: false,
-			trustedOrigins: [
-				'http://localhost:5173',
-			],
-		},
+		// csrf: {
+		// 	// checkOrigin: false,
+		// 	trustedOrigins: [
+		// 		'http://localhost:5173',
+		// 	],
+		// },
 	}
 };
 
