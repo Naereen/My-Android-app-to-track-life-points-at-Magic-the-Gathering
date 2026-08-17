@@ -33,12 +33,13 @@
 	import { archenemyState } from '$lib/store/archenemy';
 	import DayNightShowcase from '$lib/components/menu/subcomponents/dayNight/DayNightShowcase.svelte';
 	import ScryfallModal from '$lib/components/modals/scryfallModal/ScryfallModal.svelte';
+	import CoinFlipModal from '$lib/components/modals/coinFlipModal/CoinFlipModal.svelte';
+	import { coinFlipModalOpen } from '$lib/store/coinFlipStore';
 
 	$: innerWidth = 0;
 	import { onMount, onDestroy } from 'svelte';
 
 	import '../lib/utils/i18n.js'; // Importation pour initialiser i18n
-	import { _ } from 'svelte-i18n'; // i18n language toggle
 
 	import { initWakeLock, setKeepAwake, stopWakeLockManager } from '$lib/utils/wakeLock';
 
@@ -145,9 +146,9 @@
 	const lockPortraitOrientation = async () => {
 		if (typeof window === 'undefined') return;
 		const orientationApi = window.screen?.orientation as
-			| ScreenOrientation
-			| (ScreenOrientation & { lock?: (orientation: string) => Promise<void> });
-		if (!orientationApi?.lock) return;
+			| (ScreenOrientation & { lock?: (orientation: string) => Promise<void> })
+			| undefined;
+		if (typeof orientationApi?.lock !== 'function') return;
 
 		try {
 			await orientationApi.lock('portrait-primary');
@@ -198,7 +199,7 @@
 		window.addEventListener('popstate', handleBackNavigation);
 		// subscribe to appSettings.preventScreenSleep and apply
 		unsubscribeAppSettings = appSettings.subscribe((s) => {
-			setKeepAwake(!!(s as any).preventScreenSleep);
+			setKeepAwake(!!s.preventScreenSleep);
 		});
 
 		unsubscribeBackButtonMenuHandler = appState.subscribe((state) => {
@@ -309,6 +310,9 @@
 	{/if}
 	{#if $scryfallModalData.isOpen}
 		<ScryfallModal />
+	{/if}
+	{#if $coinFlipModalOpen}
+		<CoinFlipModal />
 	{/if}
 	<DayNightShowcase />
 	<FirstPlayerTouchSelectionModal />
