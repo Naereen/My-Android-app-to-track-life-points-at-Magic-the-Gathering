@@ -142,10 +142,6 @@ const getLongestStreak = (results: CoinSide[], side: CoinSide) => {
 	return longest;
 };
 
-let generatedIdCount = 0;
-
-const createId = (prefix: string) => `${prefix}-${generatedIdCount++}`;
-
 export const getCoinsPerGroup = (krarkThumbs: number) => 2 ** clampKrarkThumbs(krarkThumbs);
 
 export const getTotalCoinsPerFlip = (state: Pick<CoinFlipState, 'krarkThumbs' | 'coinsToFlip'>) =>
@@ -168,45 +164,12 @@ export const getCoinFlipStatistics = (state: CoinFlipState) => {
 	};
 };
 
-const buildHistoryEntry = (
-	groups: FlipGroup[],
-	mode: FlipHistoryEntry['mode'],
-	call: CoinSide | null
-): FlipHistoryEntry => {
-	const { heads, tails } = countSides(groups);
-
-	return {
-		id: createId('history'),
-		mode,
-		call,
-		groups,
-		heads,
-		tails
-	};
-};
-
-const updateWithNewEntry = (
-	state: CoinFlipState,
-	groups: FlipGroup[],
-	mode: FlipHistoryEntry['mode'],
-	call: CoinSide | null,
-	lastRunWasCapped: boolean
-) => {
-	const entry = buildHistoryEntry(groups, mode, call);
-
-	return {
-		...state,
-		totalHeads: state.totalHeads + entry.heads,
-		totalTails: state.totalTails + entry.tails,
-		lastResults: groups,
-		flipHistory: [...state.flipHistory, entry],
-		lastRunWasCapped
-	};
-};
-
 export const createCoinFlipStore = (random = Math.random) => {
 	const store = persist<CoinFlipState>('coinFlipState', initialCoinFlipState);
 	store.update((state) => sanitizeState(state));
+	let generatedIdCount = 0;
+
+	const createId = (prefix: string) => `${prefix}-${generatedIdCount++}`;
 
 	const createFlipGroups = (groupCount: number, coinsPerGroup: number) =>
 		Array.from({ length: groupCount }, () => ({
@@ -215,6 +178,42 @@ export const createCoinFlipStore = (random = Math.random) => {
 				random() < 0.5 ? 'H' : 'T'
 			) as CoinSide[]
 		}));
+
+	const buildHistoryEntry = (
+		groups: FlipGroup[],
+		mode: FlipHistoryEntry['mode'],
+		call: CoinSide | null
+	): FlipHistoryEntry => {
+		const { heads, tails } = countSides(groups);
+
+		return {
+			id: createId('history'),
+			mode,
+			call,
+			groups,
+			heads,
+			tails
+		};
+	};
+
+	const updateWithNewEntry = (
+		state: CoinFlipState,
+		groups: FlipGroup[],
+		mode: FlipHistoryEntry['mode'],
+		call: CoinSide | null,
+		lastRunWasCapped: boolean
+	) => {
+		const entry = buildHistoryEntry(groups, mode, call);
+
+		return {
+			...state,
+			totalHeads: state.totalHeads + entry.heads,
+			totalTails: state.totalTails + entry.tails,
+			lastResults: groups,
+			flipHistory: [...state.flipHistory, entry],
+			lastRunWasCapped
+		};
+	};
 
 	return {
 		subscribe: store.subscribe,

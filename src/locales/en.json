@@ -62,6 +62,7 @@
 	"coin_flip_tracker_help_until_lose": "Call Heads or Call Tails keeps flipping full rounds until that called side no longer appears in the round.",
 	"coin_flip_tracker_help_cards": "Useful for cards like Krark’s Thumb, Zndrsplt, and Yusri while still keeping track of your full streak.",
 	"coin_flip_tracker_cap_notice": "The latest “until you lose” run hit the visual safety cap to keep the app responsive.",
+	"coin_flip_tracker_close": "Close coin flip tracker",
 	"krarks_thumbs": "Krark's Thumbs",
 	"coins_to_flip": "Coins to Flip",
 	"total_number_of_coins": "Total Number of Coins",
