@@ -168,7 +168,7 @@
 	"enable_ticket_mode": "Включить режим Ticket?",
 	"show_life_change_history": "Показывать историю изменений жизней",
 	"underline_six_and_nine": "Подчёркивать цифры 6 и 9",
-	"starting_player_probabilities_title": "Starting Игрок Probabilities",
+	"starting_player_probabilities_title": "Вероятности выбора начинающего игрока",
 	"starting_player_probabilities_caption": "В приложении есть экспериментальная функция, которая позволяет задать свои вероятности выбора начинающего игрока. Внимание: это может считаться жульничеством без согласия соперников.",
 	"starting_player_probabilities_enable": "Включить свои вероятности выбора начинающего игрока",
 	"touch_before_random_start": "Попросить 3+ игроков коснуться своей панели перед случайным выбором начинающего",

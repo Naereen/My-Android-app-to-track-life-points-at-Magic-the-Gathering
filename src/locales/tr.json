@@ -168,7 +168,7 @@
 	"enable_ticket_mode": "Ticket modu etkinleştirilsin mi?",
 	"show_life_change_history": "Can değişim geçmişini göster",
 	"underline_six_and_nine": "6 ve 9 rakamlarının altını çiz",
-	"starting_player_probabilities_title": "Starting Oyuncu Probabilities",
+	"starting_player_probabilities_title": "Başlayan oyuncu olasılıkları",
 	"starting_player_probabilities_caption": "Bu uygulama, oyuna kimin başlayacağını seçmek için özel olasılıklar ayarlamaya yarayan deneysel bir özellik içerir. Dikkat: Rakiplerinin onayı olmadan kullanırsan bu hile sayılabilir!",
 	"starting_player_probabilities_enable": "Başlayan oyuncu için özel olasılıkları aç",
 	"touch_before_random_start": "Rastgele başlayanı seçmeden önce 3+ oyuncudan paneline dokunmasını iste",

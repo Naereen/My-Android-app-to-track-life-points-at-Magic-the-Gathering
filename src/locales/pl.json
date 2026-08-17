@@ -168,7 +168,7 @@
 	"enable_ticket_mode": "Włączyć tryb Ticket?",
 	"show_life_change_history": "Pokaż historię zmian życia",
 	"underline_six_and_nine": "Podkreśl cyfry 6 i 9",
-	"starting_player_probabilities_title": "Starting Gracz Probabilities",
+	"starting_player_probabilities_title": "Prawdopodobieństwa wyboru pierwszego gracza",
 	"starting_player_probabilities_caption": "Aplikacja zawiera eksperymentalną funkcję pozwalającą ustawić własne szanse na wybór rozpoczynającego gracza. Uwaga: może to zostać uznane za oszustwo bez zgody przeciwników!",
 	"starting_player_probabilities_enable": "Włącz własne szanse na wybór rozpoczynającego gracza",
 	"touch_before_random_start": "Poproś 3+ graczy, aby dotknęli swojego panelu przed losowym wyborem rozpoczynającego",
