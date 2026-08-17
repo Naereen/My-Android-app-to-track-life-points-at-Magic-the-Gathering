@@ -22,10 +22,11 @@ export class WebRTCManager {
 	private createPeer(): RTCPeerConnection {
 		const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
 
+		// "connected" is reported by the data channel only: ICE can be up while the
+		// SCTP channel is still opening (or never opens).
 		pc.oniceconnectionstatechange = () => {
-			if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
-				this.onStatusChange('connected');
-			} else if (
+			console.info('[sync] ICE state', pc.iceConnectionState);
+			if (
 				pc.iceConnectionState === 'disconnected' ||
 				pc.iceConnectionState === 'closed' ||
 				pc.iceConnectionState === 'failed'
@@ -42,14 +43,17 @@ export class WebRTCManager {
 		this.dataChannel = channel;
 
 		channel.onopen = () => {
+			console.info('[sync] data channel open');
 			this.onStatusChange('connected');
 		};
 
 		channel.onclose = () => {
+			console.info('[sync] data channel closed');
 			this.onStatusChange('disconnected');
 		};
 
 		channel.onerror = (e) => {
+			console.error('[sync] data channel error', e);
 			this.onStatusChange('error', String(e));
 		};
 

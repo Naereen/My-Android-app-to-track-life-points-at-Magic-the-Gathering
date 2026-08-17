@@ -85,8 +85,9 @@
 		loading = false;
 	}
 
+	// Closing the modal must keep the peer connection alive: players close it to play.
 	function close() {
-		reset();
+		if ($syncState.status !== 'connected') reset();
 		closeSyncModal();
 	}
 </script>
