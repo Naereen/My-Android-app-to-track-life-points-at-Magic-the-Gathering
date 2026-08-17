@@ -127,7 +127,7 @@
 				<p class="text-center text-white/70 text-sm">
 					{$_('sync_mode_step_1_of_2') || 'Step 1/2 — Have the guest scan this QR code.'}
 				</p>
-				<QRCodeDisplay data={offerPayload} size={200} />
+				<QRCodeDisplay data={offerPayload} size={256} />
 				<button
 					class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-semibold transition-colors"
 					on:click={() => (step = 'host_scan_answer')}
@@ -160,7 +160,7 @@
 				<p class="text-center text-white/70 text-sm">
 					{$_('sync_mode_guest_show_answer') || 'Show this QR code to the host to scan.'}
 				</p>
-				<QRCodeDisplay data={answerPayload} size={200} />
+				<QRCodeDisplay data={answerPayload} size={256} />
 				<p class="text-center text-white/50 text-sm">{$_('sync_mode_waiting_for_host') || 'Waiting for host to scan…'}</p>
 				<button class="text-white/50 text-sm underline text-center" on:click={reset}>{$_('sync_mode_cancel') || 'Cancel'}</button>
 
