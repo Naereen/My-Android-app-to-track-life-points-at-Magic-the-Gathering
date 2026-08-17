@@ -37,7 +37,21 @@ describe('coinFlipStore', () => {
 			['T', 'H']
 		]);
 		expect(formatFlipGroups(state.lastResults)).toBe('( HT, TH )');
-		expect(formatFlipHistory(state.flipHistory)).toBe('( 2H & 2T )');
+		expect(formatFlipHistory(state.flipHistory, { head: 'H', tail: 'T' })).toBe('( 2H & 2T )');
+	});
+
+	it('formats flip summaries with localized coin result initials', () => {
+		store = createDeterministicStore([0.1, 0.8, 0.75, 0.2]);
+
+		store.setKrarkThumbs(1);
+		store.setCoinsToFlip(2);
+		store.flipCoins();
+
+		const state = get(store);
+		const formatCoinSide = (result: 'H' | 'T') => (result === 'H' ? 'F' : 'P');
+
+		expect(formatFlipGroups(state.lastResults, formatCoinSide)).toBe('( FP, PF )');
+		expect(formatFlipHistory(state.flipHistory, { head: 'F', tail: 'P' })).toBe('( 2F & 2P )');
 	});
 
 	it('keeps flipping until the called side disappears from a round', () => {

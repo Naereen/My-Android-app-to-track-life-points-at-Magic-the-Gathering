@@ -30,6 +30,7 @@ export interface CoinFlipState {
 export const MAX_KRARK_THUMBS = 6;
 export const MAX_COINS_TO_FLIP = 99;
 export const MAX_FLIP_UNTIL_LOSE_ROUNDS = 24;
+const DEFAULT_COIN_SIDE_LABELS = Object.freeze({ head: 'H', tail: 'T' });
 
 const initialCoinFlipState: CoinFlipState = {
 	krarkThumbs: 0,
@@ -124,7 +125,10 @@ const countSides = (groups: FlipGroup[]) =>
 const flattenHistoryResults = (history: FlipHistoryEntry[]) =>
 	history.flatMap((entry) => entry.groups.flatMap((group) => group.results));
 
-const formatResultGroup = (group: FlipGroup) => group.results.join('');
+const formatResultGroup = (
+	group: FlipGroup,
+	formatCoinSide: (result: CoinSide) => string = (result) => result
+) => group.results.map(formatCoinSide).join('');
 
 const getLongestStreak = (results: CoinSide[], side: CoinSide) => {
 	let longest = 0;
@@ -147,12 +151,25 @@ export const getCoinsPerGroup = (krarkThumbs: number) => 2 ** clampKrarkThumbs(k
 export const getTotalCoinsPerFlip = (state: Pick<CoinFlipState, 'krarkThumbs' | 'coinsToFlip'>) =>
 	getCoinsPerGroup(state.krarkThumbs) * clampCoinsToFlip(state.coinsToFlip);
 
-export const formatFlipGroups = (groups: FlipGroup[]) =>
-	groups.length > 0 ? `( ${groups.map(formatResultGroup).join(', ')} )` : '—';
+export const formatFlipGroups = (
+	groups: FlipGroup[],
+	formatCoinSide: (result: CoinSide) => string = (result) => result
+) =>
+	groups.length > 0
+		? `( ${groups.map((group) => formatResultGroup(group, formatCoinSide)).join(', ')} )`
+		: '—';
 
-export const formatFlipHistory = (history: FlipHistoryEntry[]) =>
+export const formatFlipHistory = (
+	history: FlipHistoryEntry[],
+	coinSideLabels: { head: string; tail: string } = DEFAULT_COIN_SIDE_LABELS
+) =>
 	history.length > 0
-		? history.map((entry) => `( ${entry.heads}H & ${entry.tails}T )`).join(', ')
+		? history
+				.map(
+					(entry) =>
+						`( ${entry.heads}${coinSideLabels.head} & ${entry.tails}${coinSideLabels.tail} )`
+				)
+				.join(', ')
 		: '—';
 
 export const getCoinFlipStatistics = (state: CoinFlipState) => {
