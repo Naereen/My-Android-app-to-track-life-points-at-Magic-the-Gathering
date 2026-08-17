@@ -37,7 +37,7 @@ describe('coinFlipStore', () => {
 			['T', 'H']
 		]);
 		expect(formatFlipGroups(state.lastResults)).toBe('( HT, TH )');
-		expect(formatFlipHistory(state.flipHistory)).toBe('( 2H & 2T )');
+		expect(formatFlipHistory(state.flipHistory, { head: 'H', tail: 'T' })).toBe('( 2H & 2T )');
 	});
 
 	it('formats flip summaries with localized coin result initials', () => {

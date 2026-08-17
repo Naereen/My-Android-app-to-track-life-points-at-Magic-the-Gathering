@@ -30,6 +30,7 @@ export interface CoinFlipState {
 export const MAX_KRARK_THUMBS = 6;
 export const MAX_COINS_TO_FLIP = 99;
 export const MAX_FLIP_UNTIL_LOSE_ROUNDS = 24;
+const DEFAULT_COIN_SIDE_LABELS = Object.freeze({ head: 'H', tail: 'T' });
 
 const initialCoinFlipState: CoinFlipState = {
 	krarkThumbs: 0,
@@ -160,7 +161,7 @@ export const formatFlipGroups = (
 
 export const formatFlipHistory = (
 	history: FlipHistoryEntry[],
-	coinSideLabels: { head: string; tail: string } = { head: 'H', tail: 'T' }
+	coinSideLabels: { head: string; tail: string } = DEFAULT_COIN_SIDE_LABELS
 ) =>
 	history.length > 0
 		? history

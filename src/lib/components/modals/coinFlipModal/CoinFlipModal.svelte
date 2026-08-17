@@ -18,7 +18,8 @@
 
 	let showHelp = false;
 
-	const formatCoinSide = (result: CoinSide) => (result === 'H' ? headResultLabel : tailResultLabel);
+	const formatCoinSide = (result: CoinSide, headLabel: string, tailLabel: string) =>
+		result === 'H' ? headLabel : tailLabel;
 
 	$: coinStats = getCoinFlipStatistics($coinFlipStore);
 	$: coinsPerGroup = getCoinsPerGroup($coinFlipStore.krarkThumbs);
@@ -34,7 +35,9 @@
 		$_('coin_result_tail'),
 		'Tail'
 	);
-	$: lastResultText = formatFlipGroups($coinFlipStore.lastResults, formatCoinSide);
+	$: lastResultText = formatFlipGroups($coinFlipStore.lastResults, (result) =>
+		formatCoinSide(result, headResultLabel, tailResultLabel)
+	);
 	$: flipHistoryText = formatFlipHistory($coinFlipStore.flipHistory, {
 		head: headResultLabel,
 		tail: tailResultLabel
@@ -282,7 +285,7 @@
 												class:text-rose-300={result === 'T'}
 												class="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-sm font-black"
 											>
-												{formatCoinSide(result)}
+												{formatCoinSide(result, headResultLabel, tailResultLabel)}
 											</div>
 										{/each}
 									</div>
