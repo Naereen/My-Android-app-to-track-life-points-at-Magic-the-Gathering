@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	import { BrowserMultiFormatReader } from '@zxing/library';
+	import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
 	import { _ } from 'svelte-i18n';
 
 	const dispatch = createEventDispatcher<{ scan: string; error: string }>();
@@ -21,7 +21,7 @@
 					if (result) {
 						dispatch('scan', result.getText());
 						stopScanning();
-					} else if (err && !(err instanceof Error && err.name === 'NotFoundException')) {
+					} else if (err && !(err instanceof NotFoundException)) {
 						errorMessage = err.message ?? 'Camera error';
 						dispatch('error', errorMessage);
 					}
