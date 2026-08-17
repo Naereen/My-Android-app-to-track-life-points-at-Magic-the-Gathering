@@ -55,8 +55,8 @@ describe('cryptoRandom', () => {
 
 	it('validates invalid integer bounds', () => {
 		expect(() => secureRandomInt(2, 1)).toThrow(/min <= max/i);
-		expect(() => secureRandomInt(0.1, 1)).toThrow(/integer bounds/i);
-		expect(() => secureRandomInt(0, 1.1)).toThrow(/integer bounds/i);
+		expect(() => secureRandomInt(0.1, 1)).toThrow(/safe integer bounds/i);
+		expect(() => secureRandomInt(0, 1.1)).toThrow(/safe integer bounds/i);
 		expect(() => secureRandomInt(0, 0x100000000)).toThrow(/2\^32/i);
 	});
 

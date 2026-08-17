@@ -32,6 +32,7 @@ export type SavedGame = {
 };
 
 const MAX_SAVED_GAMES = 100;
+const savedGamesFallbackSessionPrefix = `${Date.now().toString(36)}-${(typeof performance !== 'undefined' ? performance.now().toString(36) : '0').replace('.', '')}`;
 let savedGameIdSequence = 0;
 
 export const savedGames = persist<SavedGame[]>('savedGames', []);
@@ -44,7 +45,7 @@ export const recordCompletedGame = (game: Omit<SavedGame, 'id'>) => {
 	const id =
 		typeof globalThis !== 'undefined' && globalThis.crypto?.randomUUID
 			? globalThis.crypto.randomUUID()
-			: `${Date.now()}-${savedGameIdSequence++}`;
+			: `${savedGamesFallbackSessionPrefix}-${savedGameIdSequence++}`;
 
 	savedGames.update((current) => {
 		const next = [...current, { ...game, id }];

@@ -10,16 +10,16 @@ const getCrypto = (): Crypto => {
 };
 
 export const secureRandomInt = (min: number, max: number): number => {
-	if (!Number.isInteger(min) || !Number.isInteger(max)) {
-		throw new RangeError('secureRandomInt expects integer bounds.');
+	if (!Number.isSafeInteger(min) || !Number.isSafeInteger(max)) {
+		throw new RangeError('secureRandomInt expects safe integer bounds.');
 	}
 	if (min > max) {
 		throw new RangeError('secureRandomInt expects min <= max.');
 	}
 
 	const range = max - min + 1;
-	if (range <= 0 || range > UINT32_RANGE) {
-		throw new RangeError('secureRandomInt range must be between 1 and 2^32.');
+	if (!Number.isSafeInteger(range) || range <= 0 || range > UINT32_RANGE) {
+		throw new RangeError('secureRandomInt range must be between 1 and 2^32 (inclusive).');
 	}
 
 	const maxUnbiased = Math.floor(UINT32_RANGE / range) * range;

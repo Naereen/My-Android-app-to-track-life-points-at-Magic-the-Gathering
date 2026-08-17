@@ -37,6 +37,7 @@ export type GameHistoryEntry = {
 };
 
 const MAX_GAME_HISTORY_ENTRIES = 500;
+const gameHistoryFallbackSessionPrefix = `${Date.now().toString(36)}-${(typeof performance !== 'undefined' ? performance.now().toString(36) : '0').replace('.', '')}`;
 let gameHistoryEntryIdSequence = 0;
 const MERGE_WINDOW_MS = 2000;
 const MERGEABLE_STATUS_KEYS = new Set(['energy', 'experience', 'rad', 'acorn', 'ticket']);
@@ -118,7 +119,7 @@ export const addGameHistoryEntry = (entry: Omit<GameHistoryEntry, 'id' | 'timest
 		const randomId =
 			typeof globalThis !== 'undefined' && globalThis.crypto?.randomUUID
 				? globalThis.crypto.randomUUID()
-				: `${Date.now()}-${gameHistoryEntryIdSequence++}`;
+				: `${gameHistoryFallbackSessionPrefix}-${gameHistoryEntryIdSequence++}`;
 
 		const nextEntry: GameHistoryEntry = {
 			...entry,
