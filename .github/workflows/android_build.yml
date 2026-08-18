@@ -63,10 +63,15 @@ jobs:
           cd android
           chmod +x gradlew
           # ./gradlew --stacktrace --scan assemble
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --max-workers 2
         env:
           ANDROID_VERSION_NAME: ${{ steps.vars.outputs.tag }}
           ANDROID_VERSION_CODE: ${{ steps.vars.outputs.count }}
+          GRADLE_OPTS: >-
+            -Dorg.gradle.internal.http.connectionTimeout=120000
+            -Dorg.gradle.internal.http.socketTimeout=120000
+            -Dorg.gradle.internal.repository.max.retries=4
+            -Dorg.gradle.internal.repository.initial.backoff=500
 
       - name: Sign APK
         id: sign_app
