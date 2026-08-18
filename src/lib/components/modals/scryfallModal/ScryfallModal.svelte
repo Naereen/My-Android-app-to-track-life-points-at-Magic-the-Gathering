@@ -272,12 +272,12 @@
 								{#if card.prices && (card.prices.usd || card.prices.eur)}
 									<div class="text-xs text-gray-300 mt-1 leading-snug">
 										<span>
-											{#if card.prices.usd}${card.prices.usd}{/if}{#if card.prices.usd && card.prices.eur} | {/if}{#if card.prices.eur}€{card.prices.eur}{/if}
+											{#if card.prices.usd}${card.prices.usd} {/if}{#if card.prices.usd && card.prices.eur} | {/if}{#if card.prices.eur}€{card.prices.eur}{/if}
 										</span>
 										{#if card.prices.usd_foil || card.prices.eur_foil}
 											<span class="ml-1 text-gray-400">
 												{$_('scryfall_foil') || 'Foil'}:
-												{#if card.prices.usd_foil}${card.prices.usd_foil}{/if}{#if card.prices.usd_foil && card.prices.eur_foil} | {/if}{#if card.prices.eur_foil}€{card.prices.eur_foil}{/if}
+												{#if card.prices.usd_foil}${card.prices.usd_foil} {/if}{#if card.prices.usd_foil && card.prices.eur_foil} | {/if}{#if card.prices.eur_foil}€{card.prices.eur_foil}{/if}
 											</span>
 										{/if}
 									</div>
