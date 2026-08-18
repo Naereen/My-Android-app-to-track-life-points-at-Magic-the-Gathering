@@ -47,6 +47,10 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
+      - name: Inject Camera Permissions into AndroidManifest.xml
+        run: |
+          sed -i 's/<application>/<uses-permission android:name="android.permission.CAMERA" \/>\n    <uses-feature android:name="android.hardware.camera" android:required="false" \/>\n    <application>/' android/app/src/main/AndroidManifest.xml
+
       - name: Generate Capacitor Assets
         run: npx @capacitor/assets generate --android
 
