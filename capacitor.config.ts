@@ -5,6 +5,9 @@ const config: CapacitorConfig = {
 	appId: 'link.besson.mtglifetracker',
 	appName: "Naereen's MTG Life Tracker",
 	webDir: 'build',
+ server: {
+   androidScheme: 'https',
+ },
 	plugins: {
 		SplashScreen: {
 			launchShowDuration: 500, // Temps d'affichage en ms
