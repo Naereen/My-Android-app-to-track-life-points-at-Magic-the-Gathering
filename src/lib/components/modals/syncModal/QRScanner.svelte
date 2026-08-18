@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { Capacitor } from '@capacitor/core';
+	import { Camera } from '@capacitor/camera';
+
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	import {
 		BrowserQRCodeReader,
@@ -7,6 +10,29 @@
 		NotFoundException
 	} from '@zxing/library';
 	import { _ } from 'svelte-i18n';
+
+	async function requestNativeCameraPermission(): Promise<boolean> {
+		// Si l'application tourne dans l'APK natif Capacitor
+		if (Capacitor.isNativePlatform()) {
+			const status = await Camera.checkPermissions();
+
+			if (status.camera !== 'granted') {
+			const request = await Camera.requestPermissions({ permissions: ['camera'] });
+			return request.camera === 'granted';
+			}
+		}
+		return true; // En navigateur web classique
+	}
+
+	// À appeler avant d'initialiser le scanner :
+	async function initScanner() {
+		const hasPermission = await requestNativeCameraPermission();
+		if (!hasPermission) {
+			throw new Error('Permission denied by user');
+		}
+
+		// Démarrage de votre scanner (html5-qrcode / zxing) ici...
+	}
 
 	const dispatch = createEventDispatcher<{ scan: string; error: string }>();
 
@@ -18,7 +44,8 @@
 	let manualCode = '';
 	let showManual = false;
 
-	function buildReader(): BrowserQRCodeReader {
+	async function buildReader(): Promise<BrowserQRCodeReader> {
+		await initScanner();
 		const r = new BrowserQRCodeReader(150);
 		const hints = new Map();
 		hints.set(DecodeHintType.TRY_HARDER, true);
@@ -29,7 +56,7 @@
 
 	onMount(async () => {
 		try {
-			reader = buildReader();
+			reader = await buildReader();
 			scanning = true;
 			// A high-resolution stream is mandatory: a dense QR code filmed off another
 			// screen is unreadable below ~720p.
