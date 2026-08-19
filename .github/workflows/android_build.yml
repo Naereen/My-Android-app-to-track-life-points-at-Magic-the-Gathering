@@ -9,7 +9,7 @@ on:
       reason:
         description: 'Raison du lancement manuel'
         required: false
-        default: 'Test de la CI'
+        default: 'Lancement manuel de la CI Android Build'
 
 jobs:
   build:
@@ -49,7 +49,38 @@ jobs:
 
       - name: Inject Camera Permissions into AndroidManifest.xml
         run: |
+          ls -larth android/app/src/main/AndroidManifest.xml
+          file android/app/src/main/AndroidManifest.xml
+          du -b android/app/src/main/AndroidManifest.xml
           sed -i 's/<application>/<uses-permission android:name="android.permission.CAMERA" \/>\n    <uses-feature android:name="android.hardware.camera" android:required="false" \/>\n    <application>/' android/app/src/main/AndroidManifest.xml
+          cat android/app/src/main/AndroidManifest.xml
+          grep --ignore-case camera android/app/src/main/AndroidManifest.xml
+          ls -larth android/app/src/main/AndroidManifest.xml
+          file android/app/src/main/AndroidManifest.xml
+          du -b android/app/src/main/AndroidManifest.xml
+
+      - name: Ensure Camera Permission in AndroidManifest.xml (again)
+        run: |
+          ls -larth android/app/src/main/AndroidManifest.xml
+          file android/app/src/main/AndroidManifest.xml
+          du -b android/app/src/main/AndroidManifest.xml
+          node -e "
+            const fs = require('fs');
+            const file = 'android/app/src/main/AndroidManifest.xml';
+            let content = fs.readFileSync(file, 'utf8');
+            if (!content.includes('android.permission.CAMERA')) {
+              content = content.replace(
+                '<application>',
+                '<uses-permission android:name=\"android.permission.CAMERA\" />\n    <uses-feature android:name=\"android.hardware.camera\" android:required=\"false\" />\n    <application>'
+              );
+              fs.writeFileSync(file, content);
+              console.log('Camera permission successfully injected from NodeJS script.');
+            }
+          "
+          grep --ignore-case camera android/app/src/main/AndroidManifest.xml
+          ls -larth android/app/src/main/AndroidManifest.xml
+          file android/app/src/main/AndroidManifest.xml
+          du -b android/app/src/main/AndroidManifest.xml
 
       - name: Generate Capacitor Assets
         run: npx @capacitor/assets generate --android
