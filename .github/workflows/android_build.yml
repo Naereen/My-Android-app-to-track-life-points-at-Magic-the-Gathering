@@ -57,9 +57,9 @@ jobs:
           ls -larth android/app/src/main/AndroidManifest.xml
           file android/app/src/main/AndroidManifest.xml
           du -b android/app/src/main/AndroidManifest.xml
-          grep --ignore-case camera android/app/src/main/AndroidManifest.xml
+          # grep --ignore-case camera android/app/src/main/AndroidManifest.xml
 
-      - name: Ensure Camera Permission in AndroidManifest.xml (again)
+      - name: Ensure Camera Permission in AndroidManifest.xml (nodeJS script)
         run: |
           ls -larth android/app/src/main/AndroidManifest.xml
           file android/app/src/main/AndroidManifest.xml
@@ -69,7 +69,7 @@ jobs:
             const file = 'android/app/src/main/AndroidManifest.xml';
             let content = fs.readFileSync(file, 'utf8');
             if (!content.includes('android.permission.CAMERA')) {
-              const permissions = '\n    <uses-permission android:name=\"android.permission.CAMERA\" />\n    <uses-feature android:name=\"android.hardware.camera\" android:required=\"false\" />\n';
+              const permissions = '\n    <uses-permission android:name=\"android.permission.CAMERA\" />\n    <uses-feature android:name=\"android.hardware.camera\" android:required=\"false\" />\n\n';
               content = content.replace('</manifest>', permissions + '</manifest>');
               fs.writeFileSync(file, content);
               console.log('Permissions caméra injectées avec succès avant </manifest> !');
