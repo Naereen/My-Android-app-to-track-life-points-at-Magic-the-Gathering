@@ -265,7 +265,7 @@
 		const remainingSeconds = absSeconds % 60;
 		const core =
 			hours > 0
-				? `${hours}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`
+				? `${hours}h${String(minutes).padStart(2, '0')}`
 				: `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
 		return `${isNegative ? '-' : ''}${core}`;
 	};
