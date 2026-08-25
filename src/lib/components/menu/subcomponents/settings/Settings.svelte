@@ -1647,7 +1647,7 @@
 
 		<div class="px-4 py-3 text-center text-gray-300 space-y-1">
 			<div class="text-sm">
-				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.4.12'}
+				{$_('about_version')}: {import.meta.env.VITE_APP_VERSION || '0.5.1'}
 			</div>
 			<div class="text-sm">
 				{$_('about_author')}:
