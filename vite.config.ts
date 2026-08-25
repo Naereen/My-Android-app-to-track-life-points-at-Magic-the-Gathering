@@ -1,5 +1,6 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // To read the version from package.json, we need to use the file system and URL modules, since we can't use import.meta in this config file
@@ -14,6 +15,7 @@ const pkg = JSON.parse(json);
 export default defineConfig({
 	plugins: [
 		sveltekit(),
+		basicSsl(),
 		VitePWA({
 			mode: 'development',
 			// base: '/',
@@ -98,11 +100,11 @@ export default defineConfig({
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
-	// server: {
-	// 	port: 5173,
-	// 	host: true,
-	// 	allowedHosts: true // Autorise l'accès depuis n'importe quel hôte/IP du réseau local
-	// },
+	server: {
+		// port: 5173,
+		host: true,
+		// allowedHosts: true // Autorise l'accès depuis n'importe quel hôte/IP du réseau local
+	},
 	define: {
 		// On définit une variable globale disponible dans le code Svelte
 		'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkg.version)

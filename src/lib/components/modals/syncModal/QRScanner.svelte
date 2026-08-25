@@ -4,17 +4,21 @@
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	import { browser } from '$app/environment';
 
-	// Import de TYPE uniquement : 100 % sûr au niveau serveur car effacé à la compilation TS
-	import type { CameraPlugin } from '@capacitor/camera';
-	let Camera: CameraPlugin | null = null;
+	if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+		console.error('Browser does not support camera access');
+		window.alert('Your browser does not support camera access. Please use a modern browser.');
+	}
 
-	onMount(async () => {
-		if (browser) {
-			// Chargement dynamique du module uniquement sur le client
-			const module = await import('@capacitor/camera');
-			Camera = module.Camera;
-		}
-	});
+	// // Import de TYPE uniquement : 100 % sûr au niveau serveur car effacé à la compilation TS
+	// import type { CameraPlugin } from '@capacitor/camera';
+	import { Camera } from '@capacitor/camera';
+	// let Camera: CameraPlugin | null = null;
+	// if (browser) {
+	// 	// Chargement dynamique du module uniquement sur le client
+	// 	import('@capacitor/camera').then((module) => {
+	// 		Camera = module.Camera;
+	// 	});
+	// }
 
 	import {
 		BrowserQRCodeReader,
@@ -22,11 +26,13 @@
 		BarcodeFormat,
 		NotFoundException
 	} from '@zxing/library';
+
 	import { _ } from 'svelte-i18n';
 
 	async function requestNativeCameraPermission(): Promise<boolean> {
 		if (!Camera) {
-			console.warn('[QRScanner] Camera plugin not loaded');
+			console.warn('[QRScanner] Camera plugin not yet loaded');
+			throw new Error('Camera plugin failed to load');
 			return false;
 		}
 		// Si l'application tourne dans l'APK natif Capacitor
@@ -34,18 +40,21 @@
 			const status = await Camera.checkPermissions();
 
 			if (status.camera !== 'granted') {
-			const request = await Camera.requestPermissions({ permissions: ['camera'] });
-			return request.camera === 'granted';
+				const request = await Camera.requestPermissions({
+					permissions: [ 'camera' ]
+				});
+				return (request.camera === 'granted');
 			}
 		}
-		return true; // En navigateur web classique
+		// En navigateur web classique, la permission est demandée automatiquement par le navigateur lors de l'appel à getUserMedia()
+		return true;
 	}
 
 	// À appeler avant d'initialiser le scanner :
 	async function initScanner() {
 		const hasPermission = await requestNativeCameraPermission();
 		if (!hasPermission) {
-			throw new Error('Permission denied by user');
+			throw new Error('Camera permission denied by user?');
 		}
 
 		// Démarrage de votre scanner (html5-qrcode / zxing) ici...
@@ -63,7 +72,7 @@
 
 	async function buildReader(): Promise<BrowserQRCodeReader> {
 		await initScanner();
-		const r = new BrowserQRCodeReader(150);
+		const r = new BrowserQRCodeReader(100);
 		const hints = new Map();
 		hints.set(DecodeHintType.TRY_HARDER, true);
 		hints.set(DecodeHintType.POSSIBLE_FORMATS, [BarcodeFormat.QR_CODE]);
