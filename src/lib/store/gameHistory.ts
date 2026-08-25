@@ -1,4 +1,5 @@
 import { persist } from './persist';
+import { generateUUID } from '$lib/utils/uuid';
 
 export type GameHistoryEntryKind =
 	| 'positiveLife'
@@ -117,8 +118,8 @@ const mergeEntries = (
 export const addGameHistoryEntry = (entry: Omit<GameHistoryEntry, 'id' | 'timestamp'>) => {
 	gameHistory.update((current) => {
 		const randomId =
-			typeof globalThis !== 'undefined' && globalThis.crypto?.randomUUID
-				? globalThis.crypto.randomUUID()
+			typeof globalThis !== 'undefined' && generateUUID
+				? generateUUID()
 				: `${gameHistoryFallbackSessionPrefix}-${gameHistoryEntryIdSequence++}`;
 
 		const nextEntry: GameHistoryEntry = {

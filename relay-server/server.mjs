@@ -5,6 +5,7 @@
 //
 
 import http from 'node:http';
+import { generateUUID } from '$lib/utils/uuid';
 
 const PORT = Number(process.env.PORT || 8787);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -115,7 +116,7 @@ const createServer = () => {
 			res.write('retry: 3000\n\n');
 			writeSseData(res, latestState);
 
-			const clientId = crypto.randomUUID();
+			const clientId = generateUUID();
 			const pingInterval = setInterval(() => {
 				try {
 					res.write(': ping\n\n');

@@ -1,4 +1,5 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
+import { generateUUID } from '$lib/utils/uuid';
 
 export const prerender = false;
 
@@ -88,7 +89,7 @@ export const GET: RequestHandler = async () => {
 
 	const stream = new ReadableStream<Uint8Array>({
 		start(controller) {
-			const id = crypto.randomUUID();
+			const id = generateUUID();
 			currentClientId = id;
 
 			// Heartbeat comments keep intermediaries from closing idle SSE connections.

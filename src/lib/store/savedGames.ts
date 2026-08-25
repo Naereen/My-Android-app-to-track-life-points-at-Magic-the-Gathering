@@ -1,4 +1,5 @@
 import { persist } from './persist';
+import { generateUUID } from '$lib/utils/uuid';
 
 export type SavedGamePlayerStat = {
 	name: string;
@@ -43,8 +44,8 @@ export const savedGames = persist<SavedGame[]>('savedGames', []);
  */
 export const recordCompletedGame = (game: Omit<SavedGame, 'id'>) => {
 	const id =
-		typeof globalThis !== 'undefined' && globalThis.crypto?.randomUUID
-			? globalThis.crypto.randomUUID()
+		typeof globalThis !== 'undefined' && generateUUID
+			? generateUUID()
 			: `${savedGamesFallbackSessionPrefix}-${savedGameIdSequence++}`;
 
 	savedGames.update((current) => {

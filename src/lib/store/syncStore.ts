@@ -1,5 +1,6 @@
 import { writable, get } from 'svelte/store';
 import type { SyncAction, SyncState } from '$lib/types/sync';
+import { generateUUID } from '$lib/utils/uuid';
 import { players, setPlayerLifeAbsolute, setPlayerPoison } from './player';
 import { appSettings } from './appSettings';
 import { appState } from './appState';
@@ -69,11 +70,11 @@ const initialSyncState: SyncState = {
 export const syncState = writable<SyncState>(initialSyncState);
 
 /** Unique peer ID for this session (generated once per page load). */
-export const localPeerId = crypto.randomUUID();
+export const localPeerId = generateUUID();
 
 function makeAction(type: SyncAction['type'], payload: Record<string, unknown>): SyncAction {
 	return {
-		id: crypto.randomUUID(),
+		id: generateUUID(),
 		timestamp: Date.now(),
 		sourcePlayerId: localPeerId,
 		targetPlayerId: 'all',

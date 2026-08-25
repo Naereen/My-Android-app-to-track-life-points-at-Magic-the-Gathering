@@ -1,8 +1,21 @@
 <script lang="ts">
 	import { Capacitor } from '@capacitor/core';
-	import { Camera } from '@capacitor/camera';
 
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	import { browser } from '$app/environment';
+
+	// Import de TYPE uniquement : 100 % sûr au niveau serveur car effacé à la compilation TS
+	import type { CameraPlugin } from '@capacitor/camera';
+	let Camera: CameraPlugin | null = null;
+
+	onMount(async () => {
+		if (browser) {
+			// Chargement dynamique du module uniquement sur le client
+			const module = await import('@capacitor/camera');
+			Camera = module.Camera;
+		}
+	});
+
 	import {
 		BrowserQRCodeReader,
 		DecodeHintType,
@@ -12,6 +25,10 @@
 	import { _ } from 'svelte-i18n';
 
 	async function requestNativeCameraPermission(): Promise<boolean> {
+		if (!Camera) {
+			console.warn('[QRScanner] Camera plugin not loaded');
+			return false;
+		}
 		// Si l'application tourne dans l'APK natif Capacitor
 		if (Capacitor.isNativePlatform()) {
 			const status = await Camera.checkPermissions();
