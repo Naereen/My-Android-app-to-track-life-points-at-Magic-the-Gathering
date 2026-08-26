@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import pushState from '$app/navigation';
 import { get } from 'svelte/store';
 import '../utils/i18n.js';
 import {
@@ -36,7 +37,7 @@ describe('history modal browser-back handling', () => {
 		historyModalData.set({ isOpen: true, tab: 'life' });
 		pushHistoryModalHistoryEntry();
 
-		expect(window.history.pushState).toHaveBeenCalledWith(
+		expect(pushState).toHaveBeenCalledWith(
 			expect.objectContaining({ __mtgHistoryModalOpen: true }),
 			'',
 			window.location.href

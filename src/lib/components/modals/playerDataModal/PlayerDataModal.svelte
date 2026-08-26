@@ -44,6 +44,9 @@
 	import { vibrate } from '$lib/utils/haptics';
 	import { onDestroy, onMount } from 'svelte';
 
+	// Avoid using `history.pushState(...)` and `history.replaceState(...)` as these will conflict with SvelteKit's router. Use the `pushState` and `replaceState` imports from `$app/navigation` instead.
+	import pushState from '$app/navigation';
+
 	type CommanderMinimapBurstState = {
 		playerId: number;
 		fromPlayerId: number;
@@ -137,7 +140,7 @@
 				window.history.state && typeof window.history.state === 'object'
 					? window.history.state
 					: {};
-			window.history.pushState(
+			pushState(
 				{ ...currentState, __mtgPlayerModalOpen: true },
 				'',
 				window.location.href
