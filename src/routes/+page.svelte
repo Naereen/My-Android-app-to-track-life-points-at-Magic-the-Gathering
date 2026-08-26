@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { appSettings } from '$lib/store/appSettings';
-	import pushState from '$app/navigation';
+	import { appState, toggleIsMenuOpen, type StreamGameState } from '$lib/store/appState';
+	import { gameState } from '$lib/store/streamGameState';
+	import { pushState } from '$app/navigation';
 	import { derived, get } from 'svelte/store';
 	import TwoPlayerLayout from '$lib/layouts/TwoPlayerLayout.svelte';
 	import ThreePlayerLayout from '$lib/layouts/ThreePlayerLayout.svelte';
@@ -103,7 +105,7 @@
 				window.history.state && typeof window.history.state === 'object'
 					? window.history.state
 					: {};
-			pushState({ ...currentState, __mtgMenuOpen: true }, '', window.location.href);
+			pushState('', { ...currentState, __mtgMenuOpen: true });
 			hasMenuHistoryEntry = true;
 		} catch {
 			// ignore

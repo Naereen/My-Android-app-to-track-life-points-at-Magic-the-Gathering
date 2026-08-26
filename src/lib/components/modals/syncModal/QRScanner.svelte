@@ -2,23 +2,14 @@
 	import { Capacitor } from '@capacitor/core';
 
 	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-	import { browser } from '$app/environment';
+	// import { browser } from '$app/environment';
 
 	if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
 		console.error('Browser does not support camera access');
 		window.alert('Your browser does not support camera access. Please use a modern browser.');
 	}
 
-	// // Import de TYPE uniquement : 100 % sûr au niveau serveur car effacé à la compilation TS
-	// import type { CameraPlugin } from '@capacitor/camera';
 	import { Camera } from '@capacitor/camera';
-	// let Camera: CameraPlugin | null = null;
-	// if (browser) {
-	// 	// Chargement dynamique du module uniquement sur le client
-	// 	import('@capacitor/camera').then((module) => {
-	// 		Camera = module.Camera;
-	// 	});
-	// }
 
 	import {
 		BrowserQRCodeReader,
@@ -89,9 +80,11 @@
 			await reader.decodeFromConstraints(
 				{
 					video: {
+						// TODO: if running on mobile/tablet, this line should be enabled, otherwise it should be disabled:
 						facingMode: { ideal: 'environment' },
-						width: { ideal: 1920 },
-						height: { ideal: 1080 }
+						// The ideal resolution is 1080p, but we accept 720p as a minimum. The actual resolution will depend on the device's camera capabilities.
+						width: { min: 1000, ideal: 1920 },
+						height: { min: 700, ideal: 1080 },
 					}
 				},
 				videoElement,
@@ -101,7 +94,7 @@
 						stopScanning();
 						return;
 					}
-					// NotFoundException fires on every frame without a QR code — expected.
+					// NotFoundException fires on every frame without a QR code - expected.
 					if (error && !(error instanceof NotFoundException)) {
 						console.warn('[QRScanner] decode error', error);
 					}
@@ -123,15 +116,15 @@
 		}
 	});
 
-	onDestroy(() => {
-		stopScanning();
-	});
-
 	function stopScanning() {
 		reader?.reset();
 		reader = null;
 		scanning = false;
 	}
+
+	onDestroy(() => {
+		stopScanning();
+	});
 
 	function submitManual() {
 		const value = manualCode.trim();

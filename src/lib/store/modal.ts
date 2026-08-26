@@ -10,7 +10,7 @@ import { pickWeightedIndex } from '$lib/utils/weightedRandom';
 import { primeGameplayAudio } from '$lib/utils/gameplaySound';
 import { rollDie, secureRandomInt } from '$lib/utils/cryptoRandom';
 // Avoid using `history.pushState(...)` and `history.replaceState(...)` as these will conflict with SvelteKit's router. Use the `pushState` and `replaceState` imports from `$app/navigation` instead.
-import pushState from '$app/navigation';
+import { pushState } from '$app/navigation';
 
 type RandomizerModalState = {
 	isOpen: boolean;
@@ -277,9 +277,8 @@ export const pushHistoryModalHistoryEntry = () => {
 		const currentState =
 			window.history.state && typeof window.history.state === 'object' ? window.history.state : {};
 		pushState(
-			{ ...currentState, __mtgHistoryModalOpen: true },
 			'',
-			window.location.href
+			{ ...currentState, __mtgHistoryModalOpen: true }
 		);
 		hasHistoryModalHistoryEntry = true;
 	} catch {

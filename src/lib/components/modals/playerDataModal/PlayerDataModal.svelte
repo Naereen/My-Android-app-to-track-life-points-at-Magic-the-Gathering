@@ -45,7 +45,7 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	// Avoid using `history.pushState(...)` and `history.replaceState(...)` as these will conflict with SvelteKit's router. Use the `pushState` and `replaceState` imports from `$app/navigation` instead.
-	import pushState from '$app/navigation';
+	import { pushState } from '$app/navigation';
 
 	type CommanderMinimapBurstState = {
 		playerId: number;
@@ -141,9 +141,8 @@
 					? window.history.state
 					: {};
 			pushState(
-				{ ...currentState, __mtgPlayerModalOpen: true },
 				'',
-				window.location.href
+				{ ...currentState, __mtgPlayerModalOpen: true }
 			);
 			hasModalHistoryEntry = true;
 		} catch {
