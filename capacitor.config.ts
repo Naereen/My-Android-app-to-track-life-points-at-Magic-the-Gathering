@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
-	appId: 'link.besson.mtglifetracker',
+	appId: 'link.besson.mtglifecounter',
 	appName: "Naereen's MTG Life Tracker",
 	webDir: 'build',
 	server: {
